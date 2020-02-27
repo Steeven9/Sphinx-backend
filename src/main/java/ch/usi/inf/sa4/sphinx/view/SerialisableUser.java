@@ -22,9 +22,9 @@ public class SerialisableUser {
         this.email = user.email;
         this.fullname = user.fullname;
         this.password = user.password;
-        this.rooms = new int[user.rooms.length];
+        this.rooms = new int[user.rooms.size()];
         for (int i = 0; i < this.rooms.length; i++) {
-            this.rooms[i] = user.rooms[i].id;
+            this.rooms[i] = user.get(i).id;
         }
     }
 }
