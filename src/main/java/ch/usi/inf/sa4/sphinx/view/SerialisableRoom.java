@@ -22,8 +22,9 @@ public class SerialisableRoom {
         this.name = room.name;
         this.icon = room.icon;
         this.background = room.background;
+        this.devices = new int[user.devices.size()];
         for (int i = 0; i < this.devices.length; i++) {
-            this.devices[i] = room.devices[i].id;
+            this.devices[i] = room.get(i).id;
         }
     }
 }
