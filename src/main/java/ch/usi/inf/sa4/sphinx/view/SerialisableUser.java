@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import ch.usi.inf.sa4.sphinx.model.User;
+
 public class SerialisableUser {
     public String username;
     public String email;
@@ -13,5 +15,16 @@ public class SerialisableUser {
         this.fullname = fullname;
         this.password = password;
         this.rooms = rooms;
+    }
+
+    public SerialisableUser(User user){
+        this.username = user.username;
+        this.email = user.email;
+        this.fullname = user.fullname;
+        this.password = user.password;
+        this.rooms = new int[user.rooms.length];
+        for (int i = 0; i < this.rooms.length; i++) {
+            this.rooms[i] = user.rooms[i].id;
+        }
     }
 }
