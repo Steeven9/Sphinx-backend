@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import ch.usi.inf.sa4.sphinx.model.Device;
+
 import java.util.Map;
 
 public class SerialisableDevice {
@@ -17,5 +19,18 @@ public class SerialisableDevice {
         this.label = label;
         this.switched = switched;
         this.switches = switches;
+    }
+
+    public SerialisableDevice(Device device) {
+        this.id = device.id;
+        this.icon = device.icon;
+        this.name = device.name;
+        this.label = device.label;
+        for (Integer key : device.switched.keySet()) {
+            this.switched.put(key, device.switched.get(key));
+        }
+        for (Integer key : device.switches.keySet()) {
+            this.switches.put(key, device.switches.get(key));
+        }
     }
 }
