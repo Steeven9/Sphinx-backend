@@ -1,0 +1,80 @@
+package ch.usi.inf.sa4.sphinx.controller;
+
+
+import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Objects;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+	private HashMap<String, User> users = new HashMap<>();
+
+//	@GetMapping("/")
+//	public ResponseEntity<Boolean> index() {
+//		return ResponseEntity.noContent().build();
+//	}
+
+	@GetMapping("/{username}")
+	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username) {
+
+		User user = users.get(username);
+
+		if (user == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(new SerialisableUser(user));
+	}
+
+	@PostMapping("/{username}")
+	public ResponseEntity<SerialisableUser> getUser(HttpServletRequest req, @PathVariable String username, @RequestBody SerialisableUser user) {
+		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
+			return ResponseEntity.badRequest().build();
+		}
+		User newUser = new User(username, user.password, user.email, user.fullname);
+		users.put(username, newUser);
+
+		try {
+			return ResponseEntity.created(new URI("http://" + req.getRequestURI() + "/user/" + username)).build();
+		} catch (URISyntaxException e) {
+			System.err.println("The universe broke");
+			System.exit(-1);
+			throw new RuntimeException(); // just to get the IDE/compiler to stop complaining. Execution stops at previous line
+		}
+	}
+
+	@PutMapping("/{username}")
+	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestBody SerialisableUser user) {
+		User changedUser = users.get(username);
+
+		if (user == null) {
+			return ResponseEntity.notFound().build();
+		}
+		if (user.email != null) changedUser.email = user.email;
+		if (user.fullname != null) changedUser.fullname = user.fullname;
+		if (user.password != null) changedUser.password = user.password;
+
+		return ResponseEntity.ok(new SerialisableUser(changedUser));
+	}
+
+	/*
+	@PostMapping
+	public ResponseEntity<Message> postMessage(@RequestBody Message msg){
+		logger.debug(msg.toString());
+		var nextId = idCounter.getAndIncrement();
+		msg.setId(nextId);
+		msg.setRandomNumber();
+		messages.put(nextId, msg);
+		return ResponseEntity.ok(msg);
+	}
+	*/
+}
+
