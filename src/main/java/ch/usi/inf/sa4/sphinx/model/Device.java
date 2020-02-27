@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public abstract class Device {
     protected String icon;
     protected String name;
-    protected List<SwitchInterface> ors;
-    protected List<SwitchInterface> xors;
+    protected ArrayList<SwitchInterface> ors;
+    protected ArrayList<SwitchInterface> xors;
     protected boolean on;
 
     public abstract String getLabel();
@@ -14,8 +14,8 @@ public abstract class Device {
     public Device() {
         icon = "/images/generic_device";
         name = "Device";
-        ors = new ArrayList<SwitchInterface>();
-        xors = new ArrayList<SwitchInterface>();
+        ors = new ArrayList<>();
+        xors = new ArrayList<>();
         on = true;
     }
 
