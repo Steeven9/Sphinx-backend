@@ -72,6 +72,23 @@ public class UserController {
 		return ResponseEntity.ok(new SerialisableUser(changedUser));
 	}
 
+	@DeleteMapping("/{username}")
+	public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
+													   @RequestHeader("session-token") String session_token) {
+		User deletedUser = users.get(username);
+
+		if (deletedUser == null) {
+			return ResponseEntity.notFound().build();
+		}
+		if (session_token == null || session_token != deletedUser.session_token) {
+			return ResponseEntity.status(403).build();
+		}
+
+		users.remove(username);
+
+		return ResponseEntity.noContent().build();
+	}
+
 	/*
 	@PostMapping
 	public ResponseEntity<Message> postMessage(@RequestBody Message msg){
