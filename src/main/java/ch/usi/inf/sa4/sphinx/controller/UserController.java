@@ -31,11 +31,14 @@ public class UserController {
 		if (user == null) {
 			return ResponseEntity.notFound().build();
 		}
+		if (session_token != user.session_token) {
+			return ResponseEntity.status(403).build();
+		}
 		return ResponseEntity.ok(new SerialisableUser(user));
 	}
 
 	@PostMapping("/{username}")
-	public ResponseEntity<SerialisableUser> getUser(HttpServletRequest req, @PathVariable String username, @RequestBody SerialisableUser user) {
+	public ResponseEntity<SerialisableUser> createUser(HttpServletRequest req, @PathVariable String username, @RequestBody SerialisableUser user) {
 		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -52,11 +55,15 @@ public class UserController {
 	}
 
 	@PutMapping("/{username}")
-	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestBody SerialisableUser user) {
+	public ResponseEntity<SerialisableUser> updateUser(@PathVariable String username, @RequestBody SerialisableUser user,
+													@RequestHeader("session-token") String session_token) {
 		User changedUser = users.get(username);
 
-		if (user == null) {
+		if (changedUser == null) {
 			return ResponseEntity.notFound().build();
+		}
+		if (session_token == null || session_token != changedUser.session_token) {
+			return ResponseEntity.status(403).build();
 		}
 		if (user.email != null) changedUser.email = user.email;
 		if (user.fullname != null) changedUser.fullname = user.fullname;
