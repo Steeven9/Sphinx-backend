@@ -46,7 +46,7 @@ public class UserController {
 		users.put(username, newUser);
 
 		try {
-			return ResponseEntity.created(new URI("http://" + req.getRequestURI() + "/user/" + username)).build();
+			return ResponseEntity.created(new URI(req.getRequestURL() + "/" + username)).build();
 		} catch (URISyntaxException e) {
 			System.err.println("The universe broke");
 			System.exit(-1);
