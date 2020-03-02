@@ -14,4 +14,8 @@ public class Storage {
     public static void insertUser(User user) {
         users.put(user.username, user);
     }
+
+    public static void deleteUser(String username) {
+        users.remove(username);
+    }
 }
