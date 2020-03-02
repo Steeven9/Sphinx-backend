@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -68,6 +69,17 @@ public class UserControllerTest {
         this.mockmvc.perform(get("/user/test"))
                 .andDo(print())
                 .andExpect(status().is(403));
+    }
+
+    @Test
+    public void shouldSuccessfullyCreateUserOnValidPost() throws Exception {
+
+        this.mockmvc.perform(post("/user/test").content(
+                "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
+        ))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
 
