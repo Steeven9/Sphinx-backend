@@ -18,4 +18,8 @@ public class Storage {
     public static void deleteUser(String username) {
         users.remove(username);
     }
+
+    public static void getUserByEmail(String email) {
+        return users.values().stream().anyMatch(user -> user.email == email);
+    }
 }
