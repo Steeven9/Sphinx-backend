@@ -46,11 +46,10 @@ public class UserController {
 		users.put(username, newUser);
 
 		try {
-			return ResponseEntity.created(new URI(req.getRequestURL() + "/" + username)).build();
+			return ResponseEntity.created(new URI(req.getRequestURL() + "/" + username)).body(new SerialisableUser(newUser));
 		} catch (URISyntaxException e) {
 			System.err.println("The universe broke");
-			System.exit(-1);
-			throw new RuntimeException(); // just to get the IDE/compiler to stop complaining. Execution stops at previous line
+			throw new RuntimeException("The universe broke");
 		}
 	}
 
