@@ -45,12 +45,7 @@ public class UserController {
 		User newUser = new User(username, user.password, user.email, user.fullname);
 		users.put(username, newUser);
 
-		try {
-			return ResponseEntity.created(new URI(req.getRequestURL() + "/" + username)).body(new SerialisableUser(newUser));
-		} catch (URISyntaxException e) {
-			System.err.println("The universe broke");
-			throw new RuntimeException("The universe broke");
-		}
+		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
 	}
 
 	@PutMapping("/{username}")
