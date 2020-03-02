@@ -32,7 +32,7 @@ public class UserController {
 			return ResponseEntity.notFound().build();
 		}
 		if (session_token != user.session_token) {
-			return ResponseEntity.status(403).build();
+			return ResponseEntity.status(401).build();
 		}
 		return ResponseEntity.ok(new SerialisableUser(user));
 	}
