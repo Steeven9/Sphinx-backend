@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +17,10 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserController {
 
-	private HashMap<String, User> users = new HashMap<>();
-
-//	@GetMapping("/")
-//	public ResponseEntity<Boolean> index() {
-//		return ResponseEntity.noContent().build();
-//	}
-
 	@GetMapping("/{username}")
-	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username) {
+	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
 
-		User user = users.get(username);
+		User user = Storage.getUser(username);
 
 		if (user == null) {
 			return ResponseEntity.notFound().build();
@@ -38,12 +32,12 @@ public class UserController {
 	}
 
 	@PostMapping("/{username}")
-	public ResponseEntity<SerialisableUser> createUser(HttpServletRequest req, @PathVariable String username, @RequestBody SerialisableUser user) {
+	public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
 		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
 			return ResponseEntity.badRequest().build();
 		}
 		User newUser = new User(username, user.password, user.email, user.fullname);
-		users.put(username, newUser);
+		Storage.insertUser(newUser);
 
 		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
 	}
@@ -51,7 +45,7 @@ public class UserController {
 	@PutMapping("/{username}")
 	public ResponseEntity<SerialisableUser> updateUser(@PathVariable String username, @RequestBody SerialisableUser user,
 													@RequestHeader("session-token") String session_token) {
-		User changedUser = users.get(username);
+		User changedUser = Storage.getUser(username);
 
 		if (changedUser == null) {
 			return ResponseEntity.notFound().build();
@@ -69,7 +63,7 @@ public class UserController {
 	@DeleteMapping("/{username}")
 	public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
 													   @RequestHeader("session-token") String session_token) {
-		User deletedUser = users.get(username);
+		User deletedUser = Storage.getUser(username);
 
 		if (deletedUser == null) {
 			return ResponseEntity.notFound().build();
@@ -78,7 +72,7 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 
-		users.remove(username);
+		Storage.deleteUser(username);
 
 		return ResponseEntity.noContent().build();
 	}
