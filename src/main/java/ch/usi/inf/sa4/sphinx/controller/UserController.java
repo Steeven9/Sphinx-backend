@@ -36,6 +36,7 @@ public class UserController {
 		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
 			return ResponseEntity.badRequest().build();
 		}
+		// TODO: this needs to send an email for verification
 		User newUser = new User(username, user.password, user.email, user.fullname);
 		Storage.insertUser(newUser);
 
