@@ -11,7 +11,7 @@ public class AuthController {
 
     /**
      * Logs in using given credentials.
-     * @param givenUser an empty User containing the credentials provided by the client, parsed from json.
+     * @param givenUser a SerialisableUser containing the credentials provided by the client, parsed from json.
      * @return A ResponseEntity containing status code 200 and the new session token as a body if successful or
      *      status 400 if no username or email is provided
      *      status 404 if provided username or email do not correspond to any user
@@ -44,6 +44,15 @@ public class AuthController {
         return ResponseEntity.ok(user.createSessionToken()).build();
     }
 
+    /**
+     * Verifies a user's email address.
+     * @param fakeUser an empty User containing the username and verificationToken provided by the client
+     * @return A ResponseEntity with one of the following status codes:
+     *      404 if no user with the given username exists
+     *      400 if the user with the given username is already verified
+     *      401 if the given verificationToken does not match the one of the user with the given username
+     *      200 if otherwise
+     */
     @PostMapping("/verify")
     public ResponseEntity<SerialisableUser> verifyUser(@RequestBody User fakeUser) {
         User verifiedUser = Storage.getUser(fakeUser.username);
