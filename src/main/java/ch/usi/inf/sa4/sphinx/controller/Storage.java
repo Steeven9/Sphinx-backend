@@ -44,25 +44,31 @@ public class Storage {
     /**
      * Inserts a user.
      * @param user the user to insert
+     * @return true if the insertion was successful, false otherwise
      */
-    public static void insertUser(User user) {
+    public static boolean insertUser(User user) {
         users.put(user.username, user);
+        return true;
     }
 
     /**
      * Inserts a room.
      * @param room the room to insert
+     * @return true if the insertion was successful, false otherwise
      */
-    public static void insertRoom(Room room) {
+    public static boolean insertRoom(Room room) {
         rooms.put(room.id, roon);
+        return true;
     }
 
     /**
      * Inserts a device.
      * @param device the device to insert
+     * @return true if the insertion was successful, false otherwise
      */
-    public static void insertDevice(Device device) {
+    public static boolean insertDevice(Device device) {
         devices.put(device.id, device);
+        return true;
     }
 
     /**
