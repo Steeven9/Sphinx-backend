@@ -3,14 +3,9 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Objects;
 
 @RestController
@@ -110,17 +105,5 @@ public class UserController {
 
 		return ResponseEntity.noContent().build();
 	}
-
-	/*
-	@PostMapping
-	public ResponseEntity<Message> postMessage(@RequestBody Message msg){
-		logger.debug(msg.toString());
-		var nextId = idCounter.getAndIncrement();
-		msg.setId(nextId);
-		msg.setRandomNumber();
-		messages.put(nextId, msg);
-		return ResponseEntity.ok(msg);
-	}
-	*/
 }
 
