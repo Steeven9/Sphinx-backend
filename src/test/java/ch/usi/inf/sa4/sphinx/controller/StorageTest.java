@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.Light;
+import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +16,34 @@ class StorageTest {
     }
 
     @Test
+    void getNonexistingRoomShouldReturnNull() {
+        assertNull(Storage.getRoom(0));
+    }
+
+    @Test
+    void getNonexistingDeviceShouldReturnNull() {
+        assertNull(Storage.getDevice(0));
+    }
+
+    @Test
     void insertedUserShouldBeGettable() {
         User test = new User("test"); //TODO: use actual constructor once it exists
         Storage.insertUser(test);
         assertEquals(test, Storage.getUser("test"));
+    }
+
+    @Test
+    void insertedRoomShouldBeGettable() {
+        Room test = new Room(1); //TODO: use actual constructor once it exists
+        Storage.insertRoom(test);
+        assertEquals(test, Storage.getRoom(1));
+    }
+
+    @Test
+    void insertedDeviceShouldBeGettable() {
+        Device test = new Light(1); //TODO: use actual constructor once it exists
+        Storage.insertDevice(test);
+        assertEquals(test, Storage.getDevice(1));
     }
 
     @Test
@@ -26,6 +53,24 @@ class StorageTest {
         assertEquals(test, Storage.getUser("test2"));
         Storage.deleteUser("test2");
         assertNull(Storage.getUser("test2"));
+    }
+
+    @Test
+    void deletedRoomShouldNotBeGettable() {
+        Room test = new Room(2); //TODO: use actual constructor once it exists
+        Storage.insertRoom(test);
+        assertEquals(test, Storage.getRoom(2));
+        Storage.deleteRoom(2);
+        assertNull(Storage.getRoom(2));
+    }
+
+    @Test
+    void deletedDeviceShouldNotBeGettable() {
+        Device test = new Light(2); //TODO: use actual constructor once it exists
+        Storage.insertDevice(test);
+        assertEquals(test, Storage.getDevice(2));
+        Storage.deleteDevice(2);
+        assertNull(Storage.getDevice(2));
     }
 
     @Test
