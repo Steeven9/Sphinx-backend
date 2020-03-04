@@ -6,8 +6,8 @@ public abstract class Device {
     public int id;
     public String icon;
     public String name;
-    public ArrayList<SwitchInterface> ors;
-    public ArrayList<SwitchInterface> xors;
+    public ArrayList<Integer> ors;
+    public ArrayList<Integer> xors;
     public boolean on;
     private static int nextId = 0;
 
