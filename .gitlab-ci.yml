@@ -1,8 +1,7 @@
-image: "ubuntu"
-
 stages:
     - build
     - test
+    - docker-test
 
 maven-build:
     stage: build
@@ -14,3 +13,8 @@ maven-test:
     stage: test
     script:
         - mvn test
+
+docker-build:
+    stage: docker-test
+    script:
+        - docker build ./
