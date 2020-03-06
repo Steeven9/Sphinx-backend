@@ -9,9 +9,15 @@ public class SerialisableDevice {
     public String icon;
     public String name;
     public String label;
+<<<<<<< HEAD
     public int[] switched;
     public int[] switches;
     public double intensity;
+=======
+    public Map<Integer, String> switched;
+    public Map<Integer, String> switches;
+    public int intensity;
+>>>>>>> set a todo until Lights and Switches are made
 
     public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
