@@ -9,17 +9,18 @@ public class SerialisableDevice {
     public String icon;
     public String name;
     public String label;
-    public int[] switched;
-    public int[] switches;
-    public double intensity;
+
+    public Map<Integer, String> switched;
+    public Map<Integer, String> switches;
+    public int intensity;
 
     public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
         this.icon = icon;
         this.name = name;
         this.label = label;
-        this.switched = switched;
-        this.switches = switches;
+        //this.switched = switched;
+        //this.switches = switches;
     }
 
     public SerialisableDevice(Device device, User user) {
@@ -33,11 +34,7 @@ public class SerialisableDevice {
         } else {
             this.switches = null;
         }
-        if (device instanceof DimmableLight) {
-            this.intensity = ((DimmableLight)device).getIntensity();
-        }
-        if (device instanceof DimmableSwitch) {
-            this.intensity = ((DimmableSwitch)device).getState();
-        }
+
+        // TODO: set this.intensity based on the type of device
     }
 }
