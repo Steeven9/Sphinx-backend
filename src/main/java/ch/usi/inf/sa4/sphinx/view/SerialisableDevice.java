@@ -11,6 +11,7 @@ public class SerialisableDevice {
     public String label;
     public int[] switched;
     public int[] switches;
+    public int intensity;
 
     public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
@@ -32,5 +33,6 @@ public class SerialisableDevice {
         } else {
             this.switches = null;
         }
+        // TODO: set this.intensity based on the type of device
     }
 }
