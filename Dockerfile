@@ -1,9 +1,9 @@
-FROM "ubuntu"
+FROM openjdk:13-alpine
 
-RUN ["apt-get", "update"]
-RUN ["apt-get", "install", "-y", "maven", "git"]
-RUN ["git", "clone", "https://lab.si.usi.ch/sa4-2020/sphinx/backend.git"]
-RUN ["cd", "backend"]
-RUN ["mvn", "clean", "compile"]
+ENV ECHO_SERVER_PORT 3000
 
-EXPOSE 443 80 22
+EXPOSE ${ECHO_SERVER_PORT}
+
+ADD [ "sphinx-*", "/sa4-sphinx.jar" ]
+
+ENTRYPOINT [ "java", "-jar", "/sa4-sphinx.jar" ]

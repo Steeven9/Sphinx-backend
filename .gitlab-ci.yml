@@ -3,7 +3,8 @@ image: maven:latest
 stages:
     - build
     - test
-    - docker-test
+    - package
+    - deploy
 
 maven-build:
     stage: build
@@ -16,7 +17,14 @@ maven-test:
     script:
         - mvn test
 
-docker-build:
-    stage: docker-test
+maven-package:
+    stage: package
     script:
-        - docker build ./
+        - mvn package
+
+docker-build:
+    stage: deploy
+    image: docker    
+    tags: [dind]
+    script:
+        - docker build ./ -t sa4-sphinx
