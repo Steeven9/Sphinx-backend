@@ -1,0 +1,16 @@
+image: "ubuntu"
+
+stages:
+    - build
+    - test
+
+maven-build:
+    stage: build
+    script:
+        - mvn clean
+        - mvn compile
+
+maven-test:
+    stage: test
+    script:
+        - mvn test
