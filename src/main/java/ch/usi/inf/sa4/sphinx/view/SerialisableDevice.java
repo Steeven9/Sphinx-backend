@@ -11,6 +11,7 @@ public class SerialisableDevice {
     public String label;
     public Map<Integer, String> switched;
     public Map<Integer, String> switches;
+    public int intensity;
 
     public SerialisableDevice(int id, String icon, String name, String label, Map<Integer, String> switched, Map<Integer, String> switches){
         this.id = id;
@@ -50,5 +51,6 @@ public class SerialisableDevice {
         } else {
             this.switches = null;
         }
+        // TODO: set this.intensity based on the type of device
     }
 }
