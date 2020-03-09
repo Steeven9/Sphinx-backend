@@ -21,6 +21,8 @@ maven-package:
     stage: package
     script:
         - mvn package
+    artifacts:
+        paths: [target/]
 
 docker-build:
     stage: deploy
