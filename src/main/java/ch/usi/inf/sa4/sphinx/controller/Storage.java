@@ -57,7 +57,7 @@ public class Storage {
      * @return true if the insertion was successful, false otherwise
      */
     public static boolean insertRoom(Room room) {
-        rooms.put(room.id, roon);
+        rooms.put(room.id, room);
         return true;
     }
 
