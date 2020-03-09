@@ -1,4 +1,4 @@
-image: maven:latest
+image: maven
 
 stages:
     - build
@@ -22,11 +22,12 @@ maven-package:
     script:
         - mvn package
     artifacts:
-        paths: [target/]
+        paths: [target/sphinx-backend.jar]
 
 docker-build:
     stage: deploy
     image: docker    
     tags: [dind]
     script:
-        - docker build ./ -t sa4-sphinx
+        - docker build ./ -t steeven9/sa4-sphinx:backend
+        - docker push steeven9/sa4-sphinx:backend
