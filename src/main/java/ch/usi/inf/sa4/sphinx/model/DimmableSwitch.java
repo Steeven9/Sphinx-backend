@@ -6,8 +6,8 @@ public class DimmableSwitch extends Device {
     /* Computes whether the power is 'on' or 'off'.
      * @return a String stating whether switch is 'on' or 'off'
      */
-    public String getLabel() {
-        return Math.round(state*100) + "%";
+    public String getLabel(){
+     return state + "%";
     }
 
     public void setState(double newState) {
