@@ -13,6 +13,7 @@
     <version>0.0.1</version>
     <name>sphinx</name>
     <description>SA4 SmartHut project - Sphinx team</description>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>13</java.version>
@@ -54,6 +55,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>sphinx-backend</finalName>
     </build>
 
 </project>
