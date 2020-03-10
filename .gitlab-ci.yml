@@ -26,8 +26,14 @@ maven-package:
 
 docker-build:
     stage: deploy
-    image: docker    
+    image: docker:19.03.1
+    variables:
+        DOCKER_TLS_CERTDIR: ""
+    services:
+        - docker:19.03.1-dind
     tags: [dind]
+    before_script:
+        - docker login -u $DOCKER_USER -p $DOCKER_PSW       
     script:
-        - docker build ./ -t steeven9/sa4-sphinx:backend
-        - docker push steeven9/sa4-sphinx:backend
+        - docker build ./ -t $DOCKER_USER/sa4-sphinx:backend
+        - docker push $DOCKER_USER/sa4-sphinx:backend
