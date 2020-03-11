@@ -23,7 +23,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldGet404FromWrongUsername() throws Exception {
-        this.mockmvc.perform(get("/user/test"))
+        this.mockmvc.perform(get("/user/test").header("session-token", "banana"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -37,38 +37,44 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithIncompleteOrInconsistentData() throws Exception {
-        this.mockmvc.perform(post("/user/test").content(
-                "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\"}"
-        ))
+        this.mockmvc.perform(post("/user/test")
+                    .content(
+                    "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\"}"
+                    )
+                    .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         this.mockmvc.perform(post("/user/test").content(
                 "{\"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
-        ))
+        )
+                .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         this.mockmvc.perform(post("/user/test").content(
                 "{\"email\": \"test@usi.ch\", \"password\": \"12345\", \"username\": \"test\"}"
-        ))
+        )
+                .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         this.mockmvc.perform(post("/user/test").content(
                 "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"username\": \"test\"}"
-        ))
+        )
+                .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         this.mockmvc.perform(post("/user/test").content(
                 "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"nottest\"}"
-        ))
+        )
+                .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldGet403FromNoSessionToken() throws Exception {
+    public void shouldGet400FromNoSessionToken() throws Exception {
         this.mockmvc.perform(get("/user/test"))
                 .andDo(print())
-                .andExpect(status().is(403));
+                .andExpect(status().is(400));
     }
 
     @Test
@@ -76,7 +82,8 @@ public class UserControllerTest {
 
         this.mockmvc.perform(post("/user/test").content(
                 "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
-        ))
+        )
+                    .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
