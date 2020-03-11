@@ -26,11 +26,11 @@ maven-package:
 
 docker-build:
     stage: deploy
-    image: docker:19.03.1
+    image: docker
     variables:
-        DOCKER_TLS_CERTDIR: ""
+        DOCKER_DRIVER: overlay2
     services:
-        - docker:19.03.1-dind
+        - docker:dind
     tags: [dind]
     before_script:
         - docker login -u $DOCKER_USER -p $DOCKER_PSW       
