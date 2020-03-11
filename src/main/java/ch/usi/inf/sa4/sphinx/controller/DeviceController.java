@@ -2,61 +2,33 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/devices")
 public class DeviceController {
-
 
     /**
      * @param sessionToken session token of the user
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
     @GetMapping("/")
-    public ResponseEntity<List<Integer>> getUserDevices(@RequestHeader("session-token") String sessionToken) {
-        User user;
-        try {
-            user = Storage.getUserBySessionToken(sessionToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<int[]> getUserDevices(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+        User user = Storage.getUser(username);
 
         if (user != null) {
+            if (user.getSessionToken() != sessionToken) {
+                return ResponseEntity.status(401).build();
+            }
+
             List<Integer> devices = user.getDevices();
-            //TODO return a list, does this work?
-            return ResponseEntity.ok(devices);
-        }
-
-        return ResponseEntity.notFound().build();
-    }
-
-
-    /**
-     * @param roomId id of the room
-     * @return a ResponseEntity with the ids of the devices in room
-     */
-    @GetMapping("/{roomId}")
-    public ResponseEntity<List<Integer>> getRoomDevices(@PathVariable Integer roomId) {
-        Room room;
-        try {
-            room = Storage.getRoom(roomId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
-
-        if (room != null) {
-            List<Integer> devices = room.getDevices();
-            //TODO return a list, does this work?
-            return ResponseEntity.ok(devices);
+            return ResponseEntity.ok(devices.toArray());
         }
 
         return ResponseEntity.notFound().build();
@@ -65,24 +37,26 @@ public class DeviceController {
 
     /**
      * @param deviceId id of the device
-     * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist or
-     * 500 in case of a server error
+     * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist
      */
     @GetMapping("/{deviceId}")
-    public ResponseEntity<Device> getDevice(@PathVariable Integer deviceId) {
-        Device device;
-        try {
-            device = Storage.getDevice(deviceId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
+    public ResponseEntity<SerialisableDevice> getDevice(@PathVariable Integer deviceId, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+        Device device = Storage.getDevice(deviceId);
+        User user = Storage.getUser(username);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (user.getSessionToken() != sessionToken) {
+            return ResponseEntity.status(401).build();
         }
 
         if (device != null) {
-            return ResponseEntity.ok(device);
+            return ResponseEntity.ok(new SerialisableDevice(device, user));
         }
 
-        return ResponseEntity.notFound().build();
+
     }
 
 
@@ -92,22 +66,33 @@ public class DeviceController {
      * 500 in case of a server error
      */
     @PostMapping("/")
-    public ResponseEntity<Device> createDevice(@RequestBody SerialisableDevice device) {
+    public ResponseEntity<SerialisableDevice> createDevice(@RequestBody SerialisableDevice device, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+        User user = Storage.getUser(username);
+
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (user.getSessionToken() != sessionToken) {
+            return ResponseEntity.status(401).build();
+        }
+
+
         if (device.name == null || device.label == null || device.icon == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        var newDevice = new Device(device.name, device.label, device.icon);
 
-        try {
-            Storage.insertDevice(newDevice);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(501).build();
-        }
+        //TODO differend kind of devices depending on the label, might benefit from a factory
+        Device newDevice = null;
 
-        return ResponseEntity.created(new SerialisableDevice(newDevice));
 
+        //TODO make storage make the ids?
+        newDevice.setId(UUID.randomUUID().toString());
+        Storage.insertDevice(newDevice);
+
+        return ResponseEntity.status(201).body(new SerialisableDevice(newDevice, user));
 
     }
 
@@ -121,31 +106,32 @@ public class DeviceController {
      */
     @PutMapping("/{deviceId}")
     public ResponseEntity<Device> modifyDevice(@PathVariable Integer deviceId, @RequestBody String name, @RequestBody String icon) {
-        Device changedDevice;
-        try {
-            changedDevice = Storage.getDevice(deviceId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(501).build();
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (user.getSessionToken() != sessionToken) {
+            return ResponseEntity.status(401).build();
         }
 
 
-        if (name != null) {
-            changedDevice.name = name;
+        var devices = user.getDevices();
+        for (Device device : devices) {
+            if (device.getId() == deviceId) {
+                if (name != null) {
+                    device.setName(name);
+                }
+                if (icon != null) {
+                    device.setIcon(icon);
+                }
+
+                Storage.insertDevice(device);
+
+                return ResponseEntity.status(203).build();
+            }
         }
-        if (icon != null) {
-            changedDevice.icon = icon;
-        }
 
-//        try{
-//            Storage.insertDevice(changedDeviceDevice);
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            return ResponseEntity.status(501).build();
-//        }
-
-        return ResponseEntity.status(203).body(new SerialisableDevice(changedDevice));
-
+        return ResponseEntity.notFound().build();
 
     }
 
@@ -154,22 +140,31 @@ public class DeviceController {
      * @return a ResponseEntity
      */
     @DeleteMapping("/{deviceId}")
-    public ResponseEntity<Device> modifyDevice(@PathVariable Integer deviceId) {
-        Device deletedDevice;
-        try {
-            deletedDevice = Storage.getDevice(deviceId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(501).build();
-        }
+    public ResponseEntity<Device> deleteDevice(@PathVariable Integer deviceId, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
-        if (deletedDevice == null) {
+        User user = Storage.getUser(username);
+
+
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
-        Storage.deleteDevice(deviceId);
+        if (user.getSessionToken() != sessionToken) {
+            return ResponseEntity.status(401).build();
+        }
 
-        return ResponseEntity.noContent().build();
+
+        var devices = user.getDevices();
+        for (Device device : devices) {
+            if (device.getId() == deviceId) {
+                Storage.deleteDevice(deviceId);
+                return ResponseEntity.status(202).build();
+            }
+        }
+
+
+        return ResponseEntity.notFound().build();
+
     }
 
 
