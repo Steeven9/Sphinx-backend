@@ -10,9 +10,9 @@ import java.util.HashMap;
  * Implements storage for the backend's data
  */
 public class Storage {
-    private static HashMap<String, User> users;
-    private static HashMap<Integer, Room> rooms;
-    private static HashMap<Integer, Device> devices;
+    private static HashMap<String, User> users = new HashMap<>();
+    private static HashMap<Integer, Room> rooms = new HashMap<>();
+    private static HashMap<Integer, Device> devices = new HashMap<>();
 
     /**
      * Retrieves a user given its username.
@@ -47,7 +47,7 @@ public class Storage {
      * @return true if the insertion was successful, false otherwise
      */
     public static boolean insertUser(User user) {
-        users.put(user.username, user);
+        users.put(user.getUsername(), user);
         return true;
     }
 
@@ -57,7 +57,7 @@ public class Storage {
      * @return true if the insertion was successful, false otherwise
      */
     public static boolean insertRoom(Room room) {
-        rooms.put(room.id, roon);
+        rooms.put(room.getId(), room);
         return true;
     }
 
@@ -101,6 +101,6 @@ public class Storage {
      * @return the requested user or null if no user with that email exists
      */
     public static User getUserByEmail(String email) {
-        return users.values().stream().findAny(user -> user.email == email).orElse(null);
+        return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 }

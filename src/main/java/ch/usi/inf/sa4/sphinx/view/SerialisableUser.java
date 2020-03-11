@@ -18,13 +18,13 @@ public class SerialisableUser {
     }
 
     public SerialisableUser(User user){
-        this.username = user.username;
-        this.email = user.email;
-        this.fullname = user.fullname;
-        this.password = user.password;
-        this.rooms = new int[user.rooms.size()];
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.fullname = user.getFullname();
+        this.password = user.getPassword();
+        this.rooms = new int[user.getRooms().size()];
         for (int i = 0; i < this.rooms.length; i++) {
-            this.rooms[i] = user.get(i).id;
+            this.rooms[i] = user.getRooms().get(i).getId();
         }
     }
 }

@@ -34,14 +34,14 @@ public class AuthController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        if (!user.verified) {
+        if (!user.isVerified()) {
             return ResponseEntity.status(403).build();
         }
-        if (user.password != givenUser.password) {
+        if (!user.getPassword().equals(givenUser.password)) {
             return ResponseEntity.status(401).build();
         }
 
-        return ResponseEntity.ok(user.createSessionToken()).build();
+        return ResponseEntity.ok(user.createSessionToken());
     }
 
     /**
@@ -55,17 +55,17 @@ public class AuthController {
      */
     @PostMapping("/verify")
     public ResponseEntity<SerialisableUser> verifyUser(@RequestBody User fakeUser) {
-        User verifiedUser = Storage.getUser(fakeUser.username);
+        User verifiedUser = Storage.getUser(fakeUser.getUsername());
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
-        if (verifiedUser.verified) {
+        if (verifiedUser.isVerified()) {
             return ResponseEntity.badRequest().build();
         }
-        if (verifiedUser.verificationToken != fakeUser.verificationToken) {
+        if (!verifiedUser.getVerificationToken().equals(fakeUser.getVerificationToken())) {
             return ResponseEntity.status(401).build();
         }
-        verifiedUser.verified = true;
+        verifiedUser.verify();
         return ResponseEntity.ok().build();
     }
 

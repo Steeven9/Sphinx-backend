@@ -28,7 +28,7 @@ public class UserController {
 		if (user == null) {
 			return ResponseEntity.notFound().build();
 		}
-		if (session_token == null || session_token != user.session_token) {
+		if (session_token == null || !session_token.equals(user.getSessionToken())) {
 			return ResponseEntity.status(401).build();
 		}
 		return ResponseEntity.ok(new SerialisableUser(user));
@@ -70,12 +70,12 @@ public class UserController {
 		if (changedUser == null) {
 			return ResponseEntity.notFound().build();
 		}
-		if (session_token == null || session_token != changedUser.session_token) {
+		if (session_token == null || !session_token.equals(changedUser.getSessionToken())) {
 			return ResponseEntity.status(403).build();
 		}
-		if (user.email != null) changedUser.email = user.email;
-		if (user.fullname != null) changedUser.fullname = user.fullname;
-		if (user.password != null) changedUser.password = user.password;
+		if (user.email != null) changedUser.setEmail(user.email);
+		if (user.fullname != null) changedUser.setFullname(user.fullname);
+		if (user.password != null) changedUser.setPassword(user.password);
 
 		return ResponseEntity.ok(new SerialisableUser(changedUser));
 	}
@@ -97,7 +97,7 @@ public class UserController {
 		if (deletedUser == null) {
 			return ResponseEntity.notFound().build();
 		}
-		if (session_token == null || session_token != deletedUser.session_token) {
+		if (session_token == null || !session_token.equals(deletedUser.getSessionToken())) {
 			return ResponseEntity.status(403).build();
 		}
 

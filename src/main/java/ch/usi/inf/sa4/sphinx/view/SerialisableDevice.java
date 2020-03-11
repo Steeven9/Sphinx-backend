@@ -9,10 +9,10 @@ public class SerialisableDevice {
     public String icon;
     public String name;
     public String label;
-    public Map<Integer, String> switched;
-    public Map<Integer, String> switches;
+    public int[] switched;
+    public int[] switches;
 
-    public SerialisableDevice(int id, String icon, String name, String label, Map<Integer, String> switched, Map<Integer, String> switches){
+    public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -26,27 +26,9 @@ public class SerialisableDevice {
         this.icon = device.icon;
         this.name = device.name;
         this.label = device.getLabel();
-        for (SwitchInterface sw : device.ors) {
-            this.switched.put(sw.id, "or");
-        }
-        for (SwitchInterface sw : device.xors) {
-            this.switched.put(sw.id, "xor");
-        }
+        // TODO: fill switched
         if (device instanceof Switch || device instanceof DimmableSwitch) {
-            for (Room r : user.rooms) {
-                for (Device d : r.devices) {
-                    for (SwitchInterface si : d.ors) {
-                        if (si.id == device.id) {
-                            this.switches.put(d.id, "or");
-                        }
-                    }
-                    for (SwitchInterface si : d.xors) {
-                        if (si.id == device.id) {
-                            this.switches.put(d.id, "xor");
-                        }
-                    }
-                }
-            }
+            // TODO: fill switches
         } else {
             this.switches = null;
         }
