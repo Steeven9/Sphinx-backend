@@ -48,7 +48,10 @@ class StorageTest {
 //        assertEquals(test, Storage.getDevice(1));
 //    }
 
+<<<<<<< HEAD
     @Disabled("Not implemented yet")
+=======
+>>>>>>> change _everything_
     @Test
     void deletedUserShouldNotBeGettable() {
         User test = new User("test2", "test", "test", "test");
@@ -76,7 +79,10 @@ class StorageTest {
 //        assertNull(Storage.getDevice(2));
 //    }
 
+<<<<<<< HEAD
     @Disabled("Not implemented yet")
+=======
+>>>>>>> change _everything_
     @Test
     void insertedUserShouldBeGettableByEmail() {
         User test = new User("test3", "test", "test3@email.io", "test");

@@ -1,6 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
 import java.util.*;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+
+import java.util.List;
+
 public class Room {
 	private String name;
 	private String background;

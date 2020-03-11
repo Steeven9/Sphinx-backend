@@ -8,5 +8,4 @@ public abstract class Effect<T> {
     }
 
     public abstract void execute( T effect);
-
 }
