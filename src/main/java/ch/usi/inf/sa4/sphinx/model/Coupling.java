@@ -11,7 +11,7 @@ public class Coupling<T> {
     private final List<Effect<T>> effects = new ArrayList<>();
 
     @SafeVarargs
-    public Coupling(Event<T> event, Effect<T>... effects) {
+    public Coupling(Event<T> event, Effect<T> ...effects) {
         this.event = event;
         this.effects.addAll(Arrays.asList(effects));
         Storage.getDevice(event.device).addObserver(() -> {for (Effect<T> effect : effects) effect.execute(event.get());});
