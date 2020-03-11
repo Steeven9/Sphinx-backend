@@ -18,13 +18,13 @@ public class SerialisableRoom {
     }
 
     public SerialisableRoom(Room room) {
-        this.id = room.id;
-        this.name = room.name;
-        this.icon = room.icon;
-        this.background = room.background;
-        this.devices = new int[user.devices.size()];
+        this.id = room.getId();
+        this.name = room.getName();
+        this.icon = room.getIcon();
+        this.background = room.getBackground();
+        this.devices = new int[room.getDevices().size()];
         for (int i = 0; i < this.devices.length; i++) {
-            this.devices[i] = room.get(i).id;
+            this.devices[i] = room.getDevices().get(i).id;
         }
     }
 }
