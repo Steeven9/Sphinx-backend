@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public  class Switch extends Device implements SwitchInterface {
+public class Switch extends Device {
     private int state;
     public int getPower(){
         return state;

@@ -1,5 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class TempSensor extends DimmableSwitch {
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
+public class TempSensor extends Device {
+
+    @Override
+    public String getLabel() {
+        throw new NotImplementedException();
+    }
 }

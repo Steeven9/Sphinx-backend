@@ -1,5 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class LightSensor extends DimmableSwitch {
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
+public class LightSensor extends Device {
+
+    @Override
+    public String getLabel() {
+        throw new NotImplementedException();
+    }
 }
