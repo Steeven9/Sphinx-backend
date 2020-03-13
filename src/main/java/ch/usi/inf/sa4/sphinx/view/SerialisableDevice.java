@@ -11,6 +11,7 @@ public class SerialisableDevice {
     public String label;
     public int[] switched;
     public int[] switches;
+    public double intensity;
 
     public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
@@ -31,6 +32,12 @@ public class SerialisableDevice {
             // TODO: fill switches
         } else {
             this.switches = null;
+        }
+        if (device instanceof DimmableLight) {
+            this.intensity = ((DimmableLight)device).getIntensity();
+        }
+        if (device instanceof DimmableSwitch) {
+            this.intensity = ((DimmableSwitch)device).getState();
         }
     }
 }
