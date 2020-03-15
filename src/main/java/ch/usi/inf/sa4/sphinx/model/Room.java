@@ -1,19 +1,12 @@
 package ch.usi.inf.sa4.sphinx.model;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Room {
-	protected String name;
-	protected String background;
-	protected String icon;
-	protected ArrayList<Integer> devices;
-	// protected int id;
-
-	public Room(String name){
-		this.name=name;
-		background = "/images/default_room";
-		icon = "/images/default_icon";
-		devices = new ArrayList<>();
-	}
+	private String name;
+	private String background;
+	private String icon;
+	private List<Integer> devices;
+    private int id;
 
 	public Room(){
 		name= "Room"; // + id (?)
@@ -50,7 +43,7 @@ public class Room {
 	}
 
 	//---------- getter for devices ----------------
-	public ArrayList<Integer> getDevices(){
-		return devices;
+	public List<Integer> getDevices(){
+		return Collections.unmodifiableList(devices);
 	}
 }
