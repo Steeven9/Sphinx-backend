@@ -15,7 +15,8 @@ maven-build:
 maven-test:
     stage: test
     script:
-        - mvn test
+        pwd
+        #- mvn test
 
 maven-package:
     stage: package
