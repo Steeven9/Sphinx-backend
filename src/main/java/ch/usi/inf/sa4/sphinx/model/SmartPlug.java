@@ -1,28 +1,41 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
+/**
+ * A smart-plug is a plug that can be added by user. It consumes some energy while in use.
+ */
 public class SmartPlug extends Device {
-    private double energy;
+    private double powerUsed;
 
+    /**
+     * Creates a new smart-plug with 0 consumed energy.
+     */
     public SmartPlug() {
         super();
-        this.energy = 0.0;
+        this.powerUsed = 0.0;
+    }
+
+    /**
+     * Returns the consumed energy by this smart-plug.
+     * @return the consumed energy
+     */
+    public double getpowerUsed() {
+        return powerUsed;
     }
 
     /**
      * Resets to 0 consumed energy by this smart-plug.
      */
     public void reset(){
-        this.energy = 0.0;
+        this.powerUsed = 0.0;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getLabel() {
-        throw new NotImplementedException();
-    }
-    public double getPowerUsed() {
-        throw new NotImplementedException();
+        return this.name + ", " + this.powerUsed + " kWh";
     }
 }
