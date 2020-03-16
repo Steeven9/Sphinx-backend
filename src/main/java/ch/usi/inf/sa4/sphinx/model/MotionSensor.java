@@ -42,6 +42,6 @@ public class MotionSensor extends Device {
      * {@inheritDoc}
      */
     @Override
-    public String getLabel() { return this.name + this.on + isDetected();
+    public String getLabel() { return this.name + " " + this.on + " "+ isDetected();
     }
 }
