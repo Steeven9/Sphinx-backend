@@ -39,6 +39,6 @@ public class DimmableSwitch extends Device {
      */
     @Override
     public String getLabel() {
-        return this.name + ", " + this.on + Math.round(state*100) + "%";
+        return this.name + " " + this.on + " " + Math.round(state) + "%";
     }
 }

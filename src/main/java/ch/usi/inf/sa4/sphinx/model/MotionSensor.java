@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
@@ -24,7 +23,7 @@ public class MotionSensor extends Device {
     }
 
     /**
-     * Changes state to true.
+     * Changes state to false.
      */
     public void notDetected() {
         this.detected = false;
@@ -42,6 +41,6 @@ public class MotionSensor extends Device {
      * {@inheritDoc}
      */
     @Override
-    public String getLabel() { return this.name + " " + this.on + " "+ isDetected();
+    public String getLabel() { return this.name + " " + this.on + " "+ this.isDetected();
     }
 }
