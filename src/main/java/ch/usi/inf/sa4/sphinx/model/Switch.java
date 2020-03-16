@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+/**
+ * A switch is a switch that can turn on and off a device.
+ */
 public class Switch extends Device {
 
     public Switch() {
@@ -28,7 +31,7 @@ public class Switch extends Device {
      */
     @Override
     public String getLabel(){
-        return on ? "ON": "OFF";
+        return on ? "on": "off";
     }
 
 }

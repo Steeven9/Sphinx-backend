@@ -1,14 +1,21 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-
+/**
+ * A DimmableLight is a type of light that can be dimmable, i.e. support different levels of intensity.
+ */
 public class DimmableLight extends Device {
     private double intensity;
+    private String type;
 
-    public DimmableLight() {
+    /**
+     * Creates a special light that can be dimmable, with intensity set to maximum.
+     * @param type a type of the light
+     */
+    public DimmableLight(String type) {
         super();
-        this.intensity = 0.0;
+        this.intensity = 100.0;
+        this.type = type;
     }
 
     /**
@@ -32,7 +39,11 @@ public class DimmableLight extends Device {
         return intensity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getLabel() {
-        throw new NotImplementedException();
+        return this.name + ", " + this.on + ", " + this.type + ", " + this.intensity;
     }
 }
