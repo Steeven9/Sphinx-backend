@@ -2,6 +2,9 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import java.util.Random;
 
+/**
+ * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
+ */
 public abstract class Sensor extends Device {
     private double quantity;
 
@@ -20,7 +23,7 @@ public abstract class Sensor extends Device {
      */
     public double getValue() {
         double var = new Random().nextDouble();
-        return this.quantity - var - 0.5;
+        return this.quantity + var - 0.5;
     }
 
     /**
@@ -28,7 +31,7 @@ public abstract class Sensor extends Device {
      */
     @Override
     public String getLabel() {
-        return  this.name +", " + this.getValue() + " " + this.getPhQuantity();
+        return this.name + " " + this.on + " " + this.getValue() + " " + this.getPhQuantity();
     }
 
     /**

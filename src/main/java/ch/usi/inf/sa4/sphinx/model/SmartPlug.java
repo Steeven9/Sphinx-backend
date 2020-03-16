@@ -19,8 +19,8 @@ public class SmartPlug extends Device {
      * Returns the consumed energy by this smart-plug.
      * @return the consumed energy
      */
-    public double getpowerUsed() {
-        return powerUsed;
+    public double getPowerUsed() {
+        return powerUsed += 10;
     }
 
     /**
@@ -36,6 +36,6 @@ public class SmartPlug extends Device {
      */
     @Override
     public String getLabel() {
-        return this.name + ", " + this.powerUsed + " kWh";
+        return this.name + " " + this.on + " " + this.getPowerUsed() + " kWh";
     }
 }

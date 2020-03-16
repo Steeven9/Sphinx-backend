@@ -2,7 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 /**
- * A Light is a normal light that can be on or off.
+ * A Light is a normal light that can be either on either off.
  */
 public class Light extends Device {
     private String type;
@@ -21,6 +21,6 @@ public class Light extends Device {
      */
     @Override
     public String getLabel() {
-        return this.name + ", " + this.type;
+        return this.name + " " + this.on + " " + this.type;
     }
 }

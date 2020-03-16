@@ -10,7 +10,7 @@ public class Switch extends Device {
     }
 
     /**
-     * Returns the power percentage for a given switch.
+     * Returns if the switch is powered.
      * @return true if the switch is on, otherwise false
      */
     public boolean getState(){
@@ -31,7 +31,7 @@ public class Switch extends Device {
      */
     @Override
     public String getLabel(){
-        return on ? "on": "off";
+        return this.name + " " + this.on;
     }
 
 }

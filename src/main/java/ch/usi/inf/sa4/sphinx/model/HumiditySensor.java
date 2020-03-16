@@ -7,7 +7,7 @@ package ch.usi.inf.sa4.sphinx.model;
 public class HumiditySensor extends Sensor {
 
     /**
-     * Creates a humidity sensor set to 32.0 degrees percent.
+     * Creates a humidity sensor set to 32.0 percent.
      */
     public HumiditySensor() {
         super(32.0);

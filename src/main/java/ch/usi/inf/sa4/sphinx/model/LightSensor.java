@@ -7,7 +7,7 @@ package ch.usi.inf.sa4.sphinx.model;
 public class LightSensor extends Sensor {
 
     /**
-     * Create a light sensor set to 500 lumen.
+     * Create a light sensor set to 500.0 lumen.
      */
     public LightSensor() {
         super(500.0);
