@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
 /**
  * A Light is a normal light that can be on or off.
