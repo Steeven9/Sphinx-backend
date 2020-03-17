@@ -23,7 +23,7 @@ then build the .jar file to run the server\
 `mvn package`
 
 and finally put everything in a Docker container\
-`docker build ./ -t steeven9/sa4-sphinx-backend:latest`
+`docker build ./ -t sa4-sphinx-backend:latest`
 
 that you can run with\
-`docker run -p 8080:8080 steeven9/sa4-sphinx-backend`
+`docker run -p 8080:8080 sa4-sphinx-backend`
