@@ -67,7 +67,7 @@ public class Storage {
      * @return true if the insertion was successful, false otherwise
      */
     public static boolean insertDevice(Device device) {
-        devices.put(device.id, device);
+        devices.put(device.getId(), device);
         return true;
     }
 
