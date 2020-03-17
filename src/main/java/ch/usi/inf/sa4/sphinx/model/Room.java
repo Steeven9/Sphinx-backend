@@ -1,10 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 import java.util.*;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-
-import java.util.List;
-
 public class Room {
 	private String name;
 	private String background;
@@ -13,11 +9,18 @@ public class Room {
     private int id;
 
 	public Room(){
-		name= "Room"; // + id (?)
+		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
 		devices = new ArrayList<>();
+		id = makeId();
 	}
+
+	private static int nextId = 0;
+
+	private static int makeId() { return nextId++; }
+
+	public int getId(){ return id;}
 
 	//-------- getter and setter for name ----------------------
 	public String getName(){
@@ -49,5 +52,13 @@ public class Room {
 	//---------- getter for devices ----------------
 	public List<Integer> getDevices(){
 		return Collections.unmodifiableList(devices);
+	}
+
+	public void addDevice(int device){
+		devices.add(device);
+	}
+	
+	public void removeDevice(int device){
+		devices.removeIf(x -> (int)x==device);
 	}
 }
