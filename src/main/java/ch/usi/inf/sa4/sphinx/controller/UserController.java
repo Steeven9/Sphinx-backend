@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,9 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+	@Autowired
+	Mailer mailer;
 
 	/**
 	 * gets a user.
@@ -46,8 +50,10 @@ public class UserController {
 		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
 			return ResponseEntity.badRequest().build();
 		}
-		// TODO: this needs to send an email for verification
 		User newUser = new User(username, user.password, user.email, user.fullname);
+		mailer.send(newUser.getEmail(),
+				"Confirm your email account for smarthut",
+				"Visit this link to confirm your email address: https://smarthub.xyz/auth/verify/" + newUser.getVerificationToken());
 		Storage.insertUser(newUser);
 
 		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
