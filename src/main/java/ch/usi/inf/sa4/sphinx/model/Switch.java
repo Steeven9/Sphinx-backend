@@ -13,7 +13,7 @@ public class Switch extends Device {
     }
 
     /**
-     * Returns if the switch is powered.
+     * Returns true if and only if the switch is powered.
      * @return true if the switch is on, otherwise false
      */
     public boolean getState(){
