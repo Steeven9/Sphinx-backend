@@ -37,4 +37,5 @@ public class Switch extends Device {
     public String getLabel(){
         return this.on ? "on" : "off";
     }
+
 }
