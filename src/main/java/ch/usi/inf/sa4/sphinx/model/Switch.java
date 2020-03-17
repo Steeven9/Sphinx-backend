@@ -38,4 +38,6 @@ public class Switch extends Device {
         return this.on ? "on" : "off";
     }
 
+
+
 }
