@@ -1,7 +1,10 @@
 # SmartHut - backend
-SA4 Project - Sphinx Team\
+SA4 Project - Sphinx Team
 
-This is the backend supporting our smart home application. It listens on port 8080 for requests on [these routes](https://docs.google.com/document/d/1zfh9SWjNTgY78O2VtZwKhbo_0RKyw0YzUvsAOCPs7TQ/edit?usp=sharing).
+This is the backend supporting our smart home application. It listens on port `8080` for requests on 
+[these routes](https://docs.google.com/document/d/1zfh9SWjNTgY78O2VtZwKhbo_0RKyw0YzUvsAOCPs7TQ/edit?usp=sharing).
+
+**Note:** the port cannot be changed as of now.
 
 ## Using our premade Docker image
 A public Docker image is available on the Docker repository under `steeven9/sa4-sphinx-backend`.
