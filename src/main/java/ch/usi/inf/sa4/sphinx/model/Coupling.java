@@ -15,5 +15,6 @@ public class Coupling<T> {
         this.event = event;
         this.effects.addAll(Arrays.asList(effects));
         Storage.getDevice(event.device).addObserver(() -> {for (Effect<T> effect : effects) effect.execute(event.get());});
+
     }
 }

@@ -34,4 +34,6 @@ public class Switch extends Device {
         return this.name + " " + this.on;
     }
 
+
+
 }

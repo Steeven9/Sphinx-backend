@@ -24,6 +24,8 @@ public abstract class Device {
         on = true;
     }
 
+
+
     public void addObserver(Runnable observer) {
         observers.add(observer);
     }
@@ -32,5 +34,6 @@ public abstract class Device {
             observer.run();
         }
     }
+
 
 }
