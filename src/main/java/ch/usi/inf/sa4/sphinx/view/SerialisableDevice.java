@@ -23,9 +23,9 @@ public class SerialisableDevice {
     }
 
     public SerialisableDevice(Device device, User user) {
-        this.id = device.id;
-        this.icon = device.icon;
-        this.name = device.name;
+        this.id = device.getId();
+        this.icon = device.getIcon();
+        this.name = device.getName();
         this.label = device.getLabel();
         // TODO: fill switched
         if (device instanceof Switch || device instanceof DimmableSwitch) {
