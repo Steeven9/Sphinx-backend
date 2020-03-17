@@ -29,21 +29,21 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void shouldGet404OnLoginWithWrongUsername() throws Exception {
+    public void shouldGet400OnLoginWithWrongUsername() throws Exception {
         this.mockmvc.perform(post("/auth/login")
                     .content("{username:\"test\"}")
                     .header("content-type", "application/json"))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldGet404OnLoginWithWrongEmail() throws Exception {
+    public void shouldGet400OnLoginWithWrongEmail() throws Exception {
         this.mockmvc.perform(post("/auth/login")
                     .content("{email:\"test@email.io\"}")
                     .header("content-type", "application/json"))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
 
