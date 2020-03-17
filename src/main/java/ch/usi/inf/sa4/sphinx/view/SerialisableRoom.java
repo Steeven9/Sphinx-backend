@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import ch.usi.inf.sa4.sphinx.model.Room;
+
 public class SerialisableRoom {
     public int id;
     public String name;
@@ -13,5 +15,16 @@ public class SerialisableRoom {
         this.icon = icon;
         this.background = background;
         this.devices = devices;
+    }
+
+    public SerialisableRoom(Room room) {
+        this.id = room.getId();
+        this.name = room.getName();
+        this.icon = room.getIcon();
+        this.background = room.getBackground();
+        this.devices = new int[room.getDevices().size()];
+        for (int i = 0; i < this.devices.length; i++) {
+            this.devices[i] = room.getDevices().get(i).id;
+        }
     }
 }

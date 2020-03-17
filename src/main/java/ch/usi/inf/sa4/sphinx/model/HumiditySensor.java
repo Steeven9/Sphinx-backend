@@ -1,5 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class HumiditySensor extends DimmableSwitch {
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 
+public class HumiditySensor extends Device {
+
+    public String getLabel() {
+        throw new NotImplementedException();
+    }
 }

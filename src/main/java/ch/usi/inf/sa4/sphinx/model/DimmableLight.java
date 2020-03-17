@@ -1,5 +1,16 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class DimmableLight extends Device {
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+
+public class DimmableLight extends Device {
+    private double intensity;
+
+    public double getIntensity() {
+        return intensity;
+    }
+
+    public String getLabel() {
+        throw new NotImplementedException();
+    }
 }

@@ -13,6 +13,7 @@
     <version>0.0.1</version>
     <name>sphinx</name>
     <description>SA4 SmartHut project - Sphinx team</description>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>13</java.version>
@@ -20,8 +21,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.0.1.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.0.1.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,6 +61,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>sphinx-backend</finalName>
     </build>
 
 </project>
