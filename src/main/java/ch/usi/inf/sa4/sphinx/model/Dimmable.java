@@ -41,6 +41,6 @@ public class Dimmable extends Device{
      */
     @Override
     public String getLabel() {
-        return this.getState() + "%";
+        return this.getState() * 100 + "%";
     }
 }

@@ -26,6 +26,7 @@ public class Switch extends Device {
      */
     public void click(){
         this.on = !this.on;
+        triggerObservers();
     }
 
     /**
@@ -34,6 +35,6 @@ public class Switch extends Device {
      */
     @Override
     public String getLabel(){
-        return "" + this.getState();
+        return this.on ? "on" : "off";
     }
 }

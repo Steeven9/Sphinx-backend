@@ -17,6 +17,6 @@ public class Light extends Device {
      */
     @Override
     public String getLabel() {
-        return "" + this.on;
+        return this.on ? "on" : "off";
     }
 }

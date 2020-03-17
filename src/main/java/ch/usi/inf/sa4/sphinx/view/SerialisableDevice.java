@@ -18,8 +18,8 @@ public class SerialisableDevice {
         this.icon = icon;
         this.name = name;
         this.label = label;
-        //this.switched = switched;
-        //this.switches = switches;
+        this.switched = switched;
+        this.switches = switches;
     }
 
     public SerialisableDevice(Device device, User user) {
