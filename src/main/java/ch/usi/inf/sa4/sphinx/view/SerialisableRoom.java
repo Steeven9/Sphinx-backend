@@ -24,7 +24,7 @@ public class SerialisableRoom {
         this.background = room.getBackground();
         this.devices = new int[room.getDevices().size()];
         for (int i = 0; i < this.devices.length; i++) {
-            this.devices[i] = room.getDevices().get(i).id;
+            this.devices[i] = room.getDevices().get(i);
         }
     }
 }
