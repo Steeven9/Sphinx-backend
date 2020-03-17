@@ -4,16 +4,37 @@ package ch.usi.inf.sa4.sphinx.model;
 /**
  * A DimmableLight is a type of light that can be dimmable, i.e. support different levels of intensity.
  */
-public class DimmableLight extends DimmableSwitch {
-    private String type;
+public class DimmableLight extends Device {
+    private double intensity;
 
     /**
      * Creates a special light that can be dimmable, with intensity set to maximum.
-     * @param type a String that is a type of the light
      */
-    public DimmableLight(String type) {
+    public DimmableLight() {
         super();
-        this.type = type;
+        this.intensity = 100.0;
+    }
+
+    /**
+     * Changes the state of this DimmableSwitch and remembers it.
+     * @param newState a new intensity level to be set
+     * @throws IllegalArgumentException if the intensity level is more than 100 or less than 0
+     */
+    public void setState(double newState) throws IllegalArgumentException{
+        if (newState > 100 || newState < 0){
+            throw new IllegalArgumentException("Intensity must be between 0 and 100");
+        } else {
+            intensity = newState;
+            triggerObservers();
+        }
+    }
+
+    /**
+     * Returns the intensity level of this DimmableSwitch.
+     * @return the intensity level of this DimmableSwitch
+     */
+    public double getIntensity() {
+        return intensity;
     }
 
     /**
@@ -21,6 +42,6 @@ public class DimmableLight extends DimmableSwitch {
      */
     @Override
     public String getLabel() {
-        return this.name + " " + this.on + " " + this.type + " " + this.getState();
+        return this.getIntensity() + "%";
     }
 }

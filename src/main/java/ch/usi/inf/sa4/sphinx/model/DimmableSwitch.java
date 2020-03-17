@@ -3,7 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 /**
  * A DimmableSwitch is a switch that can set and store the intensity for given device.
  */
-public class DimmableSwitch extends Device {
+public class DimmableSwitch extends Device  {
     private double state;
 
 
@@ -33,7 +33,6 @@ public class DimmableSwitch extends Device {
     public double getState() {
         return state;
     }
-
 
     /**
      * {@inheritDoc}
