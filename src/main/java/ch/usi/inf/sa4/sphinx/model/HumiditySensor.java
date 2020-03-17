@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A humidity sensor measures humidity (in %) in a given room.
  */

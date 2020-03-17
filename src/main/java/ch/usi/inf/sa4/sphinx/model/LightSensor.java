@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A light sensor measures the quantity of light (in lumen) in a given room.
  */

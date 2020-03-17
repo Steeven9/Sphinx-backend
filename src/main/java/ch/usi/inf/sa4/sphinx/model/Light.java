@@ -1,19 +1,15 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A Light is a normal light that can be either on either off.
  */
 public class Light extends Device {
-    private String type;
 
     /**
-     * Creates a light with given type.
-     * @param type a type of the light
+     * Creates a light.
      */
-    public Light(String type) {
+    public Light() {
         super();
-        this.type = type;
     }
 
     /**
@@ -21,6 +17,6 @@ public class Light extends Device {
      */
     @Override
     public String getLabel() {
-        return this.name + " " + this.on + " " + this.type;
+        return "" + this.on;
     }
 }

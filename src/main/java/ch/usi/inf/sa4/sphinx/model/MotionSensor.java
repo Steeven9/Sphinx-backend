@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
@@ -41,6 +40,6 @@ public class MotionSensor extends Device {
      * {@inheritDoc}
      */
     @Override
-    public String getLabel() { return this.name + " " + this.on + " "+ this.isDetected();
+    public String getLabel() { return "" + this.isDetected();
     }
 }

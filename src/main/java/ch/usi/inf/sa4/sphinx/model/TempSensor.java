@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A Temperature sensor measures a temperature (in C) in a given room.
  */

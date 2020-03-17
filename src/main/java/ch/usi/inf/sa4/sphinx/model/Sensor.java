@@ -18,7 +18,7 @@ public abstract class Sensor extends Device {
     }
 
     /**
-     * Returns the measured physical quantity in given room.
+     * Returns the measured physical quantity in given room, with small random error [-0.5, +0.5].
      * @return the physical quantity
      */
     public double getValue() {
@@ -31,7 +31,7 @@ public abstract class Sensor extends Device {
      */
     @Override
     public String getLabel() {
-        return this.name + " " + this.on + " " + this.getValue() + " " + this.getPhQuantity();
+        return this.getValue() + " " + this.getPhQuantity();
     }
 
     /**

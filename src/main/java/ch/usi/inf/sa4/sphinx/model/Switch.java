@@ -5,6 +5,9 @@ package ch.usi.inf.sa4.sphinx.model;
  */
 public class Switch extends Device {
 
+    /**
+     * Creates a switch, which is on.
+     */
     public Switch() {
         super();
     }
@@ -31,7 +34,6 @@ public class Switch extends Device {
      */
     @Override
     public String getLabel(){
-        return this.name + " " + this.on;
+        return "" + this.getState();
     }
-
 }

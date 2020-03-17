@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
 /**
  * A smart-plug is a plug that can be added by user. It consumes some energy while in use.
  */
@@ -30,12 +29,11 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public String getLabel() {
-        return this.name + " " + this.on + " " + this.getPowerUsed() + " kWh";
+        return this.getPowerUsed() + " kWh";
     }
 }
