@@ -11,7 +11,7 @@ public class Dimmable extends Device{
      */
     protected Dimmable() {
         super();
-        this.intensity = 100.0;
+        this.intensity = 1.0;
     }
 
     /**
