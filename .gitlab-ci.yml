@@ -15,8 +15,7 @@ maven-build:
 maven-test:
     stage: test
     script:
-        pwd
-        #- mvn test
+        - mvn test
 
 maven-package:
     stage: package
@@ -26,6 +25,7 @@ maven-package:
         paths: [target/sphinx-backend.jar]
 
 docker-build:
+    only: [dev, master]
     stage: deploy
     image: docker
     variables:
