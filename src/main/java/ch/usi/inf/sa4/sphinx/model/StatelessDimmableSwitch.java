@@ -16,7 +16,7 @@ public class StatelessDimmableSwitch extends Device {
 
 
     /** Setter for the state of the device.
-     * @param double newState: the new value of the device's state
+     * @param  newState: the new value of the device's state
      **/
     public void setState(double newState) {
         state = newState;

@@ -10,7 +10,7 @@ public class DimmableLightStateInc extends Effect<Double> {
     }
 
     /** Sets current state of the Device to the given value.
-     * @param Double value: the new state value
+     * @param  value: the new state value
      **/
     @Override
     public void execute(Double value) {
