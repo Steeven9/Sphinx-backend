@@ -14,9 +14,6 @@ public class DeviceSetOnEffect extends Effect< Boolean> {
      * @param  effect: the current value of the device
      **/
     public void execute(Boolean effect){
-       if (!effect) {
-            ((Switch)Storage.getDevice(device)).click();
-
-       }
+            Storage.getDevice(device); //TODO: complete
     }
 }
