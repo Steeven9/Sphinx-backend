@@ -1,11 +1,22 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-
+/**
+ * A Light is a normal light that can be either on either off.
+ */
 public class Light extends Device {
 
+    /**
+     * Creates a light.
+     */
+    public Light() {
+        super();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getLabel() {
-        throw new NotImplementedException();
+        return this.on ? "on" : "off";
     }
 }

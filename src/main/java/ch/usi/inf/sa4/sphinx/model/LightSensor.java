@@ -1,11 +1,22 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+/**
+ * A light sensor measures the quantity of light (in lumen) in a given room.
+ */
+public class LightSensor extends Sensor {
 
-public class LightSensor extends Device {
+    /**
+     * Create a light sensor set to 500.0 lumen.
+     */
+    public LightSensor() {
+        super(500.0);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getLabel() {
-        throw new NotImplementedException();
+    protected String getPhQuantity() {
+        return " lumen";
     }
 }

@@ -1,10 +1,22 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+/**
+ * A humidity sensor measures humidity (in %) in a given room.
+ */
+public class HumiditySensor extends Sensor {
 
-public class HumiditySensor extends Device {
+    /**
+     * Creates a humidity sensor set to 32.0 percent.
+     */
+    public HumiditySensor() {
+        super(32.0);
+    }
 
-    public String getLabel() {
-        throw new NotImplementedException();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getPhQuantity() {
+        return " %";
     }
 }

@@ -1,16 +1,22 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+/**
+ * A DimmableLight is a type of light that can be dimmable, i.e. support different levels of intensity.
+ */
+public class DimmableLight extends Dimmable {
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-
-public class DimmableLight extends Device {
-    private double intensity;
-
-    public double getIntensity() {
-        return intensity;
+    /**
+     * Creates a special light that can be dimmable.
+     */
+    public DimmableLight() {
+        super();
     }
 
-    public String getLabel() {
-        throw new NotImplementedException();
+    /**
+     * Returns the intensity level of this DimmableSwitch.
+     * @return the intensity level of this DimmableSwitch
+     */
+    public double getIntensity() {
+        return super.getState();
     }
 }

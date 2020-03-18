@@ -1,22 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class DimmableSwitch extends Device {
-    private double state;
+/**
+ * A DimmableSwitch is a switch that can set and store the intensity for given device.
+ */
+public class DimmableSwitch extends Dimmable  {
 
-    /* Computes whether the power is 'on' or 'off'.
-     * @return a String stating whether switch is 'on' or 'off'
+    /**
+     * Creates a dimmable switch.
      */
-    public String getLabel() {
-        return Math.round(state*100) + "%";
+    public DimmableSwitch() {
+        super();
     }
-
-    public void setState(double newState) {
-        state = newState;
-        triggerObservers();
-
-    }
-    public double getState() {
-        return state;
-    }
-
 }
