@@ -13,7 +13,7 @@ public class DimmableLightStateSet extends Effect<Double> {
      * @param effect:  new value of the state
      **/
     public void execute(Double effect){
-         ((DimmableSwitch) Storage.getDevice(device)).setState(effect);
+         ((DimmableLight) Storage.getDevice(device)).setState(effect);
 
     }
 }
