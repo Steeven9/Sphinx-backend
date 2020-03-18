@@ -25,11 +25,11 @@ public class Dimmable extends Device{
     /**
      * Changes the state of this DimmableSwitch and remembers it.
      * @param newState a new intensity level to be set
-     * @throws IllegalArgumentException if the intensity level is more than 100 or less than 0
+     * @throws IllegalArgumentException if the intensity level is more than 1.0 or less than 0.0
      */
     public void setState(double newState) throws IllegalArgumentException{
-        if (newState > 100 || newState < 0){
-            throw new IllegalArgumentException("Intensity must be between 0 and 100");
+        if (newState > 1 || newState < 0){
+            throw new IllegalArgumentException("Intensity must be between 0.0 and 1.0");
         } else {
             intensity = newState;
             triggerObservers();
