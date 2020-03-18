@@ -13,7 +13,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     }
 
     /** Gets current state of device
-     * @return Double, value of state of device **/
+     * @return value of state of device **/
     @Override
     public Double get() {
         return ((StatelessDimmableSwitch) Storage.getDevice(device)).isIncrementing() ? increment : -increment;

@@ -11,7 +11,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
     }
 
     /** Get's current value of state
-     * @return Double, the value of the state of the device
+     * @return the value of the state of the device
      **/
     @Override
     public Double get() {
