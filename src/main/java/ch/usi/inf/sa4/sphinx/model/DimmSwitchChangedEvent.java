@@ -10,6 +10,9 @@ public class DimmSwitchChangedEvent extends Event<Double> {
         this.device = deviceID;
     }
 
+    /** Get's current value of state
+     *
+     **/
     @Override
     public Double get() {
         return ((DimmableSwitch)Storage.getDevice(device)).getState();
