@@ -8,7 +8,7 @@ public abstract class Device {
     private final int id;
     private String icon;
     private String name;
-    private boolean on;
+    protected boolean on;
     protected List<Runnable> observers;
 
     private static int nextId = 0;
