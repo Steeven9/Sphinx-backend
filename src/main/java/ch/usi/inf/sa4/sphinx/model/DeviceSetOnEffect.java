@@ -11,11 +11,11 @@ public class DeviceSetOnEffect extends Effect< Boolean> {
     }
 
     /** checks if value of lights is off e.g, false; if so it turn them on and vice versa.
-     * @param Boolean effect: the current value of the device
+     * @param  effect: the current value of the device
      **/
     public void execute(Boolean effect){
        if (!effect) {
-            ((Switch)Storage.getDevice(device)).setPower(effect);
+            ((Switch)Storage.getDevice(device)).click();
 
        }
     }
