@@ -10,7 +10,7 @@ public class DimmableLightStateSet extends Effect<Double> {
         this.device = deviceID;
     }
     /** Sets state to the effect value.
-     * @param Double effect:  new value of the state
+     * @param  effect:  new value of the state
      **/
     public void execute(Double effect){
          ((DimmableSwitch) Storage.getDevice(device)).setState(effect);
