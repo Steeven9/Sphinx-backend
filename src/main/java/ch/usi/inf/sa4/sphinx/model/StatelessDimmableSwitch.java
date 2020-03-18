@@ -31,10 +31,9 @@ public class StatelessDimmableSwitch extends Device {
         triggerObservers();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    /** Computes whether the percentage of power used.
+     * @return a String stating the percentage of power in use
+     **/
     public String getLabel() {
         return this.button ? "+" : "-";
     }

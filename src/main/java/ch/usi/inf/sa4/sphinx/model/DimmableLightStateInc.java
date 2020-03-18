@@ -4,7 +4,6 @@ import ch.usi.inf.sa4.sphinx.controller.Storage;
 
 public class DimmableLightStateInc extends Effect<Double> {
     public final int device;
-
     public DimmableLightStateInc(int deviceID){
         super(deviceID);
         this.device = deviceID;
