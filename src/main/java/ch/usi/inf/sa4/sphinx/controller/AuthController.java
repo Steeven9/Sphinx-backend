@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = {"https://localhost", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
