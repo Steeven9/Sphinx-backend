@@ -37,7 +37,7 @@ public interface UserStorage {
      *
      * @param username the username of the user to delete
      */
-    public void delete(String username);
+    void delete(String username);
 
 
     /**

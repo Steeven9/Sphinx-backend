@@ -6,10 +6,10 @@ public interface DeviceStorage {
     /**
      * Retrieves a Device given its id.
      *
-     * @param roomId the id of the requested room
+     * @param deviceId the id of the requested room
      * @return the requested room or null if no room with that id exists.
      */
-    Device get(final String roomId);
+    Device get(final String deviceId);
 
 
     /**
