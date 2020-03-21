@@ -19,7 +19,7 @@ public interface RoomStorage {
      * @param room the room to insert
      * @return a copy of the Room stored or null if the operation fails
      */
-    Room insert(final Room room);
+    String insert(final Room room);
 
 
     /**

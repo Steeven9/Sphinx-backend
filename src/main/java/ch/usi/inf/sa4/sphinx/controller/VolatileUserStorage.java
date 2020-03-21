@@ -26,15 +26,15 @@ public class VolatileUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean insert(final User user) {
-        if (users.containsKey(user.getUsername())) {
-            return false;
+    public String insert(final User user) {
+        String username = user.getUsername();
+        if (users.containsKey(username)) {
+            return null;
         }
 
         //Notice that a copy constructor is used.
-        //TODO ADD copy constructor
-        users.put(user.getUsername(), new User(user));
-        return true;
+        users.put(username, new User(user));
+        return username;
     }
 
     @Override

@@ -16,9 +16,9 @@ public interface DeviceStorage {
      * Inserts a copy of the given Device into storage.
      *
      * @param device the room to insert
-     * @return a copy of the Device stored or null if the operation fails
+     * @return The id of the created device, null if it fails
      */
-    Device insert(final Device device);
+    String insert(final Device device);
 
 
     /**
@@ -34,5 +34,5 @@ public interface DeviceStorage {
      * @param updatedDevice the user with the updated field
      * @return true if the operation is successful else false
      */
-    boolean updateUser(final Device updatedDevice);
+    boolean updateDevice(final Device updatedDevice);
 }
