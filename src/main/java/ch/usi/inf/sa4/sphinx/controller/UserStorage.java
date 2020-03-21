@@ -26,10 +26,10 @@ public interface UserStorage {
      * Inserts a user.
      *
      * @param user the user to insert
-     * @return a copy of the user inserted in Storage or null if the operation fails
+     * @return the key for User (username) if success or null if fails
      */
     //It now returns the User for symmetry with the other Storage that possibly return a copy with a generated unique ID
-    User insert(final User user);
+    String insert(final User user);
 
 
     /**
