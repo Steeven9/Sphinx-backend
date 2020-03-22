@@ -19,4 +19,13 @@ public final class DeviceService {
     public Device get(String deviceId){
         return deviceStorage.get(deviceId);
     }
+
+
+    /**
+     * @param device the device to update
+     * @return true if the update succeds else false
+     */
+    public boolean update(Device device){
+        return deviceStorage.update(device);
+    }
 }

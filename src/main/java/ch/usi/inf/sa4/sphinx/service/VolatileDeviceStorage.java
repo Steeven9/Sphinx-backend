@@ -38,7 +38,7 @@ public class VolatileDeviceStorage implements DeviceStorage {
     }
 
     @Override
-    public boolean updateDevice(Device updatedDevice) {
+    public boolean update(Device updatedDevice) {
         if(devices.get(updatedDevice.getId()) == null){
             return false;
         }
