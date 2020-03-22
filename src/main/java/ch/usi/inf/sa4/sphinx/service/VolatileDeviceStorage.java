@@ -13,7 +13,6 @@ import java.util.UUID;
 
 
 
-@Component("volatileDeviceStorage")
 @Repository("volatileDeviceStorage")
 public class VolatileDeviceStorage implements DeviceStorage {
     private static final HashMap<String, Device> devices = new HashMap<>();

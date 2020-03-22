@@ -129,4 +129,40 @@ public final class UserService {
     }
 
 
+    /**
+     * @param username the username of the desired User
+     * @param deviceId the id of the device
+     * @return true if the User with the given Username owns the divice with the given Id
+     */
+    public boolean ownsDevice(String username, String deviceId){
+        return getDevices(username).contains(deviceId);
+    }
+
+
+
+    /**
+     * @param username the username of the desired User
+     * @param roomId the id of the device
+     * @return true if the User with the given Username owns the divice with the given Id
+     */
+    public boolean ownsRoom(String username, String roomId){
+        User user = userStorage.get(username);
+        if(user == null) return false;
+        return user.getRooms().contains(roomId));
+    }
+
+
+    /**
+     * Checks if the given session token is a match to the one in Storage
+     * @param username    the username of the User
+     * @param sessionToken the session token
+     * @return true if they match, false if the User does not exist or they don't match
+     */
+    public boolean validSession(String username, String sessionToken){
+        User user = userStorage.get(username);
+        if(user == null) return false;
+        return user.getSessionToken().equals(sessionToken);
+    }
+
+
 }
