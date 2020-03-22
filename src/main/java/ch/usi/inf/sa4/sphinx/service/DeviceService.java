@@ -2,7 +2,11 @@ package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Device;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public final class DeviceService {
 
     @Autowired

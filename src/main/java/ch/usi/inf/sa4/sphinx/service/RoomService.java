@@ -3,7 +3,9 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoomService {
 
 @Autowired
@@ -36,11 +38,8 @@ DeviceStorage deviceStorage;
      * @param deviceType the type of Device (ex DimmableLight)
      * @return true if success else false
      */
-    public final boolean addDevice(final String roomId, String deviceType){
+    public final String addDevice(final String roomId, String deviceType){
         Room room  = roomStorage.get(roomId);
-        if(room == null){
-            return false;
-        }
 
         //Needs to know what type of device to generate based on deviceType
         throw new NotImplementedException();
