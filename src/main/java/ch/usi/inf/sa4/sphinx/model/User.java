@@ -36,11 +36,7 @@ public class User {
     }
 
 
-    /**
-     * copy constructor
-     * @param user user to copy
-     */
-    public User(User user) {
+    private User(User user) {
         this.email = user.email;
         this.password = user.password;
         this.username = user.username;
@@ -50,6 +46,14 @@ public class User {
         this.rooms = new ArrayList<String>(user.rooms);
         this.sessionToken = user.sessionToken;
         this.verified = user.verified;
+    }
+
+
+    /**
+     * @return a deep copy of this Object
+     */
+    public User makeCopy(){
+        return new User(this);
     }
 
     /**
@@ -114,7 +118,7 @@ public class User {
      *
      * @return returns a list of the Ids of the rooms owned by the user
      */
-    public List<Integer> getRooms() {
+    public List<String> getRooms() {
         return rooms;
     }
 
@@ -181,8 +185,8 @@ public class User {
     /**
      * sets the verified status of the user to true
      */
-    public void setVerified() {
-        this.verified = true;
+    public void setVerified(final boolean status) {
+        this.verified = status;
     }
 
 
@@ -201,7 +205,7 @@ public class User {
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom(final Integer roomId) {
+    public void removeRoom(final String roomId) {
         rooms.remove(roomId);//Needed otherwise it will just remove the index
     }
 

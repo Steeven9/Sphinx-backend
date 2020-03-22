@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.controller;
+package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.Room;
@@ -27,7 +27,7 @@ public interface RoomStorage {
      *
      * @param roomId the id of the room to delete
      */
-    public void delete(String roomId);
+     void delete(String roomId);
 
 
     /**

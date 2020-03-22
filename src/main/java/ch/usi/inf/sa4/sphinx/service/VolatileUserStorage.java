@@ -1,7 +1,6 @@
-package ch.usi.inf.sa4.sphinx.controller;
+package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.User;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -10,6 +9,11 @@ import java.util.HashMap;
  * Volatile database for User
  *
  */
+
+
+
+//METHOD ACCESS SHOULD BE DEFAULT NOT PUBLIC BUT IT CANT BE DONE SINCE IT IMPLEMENTS AN INTERFACE, MIGHT MAKE STORAGE
+//AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
 @Repository("volatileUserStorage")
 public class VolatileUserStorage implements UserStorage {
     //This is shared between all instances of the database
@@ -33,7 +37,7 @@ public class VolatileUserStorage implements UserStorage {
         }
 
         //Notice that a copy constructor is used.
-        users.put(username, new User(user));
+        users.put(username, user.makeCopy());
         return username;
     }
 
@@ -43,7 +47,7 @@ public class VolatileUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean updateUser(final String username, final User updatedUser) {
+    public boolean update(final String username, final User updatedUser) {
         if (!users.containsKey(username)) {
             return false;
         }
@@ -56,7 +60,8 @@ public class VolatileUserStorage implements UserStorage {
         if (!olduser.getEmail().equals(updatedUser.getEmail()) && getByEmail(updatedUser.getEmail()) != null) {
             return false;
         }
-        //The old username could be differend so we remove it
+
+        //The old username could be different so we remove it
         users.remove(username);
         users.put(updatedUser.getUsername(), updatedUser);
         return true;
