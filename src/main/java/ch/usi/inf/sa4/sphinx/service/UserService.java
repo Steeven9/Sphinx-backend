@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /*
@@ -19,7 +20,9 @@ public final class UserService {
     @Autowired
     private  UserStorage userStorage;
     @Autowired
-    private  RoomStorage roomService;
+    private  RoomStorage roomStorage;
+    @Autowired
+    private  RoomService roomService;
 
     //Will be used to check that each room belongs to a single user
     private static final HashMap<String, String> roomToUser = new HashMap<>();
@@ -100,13 +103,24 @@ public final class UserService {
             return false;
         }
 
-        var roomId = roomService.insert(room);
+        var roomId = roomStorage.insert(room);
         if (roomId == null) {
             return false;
         }
 
         user.addRoom(roomId);
         return userStorage.update(username, user);
+    }
+
+
+    /**
+     * @param username the name of the User whose room is to be removed
+     * @param roomId the id of the room to remove
+     */
+    public void removeRoom(final String username, final String roomId){
+        final User user = userStorage.get(username);
+        user.removeRoom(roomId);
+        userStorage.update(username, user);
     }
 
 
@@ -148,8 +162,10 @@ public final class UserService {
     public boolean ownsRoom(String username, String roomId){
         User user = userStorage.get(username);
         if(user == null) return false;
-        return user.getRooms().contains(roomId));
+        return user.getRooms().contains(roomId);
     }
+
+
 
 
     /**
@@ -163,6 +179,27 @@ public final class UserService {
         if(user == null) return false;
         return user.getSessionToken().equals(sessionToken);
     }
+
+
+    /**
+     * Removes a device that the User owns
+     * @param username the username whose device is to be removed
+     * @param deviceId the id of the device to be removed
+     */
+    public void removeDevice(String username, String deviceId){
+        User user = userStorage.get(username);
+        if(user == null) return;
+
+        List<Room> rooms = user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
+
+        for(Room room: rooms){
+            if(room.getDevices().contains(deviceId)){
+                roomService.removeDevice(room.getId(), deviceId);
+            }
+        }
+    }
+
+
 
 
 }
