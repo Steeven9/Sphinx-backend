@@ -34,5 +34,5 @@ public interface DeviceStorage {
      * @param updatedDevice the user with the updated field
      * @return true if the operation is successful else false
      */
-    boolean updateDevice(final Device updatedDevice);
+    boolean update(final Device updatedDevice);
 }
