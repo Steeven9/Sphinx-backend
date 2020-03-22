@@ -42,6 +42,11 @@ public final class UserService {
     }
 
 
+    public User getByMail(final String email){
+        return userStorage.getByEmail(email);
+    }
+
+
     /**
      * Deletes the user with the given Username from storage
      * @param username username of the user to delete
