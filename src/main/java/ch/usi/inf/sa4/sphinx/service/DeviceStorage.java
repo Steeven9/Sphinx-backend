@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.controller;
+package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Device;
 

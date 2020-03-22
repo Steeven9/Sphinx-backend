@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.controller;
+package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.User;
 
@@ -51,7 +51,7 @@ public interface UserStorage {
      * @param updatedUser the user with the updated field
      * @return true if the operation is successful else false
      */
-    boolean updateUser(final String username, final User updatedUser);
+    boolean update(final String username, final User updatedUser);
 
 
 }

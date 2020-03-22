@@ -1,12 +1,19 @@
-package ch.usi.inf.sa4.sphinx.controller;
+package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Device;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 
+//METHOD ACCESS SHOULD BE DEFAULT NOT PUBLIC BUT IT CANT BE DONE SINCE IT IMPLEMENTS AN INTERFACE, MIGHT MAKE STORAGE
+//AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
+
+
+
+@Component("volatileDeviceStorage")
 @Repository("volatileDeviceStorage")
 public class VolatileDeviceStorage implements DeviceStorage {
     private static final HashMap<String, Device> devices = new HashMap<>();
@@ -20,9 +27,10 @@ public class VolatileDeviceStorage implements DeviceStorage {
     @Override
     public String insert(Device device) {
         Device savedDevice = device.makeCopy();
-        savedDevice.setId(UUID.randomUUID().toString());
-        devices.put(savedDevice);
-        return savedDevice.getId();
+        var newId = UUID.randomUUID().toString();
+        savedDevice.setId(newId);
+        devices.put(newId, savedDevice);
+        return newId;
     }
 
     @Override
