@@ -16,6 +16,7 @@ public class User {
     private String resetCode;
     private final List<String> rooms;
     private String sessionToken;
+    private final String verificationToken;
     private Boolean verified;
 
 
@@ -30,14 +31,16 @@ public class User {
         this.password = password;
         this.username = username;
         this.fullname = fullname;
-        rooms = new ArrayList<>();
-        verified = false;
-        confirmCode = UUID.randomUUID().toString();
+        this.rooms = new ArrayList<>();
+        this.verified = false;
+        this.confirmCode = UUID.randomUUID().toString();
+        this.verificationToken = UUID.randomUUID().toString();
     }
 
 
     private User(User user) {
         this.email = user.email;
+        this.verificationToken = user.verificationToken;
         this.password = user.password;
         this.username = user.username;
         this.fullname = user.fullname;
@@ -142,6 +145,14 @@ public class User {
         return verified;
     }
 
+    /**
+     * getter for verification Token
+     *
+     * @return confirmation code of the user, to be sent via mail and then confirmed by the user
+     */
+    public String getVerificationToken() {
+        return verificationToken;
+    }
 
 
     /**

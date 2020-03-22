@@ -6,7 +6,9 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ch.usi.inf.sa4.sphinx.service.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -16,6 +18,8 @@ public class UserController {
 
 	@Autowired
 	Mailer mailer;
+	@Autowired
+	UserService userService;
 
 	/**
 	 * gets a user.
@@ -28,7 +32,7 @@ public class UserController {
 	@GetMapping("/{username}")
 	public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
 
-		User user = Storage.getUser(username);
+		User user = userService.get(username);
 
 		if (user == null) {
 			return ResponseEntity.notFound().build();
@@ -55,7 +59,7 @@ public class UserController {
 		mailer.send(newUser.getEmail(),
 				"Confirm your email account for smarthut",
 				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
-		Storage.insertUser(newUser);
+		userService.insert(newUser);
 
 		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
 	}
@@ -72,7 +76,7 @@ public class UserController {
 	@PutMapping("/{username}")
 	public ResponseEntity<SerialisableUser> updateUser(@PathVariable String username, @RequestBody SerialisableUser user,
 													@RequestHeader("session-token") String session_token) {
-		User changedUser = Storage.getUser(username);
+		User changedUser = userService.get(username);
 
 		if (changedUser == null) {
 			return ResponseEntity.notFound().build();
@@ -83,6 +87,8 @@ public class UserController {
 		if (user.email != null) changedUser.setEmail(user.email);
 		if (user.fullname != null) changedUser.setFullname(user.fullname);
 		if (user.password != null) changedUser.setPassword(user.password);
+
+		userService.update(username, changedUser);
 
 		return ResponseEntity.ok(new SerialisableUser(changedUser));
 	}
@@ -97,9 +103,9 @@ public class UserController {
 	 * 		204 if the operation was successful
 	 */
 	@DeleteMapping("/{username}")
-	public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
+	public ResponseEntity<SerialisableUser> deleteUser( @PathVariable String username,
 													   @RequestHeader("session-token") String session_token) {
-		User deletedUser = Storage.getUser(username);
+		User deletedUser = userService.get(username);
 
 		if (deletedUser == null) {
 			return ResponseEntity.notFound().build();
@@ -108,7 +114,7 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 
-		Storage.deleteUser(username);
+		userService.delete(username);
 
 		return ResponseEntity.noContent().build();
 	}

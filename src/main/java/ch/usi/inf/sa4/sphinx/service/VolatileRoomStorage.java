@@ -11,7 +11,7 @@ import java.util.UUID;
 //AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
 
 //Docs in RoomStorage
-@Component("volatileUserStorage")
+@Component("volatileRoomStorage")
 public class VolatileRoomStorage implements RoomStorage{
     private static final HashMap<String, Room> rooms = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class VolatileRoomStorage implements RoomStorage{
     public String insert(Room room) {
         Room savedRoom = room.makeCopy();
         savedRoom.setId(UUID.randomUUID().toString());
-        rooms.put(savedRoom);
+        rooms.put(savedRoom.getId(), savedRoom);
         return savedRoom.getId();
     }
 
@@ -39,5 +39,6 @@ public class VolatileRoomStorage implements RoomStorage{
             return false;
         }
         rooms.put(updatedRoom.getId(), updatedRoom.makeCopy());
+        return true;
     }
 }
