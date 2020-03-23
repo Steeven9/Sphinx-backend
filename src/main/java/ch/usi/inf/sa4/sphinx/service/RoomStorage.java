@@ -30,6 +30,7 @@ public interface RoomStorage {
      boolean delete(String roomId);
 
 
+
     /**
      * Updates the Room found with the id in updatedRoom with the fields of updatedRoom
      * @param updatedRoom the user with the updated field

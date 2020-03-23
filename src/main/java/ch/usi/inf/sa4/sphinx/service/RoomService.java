@@ -18,6 +18,7 @@ DeviceStorage deviceStorage;
 
 
     /**
+<<<<<<< HEAD
      * @param roomId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
@@ -80,6 +81,7 @@ DeviceStorage deviceStorage;
         }
         return list;
     }
+
 
 
 }

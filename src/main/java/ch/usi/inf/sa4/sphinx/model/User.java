@@ -68,6 +68,7 @@ public class User {
         return email;
     }
 
+
     /**
      * getter for password
      *
@@ -210,6 +211,7 @@ public class User {
         rooms.add(roomId);
     }
 
+
     /**
      * removes the room with the selected id
      *
@@ -230,6 +232,7 @@ public class User {
         return sessionToken;
     }
 
+
     /**
      * generates and sets a reset code for the user
      *
@@ -240,3 +243,6 @@ public class User {
         return resetCode;
     }
 }
+
+
+

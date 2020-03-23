@@ -108,12 +108,12 @@ public final class UserService {
         if (roomId == null) {
             return null; //something went bad
         }
-
         user.addRoom(roomId);
         if (!userStorage.update(username, user)) {
             throw new NotImplementedException(); //something went bad during update
         }
         return roomId;
+
     }
 
 

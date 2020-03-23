@@ -56,6 +56,7 @@ public class AuthController {
         if (user == null) {
             user = Storage.getUserByEmail(username);
 
+
         }
 
         if (user == null) {
