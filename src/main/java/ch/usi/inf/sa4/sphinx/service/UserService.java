@@ -113,7 +113,6 @@ public final class UserService {
             throw new NotImplementedException(); //something went bad during update
         }
         return roomId;
-
     }
 
 
