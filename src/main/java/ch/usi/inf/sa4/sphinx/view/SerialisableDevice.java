@@ -5,7 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.*;
 import java.util.Map;
 
 public class SerialisableDevice {
-    public int id;
+    public String id;
     public String icon;
     public String name;
     public String label;
@@ -13,7 +13,7 @@ public class SerialisableDevice {
     public int[] switches;
     public double intensity;
 
-    public SerialisableDevice(int id, String icon, String name, String label, int[] switched, int[] switches){
+    public SerialisableDevice(String id, String icon, String name, String label, int[] switched, int[] switches){
         this.id = id;
         this.icon = icon;
         this.name = name;

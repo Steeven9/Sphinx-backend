@@ -1,21 +1,36 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ *
+ */
 public abstract class Device {
-    private final int id;
+    private  String id;
     private String icon;
     private String name;
     protected boolean on;
     protected List<Runnable> observers;
 
-    private static int nextId = 0;
 
-    private static int makeId() { return nextId++; }
 
-    public int getId() {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
         return id;
     }
 
@@ -42,10 +57,17 @@ public abstract class Device {
     public abstract String getLabel();
 
     public Device() {
-        id = makeId();
         icon = "/images/generic_device";
         name = "Device";
         on = true;
+    }
+
+    //TODO
+    /**
+     * @return a copy of this Device
+     */
+    public Device makeCopy(){
+        throw new NotImplementedException();
     }
 
     /**
