@@ -5,6 +5,9 @@ import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class RoomService {
 
@@ -65,7 +68,15 @@ DeviceStorage deviceStorage;
         return true;
     }
 
-
+    public List<Device> getDevices(final String roomId) {
+        Room room = roomStorage.get(roomId);
+        List<String> ls = room.getDevices();
+        ArrayList<Device> list = new ArrayList<Device>();
+        for (String id : ls) {
+            list.add(deviceStorage.get(id));
+        }
+        return list;
+    }
 
 
 }
