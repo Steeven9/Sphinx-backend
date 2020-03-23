@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
+
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -36,6 +37,7 @@ public class RoomController {
      */
     @GetMapping("/")
     public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
+
                                                 @NotNull @RequestHeader("user") String username,
                                                 @RequestParam(name="filter", required=false)
                                                 Errors errors) {
@@ -51,6 +53,7 @@ public class RoomController {
 
             Room[] arr = new Room[userService.getRooms(user).size()];
             return ResponseEntity.ok(userService.getRooms(user).toArray(arr));
+
         }
         return ResponseEntity.notFound().build();
     }
@@ -202,6 +205,7 @@ public class RoomController {
             return ResponseEntity.notFound().build();
         }
         return null;
+
     }
 }
 
