@@ -26,7 +26,7 @@ DeviceStorage deviceStorage;
     }
 
     /**
-     * Updates the given room, the room is used to find the User and the given User to update its fields
+     * Updates the given user, the username is used to find the User and the given User to update its fields
      * @param room the room to update
      * @return true if successful update else false
      */
