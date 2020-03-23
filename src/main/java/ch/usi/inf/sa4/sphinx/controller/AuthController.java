@@ -47,23 +47,23 @@ public class AuthController {
 
     /**
      * Verifies a user's email address.
-     * @param fakeUser an empty User containing the username and verificationToken provided by the client
+     * @param verificationCode the verification code of the user requesting verification
      * @return A ResponseEntity with one of the following status codes:
      *      404 if no user with the given username exists
      *      400 if the user with the given username is already verified
      *      401 if the given verificationToken does not match the one of the user with the given username
      *      200 if otherwise
      */
-    @PostMapping("/verify")
-    public ResponseEntity<SerialisableUser> verifyUser(@RequestBody User fakeUser) {
-        User verifiedUser = Storage.getUser(fakeUser.getUsername());
+    @PostMapping("/verify/{email}")
+    public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
+        User verifiedUser = Storage.getUserByEmail(email);
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
         if (verifiedUser.isVerified()) {
             return ResponseEntity.badRequest().build();
         }
-        if (!verifiedUser.getVerificationToken().equals(fakeUser.getVerificationToken())) {
+        if (!verifiedUser.getVerificationToken().equals(verificationCode)) {
             return ResponseEntity.status(401).build();
         }
         verifiedUser.verify();
