@@ -1,11 +1,9 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,7 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.Array;
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -125,6 +121,14 @@ public class RoomController {
         return ResponseEntity.ok(list.toArray(arr));
     }
 
+    /**
+     * Creates a new room.
+     * @param serialisableRoom a new room
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @param errors in case error occur
+     * @return a new room
+     */
     @PostMapping("/")
     public ResponseEntity<SerialisableRoom> createRoom(@NotNull @RequestBody SerialisableRoom serialisableRoom,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
@@ -147,10 +151,18 @@ public class RoomController {
         }
     }
 
+    /**
+     * Changes the fields of given room.
+     * @param roomId the id of the room
+     * @param serialisableRoom a room with new fields
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @param errors in case error occur
+     * @return A modified room
+     */
     @PutMapping("/{roomId}/")
     public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable String roomId,
-                                                       @NotBlank @RequestBody String name,
-                                                       @NotBlank @RequestBody String icon,
+                                                       @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        Errors errors) {
@@ -164,10 +176,41 @@ public class RoomController {
         if (room == null) {
             return ResponseEntity.status(404).build();
         }
-        if (roomService.update(room)) {
+        if (roomService.update(new Room(serialisableRoom))) {
             return ResponseEntity.status(203).body(new SerialisableRoom(room));
         } else {
             return ResponseEntity.status(400).build();
+        }
+    }
+
+    /**
+     * Removes given room.
+     * @param roomId the id of the room
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @param errors in case error occur
+     * @return  A ResponseEntity containing status code 203 if the room was removed
+     *       status 403 if the delete went wrong
+     */
+    @DeleteMapping("/{roomId}/")
+    public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable String roomId,
+                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
+                                                        @NotBlank @RequestHeader("user") String username,
+                                                        Errors errors) {
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+        if(!userService.validSession(username, sessionToken)){
+            return ResponseEntity.status(401).build();
+        }
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.status(404).build();
+        }
+        if (roomService.remove(roomId)) {
+            return ResponseEntity.status(203).build();
+        } else {
+            return ResponseEntity.status(403).build();
         }
     }
 }
