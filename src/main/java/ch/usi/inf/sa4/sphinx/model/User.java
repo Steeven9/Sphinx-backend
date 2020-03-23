@@ -12,12 +12,11 @@ public class User {
     private String password;
     private String username;
     private String fullname;
-    private final String confirmCode;
     private String resetCode;
     private final List<Integer> rooms;
     private String sessionToken;
     private final String verificationToken;
-    private Boolean verified;
+    private boolean verified;
 
 
     /**
@@ -33,7 +32,6 @@ public class User {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.confirmCode = UUID.randomUUID().toString();
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -44,7 +42,6 @@ public class User {
         this.password = user.password;
         this.username = user.username;
         this.fullname = user.fullname;
-        this.confirmCode = user.confirmCode;
         this.resetCode = user.resetCode;
         this.rooms = new ArrayList<Integer>(user.rooms);
         this.sessionToken = user.sessionToken;
@@ -96,14 +93,6 @@ public class User {
         return fullname;
     }
 
-    /**
-     * getter for confirmation code
-     *
-     * @return confirmation code of the user, to be sent via mail and then confirmed by the user
-     */
-    public String getConfirmCode() {
-        return confirmCode;
-    }
 
 
     /**
@@ -141,7 +130,7 @@ public class User {
      *
      * @return true if the user is verified (he clicked the confirmation link sent by mail)
      */
-    public Boolean getVerified() {
+    public boolean isVerified() {
         return verified;
     }
 
@@ -199,6 +188,14 @@ public class User {
         this.verified = status;
     }
 
+
+    /**
+     * Sets the status of the user to verified
+     */
+    public void verify(){
+        setVerified(true);
+
+    }
 
     /**
      * adds a the given roomId to the User

@@ -19,7 +19,9 @@ public abstract class Device {
 
 
     public void setId(Integer id) {
-        this.id = id;
+        if(id==null) {
+            this.id = id;
+        }
     }
 
     public void setIcon(String icon) {

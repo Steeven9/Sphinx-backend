@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository("volatileDeviceStorage")
 public class VolatileDeviceStorage implements DeviceStorage {
     private static final HashMap<Integer, Device> devices = new HashMap<>();
-    private static Integer id = 0;
+    private static Integer id = 1;
 
     private Integer generateId(){
         return id++;
@@ -44,9 +44,11 @@ public class VolatileDeviceStorage implements DeviceStorage {
 
     @Override
     public boolean update(Device updatedDevice) {
-        if(devices.get(updatedDevice.getId()) == null){
+        if(devices.get(updatedDevice.getId()) == null || !devices.containsKey(updatedDevice.getId())){
             return false;
         }
+
+
         devices.put(updatedDevice.getId(), updatedDevice.makeCopy());
 
         return true;
