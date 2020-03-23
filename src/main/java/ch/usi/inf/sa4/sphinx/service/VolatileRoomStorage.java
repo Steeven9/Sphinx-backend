@@ -29,8 +29,9 @@ public class VolatileRoomStorage implements RoomStorage{
     }
 
     @Override
-    public void delete(String roomId) {
+    public boolean delete(String roomId) {
         rooms.remove(roomId);
+        return this.get(roomId) == null;
     }
 
     @Override

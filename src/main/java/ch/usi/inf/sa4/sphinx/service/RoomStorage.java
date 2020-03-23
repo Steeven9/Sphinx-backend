@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.Room;
 
 public interface RoomStorage {
@@ -26,8 +25,9 @@ public interface RoomStorage {
      * Deletes the room with the given Id. Has no effect if no such room exists.
      *
      * @param roomId the id of the room to delete
+     * @return
      */
-     void delete(String roomId);
+     boolean delete(String roomId);
 
 
     /**
@@ -36,5 +36,4 @@ public interface RoomStorage {
      * @return true if the operation is successful else false
      */
     boolean update(final Room updatedRoom);
-
 }
