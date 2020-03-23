@@ -54,7 +54,7 @@ public class UserController {
 		User newUser = new User(username, user.password, user.email, user.fullname);
 		mailer.send(newUser.getEmail(),
 				"Confirm your email account for smarthut",
-				"Visit this link to confirm your email address: https://smarthut.xyz/verification?code=" + newUser.getVerificationToken());
+				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
 		Storage.insertUser(newUser);
 
 		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
