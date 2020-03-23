@@ -7,9 +7,9 @@ public class SerialisableUser {
     public String email;
     public String fullname;
     public String password;
-    public String[] rooms;
+    public Integer[] rooms;
 
-    public SerialisableUser(String username, String email, String fullname, String password, String[] rooms){
+    public SerialisableUser(String username, String email, String fullname, String password, Integer[] rooms){
         this.username = username;
         this.email = email;
         this.fullname = fullname;
@@ -22,7 +22,7 @@ public class SerialisableUser {
         this.email = user.getEmail();
         this.fullname = user.getFullname();
         this.password = user.getPassword();
-        this.rooms = new String[user.getRooms().size()];
+        this.rooms = new Integer[user.getRooms().size()];
         for (int i = 0; i < this.rooms.length; i++) {
             this.rooms[i] = user.getRooms().get(i);
         }

@@ -117,7 +117,7 @@ public final class UserService {
      * @param username the name of the User whose room is to be removed
      * @param roomId the id of the room to remove
      */
-    public void removeRoom(final String username, final String roomId){
+    public void removeRoom(final String username, final Integer roomId){
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(username, user);
@@ -128,8 +128,8 @@ public final class UserService {
      * @param username username of the given User
      * @return Id of the Device(s) belonging to a given User
      */
-    public List<String> getDevices(final String username) {
-        var devices = new ArrayList<String>();
+    public List<Integer> getDevices(final String username) {
+        var devices = new ArrayList<Integer>();
         final User user = userStorage.get(username);
 
         if (user != null) {
@@ -148,7 +148,7 @@ public final class UserService {
      * @param deviceId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
-    public boolean ownsDevice(String username, String deviceId){
+    public boolean ownsDevice(String username, Integer deviceId){
         return getDevices(username).contains(deviceId);
     }
 
@@ -159,7 +159,7 @@ public final class UserService {
      * @param roomId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
-    public boolean ownsRoom(String username, String roomId){
+    public boolean ownsRoom(String username, Integer roomId){
         User user = userStorage.get(username);
         if(user == null) return false;
         return user.getRooms().contains(roomId);
@@ -186,7 +186,7 @@ public final class UserService {
      * @param username the username whose device is to be removed
      * @param deviceId the id of the device to be removed
      */
-    public void removeDevice(String username, String deviceId){
+    public void removeDevice(String username, Integer deviceId){
         User user = userStorage.get(username);
         if(user == null) return;
 

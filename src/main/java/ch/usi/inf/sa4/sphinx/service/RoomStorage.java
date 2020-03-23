@@ -10,16 +10,16 @@ public interface RoomStorage {
      * @param roomId the id of the requested room
      * @return the requested room or null if no room with that id exists.
      */
-    Room get(final String roomId);
+    Room get(final Integer roomId);
 
 
     /**
      * Inserts a copy of the given room into storage.
      *
      * @param room the room to insert
-     * @return a copy of the Room stored or null if the operation fails
+     * @return The id of the room stored or null if the operation fails
      */
-    String insert(final Room room);
+    Integer insert(final Room room);
 
 
     /**
@@ -27,7 +27,7 @@ public interface RoomStorage {
      *
      * @param roomId the id of the room to delete
      */
-     void delete(String roomId);
+     void delete(Integer roomId);
 
 
     /**
