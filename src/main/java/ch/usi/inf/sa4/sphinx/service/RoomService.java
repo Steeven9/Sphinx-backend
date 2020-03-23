@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,11 @@ DeviceStorage deviceStorage;
      * @return the id of the device or null if it fails
      *
      * */
-    public final Integer addDevice(final Integer roomId, int deviceType){
+    public final Integer addDevice(final Integer roomId, DeviceType deviceType){
+        Device newDevice = DeviceType.makeDevice(deviceType);
         Room room  = roomStorage.get(roomId);
 
-        //Needs to know what type of device to generate based on deviceType
-        throw new NotImplementedException();
+        return deviceStorage.insert(newDevice);
     }
 
 
