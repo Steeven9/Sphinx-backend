@@ -1,11 +1,13 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -121,5 +123,51 @@ public class RoomController {
         List<Device> list = roomService.getDevices(roomId);
         Device[] arr = new Device[list.size()];
         return ResponseEntity.ok(list.toArray(arr));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<SerialisableRoom> createRoom(@NotNull @RequestBody SerialisableRoom serialisableRoom,
+                                                       @NotBlank @RequestHeader("session-token") String sessionToken,
+                                                       @NotBlank @RequestHeader("user") String username,
+                                                       Errors errors) {
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+        if(!userService.validSession(username, sessionToken)){
+            return ResponseEntity.status(401).build();
+        }
+
+        Room room = new Room(serialisableRoom);
+
+        String id = userService.addRoom(username, room);
+        if (id == null) {
+            return ResponseEntity.status(400).build();
+        } else {
+            return ResponseEntity.status(200).body(new SerialisableRoom(roomService.get(id)));
+        }
+    }
+
+    @PutMapping("/{roomId}/")
+    public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable String roomId,
+                                                       @NotBlank @RequestBody String name,
+                                                       @NotBlank @RequestBody String icon,
+                                                       @NotBlank @RequestHeader("session-token") String sessionToken,
+                                                       @NotBlank @RequestHeader("user") String username,
+                                                       Errors errors) {
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+        if(!userService.validSession(username, sessionToken)){
+            return ResponseEntity.status(401).build();
+        }
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.status(404).build();
+        }
+        if (roomService.update(room)) {
+            return ResponseEntity.status(203).body(new SerialisableRoom(room));
+        } else {
+            return ResponseEntity.status(400).build();
+        }
     }
 }

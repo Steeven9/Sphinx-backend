@@ -18,15 +18,15 @@ DeviceStorage deviceStorage;
 
 
     /**
-     * @param deviceId the roomId
+     * @param roomId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Room get(final String deviceId){
-        return roomStorage.get(deviceId);
+    public final Room get(final String roomId){
+        return roomStorage.get(roomId);
     }
 
     /**
-     * Updates the given user, the username is used to find the User and the given User to update its fields
+     * Updates the given room, the room is used to find the User and the given User to update its fields
      * @param room the room to update
      * @return true if successful update else false
      */
@@ -68,6 +68,11 @@ DeviceStorage deviceStorage;
         return true;
     }
 
+    /**
+     * Given a room, return all the devices in this room.
+     * @param roomId the id of the room
+     * @return a list of all devices in this room
+     */
     public List<Device> getDevices(final String roomId) {
         Room room = roomStorage.get(roomId);
         List<String> ls = room.getDevices();

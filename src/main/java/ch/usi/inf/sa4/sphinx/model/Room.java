@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 
 import java.util.*;
 
@@ -24,6 +25,13 @@ public class Room {
 		background = "/images/default_room";
 		icon = "/images/default_icon";
 		devices = new ArrayList<>();
+	}
+
+	public Room(SerialisableRoom room) {
+		this.name = room.name;
+		this.icon = room.icon;
+		this.background = room.background;
+		this.devices = new ArrayList<>();
 	}
 
 	public void setId(String id) {
