@@ -26,7 +26,7 @@ DeviceStorage deviceStorage;
     }
 
     /**
-     * Updates the given room, the room is used to find the User and the given User to update its fields
+     * Updates the given user, the username is used to find the User and the given User to update its fields
      * @param room the room to update
      * @return true if successful update else false
      */
@@ -34,6 +34,12 @@ DeviceStorage deviceStorage;
         return  roomStorage.update(room);
     }
 
+    /**
+     * Removes the given room.
+     * @param id the id of the room
+     * @return true if the room was removed correctly
+     */
+    public boolean remove(final String id){return roomStorage.delete(id);}
 
     /**
      * Adds the type of device specified by deviceType to the Room with the given roomId
