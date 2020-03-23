@@ -13,32 +13,43 @@ import java.util.UUID;
 //Docs in RoomStorage
 @Component("volatileRoomStorage")
 public class VolatileRoomStorage implements RoomStorage{
-    private static final HashMap<String, Room> rooms = new HashMap<>();
+    private static final HashMap<Integer, Room> rooms = new HashMap<>();
+    private static Integer id = 0;
+    private Integer generateId(){
+        return id++;
+    }
 
     @Override
-    public Room get(String roomId) {
+    public Room get(Integer roomId) {
        return rooms.get(roomId);
     }
 
     @Override
-    public String insert(Room room) {
+    public Integer insert(Room room) {
         Room savedRoom = room.makeCopy();
-        savedRoom.setId(UUID.randomUUID().toString());
-        rooms.put(savedRoom.getId(), savedRoom);
+        Integer newId = generateId();
+        savedRoom.setId(newId);
+        rooms.put(newId, savedRoom);
         return savedRoom.getId();
     }
 
     @Override
-    public void delete(String roomId) {
+    public void delete(Integer roomId) {
         rooms.remove(roomId);
     }
 
     @Override
     public boolean update(Room updatedRoom) {
-        if(!rooms.containsKey(updatedRoom.getId())){
+        Room oldRoom = rooms.get(updatedRoom.getId());
+        if(oldRoom == null){
             return false;
         }
-        rooms.put(updatedRoom.getId(), updatedRoom.makeCopy());
-        return true;
+
+        if(oldRoom.getDevices().equals(updatedRoom.getDevices())) {
+            rooms.put(updatedRoom.getId(), updatedRoom.makeCopy());
+            return true;
+        }
+
+        return  false;
     }
 }

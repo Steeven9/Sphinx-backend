@@ -9,7 +9,7 @@ public interface DeviceStorage {
      * @param deviceId the id of the requested room
      * @return the requested room or null if no room with that id exists.
      */
-    Device get(final String deviceId);
+    Device get(final Integer deviceId);
 
 
     /**
@@ -18,7 +18,7 @@ public interface DeviceStorage {
      * @param device the room to insert
      * @return The id of the created device, null if it fails
      */
-    String insert(final Device device);
+    Integer insert(final Device device);
 
 
     /**
@@ -26,7 +26,7 @@ public interface DeviceStorage {
      *
      * @param deviceId the id of the Device to delete
      */
-    void delete(String deviceId);
+    void delete(Integer deviceId);
 
 
     /**

@@ -7,8 +7,8 @@ public class Room {
 	private String name;
 	private String background;
 	private String icon;
-	private final List<String> devices;
-    private String id;
+	private final List<Integer> devices;
+    private Integer id;
 
 
     //TODO
@@ -26,15 +26,11 @@ public class Room {
 		devices = new ArrayList<>();
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	private static int nextId = 0;
-
-	private static int makeId() { return nextId++; }
-
-	public String getId(){ return id;}
+	public Integer getId(){ return id;}
 
 	//-------- getter and setter for name ----------------------
 	public String getName(){
@@ -64,15 +60,15 @@ public class Room {
 	}
 
 	//---------- getter for devices ----------------
-	public List<String> getDevices(){
+	public List<Integer> getDevices(){
 		return Collections.unmodifiableList(devices);
 	}
 
-	public void addDevice(String device){
+	public void addDevice(Integer device){
 		devices.add(device);
 	}
 	
-	public void removeDevice(String device){
+	public void removeDevice(Integer device){
 		devices.remove(device);
 	}
 }

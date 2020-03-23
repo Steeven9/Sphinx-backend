@@ -14,7 +14,7 @@ public class User {
     private String fullname;
     private final String confirmCode;
     private String resetCode;
-    private final List<String> rooms;
+    private final List<Integer> rooms;
     private String sessionToken;
     private final String verificationToken;
     private Boolean verified;
@@ -46,7 +46,7 @@ public class User {
         this.fullname = user.fullname;
         this.confirmCode = user.confirmCode;
         this.resetCode = user.resetCode;
-        this.rooms = new ArrayList<String>(user.rooms);
+        this.rooms = new ArrayList<Integer>(user.rooms);
         this.sessionToken = user.sessionToken;
         this.verified = user.verified;
     }
@@ -121,7 +121,7 @@ public class User {
      *
      * @return returns a list of the Ids of the rooms owned by the user
      */
-    public List<String> getRooms() {
+    public List<Integer> getRooms() {
         return rooms;
     }
 
@@ -205,7 +205,7 @@ public class User {
      *
      * @param roomId id of the room to be added
      */
-    public void addRoom(final String roomId) {
+    public void addRoom(final Integer roomId) {
         rooms.add(roomId);
     }
 
@@ -214,7 +214,7 @@ public class User {
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom(final String roomId) {
+    public void removeRoom(final Integer roomId) {
         rooms.remove(roomId);//Needed otherwise it will just remove the index
     }
 
