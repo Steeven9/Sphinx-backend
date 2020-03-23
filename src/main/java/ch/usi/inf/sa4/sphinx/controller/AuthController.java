@@ -90,10 +90,9 @@ public class AuthController {
 
         String resetCode = resetUser.createResetCode();
 
-        // TODO: use the actual route provided by the frontend
         mailer.send(email,
                 "Reset your password on smarthut.xyz",
-                "Visit this link to reset your password: https://smarthut.xyz/auth/change/" + email + "/" + resetCode);
+                "Visit this link to reset your password: https://smarthut.xyz/auth/reset/" + email + "/" + resetCode);
 
         return ResponseEntity.noContent().build();
     }
@@ -107,8 +106,7 @@ public class AuthController {
      *      404 if the provided email address does not exist
      *      403 if the provided reset code does not match the true code.
      */
-    // TODO: maybe make this a subroute of /reset
-    @PostMapping("/change/{email}/{resetCode}")
+    @PostMapping("/reset/{email}/{resetCode}")
     public ResponseEntity<Boolean> changePassword(@PathVariable String email, @PathVariable String resetCode,
                                                   @RequestBody String newPassword) {
         User changedUser = Storage.getUserByEmail(email);
