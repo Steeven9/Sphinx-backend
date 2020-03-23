@@ -32,6 +32,8 @@ DeviceStorage deviceStorage;
     }
 
 
+
+
     /**
      * Adds the type of device specified by deviceType to the Room with the given roomId
      * @param roomId id of the Room
@@ -39,7 +41,7 @@ DeviceStorage deviceStorage;
      * @return the id of the device or null if it fails
      *
      * */
-    public final Integer addDevice(final Integer roomId, String deviceType){
+    public final Integer addDevice(final Integer roomId, int deviceType){
         Room room  = roomStorage.get(roomId);
 
         //Needs to know what type of device to generate based on deviceType

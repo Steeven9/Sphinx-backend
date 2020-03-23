@@ -166,6 +166,14 @@ public final class UserService {
     }
 
 
+    public List<Room> getPopulatedRooms(String username){
+        User user = get(username);
+        if(user != null){
+            return user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
 
 
     /**

@@ -61,7 +61,7 @@ public class AuthController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        if (!user.getVerified()) {
+        if (!user.isVerified()) {
             return ResponseEntity.status(403).build();
         }
         if (!user.getPassword().equals(password)) {
@@ -92,7 +92,7 @@ public class AuthController {
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
-        if (verifiedUser.getVerified()) {
+        if (verifiedUser.isVerified()) {
             return ResponseEntity.badRequest().build();
         }
         if (!verifiedUser.getVerificationToken().equals(verificationCode)) {

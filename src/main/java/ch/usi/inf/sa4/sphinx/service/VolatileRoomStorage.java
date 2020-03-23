@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component("volatileRoomStorage")
 public class VolatileRoomStorage implements RoomStorage{
     private static final HashMap<Integer, Room> rooms = new HashMap<>();
-    private static Integer id = 0;
+    private static Integer id = 1;
     private Integer generateId(){
         return id++;
     }
