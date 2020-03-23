@@ -123,6 +123,19 @@ public final class UserService {
         userStorage.update(username, user);
     }
 
+    /**
+     * Returns a list of rooms of this user.
+     * @param user User of these/this room/s
+     * @return a list of rooms
+     */
+    public List<Room> getRooms(User user) {
+        var rooms = new ArrayList<Room>();
+        var roomIds = user.getRooms();
+        for (var roomId: roomIds){
+            rooms.add(roomService.get(roomId));
+        }
+        return rooms;
+    }
 
     /**
      * @param username username of the given User
