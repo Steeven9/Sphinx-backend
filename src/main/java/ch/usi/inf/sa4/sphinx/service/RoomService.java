@@ -82,6 +82,4 @@ DeviceStorage deviceStorage;
         return list;
     }
 
-
-
 }

@@ -14,6 +14,7 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Array;
 import java.util.List;
 
 
@@ -37,7 +38,6 @@ public class RoomController {
      */
     @GetMapping("/")
     public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
-
                                                 @NotNull @RequestHeader("user") String username,
                                                 @RequestParam(name="filter", required=false)
                                                 Errors errors) {
@@ -53,7 +53,6 @@ public class RoomController {
 
             Room[] arr = new Room[userService.getRooms(user).size()];
             return ResponseEntity.ok(userService.getRooms(user).toArray(arr));
-
         }
         return ResponseEntity.notFound().build();
     }
@@ -74,6 +73,7 @@ public class RoomController {
         if (res != null) {
             return res;
         }
+
 
         return ResponseEntity.ok(new SerialisableRoom(roomService.get(roomId)));
 
@@ -193,6 +193,7 @@ public class RoomController {
             return ResponseEntity.status(403).build();
         }
     }
+
     private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, String roomId) {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
