@@ -1,18 +1,20 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     Mailer mailer;
+    @Autowired
+    UserService userService;
 
     /**
      * Validates a given session token
@@ -36,6 +38,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+
     /**
      * Logs in using given credentials.
      * @param username the username or email of the user to log in
@@ -52,19 +55,25 @@ public class AuthController {
         user = Storage.getUser(username);
         if (user == null) {
             user = Storage.getUserByEmail(username);
+
         }
 
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        if (!user.isVerified()) {
+        if (!user.getVerified()) {
             return ResponseEntity.status(403).build();
         }
         if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(401).build();
         }
 
-        return ResponseEntity.ok(user.createSessionToken());
+        user.createSessionToken();
+        if(userService.update(user.getUsername(), user)){
+            return ResponseEntity.status(500).build();
+        }
+
+        return ResponseEntity.ok(user.getSessionToken());
     }
 
     /**
@@ -83,13 +92,13 @@ public class AuthController {
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
-        if (verifiedUser.isVerified()) {
+        if (verifiedUser.getVerified()) {
             return ResponseEntity.badRequest().build();
         }
         if (!verifiedUser.getVerificationToken().equals(verificationCode)) {
             return ResponseEntity.status(401).build();
         }
-        verifiedUser.verify();
+        verifiedUser.setVerified(true);
         return ResponseEntity.ok().build();
     }
 
