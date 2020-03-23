@@ -12,24 +12,20 @@ public class AuthController {
 
     /**
      * Logs in using given credentials.
-     * @param givenUser a SerialisableUser containing the credentials provided by the client, parsed from json.
+     * @param username the username or email of the user to log in
+     * @param password the password of the user to log in
      * @return A ResponseEntity containing status code 200 and the new session token as a body if successful or
      *      status 400 if no username or email is provided
      *      status 404 if provided username or email do not correspond to any user
      *      status 403 if the user is not verified yet
      *      status 401 if the password was incorrect
      */
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody SerialisableUser givenUser) {
-        if (givenUser.email == null && givenUser.username == null) {
-            return ResponseEntity.status(400).build();
-        }
-
+    @PostMapping("/login/{username}")
+    public ResponseEntity<String> login(@PathVariable String username, @RequestBody String password) {
         User user;
-        if (givenUser.username != null) {
-            user = Storage.getUser(givenUser.username);
-        } else {
-            user = Storage.getUserByEmail(givenUser.email);
+        user = Storage.getUser(username);
+        if (user == null) {
+            user = Storage.getUserByEmail(username);
         }
 
         if (user == null) {
@@ -38,7 +34,7 @@ public class AuthController {
         if (!user.isVerified()) {
             return ResponseEntity.status(403).build();
         }
-        if (!user.getPassword().equals(givenUser.password)) {
+        if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(401).build();
         }
 
@@ -47,6 +43,7 @@ public class AuthController {
 
     /**
      * Verifies a user's email address.
+     * @param email the email address of the user to verify
      * @param verificationCode the verification code of the user requesting verification
      * @return A ResponseEntity with one of the following status codes:
      *      404 if no user with the given username exists
