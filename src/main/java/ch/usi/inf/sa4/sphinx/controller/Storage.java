@@ -11,8 +11,8 @@ import java.util.HashMap;
  */
 public class Storage {
     private static HashMap<String, User> users = new HashMap<>();
-    private static HashMap<Integer, Room> rooms = new HashMap<>();
-    private static HashMap<Integer, Device> devices = new HashMap<>();
+    private static HashMap<String, Room> rooms = new HashMap<>();
+    private static HashMap<String, Device> devices = new HashMap<>();
 
     /**
      * Retrieves a user given its username.
