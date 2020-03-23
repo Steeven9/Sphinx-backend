@@ -92,7 +92,7 @@ public class AuthController {
 
         mailer.send(email,
                 "Reset your password on smarthut.xyz",
-                "Visit this link to reset your password: https://smarthut.xyz/auth/reset?email=" + email + "&code=" + resetCode);
+                "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode);
 
         return ResponseEntity.noContent().build();
     }
