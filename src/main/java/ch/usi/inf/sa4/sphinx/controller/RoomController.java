@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -13,6 +14,7 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +34,10 @@ public class RoomController {
      * @param sessionToken session token of the user
      * @param username the username of the user
      * @param errors in case error occur
-     * @return a ResponseEntity with the ids of the rooms owned by the user
+     * @return a ResponseEntity with the array of rooms owned by the user
      */
     @GetMapping("/")
-    public ResponseEntity<String[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                 @NotNull @RequestHeader("user") String username,
                                                 @RequestParam(name="filter", required=false)
                                                 Errors errors) {
@@ -49,16 +51,27 @@ public class RoomController {
                 return ResponseEntity.status(401).build();
             }
 
-            List<String> rooms = user.getRooms();
-            return ResponseEntity.ok(rooms.stream().toArray(String[]::new));
+            Room[] arr = new Room[userService.getRooms(user).size()];
+            return ResponseEntity.ok(userService.getRooms(user).toArray(arr));
         }
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     * Returns a room with all details about it.
+     * @param roomId the id of the room
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @return the room with all details about it
+     */
     @GetMapping("/{roomId}")
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable String roomId,
                                                       @RequestHeader("session-token") String sessionToken,
-                                                      @RequestHeader("user") String username) {
+                                                      @RequestHeader("user") String username,
+                                                        Errors errors) {
+        if (errors.hasErrors()){
+            return ResponseEntity.status(401).build();
+        }
         User user = Storage.getUser(username);
 
         if (user == null) {
@@ -77,11 +90,22 @@ public class RoomController {
         }
     }
 
+    /**
+     * Given the room, returns all the devices in this room.
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @param errors in case error occur
+     * @return an array of devices in given room
+     */
     @GetMapping("/{roomId}/devices/")
-    public ResponseEntity<String[]> getDevice(@PathVariable String roomId,
-                                                        @RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("user") String username
+    public ResponseEntity<Device[]> getDevice(@PathVariable String roomId,
+                                              @RequestHeader("session-token") String sessionToken,
+                                              @RequestHeader("user") String username,
+                                              Errors errors
                                                         ) {
+        if (errors.hasErrors()){
+            return ResponseEntity.status(401).build();
+        }
         User user = Storage.getUser(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -94,8 +118,8 @@ public class RoomController {
         if (room == null) {
             return ResponseEntity.notFound().build();
         }
-        List<String> list = room.getDevices();
-
-        return ResponseEntity.ok(list.stream().toArray(String[]::new));
+        List<Device> list = roomService.getDevices(roomId);
+        Device[] arr = new Device[list.size()];
+        return ResponseEntity.ok(list.toArray(arr));
     }
 }
