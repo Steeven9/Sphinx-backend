@@ -76,7 +76,7 @@ public class DeviceController {
         deviceService.get(deviceId);
         User user = userService.get(username);
 
-        if (!userService.validSession(username, sessionToken) || userService.ownsDevice(username, deviceId)) {
+        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
