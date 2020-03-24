@@ -46,7 +46,7 @@ public class SerialisableDevice {
                 this.roomId = room.getId();
             }
         }
-        this.type = DeviceType.deviceTypeint(DeviceType.deviceToDeviceType(device));
+        this.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device));
 
 
 

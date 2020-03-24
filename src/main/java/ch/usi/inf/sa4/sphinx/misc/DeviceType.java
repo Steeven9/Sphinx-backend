@@ -20,7 +20,7 @@ public enum DeviceType {
     DIMMABLE_LIGHT,
     SWITCH,
     DIMMABLE_SWITCH,
-    SATELESS_DIMMABLE_SWITCH,
+    STATELESS_DIMMABLE_SWITCH,
     SMART_PLUG,
     HUMIDITY_SENSOR,
     LIGHT_SENSOR,
@@ -39,7 +39,7 @@ public enum DeviceType {
             case 4:
                 return DIMMABLE_SWITCH;
             case 5:
-                return SATELESS_DIMMABLE_SWITCH;
+                return STATELESS_DIMMABLE_SWITCH;
             case 6:
                 return SMART_PLUG;
             case 7:
@@ -70,7 +70,7 @@ public enum DeviceType {
             return DIMMABLE_SWITCH;
         }
         if (d instanceof StatelessDimmableSwitch) {
-            return SATELESS_DIMMABLE_SWITCH;
+            return STATELESS_DIMMABLE_SWITCH;
         }
         if (d instanceof SmartPlug) {
             return SMART_PLUG;
@@ -92,44 +92,67 @@ public enum DeviceType {
     }
 
 
-    public static int deviceClassToInt(Class c) {
+    public static DeviceType deviceClassToDeviceType(Class c) {
 
-        if (c.isInstance(Light.class)) {
-            return 1;
+        if (Light.class.equals(c)) {
+            return LIGHT;
         }
-        if (c.isInstance(DimmableLight.class)) {
-            return 2;
+        if (DimmableLight.class.equals(c)) {
+            return DIMMABLE_LIGHT;
         }
-        if (c.isInstance(Switch.class)) {
-            return 3;
+        if (Switch.class.equals(c)) {
+            return SWITCH;
         }
-        if (c.isInstance(DimmableSwitch.class)) {
-            return 4;
+        if (DimmableSwitch.class.equals(c)) {
+            return DIMMABLE_SWITCH;
         }
-        if (c.isInstance(StatelessDimmableSwitch.class)) {
-            return 5;
+        if (StatelessDimmableSwitch.class.equals(c)) {
+            return STATELESS_DIMMABLE_SWITCH;
         }
-        if (c.isInstance(SmartPlug.class)) {
-            return 6;
+        if (SmartPlug.class.equals(c)) {
+            return SMART_PLUG;
         }
-        if (c.isInstance(HumiditySensor.class)) {
-            return 7;
+        if (HumiditySensor.class.equals(c)) {
+            return HUMIDITY_SENSOR;
         }
-        if (c.isInstance(LightSensor.class)) {
-            return 8;
+        if (LightSensor.class.equals(c)) {
+            return LIGHT_SENSOR;
         }
-        if (c.isInstance(TempSensor.class)) {
-            return 9;
+        if (TempSensor.class.equals(c)) {
+            return TEMP_SENSOR;
         }
-        if (c.isInstance(MotionSensor.class)) {
-            return 10;
+        if (MotionSensor.class.equals(c)) {
+            return MOTION_SENSOR;
         }
-        return 0;
+        return INVALID_DEVICE;
     }
 
 
-    public static int deviceTypeint(DeviceType d) {
-        return deviceClassToInt(d.getClass());
+    public static int deviceTypetoInt(DeviceType d) {
+        switch (d) {
+            case LIGHT:
+                return 1;
+            case DIMMABLE_LIGHT:
+                return 2;
+            case SWITCH:
+                return 3;
+            case DIMMABLE_SWITCH:
+                return 4;
+            case STATELESS_DIMMABLE_SWITCH:
+                return 5;
+            case SMART_PLUG:
+                return 6;
+            case HUMIDITY_SENSOR:
+                return 7;
+            case LIGHT_SENSOR:
+                return 8;
+            case TEMP_SENSOR:
+                return 9;
+            case MOTION_SENSOR:
+                return 10;
+            default:
+                return 0;
+        }
     }
 
 
@@ -143,7 +166,7 @@ public enum DeviceType {
                 return new Switch();
             case DIMMABLE_SWITCH:
                 return new DimmableSwitch();
-            case SATELESS_DIMMABLE_SWITCH:
+            case STATELESS_DIMMABLE_SWITCH:
                 return new StatelessDimmableSwitch();
             case SMART_PLUG:
                 return new SmartPlug();
