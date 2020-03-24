@@ -92,31 +92,44 @@ public enum DeviceType {
     }
 
 
-    public static int deviceTypeint(DeviceType d) {
-        switch (d) {
-            case LIGHT:
-                return 1;
-            case DIMMABLE_LIGHT:
-                return 2;
-            case SWITCH:
-                return 3;
-            case DIMMABLE_SWITCH:
-                return 4;
-            case SATELESS_DIMMABLE_SWITCH:
-                return 5;
-            case SMART_PLUG:
-                return 6;
-            case HUMIDITY_SENSOR:
-                return 7;
-            case LIGHT_SENSOR:
-                return 8;
-            case TEMP_SENSOR:
-                return 9;
-            case MOTION_SENSOR:
-                return 10;
-            default:
-                return 0;
+    public static int deviceClassToInt(Class c) {
+
+        if (c.isInstance(Light.class)) {
+            return 1;
         }
+        if (c.isInstance(DimmableLight.class)) {
+            return 2;
+        }
+        if (c.isInstance(Switch.class)) {
+            return 3;
+        }
+        if (c.isInstance(DimmableSwitch.class)) {
+            return 4;
+        }
+        if (c.isInstance(StatelessDimmableSwitch.class)) {
+            return 5;
+        }
+        if (c.isInstance(SmartPlug.class)) {
+            return 6;
+        }
+        if (c.isInstance(HumiditySensor.class)) {
+            return 7;
+        }
+        if (c.isInstance(LightSensor.class)) {
+            return 8;
+        }
+        if (c.isInstance(TempSensor.class)) {
+            return 9;
+        }
+        if (c.isInstance(MotionSensor.class)) {
+            return 10;
+        }
+        return 0;
+    }
+
+
+    public static int deviceTypeint(DeviceType d) {
+        return deviceClassToInt(d.getClass());
     }
 
 
