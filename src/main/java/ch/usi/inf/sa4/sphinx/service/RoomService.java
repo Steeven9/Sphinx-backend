@@ -6,6 +6,10 @@ import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RoomService {
 
@@ -24,6 +28,19 @@ DeviceStorage deviceStorage;
     }
 
     /**
+     * Returns a populated list of devices owned by a given room
+     * @param roomId id of the room
+     * @return the list of devices owned
+     */
+    public final List<Device> getPopulatedDevices(final  Integer roomId){
+        Room room = roomStorage.get(roomId);
+        if(room != null){
+            return room.getDevices().stream().map(deviceStorage::get).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    /**
      * Updates the given user, the username is used to find the User and the given User to update its fields
      * @param room the room to update
      * @return true if successful update else false
@@ -31,6 +48,8 @@ DeviceStorage deviceStorage;
     public final boolean update(final Room room){
         return  roomStorage.update(room);
     }
+
+
 
 
 

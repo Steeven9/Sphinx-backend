@@ -36,26 +36,26 @@ public class DeviceController {
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
     @GetMapping("/")
-    public ResponseEntity<Integer[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                    @RequestHeader("user") String username,
-                                                    Errors errors) {
-
+    public ResponseEntity<SerialisableDevice[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
+                                                               @RequestHeader("user") final String username,
+                                                               Errors errors) {
 
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
 
-        User user = Storage.getUser(username);
-        if (user != null) {
-            if (!user.getSessionToken().equals(sessionToken)) {
-                return ResponseEntity.status(401).build();
-            }
+        final User user = Storage.getUser(username);
+        if (user == null || !userService.validSession(username, sessionToken)) {
+            return ResponseEntity.status(401).build();
 
-            List<Integer> devices = userService.getDevices(username);
-            return ResponseEntity.ok(devices.toArray(new Integer[0]));
         }
+        List<Device> devices = userService.getPopulatedDevices(username);
 
-        return ResponseEntity.notFound().build();
+        SerialisableDevice[] serializedDevices = devices.stream().
+                map(device -> new SerialisableDevice(device, user)).
+                toArray(SerialisableDevice[]::new);
+
+        return ResponseEntity.ok(serializedDevices);
     }
 
 
@@ -116,7 +116,7 @@ public class DeviceController {
 
     /**
      * @param deviceId id  of the device to be modified
-     * @param device device to modify
+     * @param device   device to modify
      * @return a ResponseEntity with the data of the modified device (200), not found (404) if no such device exist or
      * 500 in case of a server error
      */
@@ -140,7 +140,6 @@ public class DeviceController {
         Device storageDevice = deviceService.get(deviceId);
         storageDevice.setIcon(device.icon);
         storageDevice.setName(device.name);
-
 
         if (deviceService.update(storageDevice)) {
             return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
