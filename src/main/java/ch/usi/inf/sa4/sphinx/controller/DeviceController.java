@@ -34,13 +34,13 @@ public class DeviceController {
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
     @GetMapping("/")
-    public ResponseEntity<Integer[]> getUserDevices(@NotNull @RequestHeader("session-token") String sessionToken,
-                                                    @NotNull @RequestHeader("user") String username,
+    public ResponseEntity<Integer[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
+                                                    @RequestHeader("user") String username,
                                                     Errors errors) {
 
 
         if (errors.hasErrors()) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.badRequest().build();
         }
 
         User user = Storage.getUser(username);
@@ -50,7 +50,7 @@ public class DeviceController {
             }
 
             List<Integer> devices = userService.getDevices(username);
-            return ResponseEntity.ok(devices.stream().toArray(Integer[]::new));
+            return ResponseEntity.ok(devices.toArray(new Integer[0]));
         }
 
         return ResponseEntity.notFound().build();
@@ -64,17 +64,21 @@ public class DeviceController {
     @GetMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> getDevice(@PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("user") String username) {
+                                                        @RequestHeader("user") String username,
+                                                        Errors errors) {
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         deviceService.get(deviceId);
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
 
         if (!userService.validSession(username, sessionToken) || userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
         return ResponseEntity.ok(new SerialisableDevice(deviceService.get(deviceId), user));
-
-
     }
 
 
@@ -88,8 +92,8 @@ public class DeviceController {
      */
     @PostMapping("/")
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
-                                                           @NotBlank @RequestHeader("session-token") String sessionToken,
-                                                           @NotBlank @RequestHeader("user") String username,
+                                                           @RequestHeader("session-token") String sessionToken,
+                                                           @RequestHeader("user") String username,
                                                            Errors errors) {
 
         if (errors.hasErrors()) {
@@ -101,7 +105,7 @@ public class DeviceController {
         }
 
         User user = userService.get(username);
-        Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
+        int deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
 
         return ResponseEntity.status(201).body(new SerialisableDevice(deviceService.get(deviceId), user));
 
@@ -119,8 +123,8 @@ public class DeviceController {
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
                                                            @NotBlank @RequestBody String name,
                                                            @NotBlank @RequestBody String icon,
-                                                           @NotBlank @RequestHeader("session-token") String sessionToken,
-                                                           @NotBlank @RequestHeader("user") String username,
+                                                           @RequestHeader("session-token") String sessionToken,
+                                                           @RequestHeader("user") String username,
                                                            Errors errors) {
 
 
@@ -139,7 +143,7 @@ public class DeviceController {
 
 
         if (deviceService.update(device)) {
-            return ResponseEntity.status(201).body(new SerialisableDevice(deviceService.get(deviceId), user));
+            return ResponseEntity.status(200).body(new SerialisableDevice(deviceService.get(deviceId), user));
         }
 
         return ResponseEntity.status(500).build();
@@ -153,7 +157,7 @@ public class DeviceController {
     @DeleteMapping("/{deviceId}")
     public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable Integer deviceId,
                                                @RequestHeader("session-token") String sessionToken,
-                                               @NotBlank @RequestHeader("user") String username,
+                                               @RequestHeader("user") String username,
                                                Errors errors) {
 
         if (errors.hasErrors()) {
@@ -165,7 +169,7 @@ public class DeviceController {
         }
         userService.removeDevice(username, deviceId);
 
-        return ResponseEntity.status(202).build();
+        return ResponseEntity.status(200).build();
     }
 
 
