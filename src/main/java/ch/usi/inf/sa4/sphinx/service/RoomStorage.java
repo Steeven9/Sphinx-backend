@@ -25,7 +25,7 @@ public interface RoomStorage {
      * Deletes the room with the given Id. Has no effect if no such room exists.
      *
      * @param roomId the id of the room to delete
-     * @return
+     * @return True is the room was deleted correctly
      */
      boolean delete(String roomId);
 

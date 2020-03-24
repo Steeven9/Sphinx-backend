@@ -64,28 +64,16 @@ public class RoomController {
      */
     @GetMapping("/{roomId}")
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable String roomId,
-                                                      @RequestHeader("session-token") String sessionToken,
-                                                      @RequestHeader("user") String username,
+                                                    @NotNull @RequestHeader("session-token") String sessionToken,
+                                                    @NotNull @RequestHeader("user") String username,
                                                         Errors errors) {
-        if (errors.hasErrors()){
-            return ResponseEntity.status(401).build();
-        }
-        User user = Storage.getUser(username);
-
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (!user.getSessionToken().equals(sessionToken)) {
-            return ResponseEntity.status(401).build();
+        var res = check(sessionToken, username, errors, roomId);
+        if (res != null) {
+            return res;
         }
 
-        Room room = roomService.get(roomId);
+        return ResponseEntity.ok(new SerialisableRoom(roomService.get(roomId)));
 
-        if (room != null) {
-            return ResponseEntity.ok(new SerialisableRoom(room));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     /**
@@ -97,8 +85,8 @@ public class RoomController {
      */
     @GetMapping("/{roomId}/devices/")
     public ResponseEntity<Device[]> getDevice(@PathVariable String roomId,
-                                              @RequestHeader("session-token") String sessionToken,
-                                              @RequestHeader("user") String username,
+                                              @NotNull @RequestHeader("session-token") String sessionToken,
+                                              @NotNull @RequestHeader("user") String username,
                                               Errors errors
                                                         ) {
         if (errors.hasErrors()){
@@ -166,16 +154,11 @@ public class RoomController {
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        Errors errors) {
-        if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
-        }
-        if(!userService.validSession(username, sessionToken)){
-            return ResponseEntity.status(401).build();
+        var res = check(sessionToken, username, errors, roomId);
+        if (res != null) {
+            return res;
         }
         Room room = roomService.get(roomId);
-        if (room == null) {
-            return ResponseEntity.status(404).build();
-        }
         if (roomService.update(new Room(serialisableRoom))) {
             return ResponseEntity.status(203).body(new SerialisableRoom(room));
         } else {
@@ -197,6 +180,17 @@ public class RoomController {
                                                         @NotBlank @RequestHeader("session-token") String sessionToken,
                                                         @NotBlank @RequestHeader("user") String username,
                                                         Errors errors) {
+        var res = check(sessionToken, username, errors, roomId);
+        if (res != null) {
+            return res;
+        }
+        if (userService.removeRoom(username, roomId)) {
+            return ResponseEntity.status(203).build();
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+    private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, String roomId) {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
@@ -205,12 +199,9 @@ public class RoomController {
         }
         Room room = roomService.get(roomId);
         if (room == null) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.notFound().build();
         }
-        if (roomService.remove(roomId)) {
-            return ResponseEntity.status(203).build();
-        } else {
-            return ResponseEntity.status(403).build();
-        }
+        return null;
     }
 }
+

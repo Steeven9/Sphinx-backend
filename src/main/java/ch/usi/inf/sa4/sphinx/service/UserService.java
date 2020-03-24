@@ -118,13 +118,15 @@ public final class UserService {
 
 
     /**
+     * Removes a given room.
      * @param username the name of the User whose room is to be removed
      * @param roomId the id of the room to remove
      */
-    public void removeRoom(final String username, final String roomId){
+    public boolean removeRoom(final String username, final String roomId){
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(username, user);
+        return roomStorage.delete(roomId);
     }
 
     /**
