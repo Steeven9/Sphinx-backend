@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 import java.util.*;
 
+
+
 public class Room {
 	private String name;
 	private String background;

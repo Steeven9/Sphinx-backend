@@ -29,6 +29,7 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
+
     /**
      * {@inheritDoc}
      */

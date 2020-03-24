@@ -35,6 +35,7 @@ public class StatelessDimmableSwitch extends Device {
      * {@inheritDoc}
      */
     @Override
+
     public String getLabel() {
         return this.button ? "+" : "-";
     }

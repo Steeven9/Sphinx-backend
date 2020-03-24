@@ -31,6 +31,10 @@ public abstract class Device {
         return on;
     }
 
+    public void setOn(boolean on) {
+        this.on = on;
+    }
+
     /**
      * Returns a user-facing description of the status of this device.
      * @return a human-friendly description of the current state of the device

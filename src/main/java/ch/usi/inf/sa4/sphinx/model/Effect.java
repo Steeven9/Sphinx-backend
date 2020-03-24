@@ -7,5 +7,5 @@ public abstract class Effect<T> {
         device = deviceId;
     }
 
-    public abstract void execute(T data);
+    public abstract void execute( T effect);
 }
