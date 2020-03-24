@@ -15,6 +15,28 @@ public class AuthController {
     Mailer mailer;
 
     /**
+     * Validates a given session token
+     * @param username the username of the user to authenticate
+     * @param sessionToken the session token to validate
+     * @return A ResponseEntity containing status code 200 if the username and session token match or
+     *      status 404 if no user with the given username exists
+     *      status 401 id the username and session token do not match
+     */
+    @PostMapping("/validate")
+    public ResponseEntity<Boolean> validate(@RequestHeader("user") String username,
+                                            @RequestHeader("session-token") String sessionToken) {
+        User user = Storage.getUser(username);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!user.getSessionToken().equals(sessionToken)) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Logs in using given credentials.
      * @param username the username or email of the user to log in
      * @param password the password of the user to log in
