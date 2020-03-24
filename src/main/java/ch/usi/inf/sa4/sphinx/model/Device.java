@@ -10,7 +10,7 @@ import java.util.function.Function;
  *
  */
 public abstract class Device {
-    private  String id;
+    private  Integer id;
     private String icon;
     private String name;
     protected boolean on;
@@ -18,7 +18,7 @@ public abstract class Device {
 
 
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -30,7 +30,7 @@ public abstract class Device {
         this.name = name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 

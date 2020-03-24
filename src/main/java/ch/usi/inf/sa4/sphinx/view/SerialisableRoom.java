@@ -5,13 +5,13 @@ import ch.usi.inf.sa4.sphinx.model.Room;
 import java.util.Arrays;
 
 public class SerialisableRoom {
-    public String id;
+    public Integer id;
     public String name;
     public String icon;
     public String background;
     public String[] devices;
 
-    public SerialisableRoom(String id, String name, String icon, String background, String[] devices) {
+    public SerialisableRoom(Integer id, String name, String icon, String background, String[] devices) {
         this.id = id;
         this.name = name;
         this.icon = icon;
