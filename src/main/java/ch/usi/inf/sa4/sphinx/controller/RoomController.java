@@ -73,7 +73,6 @@ public class RoomController {
             return res;
         }
 
-
         return ResponseEntity.ok(new SerialisableRoom(roomService.get(roomId)));
 
     }
@@ -205,7 +204,6 @@ public class RoomController {
             return ResponseEntity.notFound().build();
         }
         return null;
-
     }
 }
 
