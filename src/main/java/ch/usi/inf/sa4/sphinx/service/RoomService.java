@@ -35,13 +35,6 @@ DeviceStorage deviceStorage;
     }
 
     /**
-     * Removes the given room.
-     * @param id the id of the room
-     * @return true if the room was removed correctly
-     */
-    public boolean remove(final String id){return roomStorage.delete(id);}
-
-    /**
      * Adds the type of device specified by deviceType to the Room with the given roomId
      * @param roomId id of the Room
      * @param deviceType the type of Device (ex DimmableLight)
@@ -53,7 +46,6 @@ DeviceStorage deviceStorage;
         //Needs to know what type of device to generate based on deviceType
         throw new NotImplementedException();
     }
-
 
     /**
      * Deletes the device with the given Id from the room with the given Id

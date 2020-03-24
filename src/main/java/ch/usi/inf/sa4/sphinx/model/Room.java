@@ -31,7 +31,7 @@ public class Room {
 		this.name = room.name;
 		this.icon = room.icon;
 		this.background = room.background;
-		this.devices = new ArrayList<>();
+		this.devices = Arrays.asList(room.devices);
 	}
 
 	public void setId(String id) {
