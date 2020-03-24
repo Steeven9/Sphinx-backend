@@ -14,6 +14,11 @@ import java.util.UUID;
 @Component("volatileRoomStorage")
 public class VolatileRoomStorage implements RoomStorage{
     private static final HashMap<Integer, Room> rooms = new HashMap<>();
+    private static Integer id = 1;
+
+    private Integer generateId(){
+        return id++;
+    }
 
     @Override
     public Room get(Integer roomId) {
@@ -23,7 +28,7 @@ public class VolatileRoomStorage implements RoomStorage{
     @Override
     public Integer insert(Room room) {
         Room savedRoom = room.makeCopy();
-        savedRoom.setId(new Integer(UUID.randomUUID().toString()));
+        savedRoom.setId(generateId());
         rooms.put(savedRoom.getId(), savedRoom);
         return savedRoom.getId();
     }

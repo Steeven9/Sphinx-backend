@@ -15,33 +15,40 @@ import java.util.UUID;
 
 @Repository("volatileDeviceStorage")
 public class VolatileDeviceStorage implements DeviceStorage {
-    private static final HashMap<String, Device> devices = new HashMap<>();
+    private static final HashMap<Integer, Device> devices = new HashMap<>();
+    private static Integer id = 1;
+
+    private Integer generateId(){
+        return id++;
+    }
 
 
     @Override
-    public Device get(String deviceId) {
+    public Device get(Integer deviceId) {
         return devices.get(deviceId);
     }
 
     @Override
-    public String insert(Device device) {
+    public Integer insert(Device device) {
         Device savedDevice = device.makeCopy();
-        var newId = UUID.randomUUID().toString();
+        var newId = generateId();
         savedDevice.setId(newId);
         devices.put(newId, savedDevice);
         return newId;
     }
 
     @Override
-    public void delete(String deviceId) {
+    public void delete(Integer deviceId) {
         devices.remove(deviceId);
     }
 
     @Override
     public boolean update(Device updatedDevice) {
-        if(devices.get(updatedDevice.getId()) == null){
+        if(devices.get(updatedDevice.getId()) == null || !devices.containsKey(updatedDevice.getId())){
             return false;
         }
+
+
         devices.put(updatedDevice.getId(), updatedDevice.makeCopy());
 
         return true;

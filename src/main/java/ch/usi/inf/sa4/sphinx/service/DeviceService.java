@@ -16,7 +16,7 @@ public final class DeviceService {
      * @param deviceId the Id of the device
      * @return the Device with corresponding deviceId
      */
-    public Device get(String deviceId){
+    public Device get(Integer deviceId){
         return deviceStorage.get(deviceId);
     }
 

@@ -146,8 +146,8 @@ public final class UserService {
      * @param username username of the given User
      * @return Id of the Device(s) belonging to a given User
      */
-    public List<String> getDevices(final String username) {
-        var devices = new ArrayList<String>();
+    public List<Integer> getDevices(final String username) {
+        var devices = new ArrayList<Integer>();
         final User user = userStorage.get(username);
 
         if (user != null) {
@@ -166,18 +166,24 @@ public final class UserService {
      * @param deviceId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
-    public boolean ownsDevice(String username, String deviceId){
+    public boolean ownsDevice(String username, Integer deviceId){
         return getDevices(username).contains(deviceId);
     }
 
 
-
+    public List<Room> getPopulatedRooms(String username){
+        User user = get(username);
+        if(user != null){
+            return user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
     /**
      * @param username the username of the desired User
      * @param roomId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
-    public boolean ownsRoom(String username, String roomId){
+    public boolean ownsRoom(String username, Integer roomId){
         User user = userStorage.get(username);
         if(user == null) return false;
         return user.getRooms().contains(roomId);
@@ -204,7 +210,7 @@ public final class UserService {
      * @param username the username whose device is to be removed
      * @param deviceId the id of the device to be removed
      */
-    public void removeDevice(String username, String deviceId){
+    public void removeDevice(String username, Integer deviceId){
         User user = userStorage.get(username);
         if(user == null) return;
 

@@ -11,7 +11,7 @@ public class Room {
 	private String name;
 	private String background;
 	private String icon;
-	private final List<String> devices;
+	private final List<Integer> devices;
 	private Integer id;
 
 
@@ -27,7 +27,7 @@ public class Room {
 		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
-		devices = new ArrayList<>();
+		devices = new ArrayList<Integer>();
 	}
 
 	public Room(SerialisableRoom room) {
@@ -75,11 +75,11 @@ public class Room {
 	}
 
 	//---------- getter for devices ----------------
-	public List<String> getDevices(){
-		return Collections.unmodifiableList(devices);
+	public List<Integer> getDevices(){
+		return devices;
 	}
 
-	public void addDevice(String device){
+	public void addDevice(Integer device){
 		devices.add(device);
 	}
 

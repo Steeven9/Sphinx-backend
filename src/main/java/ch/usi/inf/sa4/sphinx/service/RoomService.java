@@ -53,7 +53,7 @@ DeviceStorage deviceStorage;
      * @param deviceId the id of the device
      * @return true if succes else false
      */
-    public final boolean removeDevice(final Integer roomId, final String deviceId){
+    public final boolean removeDevice(final Integer roomId, final Integer deviceId){
         Room room = roomStorage.get(roomId);
         if (room == null){
             return false;
@@ -73,9 +73,9 @@ DeviceStorage deviceStorage;
      */
     public List<Device> getDevices(final Integer roomId) {
         Room room = roomStorage.get(roomId);
-        List<String> ls = room.getDevices();
+        List<Integer> ls = room.getDevices();
         ArrayList<Device> list = new ArrayList<Device>();
-        for (String id : ls) {
+        for (Integer id : ls) {
             list.add(deviceStorage.get(id));
         }
         return list;
