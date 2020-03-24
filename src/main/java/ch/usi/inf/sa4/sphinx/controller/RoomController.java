@@ -14,6 +14,8 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,10 +39,9 @@ public class RoomController {
     @GetMapping("/")
     public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                 @NotNull @RequestHeader("user") String username,
-                                                @RequestParam(name="filter", required=false)
                                                 Errors errors) {
         if (errors.hasErrors()){
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.badRequest().build();
         }
 
         User user = Storage.getUser(username);
@@ -48,9 +49,9 @@ public class RoomController {
             if (!user.getSessionToken().equals(sessionToken)) {
                 return ResponseEntity.status(401).build();
             }
-
-            Room[] arr = new Room[userService.getRooms(user).size()];
-            return ResponseEntity.ok(userService.getRooms(user).toArray(arr));
+            List<Room> rooms = userService.getRooms(user);
+            Room[] arr = new Room[rooms.size()];
+            return ResponseEntity.ok(rooms.toArray(arr));
         }
         return ResponseEntity.notFound().build();
     }
@@ -67,7 +68,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username,
                                                         Errors errors) {
-        var res = check(sessionToken, username, errors, roomId);
+        ResponseEntity<SerialisableRoom> res = check(sessionToken, username, errors, roomId);
         if (res != null) {
             return res;
         }
@@ -90,7 +91,7 @@ public class RoomController {
                                               Errors errors
                                                         ) {
         if (errors.hasErrors()){
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.badRequest().build();
         }
         User user = Storage.getUser(username);
         if (user == null) {
@@ -133,7 +134,7 @@ public class RoomController {
 
         Integer id = userService.addRoom(username, room);
         if (id == null) {
-            return ResponseEntity.status(400).build();
+            return ResponseEntity.status(500).build();
         } else {
             return ResponseEntity.status(200).body(new SerialisableRoom(roomService.get(id)));
         }
@@ -160,7 +161,7 @@ public class RoomController {
         }
         Room room = roomService.get(roomId);
         if (roomService.update(new Room(serialisableRoom))) {
-            return ResponseEntity.status(203).body(new SerialisableRoom(room));
+            return ResponseEntity.status(204).body(new SerialisableRoom(room));
         } else {
             return ResponseEntity.status(400).build();
         }
@@ -187,10 +188,18 @@ public class RoomController {
         if (userService.removeRoom(username, roomId)) {
             return ResponseEntity.status(203).build();
         } else {
-            return ResponseEntity.status(403).build();
+            return ResponseEntity.status(500).build();
         }
     }
 
+    /**
+     * Checks if the request parameters are correct.
+     * @param sessionToken session token of the user
+     * @param username the username of the user
+     * @param errors in case error occur
+     * @param roomId the id of the room
+     * @return null if correct, otherwise a ResponseEntity
+     */
     private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, Integer roomId) {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
