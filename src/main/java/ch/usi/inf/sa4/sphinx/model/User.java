@@ -34,6 +34,9 @@ public class User {
     public String getFullname() {
         throw new NotImplementedException();
     }
+    public String getResetCode() {
+        throw new NotImplementedException();
+    }
     public List<Room> getRooms() {
         throw new NotImplementedException();
     }
@@ -48,6 +51,10 @@ public class User {
     }
 
     public String createSessionToken(){
+        throw new NotImplementedException();
+    }
+
+    public String createResetCode() {
         throw new NotImplementedException();
     }
 }
