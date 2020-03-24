@@ -74,5 +74,6 @@ public class Room {
 	
 	public void removeDevice(Integer device){
 		devices.remove(device);
+
 	}
 }
