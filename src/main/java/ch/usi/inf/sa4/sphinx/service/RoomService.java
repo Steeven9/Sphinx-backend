@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.stream.Collectors;
+
 @Service
 public class RoomService {
 
@@ -25,6 +27,19 @@ DeviceStorage deviceStorage;
      */
     public final Room get(final Integer deviceId){
         return roomStorage.get(deviceId);
+    }
+
+    /**
+     * Returns a populated list of devices owned by a given room
+     * @param roomId id of the room
+     * @return the list of devices owned
+     */
+    public final List<Device> getPopulatedDevices(final  Integer roomId){
+        Room room = roomStorage.get(roomId);
+        if(room != null){
+            return room.getDevices().stream().map(deviceStorage::get).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     /**

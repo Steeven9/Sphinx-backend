@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 
 import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -184,6 +185,21 @@ public final class UserService {
     }
 
 
+
+    /**
+     * Returns a populated list of Device(s) owned by a given User
+     * @param username username of required User
+     * @return Devices owned by User
+     */
+    public List<Device> getPopulatedDevices(String username){
+        User user = userStorage.get(username);
+        if(user != null){
+            return user.getRooms().stream().
+                    flatMap(roomId -> roomService.getPopulatedDevices(roomId).stream()).
+                    collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
 
 
     /**
