@@ -116,15 +116,13 @@ public class DeviceController {
 
     /**
      * @param deviceId id  of the device to be modified
-     * @param name     new name
-     * @param icon     new icon
+     * @param device device to modify
      * @return a ResponseEntity with the data of the modified device (200), not found (404) if no such device exist or
      * 500 in case of a server error
      */
     @PutMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
-                                                           @NotBlank @RequestBody String name,
-                                                           @NotBlank @RequestBody String icon,
+                                                           @NotBlank @RequestBody SerialisableDevice device,
                                                            @RequestHeader("session-token") String sessionToken,
                                                            @RequestHeader("user") String username,
                                                            Errors errors) {
@@ -139,13 +137,13 @@ public class DeviceController {
         }
 
         User user = userService.get(username);
-        Device device = deviceService.get(deviceId);
-        device.setIcon(icon);
-        device.setName(name);
+        Device storageDevice = deviceService.get(deviceId);
+        storageDevice.setIcon(device.icon);
+        storageDevice.setName(device.name);
 
 
-        if (deviceService.update(device)) {
-            return ResponseEntity.status(200).body(new SerialisableDevice(deviceService.get(deviceId), user));
+        if (deviceService.update(storageDevice)) {
+            return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
         }
 
         return ResponseEntity.status(500).build();
