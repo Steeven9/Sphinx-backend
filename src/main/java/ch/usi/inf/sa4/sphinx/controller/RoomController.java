@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -14,6 +15,7 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
+
 import java.util.List;
 
 
@@ -38,6 +40,7 @@ public class RoomController {
     public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                               @NotNull @RequestHeader("user") String username,
                                               Errors errors) {
+
         if (errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
@@ -66,6 +69,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username,
                                                     Errors errors) {
+
         ResponseEntity<SerialisableRoom> res = check(sessionToken, username, errors, roomId);
         if (res != null) {
             return res;
@@ -88,6 +92,7 @@ public class RoomController {
                                               @NotNull @RequestHeader("user") String username,
                                               Errors errors
     ) {
+
         if (errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
@@ -212,3 +217,4 @@ public class RoomController {
         return null;
     }
 }
+

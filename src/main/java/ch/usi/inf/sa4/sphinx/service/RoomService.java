@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,6 @@ DeviceStorage deviceStorage;
     public final boolean update(final Room room){
         return  roomStorage.update(room);
     }
-
-
-
 
     /**
      * Adds the type of device specified by deviceType to the Room with the given roomId
@@ -86,7 +84,5 @@ DeviceStorage deviceStorage;
         }
         return list;
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,7 @@ public final class UserService {
         user.addRoom(roomId);
         if (!userStorage.update(username, user)) {
             return null;
+
         }
         return roomId;
     }
@@ -127,7 +129,6 @@ public final class UserService {
         userStorage.update(username, user);
         return roomStorage.delete(roomId);
     }
-
 
     /**
      * Returns a list of rooms of this user.
@@ -180,7 +181,6 @@ public final class UserService {
         }
         return new ArrayList<>();
     }
-
     /**
      * @param username the username of the desired User
      * @param roomId the id of the device
