@@ -17,6 +17,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+
+@CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/devices")
 public class DeviceController {
