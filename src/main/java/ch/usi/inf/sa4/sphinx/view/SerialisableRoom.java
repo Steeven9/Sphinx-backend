@@ -9,9 +9,9 @@ public class SerialisableRoom {
     public String name;
     public String icon;
     public String background;
-    public Integer[] devices;
+    public int[] devices;
 
-    public SerialisableRoom(Integer id, String name, String icon, String background, Integer[] devices) {
+    public SerialisableRoom(Integer id, String name, String icon, String background, int[] devices) {
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -24,8 +24,11 @@ public class SerialisableRoom {
         this.name = room.getName();
         this.icon = room.getIcon();
         this.background = room.getBackground();
-        Object[] devices = room.getDevices().toArray();
-        this.devices = Arrays.copyOf(devices, devices.length, Integer[].class);
+        this.devices = new int[room.getDevices().size()];
+        for (int i = 0; i < this.devices.length; i++) {
+            this.devices[i] = room.getDevices().get(i);
+        }
+
 
     }
 }
