@@ -2,14 +2,16 @@ package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.model.Room;
 
+import java.util.Arrays;
+
 public class SerialisableRoom {
-    public int id;
+    public Integer id;
     public String name;
     public String icon;
     public String background;
     public int[] devices;
 
-    public SerialisableRoom(int id, String name, String icon, String background, int[] devices) {
+    public SerialisableRoom(Integer id, String name, String icon, String background, int[] devices) {
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -26,5 +28,7 @@ public class SerialisableRoom {
         for (int i = 0; i < this.devices.length; i++) {
             this.devices[i] = room.getDevices().get(i);
         }
+
+
     }
 }
