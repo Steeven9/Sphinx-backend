@@ -14,6 +14,9 @@ package ch.usi.inf.sa4.sphinx.misc;
 
 import ch.usi.inf.sa4.sphinx.model.*;
 
+/**
+ *
+ */
 public enum DeviceType {
     INVALID_DEVICE,
     LIGHT,
@@ -28,6 +31,10 @@ public enum DeviceType {
     MOTION_SENSOR;
 
 
+    /**
+     * @param d the int representing the DeviceType according to the API
+     * @return the corresponding DeviceType
+     */
     public static DeviceType intToDeviceType(int d) {
         switch (d) {
             case 1:
@@ -56,44 +63,20 @@ public enum DeviceType {
     }
 
 
+    /**
+     * @param d a given Device
+     * @return the DeviceType of the given Device
+     */
     public static DeviceType deviceToDeviceType(Device d) {
-        if (d instanceof Light) {
-            return LIGHT;
-        }
-        if (d instanceof DimmableLight) {
-            return DIMMABLE_LIGHT;
-        }
-        if (d instanceof Switch) {
-            return SWITCH;
-        }
-        if (d instanceof DimmableSwitch) {
-            return DIMMABLE_SWITCH;
-        }
-        if (d instanceof StatelessDimmableSwitch) {
-            return STATELESS_DIMMABLE_SWITCH;
-        }
-        if (d instanceof SmartPlug) {
-            return SMART_PLUG;
-        }
-        if (d instanceof HumiditySensor) {
-            return HUMIDITY_SENSOR;
-        }
-        if (d instanceof LightSensor) {
-            return LIGHT_SENSOR;
-        }
-
-        if (d instanceof TempSensor) {
-            return TEMP_SENSOR;
-        }
-        if (d instanceof MotionSensor) {
-            return MOTION_SENSOR;
-        }
-        return INVALID_DEVICE;
+        return deviceClassToDeviceType(d.getClass());
     }
 
 
+    /**
+     * @param c class of an Object
+     * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
+     */
     public static DeviceType deviceClassToDeviceType(Class c) {
-
         if (Light.class.equals(c)) {
             return LIGHT;
         }
@@ -128,6 +111,10 @@ public enum DeviceType {
     }
 
 
+    /**
+     * @param d the DeviceType
+     * @return the int corresponding to the DeviceType according to the API doc
+     */
     public static int deviceTypetoInt(DeviceType d) {
         switch (d) {
             case LIGHT:
@@ -156,6 +143,10 @@ public enum DeviceType {
     }
 
 
+    /**
+     * @param d the device type
+     * @return a new Device according to the DeviceType
+     */
     public static Device makeDevice(DeviceType d) {
         switch (d) {
             case LIGHT:
