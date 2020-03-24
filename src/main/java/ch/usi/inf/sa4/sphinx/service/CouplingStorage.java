@@ -3,7 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Coupling;
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public interface CouplingStorage {
 
     /**
