@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
-
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -64,7 +63,7 @@ public class RoomController {
      * @return the room with all details about it
      */
     @GetMapping("/{roomId}")
-    public ResponseEntity<SerialisableRoom> getRoom(@PathVariable String roomId,
+    public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username,
                                                         Errors errors) {
@@ -85,7 +84,7 @@ public class RoomController {
      * @return an array of devices in given room
      */
     @GetMapping("/{roomId}/devices/")
-    public ResponseEntity<Device[]> getDevice(@PathVariable String roomId,
+    public ResponseEntity<Device[]> getDevice(@PathVariable Integer roomId,
                                               @NotNull @RequestHeader("session-token") String sessionToken,
                                               @NotNull @RequestHeader("user") String username,
                                               Errors errors
@@ -132,7 +131,7 @@ public class RoomController {
 
         Room room = new Room(serialisableRoom);
 
-        String id = userService.addRoom(username, room);
+        Integer id = userService.addRoom(username, room);
         if (id == null) {
             return ResponseEntity.status(400).build();
         } else {
@@ -150,7 +149,7 @@ public class RoomController {
      * @return A modified room
      */
     @PutMapping("/{roomId}/")
-    public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable String roomId,
+    public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
@@ -177,7 +176,7 @@ public class RoomController {
      *       status 403 if the delete went wrong
      */
     @DeleteMapping("/{roomId}/")
-    public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable String roomId,
+    public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable Integer roomId,
                                                         @NotBlank @RequestHeader("session-token") String sessionToken,
                                                         @NotBlank @RequestHeader("user") String username,
                                                         Errors errors) {
@@ -192,7 +191,7 @@ public class RoomController {
         }
     }
 
-    private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, String roomId) {
+    private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, Integer roomId) {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }

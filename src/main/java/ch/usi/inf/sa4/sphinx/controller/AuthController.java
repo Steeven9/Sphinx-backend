@@ -52,17 +52,16 @@ public class AuthController {
     @PostMapping("/login/{username}")
     public ResponseEntity<String> login(@PathVariable String username, @RequestBody String password) {
         User user;
-        user = Storage.getUser(username);
+
+        user = userService.get(username);
         if (user == null) {
-            user = Storage.getUserByEmail(username);
-
-
+            user = userService.getByMail(username);
         }
 
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        if (!user.getVerified()) {
+        if (!user.isVerified()) {
             return ResponseEntity.status(403).build();
         }
         if (!user.getPassword().equals(password)) {
@@ -93,7 +92,7 @@ public class AuthController {
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
-        if (verifiedUser.getVerified()) {
+        if (verifiedUser.isVerified()) {
             return ResponseEntity.badRequest().build();
         }
         if (!verifiedUser.getVerificationToken().equals(verificationCode)) {

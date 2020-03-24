@@ -12,12 +12,11 @@ public class User {
     private String password;
     private String username;
     private String fullname;
-    private final String confirmCode;
     private String resetCode;
-    private final List<String> rooms;
+    private final List<Integer> rooms;
     private String sessionToken;
     private final String verificationToken;
-    private Boolean verified;
+    private boolean verified;
 
 
     /**
@@ -33,7 +32,6 @@ public class User {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.confirmCode = UUID.randomUUID().toString();
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -44,9 +42,8 @@ public class User {
         this.password = user.password;
         this.username = user.username;
         this.fullname = user.fullname;
-        this.confirmCode = user.confirmCode;
         this.resetCode = user.resetCode;
-        this.rooms = new ArrayList<String>(user.rooms);
+        this.rooms = new ArrayList<Integer>(user.rooms);
         this.sessionToken = user.sessionToken;
         this.verified = user.verified;
     }
@@ -67,7 +64,6 @@ public class User {
     public String getEmail() {
         return email;
     }
-
 
     /**
      * getter for password
@@ -97,14 +93,6 @@ public class User {
         return fullname;
     }
 
-    /**
-     * getter for confirmation code
-     *
-     * @return confirmation code of the user, to be sent via mail and then confirmed by the user
-     */
-    public String getConfirmCode() {
-        return confirmCode;
-    }
 
 
     /**
@@ -122,7 +110,7 @@ public class User {
      *
      * @return returns a list of the Ids of the rooms owned by the user
      */
-    public List<String> getRooms() {
+    public List<Integer> getRooms() {
         return rooms;
     }
 
@@ -142,7 +130,7 @@ public class User {
      *
      * @return true if the user is verified (he clicked the confirmation link sent by mail)
      */
-    public Boolean getVerified() {
+    public boolean isVerified() {
         return verified;
     }
 
@@ -154,6 +142,7 @@ public class User {
     public String getVerificationToken() {
         return verificationToken;
     }
+
 
     /**
      * setter for email field
@@ -183,7 +172,6 @@ public class User {
         this.username = username;
     }
 
-
     /**
      * setter for full user name
      *
@@ -202,22 +190,30 @@ public class User {
     }
 
 
+
+    /**
+     * Sets the status of the user to verified
+     */
+    public void verify(){
+        setVerified(true);
+
+    }
+
     /**
      * adds a the given roomId to the User
      *
      * @param roomId id of the room to be added
      */
-    public void addRoom(final String roomId) {
+    public void addRoom(final Integer roomId) {
         rooms.add(roomId);
     }
-
 
     /**
      * removes the room with the selected id
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom(final String roomId) {
+    public void removeRoom(final Integer roomId) {
         rooms.remove(roomId);//Needed otherwise it will just remove the index
     }
 
@@ -232,7 +228,6 @@ public class User {
         return sessionToken;
     }
 
-
     /**
      * generates and sets a reset code for the user
      *
@@ -243,6 +238,3 @@ public class User {
         return resetCode;
     }
 }
-
-
-

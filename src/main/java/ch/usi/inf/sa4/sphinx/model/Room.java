@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+
 import java.util.*;
 
 
@@ -11,7 +12,7 @@ public class Room {
 	private String background;
 	private String icon;
 	private final List<String> devices;
-	private String id;
+	private Integer id;
 
 
 	//TODO
@@ -36,8 +37,7 @@ public class Room {
 		this.devices = Arrays.asList(room.devices);
 	}
 
-
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -45,7 +45,7 @@ public class Room {
 
 	private static int makeId() { return nextId++; }
 
-	public String getId(){ return id;}
+	public Integer getId(){ return id;}
 
 	//-------- getter and setter for name ----------------------
 	public String getName(){

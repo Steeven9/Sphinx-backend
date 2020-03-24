@@ -21,7 +21,7 @@ DeviceStorage deviceStorage;
      * @param roomId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Room get(final String roomId){
+    public final Room get(final Integer roomId){
         return roomStorage.get(roomId);
     }
 
@@ -40,7 +40,7 @@ DeviceStorage deviceStorage;
      * @param deviceType the type of Device (ex DimmableLight)
      * @return true if success else false
      */
-    public final String addDevice(final String roomId, String deviceType){
+    public final String addDevice(final Integer roomId, String deviceType){
         Room room  = roomStorage.get(roomId);
 
         //Needs to know what type of device to generate based on deviceType
@@ -53,7 +53,7 @@ DeviceStorage deviceStorage;
      * @param deviceId the id of the device
      * @return true if succes else false
      */
-    public final boolean removeDevice(final String roomId, final String deviceId){
+    public final boolean removeDevice(final Integer roomId, final String deviceId){
         Room room = roomStorage.get(roomId);
         if (room == null){
             return false;
@@ -71,7 +71,7 @@ DeviceStorage deviceStorage;
      * @param roomId the id of the room
      * @return a list of all devices in this room
      */
-    public List<Device> getDevices(final String roomId) {
+    public List<Device> getDevices(final Integer roomId) {
         Room room = roomStorage.get(roomId);
         List<String> ls = room.getDevices();
         ArrayList<Device> list = new ArrayList<Device>();

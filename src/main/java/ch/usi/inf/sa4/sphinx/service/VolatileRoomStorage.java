@@ -13,23 +13,23 @@ import java.util.UUID;
 //Docs in RoomStorage
 @Component("volatileRoomStorage")
 public class VolatileRoomStorage implements RoomStorage{
-    private static final HashMap<String, Room> rooms = new HashMap<>();
+    private static final HashMap<Integer, Room> rooms = new HashMap<>();
 
     @Override
-    public Room get(String roomId) {
+    public Room get(Integer roomId) {
        return rooms.get(roomId);
     }
 
     @Override
-    public String insert(Room room) {
+    public Integer insert(Room room) {
         Room savedRoom = room.makeCopy();
-        savedRoom.setId(UUID.randomUUID().toString());
+        savedRoom.setId(new Integer(UUID.randomUUID().toString()));
         rooms.put(savedRoom.getId(), savedRoom);
         return savedRoom.getId();
     }
 
     @Override
-    public boolean delete(String roomId) {
+    public boolean delete(Integer roomId) {
         rooms.remove(roomId);
         return this.get(roomId) == null;
     }

@@ -98,7 +98,7 @@ public final class UserService {
      * @param room the Room to be added to the User
      * @return the id of the room
      */
-    public String addRoom(final String username, final Room room) {
+    public Integer addRoom(final String username, final Room room) {
         final User user = userStorage.get(username);
         if (user == null) {
             return null; //something went bad
@@ -121,7 +121,7 @@ public final class UserService {
      * @param username the name of the User whose room is to be removed
      * @param roomId the id of the room to remove
      */
-    public boolean removeRoom(final String username, final String roomId){
+    public boolean removeRoom(final String username, final Integer roomId){
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(username, user);
