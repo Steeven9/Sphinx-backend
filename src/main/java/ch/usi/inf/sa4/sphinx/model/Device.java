@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,15 @@ public abstract class Device {
     protected List<Runnable> observers;
 
 
+
+    public SerialisableDevice serialize(){
+        SerialisableDevice serialisableDevice = new SerialisableDevice();
+        serialisableDevice.id = this.id;
+        serialisableDevice.icon = this.icon;
+        serialisableDevice.name = this.name;
+        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        return serialisableDevice;
+    }
 
     public void setId(Integer id) {
         if(id==null) {
