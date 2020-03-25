@@ -26,7 +26,7 @@ public class Switch extends Device {
      */
     public void click(){
         this.on = !this.on;
-        triggerObservers();
+        triggerEffects();
     }
 
     /**

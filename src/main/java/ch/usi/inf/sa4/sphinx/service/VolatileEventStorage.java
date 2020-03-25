@@ -1,10 +1,12 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Event;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 
+
+@Repository
 public class VolatileEventStorage implements  EventStorage {
     private static final HashMap<Integer, Event> events = new HashMap<>();
     private static Integer id = 1;
@@ -14,7 +16,7 @@ public class VolatileEventStorage implements  EventStorage {
     }
 
     @Override
-    public Event get(int id) {
+    public Event get(Integer id) {
         return events.get(id);
     }
 
@@ -28,7 +30,7 @@ public class VolatileEventStorage implements  EventStorage {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         events.remove(id);
 
     }

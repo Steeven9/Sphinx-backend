@@ -2,26 +2,30 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
  */
 public abstract class Device {
-    private  Integer id;
+    private Integer id;
     private String icon;
     private String name;
     protected boolean on;
-    protected List<Runnable> observers;
+    protected List<Integer> couplings;
 
 
+    @Autowired
+    CouplingService couplingService;
 
-    public SerialisableDevice serialize(){
+
+    public SerialisableDevice serialize() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
         serialisableDevice.id = this.id;
         serialisableDevice.icon = this.icon;
@@ -31,7 +35,7 @@ public abstract class Device {
     }
 
     public void setId(Integer id) {
-        if(id==null) {
+        if (id == null) {
             this.id = id;
         }
     }
@@ -66,6 +70,7 @@ public abstract class Device {
 
     /**
      * Returns a user-facing description of the status of this device.
+     *
      * @return a human-friendly description of the current state of the device
      */
     public abstract String getLabel();
@@ -77,23 +82,34 @@ public abstract class Device {
     }
 
     //TODO
+
     /**
      * @return a copy of this Device
      */
-     public Device makeCopy(){
+    public Device makeCopy() {
         throw new NotImplementedException();
-     }
+    }
 
     /**
      * Adds an observer to this device that will be notified whenever its state changes.
+     *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(Runnable observer) {
-        observers.add(observer);
+    public void addObserver(Integer observer) {
+        couplings.add(observer);
     }
-    protected void triggerObservers() {
-        for (Runnable observer : observers) {
-            observer.run();
+
+
+    //TODO fix unchecked
+    protected void triggerEffects() {
+        for(Integer coupling: couplings){
+            Effect effect = couplingService.getEffect(coupling);
+            Event event = couplingService.getEvent(coupling);
+            effect.execute(event.get());
         }
+
+
+
+
     }
 }

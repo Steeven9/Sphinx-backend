@@ -23,7 +23,7 @@ public class VolatileCouplingStorage implements CouplingStorage {
      */
     @Override
     public Coupling get(int id) {
-        return couplings.get(id);
+        return couplings.get(id).makeCopy();
     }
 
     /**
@@ -50,7 +50,7 @@ public class VolatileCouplingStorage implements CouplingStorage {
 
     @Override
     public boolean update(Coupling updatedDevice) {
-        if(!couplings.containsKey(id)){
+        if (!couplings.containsKey(id)) {
             return false;
         }
         couplings.put(updatedDevice.getId(), updatedDevice);

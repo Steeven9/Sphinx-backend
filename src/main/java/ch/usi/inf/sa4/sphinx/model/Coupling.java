@@ -1,27 +1,34 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.controller.Storage;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
-public class Coupling<T> {
+
+//TODO fix atm couplings of different parameters can be created
+public class Coupling {
+
     @Autowired
     DeviceService deviceService;
 
     private Integer id;
-    private final Event<T> event;
-    private final List<Effect<T>> effects = new ArrayList<>();
+    private final Integer eventId;
+    private final List<Integer> effectIds;
 
-    @SafeVarargs
-    public Coupling(Event<T> event, Effect<T> ...effects) {
-        this.event = event;
-        this.effects.addAll(Arrays.asList(effects));
-        deviceService.get(event.device).addObserver(() -> {for (Effect<T> effect : effects) effect.execute(event.get());});
 
+    public Coupling(Integer eventId, Integer effectId) {
+        this.eventId = eventId;
+        this.effectIds =new ArrayList<>();
+        effectIds.add(effectId);
+    }
+
+    public Coupling(Integer eventId, Collection<Integer> effectIds){
+        this.eventId = eventId;
+        this.effectIds = new ArrayList<>();
+        this.effectIds.addAll(effectIds);
     }
 
     /**
@@ -46,13 +53,22 @@ public class Coupling<T> {
     }
 
 
-    public void addEffect(Effect<T> effect){
-        effects.add(effect);
+    public Integer getEventId() {
+        return eventId;
     }
 
-    //TODO
+    public List<Integer> getEffectIds() {
+        return effectIds;
+    }
+
+    public void addEffect(Integer effect){
+        effectIds.add(effect);
+    }
+
     public Coupling makeCopy(){
-        return this;
+        Coupling cp = new Coupling(eventId, effectIds);
+        cp.id = this.id;
+        return cp;
     }
 
 }

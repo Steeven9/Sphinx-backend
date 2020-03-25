@@ -1,9 +1,15 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.controller.Storage;
+
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DimmableLightStateSet extends Effect<Double> {
     public final int device;
+
+    @Autowired
+    private DeviceService deviceService;
+
 
     public DimmableLightStateSet(int deviceID){
         super(deviceID);
@@ -13,7 +19,8 @@ public class DimmableLightStateSet extends Effect<Double> {
      * @param effect:  new value of the state
      **/
     public void execute(Double effect){
-         ((DimmableLight) Storage.getDevice(device)).setState(effect);
-
+        DimmableLight dl =  ((DimmableLight) deviceService.get(device));
+        dl.setState(effect);
+        deviceService.update(dl);
     }
 }

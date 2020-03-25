@@ -1,9 +1,11 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Effect;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 
+@Repository
 public class VolatileEffectStorage implements EffectStorage {
     private static final HashMap<Integer, Effect> effects = new HashMap<>();
     private static Integer id = 1;
@@ -13,7 +15,7 @@ public class VolatileEffectStorage implements EffectStorage {
     }
 
     @Override
-    public Effect get(int id) {
+    public Effect get(Integer id) {
         return effects.get(id);
     }
 
@@ -27,7 +29,7 @@ public class VolatileEffectStorage implements EffectStorage {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         effects.remove(id);
     }
 

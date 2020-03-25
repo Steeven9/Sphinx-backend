@@ -3,8 +3,8 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Effect;
 
 public interface EffectStorage {
-    Effect get(int id);
+    Effect get(Integer id);
     Integer insert(Effect c);
-    void delete(int id);
+    void delete(Integer id);
     boolean update(Effect ev);
 }

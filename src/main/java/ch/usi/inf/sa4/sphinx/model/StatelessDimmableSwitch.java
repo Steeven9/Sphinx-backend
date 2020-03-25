@@ -28,7 +28,7 @@ public class StatelessDimmableSwitch extends Device {
      */
     public void setIncrement(boolean value) {
         this.button = value;
-        triggerObservers();
+        triggerEffects();
     }
 
     /**
