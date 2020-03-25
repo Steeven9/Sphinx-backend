@@ -172,7 +172,7 @@ public class RoomController {
         if (roomService.update(new Room(serialisableRoom))) {
             return ResponseEntity.status(204).build();
         } else {
-            return ResponseEntity.status(400).build();
+            return ResponseEntity.status(500).build();
         }
     }
 
