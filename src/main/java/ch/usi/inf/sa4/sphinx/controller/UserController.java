@@ -55,9 +55,9 @@ public class UserController {
 		if (user.email == null || user.fullname == null || user.password == null || !Objects.equals(user.username, username)) {
 			return ResponseEntity.badRequest().build();
 		}
-		User newUser = new User(username, user.password, user.email, user.fullname);
+		User newUser = new User(user.email, user.password, username, user.fullname);
 		mailer.send(newUser.getEmail(),
-				"Confirm your email account for smarthut",
+				"Confirm your email account for SmartHut",
 				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
 		userService.insert(newUser);
 
