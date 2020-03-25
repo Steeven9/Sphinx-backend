@@ -35,7 +35,6 @@ public class User {
         this.verificationToken = UUID.randomUUID().toString();
     }
 
-
     private User(User user) {
         this.email = user.email;
         this.verificationToken = user.verificationToken;
@@ -64,6 +63,7 @@ public class User {
     public String getEmail() {
         return email;
     }
+
 
     /**
      * getter for password
@@ -238,7 +238,4 @@ public class User {
         return resetCode;
     }
 }
-
-
-
 

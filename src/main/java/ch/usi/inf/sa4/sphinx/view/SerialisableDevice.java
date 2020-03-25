@@ -51,8 +51,6 @@ public class SerialisableDevice {
 
 
 
-
-
         // TODO: fill switched
         if (device instanceof Switch || device instanceof DimmableSwitch) {
             // TODO: fill switches

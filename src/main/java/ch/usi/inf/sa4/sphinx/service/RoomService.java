@@ -1,10 +1,14 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RoomService {
@@ -31,9 +35,6 @@ DeviceStorage deviceStorage;
     public final boolean update(final Room room){
         return  roomStorage.update(room);
     }
-
-
-
 
     /**
      * Adds the type of device specified by deviceType to the Room with the given roomId
@@ -69,7 +70,19 @@ DeviceStorage deviceStorage;
         return true;
     }
 
-
-
+    /**
+     * Given a room, return all the devices in this room.
+     * @param roomId the id of the room
+     * @return a list of all devices in this room
+     */
+    public List<Device> getDevices(final Integer roomId) {
+        Room room = roomStorage.get(roomId);
+        List<Integer> ls = room.getDevices();
+        ArrayList<Device> list = new ArrayList<Device>();
+        for (Integer id : ls) {
+            list.add(deviceStorage.get(id));
+        }
+        return list;
+    }
 
 }

@@ -39,6 +39,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+
     /**
      * Logs in using given credentials.
      * @param username the username or email of the user to log in
