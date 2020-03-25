@@ -38,7 +38,10 @@ public class Room {
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		if(this.id == null) {
+			this.id = id;
+		}
+
 	}
 
 	private static int nextId = 0;
