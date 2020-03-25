@@ -138,9 +138,18 @@ public class DeviceController {
 
         User user = userService.get(username);
         Device storageDevice = deviceService.get(deviceId);
+
+        //Device can change room
+        var owningRoomId = userService.owningRoom(username, deviceId);
+        if(!owningRoomId.equals(device.roomId)){
+            if(!userService.migrateDevice(username, deviceId, owningRoomId, device.roomId)){
+                //means that one or both rooms are not owned by the user or do not contain the device
+                return ResponseEntity.status(401).build();
+            }
+        }
+
         storageDevice.setIcon(device.icon);
         storageDevice.setName(device.name);
-
         if (deviceService.update(storageDevice)) {
             return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
         }

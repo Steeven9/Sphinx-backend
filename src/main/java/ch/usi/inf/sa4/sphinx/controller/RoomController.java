@@ -112,7 +112,7 @@ public class RoomController {
         if (room == null) {
             return ResponseEntity.notFound().build();
         }
-        List<Device> list = roomService.getDevices(roomId);
+        List<Device> list = roomService.getPopulatedDevices(roomId);
         SerialisableDevice[] arr = new SerialisableDevice[list.size()];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = new SerialisableDevice(list.get(i), user);
