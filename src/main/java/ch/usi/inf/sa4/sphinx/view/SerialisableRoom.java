@@ -11,6 +11,9 @@ public class SerialisableRoom {
     public String background;
     public int[] devices;
 
+
+
+
     public SerialisableRoom(Integer id, String name, String icon, String background, int[] devices) {
         this.id = id;
         this.name = name;
