@@ -70,7 +70,7 @@ public class AuthController {
         }
 
         user.createSessionToken();
-        if(userService.update(user.getUsername(), user)){
+        if(!userService.update(user.getUsername(), user)){
             return ResponseEntity.status(500).build();
         }
 

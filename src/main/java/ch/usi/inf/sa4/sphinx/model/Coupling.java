@@ -45,6 +45,11 @@ public class Coupling<T> {
         return id;
     }
 
+
+    public void addEffect(Effect<T> effect){
+        effects.add(effect);
+    }
+
     //TODO
     public Coupling makeCopy(){
         return this;

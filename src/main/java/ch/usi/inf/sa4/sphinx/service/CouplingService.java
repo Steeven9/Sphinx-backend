@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Coupling;
+import ch.usi.inf.sa4.sphinx.model.Effect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,13 @@ public class CouplingService {
 
     public void delete(int id) {
         couplingStorage.delete(id);
+    }
+
+    public boolean addEffect(int id, Effect effect){
+        Coupling c = get(id);
+        if (c == null) {
+            return false;
+        }
+        return true;
     }
 }

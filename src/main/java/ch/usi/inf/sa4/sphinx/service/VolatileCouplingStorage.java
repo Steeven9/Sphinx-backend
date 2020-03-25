@@ -47,4 +47,13 @@ public class VolatileCouplingStorage implements CouplingStorage {
     public void delete(int id) {
         couplings.remove(id);
     }
+
+    @Override
+    public boolean update(Coupling updatedDevice) {
+        if(!couplings.containsKey(id)){
+            return false;
+        }
+        couplings.put(updatedDevice.getId(), updatedDevice);
+        return true;
+    }
 }
