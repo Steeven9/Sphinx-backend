@@ -33,3 +33,6 @@ build/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+### Custom env file ###
+sh_envfile

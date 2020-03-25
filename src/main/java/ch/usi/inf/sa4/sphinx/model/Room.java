@@ -30,6 +30,13 @@ public class Room {
 		devices = new ArrayList<>();
 	}
 
+	public Room(SerialisableRoom room) {
+		this.name = room.name;
+		this.icon = room.icon;
+		this.background = room.background;
+		this.devices = Arrays.asList(room.devices);
+	}
+
 	public void setId(Integer id) {
 		if(id==null) {
 			this.id = id;
@@ -89,4 +96,7 @@ public class Room {
 		return sd;
 
 	}
+
+
+
 }
