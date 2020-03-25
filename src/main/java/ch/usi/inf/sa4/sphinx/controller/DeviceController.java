@@ -140,7 +140,7 @@ public class DeviceController {
         Device storageDevice = deviceService.get(deviceId);
 
         //Device can change room
-        var owningRoomId = userService.owningRoom(username, deviceId);
+        Integer owningRoomId = userService.owningRoom(username, deviceId);
         if(!owningRoomId.equals(device.roomId)){
             if(!userService.migrateDevice(username, deviceId, owningRoomId, device.roomId)){
                 return ResponseEntity.status(401).build();

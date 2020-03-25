@@ -31,7 +31,6 @@ public class RoomService {
     }
 
 
-
     /**
      * Given a room, return all the devices in this room.
      *
@@ -90,22 +89,6 @@ public class RoomService {
         deviceStorage.delete(deviceId);
         return true;
     }
-
-    //Should already be getPopulatedDevices
-//    /**
-//     * Given a room, return all the devices in this room.
-//     * @param roomId the id of the room
-//     * @return a list of all devices in this room
-//     */
-//    public List<Device> getDevices(final Integer roomId) {
-//        Room room = roomStorage.get(roomId);
-//        List<Integer> ls = room.getDevices();
-//        ArrayList<Device> list = new ArrayList<Device>();
-//        for (Integer id : ls) {
-//            list.add(deviceStorage.get(id));
-//        }
-//        return list;
-//    }
 
 
 }
