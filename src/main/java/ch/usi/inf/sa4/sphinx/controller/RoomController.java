@@ -46,7 +46,7 @@ public class RoomController {
             return ResponseEntity.badRequest().build();
         }
 
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
         if (user != null) {
             if (!user.getSessionToken().equals(sessionToken)) {
                 return ResponseEntity.status(401).build();
@@ -100,7 +100,7 @@ public class RoomController {
         if (errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
