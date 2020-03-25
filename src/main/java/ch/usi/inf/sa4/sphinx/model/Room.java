@@ -38,7 +38,10 @@ public class Room {
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		if(this.id == null) {
+			this.id = id;
+		}
+
 	}
 
 	public Integer getId(){ return id;}
