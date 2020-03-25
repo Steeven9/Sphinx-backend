@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 
 import java.util.*;
@@ -12,10 +12,10 @@ public class Room {
 	private String background;
 	private String icon;
 	private final List<Integer> devices;
-	private Integer id;
+    private Integer id;
 
 
-	//TODO
+    //TODO
 	/**
 	 * @return a copy of this object
 	 */
@@ -27,21 +27,13 @@ public class Room {
 		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
-		devices = new ArrayList<Integer>();
-	}
-
-	public Room(SerialisableRoom room) {
-		this.name = room.name;
-		this.icon = room.icon;
-		this.background = room.background;
-		this.devices = Arrays.asList(room.devices);
+		devices = new ArrayList<>();
 	}
 
 	public void setId(Integer id) {
-		if(this.id == null) {
+		if(id==null) {
 			this.id = id;
 		}
-
 	}
 
 	public Integer getId(){ return id;}
@@ -75,14 +67,26 @@ public class Room {
 
 	//---------- getter for devices ----------------
 	public List<Integer> getDevices(){
-		return devices;
+		return Collections.unmodifiableList(devices);
 	}
 
 	public void addDevice(Integer device){
 		devices.add(device);
 	}
-
+	
 	public void removeDevice(Integer device){
 		devices.remove(device);
+
+	}
+
+	public SerialisableRoom serialize(){
+		SerialisableRoom sd = new SerialisableRoom();
+		sd.devices = devices.toArray(new Integer[0]);
+		sd.background = background;
+		sd.icon = icon;
+		sd.id = id;
+		sd.name = name;
+		return sd;
+
 	}
 }

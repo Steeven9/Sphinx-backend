@@ -11,6 +11,13 @@ public class SerialisableRoom {
     public String background;
     public Integer[] devices;
 
+
+
+
+    public SerialisableRoom(){
+
+    }
+
     public SerialisableRoom(Integer id, String name, String icon, String background, Integer[] devices) {
         this.id = id;
         this.name = name;
@@ -24,8 +31,11 @@ public class SerialisableRoom {
         this.name = room.getName();
         this.icon = room.getIcon();
         this.background = room.getBackground();
-        Object[] devices = room.getDevices().toArray();
-        this.devices = Arrays.copyOf(devices, devices.length, Integer[].class);
+        this.devices = new Integer[room.getDevices().size()];
+        for (int i = 0; i < this.devices.length; i++) {
+            this.devices[i] = room.getDevices().get(i);
+        }
+
 
     }
 }
