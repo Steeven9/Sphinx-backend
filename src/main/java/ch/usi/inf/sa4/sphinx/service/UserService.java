@@ -130,20 +130,6 @@ public final class UserService {
         return roomStorage.delete(roomId);
     }
 
-    /**
-     * Returns a list of rooms of this user.
-     * @param user User of these/this room/s
-     * @return a list of rooms
-     */
-    public List<Room> getRooms(User user) {
-        var rooms = new ArrayList<Room>();
-        var roomIds = user.getRooms();
-        for (var roomId: roomIds){
-            rooms.add(roomService.get(roomId));
-        }
-        return rooms;
-    }
-
 
     /**
      * @param username username of the given User
@@ -174,6 +160,11 @@ public final class UserService {
     }
 
 
+    /**
+     * Returns a list of rooms of this user.
+     * @param username User of these/this room/s
+     * @return a list of rooms
+     */
     public List<Room> getPopulatedRooms(String username){
         User user = get(username);
         if(user != null){

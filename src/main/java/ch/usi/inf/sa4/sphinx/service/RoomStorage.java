@@ -16,7 +16,7 @@ public interface RoomStorage {
      * Inserts a copy of the given room into storage.
      *
      * @param room the room to insert
-     * @return a copy of the Room stored or null if the operation fails
+     * @return the id of the Room stored or null if the operation fails
      */
     Integer insert(final Room room);
 

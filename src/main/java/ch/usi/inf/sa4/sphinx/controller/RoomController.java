@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.lang.reflect.Array;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -37,7 +38,7 @@ public class RoomController {
      * @return a ResponseEntity with the array of rooms owned by the user
      */
     @GetMapping("/")
-    public ResponseEntity<Room[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<SerialisableRoom[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                               @NotNull @RequestHeader("user") String username,
                                               Errors errors) {
 
@@ -50,9 +51,12 @@ public class RoomController {
             if (!user.getSessionToken().equals(sessionToken)) {
                 return ResponseEntity.status(401).build();
             }
-            List<Room> rooms = userService.getRooms(user);
-            Room[] arr = new Room[rooms.size()];
-            return ResponseEntity.ok(rooms.toArray(arr));
+            List<Room> rooms = userService.getPopulatedRooms(username);
+            SerialisableRoom[] arr = new SerialisableRoom[rooms.size()];
+            for (int i = 0; i < arr.length; i++) {
+                arr[i] = new SerialisableRoom(rooms.get(i));
+            }
+            return ResponseEntity.ok(arr);
         }
         return ResponseEntity.notFound().build();
     }
@@ -87,10 +91,10 @@ public class RoomController {
      * @return an array of devices in given room
      */
     @GetMapping("/{roomId}/devices/")
-    public ResponseEntity<Device[]> getDevice(@PathVariable Integer roomId,
-                                              @NotNull @RequestHeader("session-token") String sessionToken,
-                                              @NotNull @RequestHeader("user") String username,
-                                              Errors errors
+    public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
+                                                          @NotNull @RequestHeader("session-token") String sessionToken,
+                                                          @NotNull @RequestHeader("user") String username,
+                                                          Errors errors
     ) {
 
         if (errors.hasErrors()){
@@ -109,8 +113,11 @@ public class RoomController {
             return ResponseEntity.notFound().build();
         }
         List<Device> list = roomService.getDevices(roomId);
-        Device[] arr = new Device[list.size()];
-        return ResponseEntity.ok(list.toArray(arr));
+        SerialisableDevice[] arr = new SerialisableDevice[list.size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = new SerialisableDevice(list.get(i), user);
+        }
+        return ResponseEntity.ok(arr);
     }
 
     /**
@@ -162,9 +169,8 @@ public class RoomController {
         if (res != null) {
             return res;
         }
-        Room room = roomService.get(roomId);
         if (roomService.update(new Room(serialisableRoom))) {
-            return ResponseEntity.status(204).body(new SerialisableRoom(room));
+            return ResponseEntity.status(204).build();
         } else {
             return ResponseEntity.status(400).build();
         }
@@ -189,7 +195,7 @@ public class RoomController {
             return res;
         }
         if (userService.removeRoom(username, roomId)) {
-            return ResponseEntity.status(203).build();
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(500).build();
         }

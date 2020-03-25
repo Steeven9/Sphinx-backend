@@ -41,10 +41,6 @@ public class Room {
 		this.id = id;
 	}
 
-	private static int nextId = 0;
-
-	private static int makeId() { return nextId++; }
-
 	public Integer getId(){ return id;}
 
 	//-------- getter and setter for name ----------------------
@@ -83,7 +79,7 @@ public class Room {
 		devices.add(device);
 	}
 
-	public void removeDevice(String device){
+	public void removeDevice(Integer device){
 		devices.remove(device);
 	}
 }
