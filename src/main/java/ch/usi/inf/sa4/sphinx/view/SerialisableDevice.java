@@ -73,19 +73,4 @@ public class SerialisableDevice {
     }
 
 
-
-
-    public  SerialisableDevice serialize(Device device, User user){
-        SerialisableDevice sd = device.serialize();
-
-        var rooms = userService.getPopulatedRooms(user.getUsername());
-        for(var room:rooms){
-            if(room.getDevices().contains(device.getId())){
-                sd.roomId = room.getId();
-                sd.roomName = room.getName();
-            }
-        }
-        sd.userName = user.getUsername();
-        return sd;
-    }
 }

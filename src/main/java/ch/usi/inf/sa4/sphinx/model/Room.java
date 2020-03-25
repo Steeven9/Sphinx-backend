@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 
 import java.util.*;
 
@@ -74,6 +76,17 @@ public class Room {
 	
 	public void removeDevice(Integer device){
 		devices.remove(device);
+
+	}
+
+	public SerialisableRoom serialize(){
+		SerialisableRoom sd = new SerialisableRoom();
+		sd.devices = devices.toArray(new Integer[0]);
+		sd.background = background;
+		sd.icon = icon;
+		sd.id = id;
+		sd.name = name;
+		return sd;
 
 	}
 }

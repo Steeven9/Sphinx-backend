@@ -1,10 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-
 
 
 public class User {
@@ -52,7 +52,7 @@ public class User {
     /**
      * @return a deep copy of this Object
      */
-    public User makeCopy(){
+    public User makeCopy() {
         return new User(this);
     }
 
@@ -92,7 +92,6 @@ public class User {
     public String getFullname() {
         return fullname;
     }
-
 
 
     /**
@@ -190,11 +189,10 @@ public class User {
     }
 
 
-
     /**
      * Sets the status of the user to verified
      */
-    public void verify(){
+    public void verify() {
         setVerified(true);
 
     }
@@ -236,6 +234,16 @@ public class User {
     public String createResetCode() {
         resetCode = UUID.randomUUID().toString();
         return resetCode;
+    }
+
+
+    public SerialisableUser serialize() {
+        SerialisableUser sd = new SerialisableUser();
+        sd.email = this.email;
+        sd.fullname = this.fullname;
+        sd.password = this.password;
+        sd.rooms = this.rooms.toArray(new Integer[0]);
+        return sd;
     }
 }
 
