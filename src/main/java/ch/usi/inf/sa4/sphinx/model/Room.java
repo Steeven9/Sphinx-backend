@@ -15,12 +15,11 @@ public class Room {
     private Integer id;
 
 
-    //TODO
 	/**
 	 * @return a copy of this object
 	 */
 	public Room makeCopy(){
-		throw new NotImplementedException();
+		return new Room(this);
 	}
 
 	public Room(){
@@ -35,6 +34,13 @@ public class Room {
 		this.icon = room.icon;
 		this.background = room.background;
 		this.devices = Arrays.asList(room.devices);
+	}
+
+	public Room(Room room) {
+		this.name = room.name;
+		this.icon = room.icon;
+		this.background = room.background;
+		this.devices = Collections.unmodifiableList(room.devices);
 	}
 
 	public void setId(Integer id) {
