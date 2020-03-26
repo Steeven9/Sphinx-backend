@@ -15,7 +15,7 @@ public class SerialisableDevice {
     public String label;
     public int[] switched;
     public int[] switches;
-    public double intensity;
+    public double slider;
     public Integer roomId;
     public String roomName;
     public Integer type;
@@ -36,7 +36,7 @@ public class SerialisableDevice {
         this.label = label;
         this.switched = switched;
         this.switches = switches;
-        this.intensity = intensity;
+        this.slider = intensity;
         this.roomId = roomId;
         this.type = type;
         this.on = on;
@@ -48,6 +48,7 @@ public class SerialisableDevice {
         this.name = device.getName();
         this.label = device.getLabel();
         this.on = device.isOn();
+        
 
         var rooms = userService.getPopulatedRooms(user.getUsername());
         for(var room:rooms){
@@ -67,7 +68,7 @@ public class SerialisableDevice {
             this.switches = null;
         }
         if (device instanceof Dimmable) {
-            this.intensity = ((Dimmable)device).getState();
+            this.slider = ((Dimmable)device).getState();
         }
     }
 
