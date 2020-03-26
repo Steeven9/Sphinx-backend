@@ -14,6 +14,16 @@ public class StatelessDimmableSwitch extends Device {
         this.button = false;
     }
 
+    public StatelessDimmableSwitch(StatelessDimmableSwitch s) {
+        super(s);
+        button = s.button;
+    }
+
+    @Override
+    public StatelessDimmableSwitch makeCopy() {
+        return new StatelessDimmableSwitch(this);
+    }
+
     /**
      * Returns true if the intensity was incremented or false if it was decremented.
      * @return true if the intensity was incremented, false otherwise
