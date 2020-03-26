@@ -26,14 +26,7 @@ public class VolatileDeviceStorage implements DeviceStorage {
     @Override
     public Device get(Integer deviceId) {
         Device storageDevice = devices.get(deviceId);
-        if(storageDevice == null){
-            return null;
-        }
-        Device returnDevice = storageDevice.makeCopy();
-        //The copy is without ID
-        returnDevice.setId(storageDevice.getId());
-
-        return devices.get(deviceId);
+        return storageDevice == null? null: storageDevice.makeCopy();
     }
 
     @Override

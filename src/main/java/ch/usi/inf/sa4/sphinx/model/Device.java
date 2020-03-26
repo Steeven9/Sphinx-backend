@@ -21,6 +21,10 @@ public abstract class Device {
     protected List<Integer> couplings;
 
     public Device() {
+        icon = "/images/generic_device";
+        name = "Device";
+        on = true;
+
     }
 
     protected Device(Device d) {

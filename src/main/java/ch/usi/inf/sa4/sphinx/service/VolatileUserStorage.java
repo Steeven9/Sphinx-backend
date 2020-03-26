@@ -22,10 +22,7 @@ public class VolatileUserStorage implements UserStorage {
     @Override
     public User get(final String username) {
         User user = users.get(username);
-        if(user == null){
-            return null;
-        }
-        return user.makeCopy();
+        return user == null? null : user.makeCopy();
     }
 
     @Override

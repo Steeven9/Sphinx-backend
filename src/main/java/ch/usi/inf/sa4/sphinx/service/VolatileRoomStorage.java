@@ -24,12 +24,7 @@ public class VolatileRoomStorage implements RoomStorage{
     @Override
     public Room get(Integer roomId) {
         Room storageRoom = rooms.get(roomId);
-        if(storageRoom == null){
-            return null;
-        }
-        Room returnRoom = storageRoom.makeCopy();
-        storageRoom.setId(roomId);
-        return returnRoom;
+        return storageRoom == null? null:storageRoom.makeCopy();
     }
 
     @Override
