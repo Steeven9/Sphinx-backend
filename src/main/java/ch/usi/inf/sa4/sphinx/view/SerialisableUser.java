@@ -9,6 +9,11 @@ public class SerialisableUser {
     public String password;
     public Integer[] rooms;
 
+
+    public SerialisableUser(){
+
+    }
+
     public SerialisableUser(String username, String email, String fullname, String password, Integer[] rooms){
         this.username = username;
         this.email = email;

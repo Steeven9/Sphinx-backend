@@ -39,7 +39,7 @@ public class RoomController {
     public ResponseEntity<SerialisableRoom[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                               @NotNull @RequestHeader("user") String username) {
 
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
         if (user != null) {
             if (!user.getSessionToken().equals(sessionToken)) {
                 return ResponseEntity.status(401).build();
@@ -85,7 +85,7 @@ public class RoomController {
     public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
                                                           @NotNull @RequestHeader("session-token") String sessionToken,
                                                           @NotNull @RequestHeader("user") String username) {
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -131,7 +131,7 @@ public class RoomController {
         if (id == null) {
             return ResponseEntity.status(500).build();
         } else {
-            return ResponseEntity.status(200).body(new SerialisableRoom(roomService.get(id)));
+            return ResponseEntity.status(203).body(new SerialisableRoom(roomService.get(id)));
         }
     }
 

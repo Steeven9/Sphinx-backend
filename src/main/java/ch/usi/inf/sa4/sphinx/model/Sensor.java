@@ -17,6 +17,15 @@ public abstract class Sensor extends Device {
         this.quantity = quantity;
     }
 
+    protected Sensor(Sensor s) {
+        super();
+        this.quantity = s.getQuantity();
+    }
+
+    private double getQuantity() {
+        return quantity;
+    }
+
     /**
      * Returns the measured physical quantity in given room, with small random error [-0.5, +0.5].
      * @return the physical quantity

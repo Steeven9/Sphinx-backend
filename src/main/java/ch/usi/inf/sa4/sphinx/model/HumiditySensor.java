@@ -12,6 +12,15 @@ public class HumiditySensor extends Sensor {
         super(32.0);
     }
 
+    public HumiditySensor(HumiditySensor s) {
+        super(s);
+    }
+
+    @Override
+    public HumiditySensor makeCopy() {
+        return new HumiditySensor(this);
+    }
+
     /**
      * {@inheritDoc}
      */
