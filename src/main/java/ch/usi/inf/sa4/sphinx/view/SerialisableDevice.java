@@ -58,6 +58,7 @@ public class SerialisableDevice {
 
 
         // TODO: fill switched
+        //In the future discard this todo and use Serialiser class and serialise method instead
         if (device instanceof Switch || device instanceof DimmableSwitch) {
             // TODO: fill switches
         } else {

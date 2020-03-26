@@ -42,7 +42,7 @@ public class User {
         this.username = user.username;
         this.fullname = user.fullname;
         this.resetCode = user.resetCode;
-        this.rooms = new ArrayList<Integer>(user.rooms);
+        this.rooms = new ArrayList<>(user.rooms);
         this.sessionToken = user.sessionToken;
         this.verified = user.verified;
     }

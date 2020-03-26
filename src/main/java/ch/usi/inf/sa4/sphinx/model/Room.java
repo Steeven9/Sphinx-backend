@@ -1,6 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 
 import java.util.*;
@@ -11,7 +9,7 @@ public class Room {
 	private String name;
 	private String background;
 	private String icon;
-	private final List<Integer> devices;
+	private List<Integer> devices;
     private Integer id;
 
 
@@ -19,7 +17,13 @@ public class Room {
 	 * @return a copy of this object
 	 */
 	public Room makeCopy(){
-		return new Room(this);
+		Room newRoom = new Room();
+		newRoom.name = this.name;
+		newRoom.icon = this.icon;
+		newRoom.background = this.background;
+		newRoom.id = this.id;
+		newRoom.devices = new ArrayList<>(devices);
+		return newRoom;
 	}
 
 	public Room(){
@@ -36,17 +40,13 @@ public class Room {
 		this.devices = Arrays.asList(room.devices);
 	}
 
-	public Room(Room room) {
-		this.name = room.name;
-		this.icon = room.icon;
-		this.background = room.background;
-		this.devices = Collections.unmodifiableList(room.devices);
-	}
 
-	public void setId(Integer id) {
+	public boolean setId(Integer id) {
 		if (this.id == null) {
 			this.id = id;
+			return true;
 		}
+		return false;
 	}
 
 	public Integer getId(){ return id;}

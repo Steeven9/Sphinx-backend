@@ -144,11 +144,13 @@ public class DeviceController {
 
 
         if (deviceService.update(storageDevice)) {
+            final Integer owningRoom = userService.owningRoom(username, deviceId);
+            if(!device.roomId.equals(owningRoom)){
+                userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
+            }
             return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
         }
-
         return ResponseEntity.status(500).build();
-
     }
 
     /**

@@ -1,18 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- *
- */
+
 public abstract class Device {
 
     @Autowired
@@ -28,18 +24,18 @@ public abstract class Device {
         icon = "/images/generic_device";
         name = "Device";
         on = true;
+
     }
 
-    // TODO(lagraf): rewrite correctly or confirm that it is so already
-    public Device(Device d) {
+    protected Device(Device d) {
         this.icon = d.getIcon();
         this.name = d.getName();
         this.on = d.isOn();
         this.couplings = new ArrayList<>(d.couplings);
+        this.id = d.id;
     }
 
 
-    //TODO(lagraf): fix makeCopy in subclasses if necessary
     /**
      * @return a copy of this Device
      */
@@ -54,10 +50,12 @@ public abstract class Device {
         return serialisableDevice;
     }
 
-    public void setId(Integer id) {
+    public boolean setId(Integer id) {
         if (id == null) {
             this.id = id;
+            return true;
         }
+        return false;
     }
 
     public void setIcon(String icon) {
