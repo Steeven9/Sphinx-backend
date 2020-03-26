@@ -15,11 +15,12 @@ public class SerialisableDevice {
     public String label;
     public int[] switched;
     public int[] switches;
-    public double intensity;
+    public double slider;
     public Integer roomId;
     public String roomName;
     public Integer type;
     public String userName;
+    public Boolean on;
 
 
     public SerialisableDevice(){ }
@@ -28,16 +29,17 @@ public class SerialisableDevice {
 
 
 
-    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type) {
+    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on) {
         this.id = id;
         this.icon = icon;
         this.name = name;
         this.label = label;
         this.switched = switched;
         this.switches = switches;
-        this.intensity = intensity;
+        this.slider = intensity;
         this.roomId = roomId;
         this.type = type;
+        this.on = on;
     }
 
     public SerialisableDevice(Device device, User user) {
@@ -45,6 +47,8 @@ public class SerialisableDevice {
         this.icon = device.getIcon();
         this.name = device.getName();
         this.label = device.getLabel();
+        this.on = device.isOn();
+
 
         var rooms = userService.getPopulatedRooms(user.getUsername());
         for(var room:rooms){
@@ -64,11 +68,8 @@ public class SerialisableDevice {
         } else {
             this.switches = null;
         }
-        if (device instanceof DimmableLight) {
-            this.intensity = ((DimmableLight)device).getIntensity();
-        }
-        if (device instanceof DimmableSwitch) {
-            this.intensity = ((DimmableSwitch)device).getState();
+        if (device instanceof Dimmable) {
+            this.slider = ((Dimmable)device).getState();
         }
     }
 

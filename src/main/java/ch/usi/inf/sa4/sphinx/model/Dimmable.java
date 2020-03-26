@@ -11,7 +11,7 @@ public class Dimmable extends Device {
     @Override
     public SerialisableDevice serialise(){
         SerialisableDevice sd = super.serialise();
-        sd.intensity = this.intensity;
+        sd.slider = this.intensity;
         return sd;
     }
 
