@@ -48,6 +48,7 @@ public abstract class Device {
     public SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
         serialisableDevice.id = this.id;
+        serialisableDevice.on = this.on;
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));

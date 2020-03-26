@@ -139,9 +139,9 @@ public class DeviceController {
 
         User user = userService.get(username);
         Device storageDevice = deviceService.get(deviceId);
-        storageDevice.setIcon(device.icon);
-        storageDevice.setName(device.name);
-
+        if (device.icon != null) storageDevice.setIcon(device.icon);
+        if (device.name != null) storageDevice.setName(device.name);
+        if (device.on != null) storageDevice.setOn(device.on);
 
         if (deviceService.update(storageDevice)) {
             return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
