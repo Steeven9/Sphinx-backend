@@ -121,7 +121,8 @@ public class AuthController {
 
         mailer.send(email,
                 "Reset your password on smarthut.xyz",
-                "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode);
+                "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode +
+                "\nOr, from local, http://localhost:3000/changepassword?email=" + email + "&code=" + resetCode);
 
         return ResponseEntity.noContent().build();
     }

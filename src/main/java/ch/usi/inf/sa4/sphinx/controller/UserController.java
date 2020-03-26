@@ -58,7 +58,8 @@ public class UserController {
 		User newUser = new User(user.email, user.password, username, user.fullname);
 		mailer.send(newUser.getEmail(),
 				"Confirm your email account for SmartHut",
-				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
+				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
+						"\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
 		userService.insert(newUser);
 
 		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
