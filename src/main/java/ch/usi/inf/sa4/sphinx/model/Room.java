@@ -16,12 +16,12 @@ public class Room {
 	/**
 	 * @return a copy of this object
 	 */
-	public Room makeCopy(Room oldRoom){
+	public Room makeCopy(){
 		Room newRoom = new Room();
-		newRoom.name = oldRoom.name;
-		newRoom.icon = oldRoom.icon;
-		newRoom.background = oldRoom.background;
-		newRoom.id = oldRoom.id;
+		newRoom.name = this.name;
+		newRoom.icon = this.icon;
+		newRoom.background = this.background;
+		newRoom.id = this.id;
 		newRoom.devices = new ArrayList<>(devices);
 		return newRoom;
 	}
