@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -98,7 +99,7 @@ public class DeviceController {
                                                            @RequestHeader("user") String username,
                                                            Errors errors) {
 
-        if (errors.hasErrors()) {
+        if (errors.hasErrors() || Objects.isNull(device.roomId) || Objects.isNull(device.type)) {
             return ResponseEntity.badRequest().build();
         }
 

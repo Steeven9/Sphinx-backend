@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class SerialisableDevice {
     @Autowired
-    private UserService userService;
+    private static UserService userService;
+
     public int id;
     public String icon;
     public String name;
