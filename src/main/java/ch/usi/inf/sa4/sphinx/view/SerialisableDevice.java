@@ -9,7 +9,8 @@ import java.util.Map;
 
 public class SerialisableDevice {
     @Autowired
-    private UserService userService;
+    private static UserService userService;
+
     public int id;
     public String icon;
     public String name;
@@ -17,7 +18,7 @@ public class SerialisableDevice {
     public int[] switched;
     public int[] switches;
     public double intensity;
-    public  int roomId;
+    public int roomId;
     public int type;
 
 
