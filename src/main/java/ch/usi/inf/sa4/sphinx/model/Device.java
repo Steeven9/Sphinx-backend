@@ -14,18 +14,37 @@ import java.util.stream.Collectors;
  *
  */
 public abstract class Device {
+
+    @Autowired
+    static CouplingService couplingService;
+
     private Integer id;
     private String icon;
     private String name;
     protected boolean on;
     protected List<Integer> couplings;
 
+    public Device() {
+        icon = "/images/generic_device";
+        name = "Device";
+        on = true;
+    }
 
-    @Autowired
-    CouplingService couplingService;
+    // TODO(lagraf): rewrite correctly or confirm that it is so already
+    public Device(Device d) {
+        this.icon = d.getIcon();
+        this.name = d.getName();
+        this.on = d.isOn();
+        this.couplings = new ArrayList<>(d.getCouplings());
+    }
 
+    // Added only for the copy constructor
+    // TODO: remove if its presence is undesired
+    private List<Integer> getCouplings() {
+        return couplings;
+    }
 
-    public SerialisableDevice serialize() {
+    public SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
         serialisableDevice.id = this.id;
         serialisableDevice.icon = this.icon;
@@ -75,11 +94,6 @@ public abstract class Device {
      */
     public abstract String getLabel();
 
-    public Device() {
-        icon = "/images/generic_device";
-        name = "Device";
-        on = true;
-    }
 
     //TODO
 

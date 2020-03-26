@@ -13,15 +13,15 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class Serializer {
+public class Serialiser {
     @Autowired
-    private  UserService userService;
+    private static UserService userService;
     @Autowired
-    private DeviceService deviceService;
+    private static DeviceService deviceService;
     @Autowired
-    private RoomService roomService;
+    private static RoomService roomService;
 
-    private Serializer(){}
+    private Serialiser(){}
 
     /**
      * Serializes a Device for the desciption of the serialized fields consult SerialisableDevice
@@ -29,8 +29,8 @@ public class Serializer {
      * @param d the device to serialize
      * @return the serialized device
      */
-    public  SerialisableDevice serializeDevice(Device d){
-      return d.serialize();
+    public SerialisableDevice serialiseDevice(Device d){
+      return d.serialise();
     }
 
     /**
@@ -42,8 +42,8 @@ public class Serializer {
      * @param user the User that owns the device
      * @return
      */
-    public  SerialisableDevice serializeDevice(Device device, User user){
-        SerialisableDevice sd = serializeDevice(device);
+    public  SerialisableDevice serialiseDevice(Device device, User user){
+        SerialisableDevice sd = serialiseDevice(device);
 
         var rooms = userService.getPopulatedRooms(user.getUsername());
         for(var room:rooms){
@@ -56,12 +56,12 @@ public class Serializer {
         return sd;
     }
 
-    public SerialisableUser serializeUser(User user){
-        return user.serialize();
+    public SerialisableUser serialiseUser(User user){
+        return user.serialise();
     }
 
-    public SerialisableRoom serializeRoom(Room room){
-        return room.serialize();
+    public SerialisableRoom serialiseRoom(Room room){
+        return room.serialise();
     }
 
 }

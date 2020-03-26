@@ -9,8 +9,8 @@ public class Dimmable extends Device {
     private double intensity;
 
     @Override
-    public SerialisableDevice serialize(){
-        SerialisableDevice sd = super.serialize();
+    public SerialisableDevice serialise(){
+        SerialisableDevice sd = super.serialise();
         sd.intensity = this.intensity;
         return sd;
     }

@@ -92,7 +92,7 @@ public class Room {
 
 	}
 
-	public SerialisableRoom serialize(){
+	public SerialisableRoom serialise(){
 		SerialisableRoom sd = new SerialisableRoom();
 		sd.devices = devices.toArray(new Integer[0]);
 		sd.background = background;

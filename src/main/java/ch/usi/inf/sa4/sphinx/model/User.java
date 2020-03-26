@@ -237,7 +237,7 @@ public class User {
     }
 
 
-    public SerialisableUser serialize() {
+    public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
         sd.email = this.email;
         sd.fullname = this.fullname;
