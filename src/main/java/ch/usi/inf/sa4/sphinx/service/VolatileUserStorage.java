@@ -36,7 +36,7 @@ public class VolatileUserStorage implements UserStorage {
         if (users.containsKey(username)) {
             return null;
         }
-        //Notice that a copy  is used.
+        // Notice that a copy is used.
         users.put(username, user.makeCopy());
         return username;
     }
