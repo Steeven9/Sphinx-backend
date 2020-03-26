@@ -14,7 +14,7 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
-    public SmartPlug(SmartPlug s) {
+    protected SmartPlug(SmartPlug s) {
         super(s);
         powerUsed = s.getPowerUsed();
     }

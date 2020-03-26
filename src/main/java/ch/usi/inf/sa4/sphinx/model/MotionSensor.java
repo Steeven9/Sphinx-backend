@@ -14,7 +14,7 @@ public class MotionSensor extends Device {
         this.detected = false;
     }
 
-    public MotionSensor(MotionSensor s) {
+    protected MotionSensor(MotionSensor s) {
         super(s);
         this.detected = s.isDetected();
     }
