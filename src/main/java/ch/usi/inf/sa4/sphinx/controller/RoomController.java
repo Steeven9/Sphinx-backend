@@ -15,7 +15,6 @@ import  ch.usi.inf.sa4.sphinx.service.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.Array;
 
 import java.util.List;
 
@@ -34,17 +33,11 @@ public class RoomController {
     /**
      * @param sessionToken session token of the user
      * @param username the username of the user
-     * @param errors in case error occur
      * @return a ResponseEntity with the array of rooms owned by the user
      */
     @GetMapping("/")
     public ResponseEntity<SerialisableRoom[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
-                                              @NotNull @RequestHeader("user") String username,
-                                              Errors errors) {
-
-        if (errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
-        }
+                                              @NotNull @RequestHeader("user") String username) {
 
         User user = userService.get(username);
         if (user != null) {
@@ -71,10 +64,9 @@ public class RoomController {
     @GetMapping("/{roomId}")
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
-                                                    @NotNull @RequestHeader("user") String username,
-                                                    Errors errors) {
+                                                    @NotNull @RequestHeader("user") String username) {
 
-        ResponseEntity<SerialisableRoom> res = check(sessionToken, username, errors, roomId);
+        ResponseEntity<SerialisableRoom> res = check(sessionToken, username, null, roomId);
         if (res != null) {
             return res;
         }
@@ -87,20 +79,13 @@ public class RoomController {
      * Given the room, returns all the devices in this room.
      * @param sessionToken session token of the user
      * @param username the username of the user
-     * @param errors in case error occur
      * @return an array of devices in given room
      */
     @GetMapping("/{roomId}/devices/")
     public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
                                                           @NotNull @RequestHeader("session-token") String sessionToken,
-                                                          @NotNull @RequestHeader("user") String username,
-                                                          Errors errors
-    ) {
-
-        if (errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
-        }
-        User user = userService.get(username);
+                                                          @NotNull @RequestHeader("user") String username) {
+        userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -129,9 +114,9 @@ public class RoomController {
      * @return a new room
      */
     @PostMapping("/")
-    public ResponseEntity<SerialisableRoom> createRoom(@NotNull @RequestBody SerialisableRoom serialisableRoom,
-                                                       @NotBlank @RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
+                                                       @NotNull @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
@@ -161,9 +146,9 @@ public class RoomController {
      */
     @PutMapping("/{roomId}/")
     public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable Integer roomId,
-                                                       @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
+                                                       @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
         var res = check(sessionToken, username, errors, roomId);
         if (res != null) {
@@ -181,16 +166,14 @@ public class RoomController {
      * @param roomId the id of the room
      * @param sessionToken session token of the user
      * @param username the username of the user
-     * @param errors in case error occur
      * @return  A ResponseEntity containing status code 203 if the room was removed
      *       status 403 if the delete went wrong
      */
     @DeleteMapping("/{roomId}/")
     public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable Integer roomId,
                                                         @NotBlank @RequestHeader("session-token") String sessionToken,
-                                                        @NotBlank @RequestHeader("user") String username,
-                                                        Errors errors) {
-        var res = check(sessionToken, username, errors, roomId);
+                                                        @NotBlank @RequestHeader("user") String username) {
+        var res = check(sessionToken, username, null, roomId);
         if (res != null) {
             return res;
         }
@@ -210,7 +193,7 @@ public class RoomController {
      * @return null if correct, otherwise a ResponseEntity
      */
     private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, Integer roomId) {
-        if(errors.hasErrors()){
+        if(errors != null && errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
         if(!userService.validSession(username, sessionToken)){
