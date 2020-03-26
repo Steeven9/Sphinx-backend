@@ -66,11 +66,8 @@ public class SerialisableDevice {
         } else {
             this.switches = null;
         }
-        if (device instanceof DimmableLight) {
-            this.intensity = ((DimmableLight)device).getIntensity();
-        }
-        if (device instanceof DimmableSwitch) {
-            this.intensity = ((DimmableSwitch)device).getState();
+        if (device instanceof Dimmable) {
+            this.intensity = ((Dimmable)device).getState();
         }
     }
 
