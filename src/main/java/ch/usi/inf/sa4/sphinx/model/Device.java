@@ -35,14 +35,15 @@ public abstract class Device {
         this.icon = d.getIcon();
         this.name = d.getName();
         this.on = d.isOn();
-        this.couplings = new ArrayList<>(d.getCouplings());
+        this.couplings = new ArrayList<>(d.couplings);
     }
 
-    // Added only for the copy constructor
-    // TODO: remove if its presence is undesired
-    private List<Integer> getCouplings() {
-        return couplings;
-    }
+
+    //TODO(lagraf): fix makeCopy in subclasses if necessary
+    /**
+     * @return a copy of this Device
+     */
+    public abstract Device makeCopy();
 
     public SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
@@ -93,16 +94,6 @@ public abstract class Device {
      * @return a human-friendly description of the current state of the device
      */
     public abstract String getLabel();
-
-
-    //TODO
-
-    /**
-     * @return a copy of this Device
-     */
-    public Device makeCopy() {
-        throw new NotImplementedException();
-    }
 
     /**
      * Adds an observer to this device that will be notified whenever its state changes.

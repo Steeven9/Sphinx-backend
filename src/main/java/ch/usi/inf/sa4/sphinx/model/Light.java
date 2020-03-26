@@ -12,6 +12,15 @@ public class Light extends Device {
         super();
     }
 
+    public Light(Light l) {
+        super(l);
+    }
+
+    @Override
+    public Device makeCopy() {
+        return new Light(this);
+    }
+
     /**
      * {@inheritDoc}
      */

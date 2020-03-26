@@ -12,6 +12,15 @@ public class Switch extends Device {
         super();
     }
 
+    public Switch(Switch s) {
+        super(s);
+    }
+
+    @Override
+    public Device makeCopy() {
+        return new Switch(this);
+    }
+
     /**
      * Returns true if and only if the switch is powered.
      * @return true if the switch is on, otherwise false

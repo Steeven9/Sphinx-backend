@@ -23,6 +23,16 @@ public class Dimmable extends Device {
         this.intensity = 1.0;
     }
 
+    protected Dimmable(Dimmable d) {
+        super(d);
+        this.intensity = d.getState();
+    }
+
+    @Override
+    public Dimmable makeCopy() {
+        return new Dimmable(this);
+    }
+
     /**
      * Returns the intensity level of this DimmableSwitch.
      *
