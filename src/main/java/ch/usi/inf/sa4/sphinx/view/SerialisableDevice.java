@@ -48,7 +48,7 @@ public class SerialisableDevice {
         this.name = device.getName();
         this.label = device.getLabel();
         this.on = device.isOn();
-        
+
 
         var rooms = userService.getPopulatedRooms(user.getUsername());
         for(var room:rooms){
