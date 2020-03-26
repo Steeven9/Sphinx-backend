@@ -1,10 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.controller.Storage;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     public final int device;
     private double increment;
+    @Autowired
+    private DeviceService deviceService;
+
 
     public StatelessDimmSwitchChangedEvent(int deviceID, double increment){
         super(deviceID);
@@ -16,7 +20,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      * @return value of state of device **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) Storage.getDevice(device)).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) deviceService.get(device)).isIncrementing() ? increment : -increment;
     }
 
 }

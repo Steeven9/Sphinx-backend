@@ -1,9 +1,15 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.controller.Storage;
+
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DimmSwitchChangedEvent extends Event<Double> {
     public final int device;
+
+    @Autowired
+    private DeviceService deviceService;
+
 
     public DimmSwitchChangedEvent(int deviceID){
         super(deviceID);
@@ -15,6 +21,6 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch)Storage.getDevice(device)).getState();
+        return ((DimmableSwitch) deviceService.get(device)).getState();
     }
 }

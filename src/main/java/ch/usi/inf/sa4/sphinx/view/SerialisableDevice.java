@@ -5,8 +5,6 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
-
 public class SerialisableDevice {
     @Autowired
     private static UserService userService;
@@ -18,8 +16,15 @@ public class SerialisableDevice {
     public int[] switched;
     public int[] switches;
     public double intensity;
-    public int roomId;
-    public int type;
+    public Integer roomId;
+    public String roomName;
+    public Integer type;
+    public String userName;
+
+
+    public SerialisableDevice(){ }
+
+
 
 
 
@@ -65,4 +70,6 @@ public class SerialisableDevice {
             this.intensity = ((DimmableSwitch)device).getState();
         }
     }
+
+
 }

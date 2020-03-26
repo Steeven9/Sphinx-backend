@@ -28,7 +28,7 @@ public class AuthController {
     @PostMapping("/validate")
     public ResponseEntity<Boolean> validate(@RequestHeader("user") String username,
                                             @RequestHeader("session-token") String sessionToken) {
-        User user = Storage.getUser(username);
+        User user = userService.get(username);
 
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -70,7 +70,7 @@ public class AuthController {
         }
 
         user.createSessionToken();
-        if(userService.update(user.getUsername(), user)){
+        if(!userService.update(user.getUsername(), user)){
             return ResponseEntity.status(500).build();
         }
 
@@ -89,7 +89,7 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = Storage.getUserByEmail(email);
+        User verifiedUser = userService.getByMail(email);
         if (verifiedUser == null) {
             return ResponseEntity.notFound().build();
         }
@@ -111,7 +111,7 @@ public class AuthController {
      */
     @PostMapping("/reset/{email}")
     public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
-        User resetUser = Storage.getUserByEmail(email);
+        User resetUser = userService.getByMail(email);
 
         if (resetUser == null) {
             return ResponseEntity.notFound().build();
@@ -138,7 +138,7 @@ public class AuthController {
     @PostMapping("/reset/{email}/{resetCode}")
     public ResponseEntity<Boolean> changePassword(@PathVariable String email, @PathVariable String resetCode,
                                                   @RequestBody String newPassword) {
-        User changedUser = Storage.getUserByEmail(email);
+        User changedUser = userService.getByMail(email);
 
         if (changedUser == null) {
             return ResponseEntity.notFound().build();

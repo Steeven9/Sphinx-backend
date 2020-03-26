@@ -14,6 +14,16 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
+    public SmartPlug(SmartPlug s) {
+        super(s);
+        powerUsed = s.getPowerUsed();
+    }
+
+    @Override
+    public SmartPlug makeCopy() {
+        return new SmartPlug(this);
+    }
+
     /**
      * Returns the consumed energy by this smart-plug.
      * @return the consumed energy

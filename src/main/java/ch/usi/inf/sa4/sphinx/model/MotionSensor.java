@@ -14,6 +14,16 @@ public class MotionSensor extends Device {
         this.detected = false;
     }
 
+    public MotionSensor(MotionSensor s) {
+        super(s);
+        this.detected = s.isDetected();
+    }
+
+    @Override
+    public MotionSensor makeCopy() {
+        return new MotionSensor(this);
+    }
+
     /**
      * Changes state to true.
      */
@@ -40,6 +50,7 @@ public class MotionSensor extends Device {
      * {@inheritDoc}
      */
     @Override
-    public String getLabel() { return "" + this.isDetected();
+    public String getLabel() {
+        return "" + this.isDetected();
     }
 }

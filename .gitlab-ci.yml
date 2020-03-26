@@ -1,23 +1,24 @@
 image: maven:3-jdk-13
 
+# Cache compiled project across all branches and jobs
+cache:
+    key: backend-cache
+    paths:
+        - target/
+
 stages:
     - build
-    - test
     - package
     - deploy
 
 maven-build:
     stage: build
     script:
-        - mvn clean
         - mvn compile
-
-maven-test:
-    stage: test
-    script:
         - mvn test
 
 maven-package:
+    only: [dev, master]
     stage: package
     script:
         - mvn package -DskipTests
