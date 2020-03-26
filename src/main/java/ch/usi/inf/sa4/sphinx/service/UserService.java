@@ -71,7 +71,7 @@ public final class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        return userStorage.insert(user) == null;
+        return userStorage.insert(user) != null;
     }
 
     /**
@@ -91,6 +91,7 @@ public final class UserService {
             oldUser.setEmail(user.getEmail());
             oldUser.setFullname(user.getFullname());
             oldUser.setPassword(user.getPassword());
+            oldUser.setSessionToken(user.getSessionToken());
             return userStorage.update(username, oldUser);
         }
         return false;

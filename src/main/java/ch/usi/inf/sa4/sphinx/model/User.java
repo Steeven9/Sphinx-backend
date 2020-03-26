@@ -124,6 +124,10 @@ public class User {
     }
 
 
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
     /**
      * getter for the verification status of the user
      *
