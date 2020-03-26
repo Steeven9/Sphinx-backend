@@ -23,16 +23,15 @@ public abstract class Device {
     public Device() {
     }
 
-    // TODO(lagraf): rewrite correctly or confirm that it is so already
     protected Device(Device d) {
         this.icon = d.getIcon();
         this.name = d.getName();
         this.on = d.isOn();
         this.couplings = new ArrayList<>(d.couplings);
+        this.id = d.id;
     }
 
 
-    //TODO(lagraf): fix makeCopy in subclasses if necessary
     /**
      * @return a copy of this Device
      */
@@ -47,10 +46,12 @@ public abstract class Device {
         return serialisableDevice;
     }
 
-    public void setId(Integer id) {
+    public boolean setId(Integer id) {
         if (id == null) {
             this.id = id;
+            return true;
         }
+        return false;
     }
 
     public void setIcon(String icon) {

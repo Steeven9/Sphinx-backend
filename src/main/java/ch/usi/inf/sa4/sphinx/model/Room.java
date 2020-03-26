@@ -41,10 +41,12 @@ public class Room {
 	}
 
 
-	public void setId(Integer id) {
+	public boolean setId(Integer id) {
 		if (this.id == null) {
 			this.id = id;
+			return true;
 		}
+		return false;
 	}
 
 	public Integer getId(){ return id;}

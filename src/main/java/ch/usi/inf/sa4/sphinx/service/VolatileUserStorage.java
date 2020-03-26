@@ -21,7 +21,11 @@ public class VolatileUserStorage implements UserStorage {
 
     @Override
     public User get(final String username) {
-        return users.get(username);
+        User user = users.get(username);
+        if(user == null){
+            return null;
+        }
+        return user.makeCopy();
     }
 
     @Override
@@ -35,8 +39,7 @@ public class VolatileUserStorage implements UserStorage {
         if (users.containsKey(username)) {
             return null;
         }
-
-        //Notice that a copy constructor is used.
+        //Notice that a copy  is used.
         users.put(username, user.makeCopy());
         return username;
     }

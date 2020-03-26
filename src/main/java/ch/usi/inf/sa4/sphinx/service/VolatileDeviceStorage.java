@@ -25,16 +25,27 @@ public class VolatileDeviceStorage implements DeviceStorage {
 
     @Override
     public Device get(Integer deviceId) {
+        Device storageDevice = devices.get(deviceId);
+        if(storageDevice == null){
+            return null;
+        }
+        Device returnDevice = storageDevice.makeCopy();
+        //The copy is without ID
+        returnDevice.setId(storageDevice.getId());
+
         return devices.get(deviceId);
     }
 
     @Override
     public Integer insert(Device device) {
         Device savedDevice = device.makeCopy();
-        var newId = generateId();
-        savedDevice.setId(newId);
-        devices.put(newId, savedDevice);
-        return newId;
+        Integer newId = generateId();
+        if(savedDevice.setId(newId)) {
+            devices.put(newId, savedDevice);
+            return newId;
+        }
+        return null;
+
     }
 
     @Override
@@ -47,10 +58,7 @@ public class VolatileDeviceStorage implements DeviceStorage {
         if(devices.get(updatedDevice.getId()) == null || !devices.containsKey(updatedDevice.getId())){
             return false;
         }
-
-
         devices.put(updatedDevice.getId(), updatedDevice.makeCopy());
-
         return true;
     }
 }
