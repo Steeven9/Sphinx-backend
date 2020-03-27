@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +33,6 @@ class DimmableTest {
     @Test
     void shouldReturnTheStateAfterSettingItMultipleElements() {
         Dimmable d = new Dimmable();
-        d.couplings = new ArrayList<Integer>();
         d.couplings.add(11);
         d.setState(0.4);
         assertEquals(0.4, d.getState());
@@ -41,7 +41,6 @@ class DimmableTest {
     @Test
     void shouldReturnTheStateAfterSettingIt() {
         Dimmable d = new Dimmable();
-        d.couplings = new ArrayList<Integer>();
         d.setState(0.4);
         assertEquals(0.4, d.getState());
 >>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
@@ -56,7 +55,6 @@ class DimmableTest {
 =======
     void shouldThrowExceptionIfTheStateIsSetWrong() {
         Dimmable d = new Dimmable();
-        d.couplings = new ArrayList<Integer>(Arrays.asList(10,11));
         Dimmable d2 = new Dimmable(d);
         assertThrows(IllegalArgumentException.class,()->d2.setState(1.1));
 >>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
@@ -99,7 +97,6 @@ class DimmableTest {
     @Test
     void shouldCopyDimmableCorrectly() {
         Dimmable d = new Dimmable();
-        d.couplings = new ArrayList<Integer>(Arrays.asList(10,11));
         Dimmable d2 = d.makeCopy();
         assertEquals(d.couplings, d2.couplings);
     }
