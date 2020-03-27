@@ -110,6 +110,7 @@ public abstract class Device extends Storable<Integer, Device> {
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 
@@ -117,4 +118,6 @@ public abstract class Device extends Storable<Integer, Device> {
 =======
 >>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
 >>>>>>> solved conflicts
+=======
+>>>>>>> #61: Model Test set-up
 }
