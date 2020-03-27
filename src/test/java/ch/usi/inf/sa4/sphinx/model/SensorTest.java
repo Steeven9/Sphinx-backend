@@ -4,9 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DeviceSetOnEffectTest {
+class SensorTest {
 
     @Test
-    void execute() {
+    void getValue() {
+    }
+
+    @Test
+    void getLabel() {
+    }
+
+    @Test
+    void getPhQuantity() {
     }
 }
