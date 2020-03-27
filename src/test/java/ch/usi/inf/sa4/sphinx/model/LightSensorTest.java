@@ -6,10 +6,10 @@ import java.text.*;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LightSensorTest {
-
     @Disabled
     @Test
     void shouldReturnCorrectQuantityIfCallGetQuantity() {

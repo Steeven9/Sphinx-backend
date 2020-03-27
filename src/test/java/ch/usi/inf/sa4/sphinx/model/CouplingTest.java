@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,38 +36,32 @@ class CouplingTest {
         Coupling c = new Coupling(10, 11);
         c.setId(4283);
         assertEquals(4283, c.getId());
-    }
+        }
 
-    @Test
-    void getEventId() {
-        Coupling c = new Coupling(10, 11);
-        assertNull(c.getId());
-    }
+        @Test
+        void shouldReturnIntegerIfCallingGetterEventIdAndSetInConstructor () {
+            Coupling c = new Coupling(10, 11);
+            assertEquals(10, c.getEventId());
+        }
 
-    @Test
-    void shouldReturnIntegerIfCallingGetterEventIdAndSetInConstructor() {
-        Coupling c = new Coupling(10, 11);
-        assertEquals(10, c.getEventId());
-    }
+        @Test
+        void shouldReturnListOfIntegersIfCallingGetterEffectsSetInConstructor () {
+            Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
+            assertEquals(new ArrayList<Integer>(Arrays.asList(11, 19)), c.getEffectIds());
+        }
 
-    @Test
-    void shouldReturnListOfIntegersIfCallingGetterEffectsSetInConstructor() {
-        Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
-        assertEquals(new ArrayList<Integer>(Arrays.asList(11, 19)), c.getEffectIds());
-    }
+        @Test
+        void shouldReturnListOfIntegersIfCallingGetterEffectsSetInConstructorAndAddedEffect () {
+            Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
+            Integer e = 20;
+            c.addEffect(e);
+            assertEquals(new ArrayList<Integer>(Arrays.asList(11, 19, 20)), c.getEffectIds());
+        }
 
-    @Test
-    void shouldReturnListOfIntegersIfCallingGetterEffectsSetInConstructorAndAddedEffect() {
-        Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
-        Integer e = 20;
-        c.addEffect(e);
-        assertEquals(new ArrayList<Integer>(Arrays.asList(11, 19, 20)), c.getEffectIds());
-    }
-
-    @Test
-    void shouldReturnTrueIfCopyIsEqualToOriginalUsingMakeCopy() {
-        Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
-        Coupling newC = c.makeCopy();
+        @Test
+        void shouldReturnTrueIfCopyIsEqualToOriginalUsingMakeCopy () {
+            Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
+            Coupling newC = c.makeCopy();
 //        assertTrue(newC.equals(c));
+        }
     }
-}

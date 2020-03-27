@@ -20,7 +20,7 @@ class RoomTest {
     }
 
     @Test
-    void shouldSetARoomUsingTheConstructorSerialisable(){
+    void shouldSetARoomUsingTheConstructorSerialisable() {
         SerialisableRoom serialisableRoom = new SerialisableRoom(100, "test_name", "test_icon", "test_bg", new Integer[]{1, 2, 3, 4});
         Room room = new Room(serialisableRoom);
 //        assertTrue(serialisableRoom.equals(room));
@@ -91,16 +91,16 @@ class RoomTest {
     }
 
     @Test
-        void shouldReturnListOnSettingDevicesToIntegerList() {
+    void shouldReturnListOnSettingDevicesToIntegerList() {
 
-            int test_device1 = 1;
-            r.addDevice(test_device1);
+        int test_device1 = 1;
+        r.addDevice(test_device1);
 
-            int test_device2 = 2;
-            r.addDevice(test_device2);
+        int test_device2 = 2;
+        r.addDevice(test_device2);
 
-            List<Integer> test_devices = Arrays.asList(test_device1,test_device2);
-            assertEquals(test_devices, r.getDevices());
+        List<Integer> test_devices = Arrays.asList(test_device1, test_device2);
+        assertEquals(test_devices, r.getDevices());
     }
 
     @Test
@@ -129,7 +129,7 @@ class RoomTest {
         r.addDevice(test_device6);
         r.addDevice(test_device7);
         r.removeDevice(4);
-        assertEquals(test_devices,r.getDevices());
+        assertEquals(test_devices, r.getDevices());
     }
 
     @Test
@@ -139,10 +139,6 @@ class RoomTest {
         d.setId(23);
         SerialisableRoom sd = d.serialise();
         assertEquals("TEST_NAME", sd.name);
-<<<<<<< HEAD
-        assertEquals(23, sd.id);}
-=======
         assertEquals(23, sd.id);
     }
->>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
 }
