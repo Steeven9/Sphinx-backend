@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableTest {
@@ -59,4 +60,5 @@ class DimmableTest {
             Dimmable d2 = d.makeCopy();
             assertEquals(d.couplings, d2.couplings);
         }
+
 }

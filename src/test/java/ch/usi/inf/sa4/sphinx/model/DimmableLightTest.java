@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableLightTest {
-
     @Test
     void shouldReturnIntensityCorrectly() {
         DimmableLight light = new DimmableLight();
