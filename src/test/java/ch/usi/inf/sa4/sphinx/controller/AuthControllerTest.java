@@ -41,5 +41,4 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
 }
