@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +34,9 @@ class CouplingTest {
     void shouldReturnIntegerIfSettingIdThatIsSetBefore() {
         Coupling c = new Coupling(10, 11);
         c.setId(4283);
-        assertEquals(4283,c.getId());
+        assertEquals(4283, c.getId());
     }
+
     @Test
     void getEventId() {
         Coupling c = new Coupling(10, 11);
@@ -68,5 +68,6 @@ class CouplingTest {
         Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
         Coupling newC = c.makeCopy();
 //        assertTrue(newC.equals(c));
+
     }
 }

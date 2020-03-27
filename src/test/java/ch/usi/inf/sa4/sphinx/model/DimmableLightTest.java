@@ -1,5 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +10,6 @@ class DimmableLightTest {
     void shouldReturnIntensityCorrectly() {
         DimmableLight light = new DimmableLight();
         assertNotNull(light);
-        assertEquals(1.0,light.getIntensity());
+        assertEquals(1.0, light.getIntensity());
     }
 }
