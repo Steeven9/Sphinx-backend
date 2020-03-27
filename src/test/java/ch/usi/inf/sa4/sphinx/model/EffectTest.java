@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EffectTest {
-
     @Disabled
     @Test
     void shouldReturnTrueIfSettingIdIsSetBefore() {
@@ -23,13 +24,5 @@ class EffectTest {
         d.setId(1);
         assertFalse(d.setId(4283));
         assertEquals(1, d.getId());
-    }
-
-    @Test
-    void setId() {
-    }
-
-    @Test
-    void getId() {
     }
 }
