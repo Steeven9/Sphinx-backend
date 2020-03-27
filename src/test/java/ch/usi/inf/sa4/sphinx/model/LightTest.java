@@ -2,8 +2,8 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LightTest {
@@ -12,7 +12,6 @@ class LightTest {
     void shouldReturnCopyIfMakeCopy() {
         Light l = new Light();
         l.setName("TEST_LIGHT");
-        l.couplings = new ArrayList<>();
 
         Device l2 = l.makeCopy();
         assertNotNull(l2);
@@ -24,7 +23,6 @@ class LightTest {
     void shouldReturnOnLabelIfCalledGetLabel() {
         Light l = new Light();
         l.setOn(true);
-        l.couplings = new ArrayList<>();
 
         assertEquals("on",l.getLabel());
     }
@@ -33,7 +31,6 @@ class LightTest {
     void shouldReturnOffLabelIfCalledGetLabel() {
         Light l = new Light();
         l.setOn(false);
-        l.couplings = new ArrayList<>();
 
         assertEquals("off",l.getLabel());
     }

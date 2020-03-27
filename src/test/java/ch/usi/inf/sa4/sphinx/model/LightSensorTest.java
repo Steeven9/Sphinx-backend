@@ -1,10 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import java.text.*;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,13 +20,13 @@ class LightSensorTest {
         String s2 = "";
         int c = 0;
 
-        for(c = 0;comma <=0;c++){
+        for (c = 0; comma <= 0; c++) {
             s2 += s.charAt(c);
-            if(s.charAt(c) == '.'){
+            if (s.charAt(c) == '.') {
                 comma++;
             }
         }
-        s2+=s.charAt(c);
+        s2 += s.charAt(c);
 
         Random random = new Random();
         double rd = random.nextDouble();
@@ -36,25 +36,21 @@ class LightSensorTest {
         int comma2 = 0;
         String comparing_new = "";
         int i = 0;
-        for(i = 0;comma2 <=0;c++){
-            if(comparing_cutted.charAt(i) == ','){
+        for (i = 0; comma2 <= 0; c++) {
+            if (comparing_cutted.charAt(i) == ',') {
                 comparing_new += ".";
                 comma2++;
-            }else{
+            } else {
                 comparing_new += s.charAt(i);
             }
         }
-        comparing_new +=s.charAt(i);
+        comparing_new += s.charAt(i);
 
-        while(!s2.equals(comparing_cutted)){
+        while (!s2.equals(comparing_cutted)) {
             rd = random.nextDouble();
-            comparing = 500.0 + (rd -0.5);
+            comparing = 500.0 + (rd - 0.5);
             comparing_cutted = df.format(comparing);
         }
         assertEquals(comparing_cutted + "" + l.getPhQuantity(), s2);
-    }
-
-    @Test
-    void getPhQuantity() {
     }
 }
