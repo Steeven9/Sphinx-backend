@@ -104,7 +104,7 @@ public class AuthController {
     }
 
     /**
-     * Generates and sends a reset code used to reset a User's password for a particular email address
+     * Generates and sends a reset code used to reset a User's password for a particular email address.
      * @param email the email address of the User whose password needs to be reset
      * @return A ResponseEntity containing status code 204 if operation completed successfully or
      *      404 id the provided email address does not exist.
@@ -128,7 +128,7 @@ public class AuthController {
     }
 
     /**
-     * Given the correct resetCode for the given email address, changes its password to the given password
+     * Given the correct resetCode for the given email address, changes its password to the given password.
      * @param email the email of the User whose password should be changed
      * @param resetCode the resetCode of the given user
      * @param newPassword the new password to change to

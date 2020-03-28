@@ -15,6 +15,11 @@ public class Mailer {
     @Value("${spring.mail.username}")
     private String fromAddress;
 
+    /** Send e-mail to a given user.
+     * @param to the user the e-mail is sent to
+     * @param subject the subject of the email
+     * @param message the message that get's sent to the user
+     **/
     public void send(String to, String subject, String message) {
 
         SimpleMailMessage mail = new SimpleMailMessage();

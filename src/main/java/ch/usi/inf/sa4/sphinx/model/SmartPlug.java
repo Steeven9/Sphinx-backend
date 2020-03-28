@@ -19,6 +19,9 @@ public class SmartPlug extends Device {
         powerUsed = s.getPowerUsed();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SmartPlug makeCopy() {
         return new SmartPlug(this);
