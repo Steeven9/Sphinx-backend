@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 
-/**
- *
- */
-public class User extends Storable<String, User> {
+public class User extends Storable<String>{
     private String email;
     private String password;
+    private String username;
     private String fullname;
     private String resetCode;
     private final List<Integer> rooms;
@@ -21,6 +19,16 @@ public class User extends Storable<String, User> {
     private boolean verified;
 
 
+    @Override
+    public boolean setKey( String key) {
+        return this.setUsername();
+    }
+
+    @Override
+    public String getKey() {
+        return this.getUsername();
+    }
+
     /**
      * @param email    user email: can't be the same as other users
      * @param password user password
@@ -28,9 +36,9 @@ public class User extends Storable<String, User> {
      * @param fullname full name
      */
     public User(final String email, final String password, final String username, final String fullname) {
-        super.setKey(username);
         this.email = email;
         this.password = password;
+        this.username = username;
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
@@ -39,10 +47,10 @@ public class User extends Storable<String, User> {
     }
 
     private User(User user) {
-        super.setKey(user.getKey());
         this.email = user.email;
         this.verificationToken = user.verificationToken;
         this.password = user.password;
+        this.username = user.username;
         this.fullname = user.fullname;
         this.resetCode = user.resetCode;
         this.rooms = new ArrayList<>(user.rooms);
@@ -50,14 +58,6 @@ public class User extends Storable<String, User> {
         this.verified = user.verified;
     }
 
-
-    /**
-     * @return
-     */
-    @Override
-    public String getKey() {
-        return this.getUsername();
-    }
 
     /**
      * @return a deep copy of this Object
@@ -91,7 +91,7 @@ public class User extends Storable<String, User> {
      * @return username of the user
      */
     public String getUsername() {
-        return getKey();
+        return username;
     }
 
 
@@ -182,8 +182,8 @@ public class User extends Storable<String, User> {
      *
      * @param username username
      */
-    public boolean setUsername(final String username) {
-        return setKey(username);
+    public void setUsername(final String username) {
+        this.username = username;
     }
 
     /**

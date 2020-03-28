@@ -10,10 +10,23 @@ public class Room extends Storable<Integer, Room> {
 	private String background;
 	private String icon;
 	private List<Integer> devices;
+    private Integer id;
 
 
+	/**
+	 * @return a copy of this object
+	 */
+	public Room makeCopy(){
+		Room newRoom = new Room();
+		newRoom.name = this.name;
+		newRoom.icon = this.icon;
+		newRoom.background = this.background;
+		newRoom.id = this.id;
+		newRoom.devices = new ArrayList<>(devices);
+		return newRoom;
+	}
 
-	public Room() {
+	public Room(){
 		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
@@ -28,28 +41,27 @@ public class Room extends Storable<Integer, Room> {
 	}
 
 
-
-	/**
-	 * @return a copy of this object
-	 */
-	public Room makeCopy(){
-		Room newRoom = new Room();
-		newRoom.setKey(getKey());
-		newRoom.name = this.name;
-		newRoom.icon = this.icon;
-		newRoom.background = this.background;
-		newRoom.devices = new ArrayList<>(devices);
-		return newRoom;
+	//TODO move on super and delete getId and setId
+	@Override
+	public boolean setKey(Integer key) {
+		return setId(key);
 	}
 
 
-	public boolean setId(Integer key) {
-		return setKey(key);
+	@Override
+	public Integer getKey() {
+		return getId();
 	}
 
-	public Integer getId(){
-		return getKey();
+	public boolean setId(Integer id) {
+		if (this.id == null) {
+			this.id = id;
+			return true;
+		}
+		return false;
 	}
+
+	public Integer getId(){ return id;}
 
 	//-------- getter and setter for name ----------------------
 	public String getName(){
@@ -97,8 +109,8 @@ public class Room extends Storable<Integer, Room> {
 		sd.devices = devices.toArray(new Integer[0]);
 		sd.background = background;
 		sd.icon = icon;
+		sd.id = id;
 		sd.name = name;
-		sd.id = getKey();
 		return sd;
 
 	}
