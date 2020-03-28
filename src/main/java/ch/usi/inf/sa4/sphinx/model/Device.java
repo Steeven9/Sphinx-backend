@@ -52,7 +52,7 @@ public abstract class Device {
     }
 
     public boolean setId(Integer id) {
-        if (id == null) {
+        if (this.id == null) {
             this.id = id;
             return true;
         }

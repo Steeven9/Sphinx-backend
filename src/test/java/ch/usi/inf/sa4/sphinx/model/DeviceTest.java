@@ -7,15 +7,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class DeviceTest {
 
     @Test
-    void makeCopy() {
+    void shouldReturnTrueIfCronstructorCreatesNotNull() {
+        Device d = new Dimmable();
+        assertNotNull(d);
     }
 
     @Test
-    void serialise() {
+    void shouldReturnTrueIfSettingIdIsNotSetBefore() {
+        Device c = new Dimmable();
+        assertTrue(c.setId(1));
     }
 
     @Test
-    void setId() {
+    void shouldReturnFalseIfSettingIdIsSetBefore() {
+        Device c = new Light();
+        c.setId(1);
+        assertFalse(c.setId(4283));
+    }
+
+    @Test
+    void should() {
     }
 
     @Test
