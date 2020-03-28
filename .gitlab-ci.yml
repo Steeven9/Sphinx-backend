@@ -39,3 +39,18 @@ docker-build:
     script:
         - docker build ./ -t $DOCKER_USER/sa4-sphinx-backend:latest
         - docker push $DOCKER_USER/sa4-sphinx-backend:latest
+
+docker-build-tags:
+    only: [tags]
+    stage: deploy
+    image: docker
+    variables:
+        DOCKER_DRIVER: overlay2
+    services:
+        - docker:dind
+    tags: [dind]
+    before_script:
+        - docker login -u $DOCKER_USER -p $DOCKER_PSW
+    script:
+        - docker build ./ -t $DOCKER_USER/sa4-sphinx-backend:$CI_COMMIT_REF_NAME
+        - docker push $DOCKER_USER/sa4-sphinx-backend:$CI_COMMIT_REF_NAME
