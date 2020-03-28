@@ -52,7 +52,6 @@ public abstract class Device extends Storable<Integer, Device> {
         return serialisableDevice;
     }
 
-
     public boolean setId(Integer key) {
         return super.setKey(key);
     }
