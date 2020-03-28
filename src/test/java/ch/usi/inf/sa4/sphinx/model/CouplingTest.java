@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouplingTest {
@@ -68,6 +73,5 @@ class CouplingTest {
         Coupling c = new Coupling(10, new ArrayList<Integer>(Arrays.asList(11, 19)));
         Coupling newC = c.makeCopy();
 //        assertTrue(newC.equals(c));
-
     }
 }
