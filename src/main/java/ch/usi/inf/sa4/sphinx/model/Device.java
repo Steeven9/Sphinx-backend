@@ -54,6 +54,7 @@ public abstract class Device extends Storable<Integer, Device> {
 
     public boolean setId(Integer key) {
         return super.setKey(key);
+
     }
 
     public void setIcon(String icon) {
@@ -109,15 +110,5 @@ public abstract class Device extends Storable<Integer, Device> {
             effect.execute(event.get());
         }
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-
-=======
->>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
->>>>>>> solved conflicts
-=======
->>>>>>> #61: Model Test set-up
 }
