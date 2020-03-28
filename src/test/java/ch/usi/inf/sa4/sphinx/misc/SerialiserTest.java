@@ -25,11 +25,5 @@ class SerialiserTest {
 
     @Test
     void isSerializedDevice() {
-        serialisableDevice = new SerialisableDevice();
-        device = new Light();
-        var x = serialiser.serialiseDevice(device);
-        var z = x.getClass();
-        var y = serialisableDevice.getClass();
-        assertEquals(z, y);
     }
 }
