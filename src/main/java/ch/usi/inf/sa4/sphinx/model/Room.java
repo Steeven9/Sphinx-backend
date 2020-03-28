@@ -5,7 +5,7 @@ import java.util.*;
 
 
 
-public class Room {
+public class Room extends Storable<Integer, Room> {
 	private String name;
 	private String background;
 	private String icon;
@@ -40,6 +40,18 @@ public class Room {
 		this.devices = Arrays.asList(room.devices);
 	}
 
+
+	//TODO move on super and delete getId and setId
+	@Override
+	public boolean setKey(Integer key) {
+		return setId(key);
+	}
+
+
+	@Override
+	public Integer getKey() {
+		return getId();
+	}
 
 	public boolean setId(Integer id) {
 		if (this.id == null) {
