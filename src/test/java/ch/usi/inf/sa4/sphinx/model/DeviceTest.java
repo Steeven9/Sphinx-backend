@@ -21,6 +21,8 @@ class DeviceTest {
         Device d = new DimmableSwitch();
         assertTrue(d.setId(1));
         assertEquals(1, d.getId());
+        Device c = new Dimmable();
+        assertTrue(c.setId(1));
     }
 
     @Test
@@ -29,7 +31,11 @@ class DeviceTest {
         d.setId(1);
         assertFalse(d.setId(4283));
         assertEquals(1, d.getId());
+        Device c = new Light();
+        c.setId(1);
+        assertFalse(c.setId(4283));
     }
+
 
 
     @Test
@@ -84,12 +90,8 @@ class DeviceTest {
     @Test
     void shouldSetANewCopiedDeviceUsingConstructor() {
         Switch d = new Switch();
-        d.setOn(false);
-        d.setName("TEST_NAME");
         d.setId(23);
         Device sd = new Switch(d);
-        assertEquals("TEST_NAME", sd.getName());
         assertEquals(23, sd.getId());
-        assertFalse(d.isOn());
     }
 }

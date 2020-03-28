@@ -23,6 +23,5 @@ class EffectTest {
         Device d = new Light();
         d.setId(1);
         assertFalse(d.setId(4283));
-        assertEquals(1, d.getId());
     }
 }
