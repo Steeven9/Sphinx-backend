@@ -4,8 +4,9 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import java.util.*;
 
 
-/** Class representing a Room **/
-public class Room {
+
+
+public class Room extends Storable<Integer, Room> {
 	private String name;
 	private String background;
 	private String icon;

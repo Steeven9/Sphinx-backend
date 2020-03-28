@@ -13,7 +13,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 //Docs in RoomStorage
 @Component("volatileRoomStorage")
-public class VolatileRoomStorage implements RoomStorage{
+public class VolatileRoomStorage extends VolatileStorage<String, Room> implements RoomStorage{
     private static final HashMap<Integer, Room> rooms = new HashMap<>();
     private static Integer id = 1;
 
