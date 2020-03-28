@@ -1,5 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -22,10 +21,9 @@ class DeviceTest {
 
     @Test
     void shouldReturnFalseIfSettingIdIsSetBefore() {
-        Device d = new Light();
-        d.setId(1);
-        assertFalse(d.setId(4283));
-        assertEquals(1, d.getId());
+        Device c = new Light();
+        c.setId(1);
+        assertFalse(c.setId(4283));
     }
 
 
@@ -83,9 +81,6 @@ class DeviceTest {
         Switch d = new Switch();
         d.setId(23);
         Device sd = new Switch(d);
-        assertEquals(23, sd.getId());
-        d.setOn(false);
-        d.setName("TEST_NAME");
         d.setId(23);
         assertEquals("TEST_NAME", sd.getName());
         assertEquals(23, sd.getId());

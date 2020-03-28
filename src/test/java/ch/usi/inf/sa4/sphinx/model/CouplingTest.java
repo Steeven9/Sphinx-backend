@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouplingTest {
@@ -64,4 +63,5 @@ class CouplingTest {
             Coupling newC = c.makeCopy();
 //        assertTrue(newC.equals(c));
         }
-    }
+        Coupling c = new Coupling(10, 11);
+}
