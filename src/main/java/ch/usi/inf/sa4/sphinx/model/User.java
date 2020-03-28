@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class User {
+public class User extends Storable<String>{
     private String email;
     private String password;
     private String username;
@@ -18,6 +18,16 @@ public class User {
     private final String verificationToken;
     private boolean verified;
 
+
+    @Override
+    public boolean setKey( String key) {
+        return this.setUsername();
+    }
+
+    @Override
+    public String getKey() {
+        return this.getUsername();
+    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -33,6 +43,7 @@ public class User {
         this.rooms = new ArrayList<>();
         this.verified = false;
         this.verificationToken = UUID.randomUUID().toString();
+        super.setKey(username);
     }
 
     private User(User user) {
