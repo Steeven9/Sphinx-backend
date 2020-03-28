@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import org.junit.jupiter.api.Test;
 
@@ -102,6 +103,7 @@ class RoomTest {
         r.addDevice(null);
         r.addDevice(null);
         assertEquals(test_devices, r.getDevices());
+
     }
 
     @Test
