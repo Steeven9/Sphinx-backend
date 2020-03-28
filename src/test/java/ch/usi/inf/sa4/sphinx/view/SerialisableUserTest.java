@@ -43,39 +43,4 @@ class SerialisableUserTest {
         SerialisableUser serialisableUser = new SerialisableUser();
         assertNotNull(serialisableUser);
     }
-
-    @Nested
-    @DisplayName("Testing constructor with User as argument")
-    class SerialisableUserWithUser {
-
-        @BeforeEach
-        void createUser() {
-            user = new User("testEmail", "testPassword", "testUsername", "testFullanme");
-        }
-
-        @Test
-        @DisplayName("")
-        void testUserConstructor() {
-            serialisableUser = new SerialisableUser(user);
-            assertAll("Should return new Serialized user",
-                    () -> assertEquals(serialisableUser.fullname, user.getFullname()),
-                    () -> assertEquals(serialisableUser.username, user.getUsername()),
-                    () -> assertEquals(serialisableUser.email, user.getEmail()),
-                    () -> assertEquals(serialisableUser.password, user.getPassword()),
-                    () -> assertEquals(serialisableUser.rooms.length, user.getRooms().size()));
-        }
-
-        @Test
-        @DisplayName("")
-        void testUserConstructorWithRooms() {
-            int roomNum = 10;
-            for (int i = 1; i <= roomNum; i++) {
-                user.addRoom(i * 3);
-            }
-            serialisableUser = new SerialisableUser(user);
-            for (int i = 0; i < roomNum; i++) {
-                assertEquals(serialisableUser.rooms[i], user.getRooms().get(i));
-            }
-        }
-    }
 }

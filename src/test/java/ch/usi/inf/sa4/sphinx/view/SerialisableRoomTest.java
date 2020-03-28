@@ -1,10 +1,7 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.model.Room;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -45,42 +42,5 @@ public class SerialisableRoomTest {
     void existSerializedRoom() {
         SerialisableRoom room = new SerialisableRoom();
         assertNotNull(room);
-    }
-
-
-    @Nested
-    @DisplayName("Testing constructor with Room as parameter")
-    class SerialisableUserWithUser {
-
-        @BeforeEach
-        void createUser() {
-            room = new Room();
-        }
-
-        @Test
-        @DisplayName(" , where Room does not contain any device")
-        void testUserConstructor() {
-            room.setId(23);
-            serialisableRoom = new SerialisableRoom(room);
-            assertAll("Should return new SerializedRoom",
-                    () -> assertEquals(serialisableRoom.name, room.getName()),
-                    () -> assertEquals(serialisableRoom.icon, room.getIcon()),
-                    () -> assertEquals(serialisableRoom.id, room.getId()),
-                    () -> assertEquals(serialisableRoom.devices.length, room.getDevices().size()), //should be 0
-                    () -> assertEquals(serialisableRoom.background, room.getBackground()));
-        }
-
-        @Test
-        @DisplayName(" , where Room contains some devices")
-        void testUserConstructorWithRooms() {
-            int deviceNum = 15;
-            for (int i = 1; i <= deviceNum; i++) {
-                room.addDevice(i * 2);
-            }
-            serialisableRoom = new SerialisableRoom(room);
-            for (int i = 0; i < deviceNum; i++) {
-                assertEquals(serialisableRoom.devices[i], room.getDevices().get(i));
-            }
-        }
     }
 }
