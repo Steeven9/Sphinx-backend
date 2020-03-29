@@ -76,12 +76,12 @@ public class DummyDataAdder {
 
     //user with 20 rooms and random devices in them
     private void randUser() {
-        User newuUser = new User("rand2@usi.ch", "1234", "mario2", "mario rossi");
+        User newuUser = new User("rand@usi.ch", "1234", "rand", "randomUser");
         userService.insert(newuUser);
         for (int i = 0; i < 20; i++) {
             Room newRoom = new Room();
             newRoom.setName(UUID.randomUUID().toString());
-            Integer roomId = userService.addRoom("mario2", newRoom);
+            Integer roomId = userService.addRoom("rand", newRoom);
             Random rand = new Random();
 
             int devices = rand.nextInt(30);
