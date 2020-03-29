@@ -18,11 +18,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public final class UserService {
-    //    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    private UserStorage userStorage;
+    private VolatileUserStorage userStorage;
     @Autowired
-    private RoomStorage roomStorage;
+    private Storage<Integer, Room> roomStorage;
     @Autowired
     private RoomService roomService;
     @Autowired
@@ -133,10 +132,15 @@ public final class UserService {
      * @param roomId   the id of the room to remove
      */
     public boolean removeRoom(final String username, final Integer roomId) {
+        if(!ownsRoom(username, roomId)){
+            return false;
+        }
+
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(username, user);
-        return roomStorage.delete(roomId);
+        roomStorage.delete(roomId);
+        return true;
     }
 
 

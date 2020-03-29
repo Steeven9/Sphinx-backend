@@ -2,7 +2,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Storable;
 
-public abstract class VolatileIntegerKeyStorage<T extends Storable<Integer>> extends VolatileStorage<Integer, T> {
+public abstract class VolatileIntegerKeyStorage<T extends Storable<Integer, T>> extends VolatileStorage<Integer, T> {
     private Integer id;
 
 
@@ -10,9 +10,8 @@ public abstract class VolatileIntegerKeyStorage<T extends Storable<Integer>> ext
         this.id = 1;
     }
 
-
     @Override
-    protected Integer generateKey() {
+    protected Integer generateKey(T item) {
         return id++;
     }
 }

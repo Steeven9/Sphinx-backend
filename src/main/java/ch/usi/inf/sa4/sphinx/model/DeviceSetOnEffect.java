@@ -1,12 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.DeviceStorage;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import ch.usi.inf.sa4.sphinx.service.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class DeviceSetOnEffect extends Effect< Boolean> {
     public final int device;
     @Autowired
-    private DeviceStorage deviceStorage;
+    private DeviceService deviceService;
 
     /** Constructor **/
     public DeviceSetOnEffect(int deviceID){
@@ -18,6 +19,6 @@ public class DeviceSetOnEffect extends Effect< Boolean> {
      * @param  effect: the current value of the device
      **/
     public void execute(Boolean effect){
-            deviceStorage.get(device).setOn(effect);
+            deviceService.get(device).setOn(effect);
     }
 }

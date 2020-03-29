@@ -11,57 +11,22 @@ import java.util.HashMap;
  */
 
 
-
-//METHOD ACCESS SHOULD BE DEFAULT NOT PUBLIC BUT IT CANT BE DONE SINCE IT IMPLEMENTS AN INTERFACE, MIGHT MAKE STORAGE
-//AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
 @Repository("volatileUserStorage")
-public class VolatileUserStorage implements UserStorage {
+public class VolatileUserStorage extends VolatileStorage<String, User> {
     //This is shared between all instances of the database
     private static final HashMap<String, User> users = new HashMap<>();
 
-    /**
-     * {@inheritDoc}
-     **/
     @Override
-    public User get(final String username) {
-        User user = users.get(username);
-        return user == null? null : user.makeCopy();
+    protected String generateKey(User user) {
+        return user.getKey();
     }
 
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
     public User getByEmail(final String email) {
         return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
-    public String insert(final User user) {
-        String username = user.getUsername();
-        if (users.containsKey(username)) {
-            return null;
-        }
-        // Notice that a copy is used.
-        users.put(username, user.makeCopy());
-        return username;
-    }
 
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
-    public void delete(String username) {
-        users.remove(username);
-    }
 
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
     public boolean update(final String username, final User updatedUser) {
         if (!users.containsKey(username)) {
             return false;
@@ -81,7 +46,5 @@ public class VolatileUserStorage implements UserStorage {
         users.put(updatedUser.getUsername(), updatedUser);
         return true;
     }
-
-
 
 }

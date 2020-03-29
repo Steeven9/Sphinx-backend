@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.misc;
+package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.model.Device;

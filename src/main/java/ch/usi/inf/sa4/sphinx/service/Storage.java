@@ -2,7 +2,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Storable;
 
-public abstract class Storage<K, T extends Storable<K> > {
+public abstract class Storage<K, T extends Storable<K, T> > {
     /**
      * Retrieves an item its key
      *
