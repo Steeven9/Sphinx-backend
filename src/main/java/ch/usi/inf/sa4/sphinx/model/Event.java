@@ -1,19 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Event<T> {
+public abstract class Event<T> extends Storable<Integer> {
     public final int device;
-    private Integer id;
 
     public int getDevice() {
         return device;
     }
 
     public boolean setId(Integer id) {
-        if (this.id != null) {
-            this.id = id;
-            return true;
-        }
-        return false;
+        return setId(id);
     }
 
     public Event(int deviceId) {
@@ -23,6 +18,6 @@ public abstract class Event<T> {
     public abstract T get();
 
     public Integer getId() {
-        return id;
+        return getKey();
     }
 }
