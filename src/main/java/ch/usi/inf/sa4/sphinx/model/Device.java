@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device extends Storable<Integer, Device>{
+public abstract class Device extends Storable<Integer>{
 
     @Autowired
     static CouplingService couplingService;
