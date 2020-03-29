@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class VolatileEventStorage extends VolatileIntegerKeyStorage<Event<?>> {
+public class VolatileEventStorage extends VolatileIntegerKeyStorage<Event<?> > {
     private VolatileEventStorage() {
     }
 }

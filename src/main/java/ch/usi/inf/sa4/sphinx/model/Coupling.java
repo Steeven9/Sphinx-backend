@@ -9,7 +9,7 @@ import java.util.List;
 
 
 //TODO fix atm couplings of different parameters can be created
-public class Coupling extends Storable<Integer>{
+public class Coupling extends Storable<Integer, Coupling>{
 
 
 

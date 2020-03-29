@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 public class RoomService {
 
     @Autowired
-    RoomStorage roomStorage;
+    Storage<Integer, Room> roomStorage;
     @Autowired
-    DeviceStorage deviceStorage;
+    Storage<Integer, Device> deviceStorage;
 
 
     /**

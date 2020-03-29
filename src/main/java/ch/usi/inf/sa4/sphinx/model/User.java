@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  *
  */
-public class User extends Storable<String> {
+public class User extends Storable<String, User> {
     private String email;
     private String password;
     private String fullname;

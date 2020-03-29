@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 public class CouplingService {
 
     @Autowired
-    private CouplingStorage couplingStorage;
+    private Storage<Integer, Coupling> couplingStorage;
     @Autowired
-    private EffectStorage effectStorage;
+    private Storage<Integer, Effect<?> > effectStorage;
     @Autowired
     private VolatileEventStorage eventStorage;
 
