@@ -93,11 +93,17 @@ public class DummyDataAdder {
         }
     }
 
+    /**
+     * When called adds various users to the storage
+     */
     public void dummy1() {
         user1();
         user2();
     }
 
+    /**
+     * Adds a User with key rand with randomly generated rooms and devices
+     */
     public void randDummy() {
         randUser();
     }

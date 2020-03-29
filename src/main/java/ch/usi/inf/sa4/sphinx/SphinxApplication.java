@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,17 +12,20 @@ import org.springframework.context.annotation.PropertySource;
 public class SphinxApplication {
 
 
-	@Value("${dummy_enabled:true}")
-	private static boolean dummyDataEnabled;
+    private static boolean dummyDataEnabled;
 
-	public static void main(String[] args) {
 
-		SpringApplication.run(SphinxApplication.class, args);
-		if (dummyDataEnabled) {
-			System.out.println("HERE");
-			DummyDataAdder dda = new DummyDataAdder();
-			dda.dummy1();
-		}
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SphinxApplication.class, args);
+        if (dummyDataEnabled) {
+            DummyDataAdder dda = new DummyDataAdder();
+            dda.dummy1();
+        }
+    }
 
+
+    @Value("${dummy_enabled:true}")
+    private void setDummyDataEnabled(boolean value) {
+        dummyDataEnabled = value;
+    }
 }
