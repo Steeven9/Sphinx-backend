@@ -33,6 +33,7 @@ public class SerialisableRoomTest {
     void testLongConstructor(Integer id, String name, String icon, String background, Integer[] devices) {
         serialisableRoom = new SerialisableRoom(id, name, icon, background, devices);
 
+
         assertAll("Should return new SerializedRoom",
                 () -> assertEquals(id, serialisableRoom.id),
                 () -> assertEquals(icon, serialisableRoom.icon),
