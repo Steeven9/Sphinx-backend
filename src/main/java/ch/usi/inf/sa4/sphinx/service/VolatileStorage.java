@@ -30,7 +30,7 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
 
             if(storageItem == item){
                 String className = item.getClass().getName();
-                throw new ImproperImplementation(className + "makeCopy() should not reference the same object");
+                throw new ImproperImplementation(className + ".makeCopy() should not reference the same object");
             }
 
             data.put(key, item);
