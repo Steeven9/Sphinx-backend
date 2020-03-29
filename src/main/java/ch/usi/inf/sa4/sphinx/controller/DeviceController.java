@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
@@ -31,6 +32,8 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    Serialiser serialiser;
 
     /**
      * Returns all the user's devices.
@@ -67,7 +70,7 @@ public class DeviceController {
      * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist
      */
     @GetMapping("/{deviceId}")
-    public ResponseEntity<SerialisableDevice> getDevice(@PathVariable Integer deviceId,
+    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username,
                                                         Errors errors) {
@@ -76,14 +79,16 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
-        deviceService.get(deviceId);
+
         User user = userService.get(username);
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
-        return ResponseEntity.ok(new SerialisableDevice(deviceService.get(deviceId), user));
+        Device device = deviceService.get(deviceId);
+
+        return ResponseEntity.ok(serialiser.serialiseDevice(device));
     }
 
 
