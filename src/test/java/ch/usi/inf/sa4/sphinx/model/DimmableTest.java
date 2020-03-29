@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,32 +32,31 @@ class DimmableTest {
         assertEquals(0.4, d.getState());
     }
 
-    @Test
-    void shouldReturnTheStateAfterSettingIt() {
-        Dimmable d = new Dimmable();
-        d.setState(0.4);
-        assertEquals(0.4, d.getState());
-    }
 
-    @Test
-    void shouldThrowExceptionIfTheStateIsSetWrong() {
-        Dimmable d = new Dimmable();
-        Dimmable d2 = new Dimmable(d);
-        assertThrows(IllegalArgumentException.class,()->d2.setState(1.1));
-    }
+        @Test
+        void shouldReturnTheStateAfterSettingIt () {
+            Dimmable d = new Dimmable();
+            d.setState(0.4);
+            assertEquals(0.4, d.getState());
+        }
 
-    @Test
-    void shouldReturnLabelCorrectly() {
-        Dimmable d = new Dimmable();
-        assertEquals("100.0%", d.getLabel());
-    }
+        @Test
+        void shouldThrowExceptionIfTheStateIsSetWrong () {
+            Dimmable d = new Dimmable();
+            Dimmable d2 = new Dimmable(d);
+            assertThrows(IllegalArgumentException.class, () -> d2.setState(1.1));
+        }
 
-    @Test
-    void shouldCopyDimmableCorrectly() {
-        Dimmable d = new Dimmable();
-        Dimmable d2 = d.makeCopy();
-        assertEquals(d.couplings, d2.couplings);
-    }
+        @Test
+        void shouldReturnLabelCorrectly () {
+            Dimmable d = new Dimmable();
+            assertEquals("100.0%", d.getLabel());
+        }
 
-
+        @Test
+        void shouldCopyDimmableCorrectly () {
+            Dimmable d = new Dimmable();
+            Dimmable d2 = d.makeCopy();
+            assertEquals(d.couplings, d2.couplings);
+        }
 }
