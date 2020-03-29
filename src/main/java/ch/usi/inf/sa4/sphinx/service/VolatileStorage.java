@@ -26,7 +26,7 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
         if (key == null) return null;
 
         if (item.setKey(key)) {
-            T storageItem =  item.makeCopy();
+            T storageItem = item.makeCopy();
 
             if(storageItem == item){
                 String className = item.getClass().getName();
