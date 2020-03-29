@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableTest {
@@ -29,11 +28,7 @@ class DimmableTest {
     void shouldReturnTheStateAfterSettingItMultipleElements() {
         Dimmable d = new Dimmable();
         d.couplings.add(11);
-        d.setState(0.4);
-        assertEquals(0.4, d.getState());
     }
-
-
         @Test
         void shouldReturnTheStateAfterSettingIt () {
             Dimmable d = new Dimmable();
@@ -60,5 +55,4 @@ class DimmableTest {
             Dimmable d2 = d.makeCopy();
             assertEquals(d.couplings, d2.couplings);
         }
-
 }
