@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
@@ -33,9 +32,8 @@ public class SerialisableDeviceTest {
     @Autowired
     RoomService roomService;
     @Autowired
-    DummyDataAdder dummyDataAdder;
-    @Autowired
     DeviceService deviceService;
+
 
 
     SerialisableDevice serialisableDevice;
