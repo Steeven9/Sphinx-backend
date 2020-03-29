@@ -111,9 +111,5 @@ public abstract class Device {
             Event event = couplingService.getEvent(coupling);
             effect.execute(event.get());
         }
-
-
-
-
     }
 }
