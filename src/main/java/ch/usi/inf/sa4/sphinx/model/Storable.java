@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Storable<K, T> {
+public abstract class Storable<K> {
     private K key;
 
     protected Storable(){
@@ -18,5 +18,5 @@ public abstract class Storable<K, T> {
         return key;
     }
 
-    public abstract T makeCopy();
+    public abstract Storable<K> makeCopy();
 }

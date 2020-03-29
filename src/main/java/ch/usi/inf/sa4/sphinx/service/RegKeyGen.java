@@ -1,9 +1,11 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Storable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 
-public class RegKeyGen extends KeyGen<Integer, Storable>{
+public class RegKeyGen extends KeyGen<Integer, Storable<Integer>>{
     private Integer id;
 
     public RegKeyGen(){
@@ -12,7 +14,7 @@ public class RegKeyGen extends KeyGen<Integer, Storable>{
 
 
     @Override
-    public Integer generateKey(Storable item) {
+    public Integer generateKey(Storable<Integer> item) {
         return id++;
     }
 }

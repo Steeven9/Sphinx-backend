@@ -9,12 +9,13 @@ import java.util.List;
 
 
 //TODO fix atm couplings of different parameters can be created
-public class Coupling {
+public class Coupling extends Storable<Integer>{
+
+
 
     @Autowired
     DeviceService deviceService;
 
-    private Integer id;
     private final Integer eventId;
     private final List<Integer> effectIds;
 
@@ -31,17 +32,24 @@ public class Coupling {
         this.effectIds.addAll(effectIds);
     }
 
+
+    @Override
+    public boolean setKey(Integer key) {
+        return setId(key);
+    }
+
+    @Override
+    public Integer getKey() {
+        return getId();
+    }
+
     /**
      * sets the id of this object to the given id
-     * @param id the id to set
+     * @param key the id to set
      * @return true if the id is set false otherwise if it has already been set
      */
-    public boolean setId(int id){
-        if(this.id ==  null){
-            this.id = id;
-            return true;
-        }
-        return false;
+    public boolean setId(int key){
+        return setKey(key);
     }
 
     /**
@@ -49,7 +57,7 @@ public class Coupling {
      * @return the id of the coupling
      */
     public Integer getId() {
-        return id;
+        return getId();
     }
 
 
@@ -67,7 +75,7 @@ public class Coupling {
 
     public Coupling makeCopy(){
         Coupling cp = new Coupling(eventId, effectIds);
-        cp.id = this.id;
+        cp.setKey(getKey());
         return cp;
     }
 

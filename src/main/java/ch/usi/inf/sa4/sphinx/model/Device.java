@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device {
+public abstract class Device extends Storable<Integer>{
 
     @Autowired
     static CouplingService couplingService;
 
-    private Integer id;
     private String icon;
     private String name;
     protected boolean on;
@@ -28,12 +27,13 @@ public abstract class Device {
     }
 
     protected Device(Device d) {
+        super.setKey(d.getKey());
         this.icon = d.getIcon();
         this.name = d.getName();
         this.on = d.isOn();
         this.couplings = new ArrayList<>(d.couplings);
-        this.id = d.id;
     }
+
 
 
     /**
@@ -41,9 +41,8 @@ public abstract class Device {
      */
     public abstract Device makeCopy();
 
-    public SerialisableDevice serialise() {
+    protected SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.id = this.id;
         serialisableDevice.on = this.on;
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
@@ -51,12 +50,8 @@ public abstract class Device {
         return serialisableDevice;
     }
 
-    public boolean setId(Integer id) {
-        if (id == null) {
-            this.id = id;
-            return true;
-        }
-        return false;
+    public boolean setId(Integer key) {
+        return super.setKey(key);
     }
 
     public void setIcon(String icon) {
@@ -68,7 +63,7 @@ public abstract class Device {
     }
 
     public Integer getId() {
-        return id;
+        return getKey();
     }
 
     public String getIcon() {
