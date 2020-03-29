@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Event<T> extends Storable<Integer> {
+public abstract class Event<T> extends Storable<Integer, Event<?> > {
     public final int device;
 
     public int getDevice() {
@@ -16,6 +16,11 @@ public abstract class Event<T> extends Storable<Integer> {
     }
 
     public abstract T get();
+
+    @Override
+    public Event<T> makeCopy() {
+        return null;
+    }
 
     public Integer getId() {
         return getKey();

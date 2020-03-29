@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Effect<T> extends Storable<Integer> {
+public abstract class Effect<T> extends Storable<Integer, Effect<?> > {
     public final int device;
 
     public Effect(int deviceId) {
@@ -13,6 +13,10 @@ public abstract class Effect<T> extends Storable<Integer> {
         return setKey(id);
     }
 
+    @Override
+    public Effect<T> makeCopy() {
+        return null;
+    }
 
     public int getId() {
         return getKey();
