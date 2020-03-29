@@ -5,7 +5,7 @@ import java.util.*;
 
 
 
-public class Room extends Storable<Integer> {
+public class Room extends Storable<Integer, Room> {
 	private String name;
 	private String background;
 	private String icon;
