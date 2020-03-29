@@ -10,5 +10,6 @@ class DimmableLightTest {
         DimmableLight light = new DimmableLight();
         assertNotNull(light);
         assertEquals(1.0, light.getIntensity());
+
     }
 }

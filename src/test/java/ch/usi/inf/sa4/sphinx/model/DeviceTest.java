@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeviceTest {
@@ -41,7 +42,6 @@ class DeviceTest {
         assertEquals("TEST_NAME", d.getName());
     }
 
-
     @Test
     void shouldReturnTrueIfIsOn() {
         Device d = new DimmableLight();
@@ -71,6 +71,7 @@ class DeviceTest {
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
+
         Integer observer = 10;
         d.addObserver(observer);
         assertTrue(d.couplings.contains(observer));
