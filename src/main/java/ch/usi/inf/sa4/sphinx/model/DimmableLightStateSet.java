@@ -23,4 +23,9 @@ public class DimmableLightStateSet extends Effect<Double> {
         dl.setState(effect);
         deviceService.update(dl);
     }
+
+    @Override
+    public DimmableLightStateSet makeCopy() {
+        return new DimmableLightStateSet(device);
+    }
 }

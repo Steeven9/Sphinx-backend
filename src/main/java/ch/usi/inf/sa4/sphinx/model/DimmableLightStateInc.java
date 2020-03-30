@@ -21,5 +21,11 @@ public class DimmableLightStateInc extends Effect<Double> {
         deviceService.update(light);
     }
 
-
+    /**
+     * @return a copy of this object
+     */
+    @Override
+    public DimmableLightStateInc makeCopy() {
+        return new DimmableLightStateInc(getId());
+    }
 }
