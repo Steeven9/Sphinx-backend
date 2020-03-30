@@ -61,7 +61,7 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
         T storageItem = updatedItem.makeCopy();
         if (storageItem == updatedItem || storageItem == null) {
             String className = updatedItem.getClass().getName();
-            throw new ImproperImplementationException(className + "makeCopy() should not reference the same object or null");
+            throw new ImproperImplementationException(className + ".makeCopy() should not reference the same object or null");
         }
 
         data.put(key, updatedItem);
