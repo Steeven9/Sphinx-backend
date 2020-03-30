@@ -24,8 +24,8 @@ public class Serialiser {
     private Serialiser(){}
 
     /**
-     * Serializes a Device for the desciption of the serialized fields consult SerialisableDevice
-     * the field that can't be retrived from the device alone will be null
+     * Serializes a Device for the description of the serialized fields consult SerialisableDevice
+     * the field that can't be retrieved from the device alone will be null
      * @param d the device to serialize
      * @return the serialized device
      */
@@ -40,7 +40,7 @@ public class Serialiser {
      * the username of the user that owns the device
      * @param device the device to serialize
      * @param user the User that owns the device
-     * @return
+     * @return the serialized device
      */
     public  SerialisableDevice serialiseDevice(Device device, User user){
         SerialisableDevice sd = serialiseDevice(device);
@@ -56,10 +56,22 @@ public class Serialiser {
         return sd;
     }
 
+    /**
+     * Serializes a User for the description of the serialized fields consult SerialisableUser
+     * the field that can't be retrieved from the device alone will be null
+     * @param user the user to serialize
+     * @return the serialized user
+     */
     public SerialisableUser serialiseUser(User user){
         return user.serialise();
     }
 
+    /**
+     * Serializes a Room for the description of the serialized fields consult SerialisableRoom
+     * the field that can't be retrieved from the device alone will be null
+     * @param room the room to serialize
+     * @return the serialized room
+     */
     public SerialisableRoom serialiseRoom(Room room){
         return room.serialise();
     }
