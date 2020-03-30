@@ -11,8 +11,6 @@ import java.util.List;
 //TODO fix atm couplings of different parameters can be created
 public class Coupling extends Storable<Integer, Coupling>{
 
-
-
     @Autowired
     DeviceService deviceService;
 
@@ -33,16 +31,6 @@ public class Coupling extends Storable<Integer, Coupling>{
     }
 
 
-    @Override
-    public boolean setKey(Integer key) {
-        return setId(key);
-    }
-
-    @Override
-    public Integer getKey() {
-        return getId();
-    }
-
     /**
      * sets the id of this object to the given id
      * @param key the id to set
@@ -57,7 +45,7 @@ public class Coupling extends Storable<Integer, Coupling>{
      * @return the id of the coupling
      */
     public Integer getId() {
-        return getId();
+        return getKey();
     }
 
 

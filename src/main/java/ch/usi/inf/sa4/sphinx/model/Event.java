@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import jdk.jshell.spi.ExecutionControl;
+
 public abstract class Event<T> extends Storable<Integer, Event<?> > {
     public final int device;
 
@@ -17,10 +20,6 @@ public abstract class Event<T> extends Storable<Integer, Event<?> > {
 
     public abstract T get();
 
-    @Override
-    public Event<T> makeCopy() {
-        return null;
-    }
 
     public Integer getId() {
         return getKey();

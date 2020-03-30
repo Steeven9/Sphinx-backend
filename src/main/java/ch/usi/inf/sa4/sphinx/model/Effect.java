@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+
 public abstract class Effect<T> extends Storable<Integer, Effect<?> > {
     public final int device;
 
@@ -9,14 +11,6 @@ public abstract class Effect<T> extends Storable<Integer, Effect<?> > {
 
     public abstract void execute(T effect);
 
-    public boolean setId(Integer id) {
-        return setKey(id);
-    }
-
-    @Override
-    public Effect<T> makeCopy() {
-        return null;
-    }
 
     public int getId() {
         return getKey();

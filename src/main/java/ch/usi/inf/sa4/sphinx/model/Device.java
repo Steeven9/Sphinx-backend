@@ -39,7 +39,6 @@ public abstract class Device extends Storable<Integer, Device>{
     /**
      * @return a copy of this Device
      */
-    public abstract Device makeCopy();
 
     protected SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();

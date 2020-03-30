@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
 /*
@@ -17,17 +18,17 @@ public class VolatileUserStorage extends VolatileStorage<String, User> {
     private static final HashMap<String, User> users = new HashMap<>();
 
     @Override
-    protected String generateKey(User user) {
+    protected String generateKey(@NotNull User user) {
         return user.getKey();
     }
 
-    public User getByEmail(final String email) {
+    public User getByEmail(@NotNull final String email) {
         return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 
 
 
-    public boolean update(final String username, final User updatedUser) {
+    public boolean update(@NotNull final String username,@NotNull final User updatedUser) {
         if (!users.containsKey(username)) {
             return false;
         }

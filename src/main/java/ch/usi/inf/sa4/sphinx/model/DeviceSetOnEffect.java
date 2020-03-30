@@ -4,6 +4,8 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
+
 public class DeviceSetOnEffect extends Effect< Boolean> {
     public final int device;
     @Autowired
@@ -20,5 +22,10 @@ public class DeviceSetOnEffect extends Effect< Boolean> {
      **/
     public void execute(Boolean effect){
             deviceService.get(device).setOn(effect);
+    }
+
+    @Override
+    public @NotNull Effect<?> makeCopy() {
+        return new DeviceSetOnEffect(device);
     }
 }
