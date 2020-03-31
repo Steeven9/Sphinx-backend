@@ -15,8 +15,8 @@ public class HumiditySensor extends Sensor {
 
     /**
      * Constructor.
-     * Creates a humidity sensor set to the percent of the HumiditySensor passed.
-     * @param s , a HumiditySensor instance
+     * Given a HumiditySensor, creates a copy of it.
+     * @param s The HumiditySensor to copy
      */
     public HumiditySensor(HumiditySensor s) {
         super(s);
