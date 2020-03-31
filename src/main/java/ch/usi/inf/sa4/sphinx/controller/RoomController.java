@@ -31,7 +31,7 @@ public class RoomController {
     RoomService roomService;
 
     /**
-     * Returns a list of all rooms.
+     * Returns a list of all rooms which belong to the given user.
      * @param sessionToken session token of the user
      * @param username the username of the user
      * @return a ResponseEntity with the array of rooms owned by the user
