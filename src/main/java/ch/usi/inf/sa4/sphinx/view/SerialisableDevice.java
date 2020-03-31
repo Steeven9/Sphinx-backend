@@ -22,13 +22,24 @@ public class SerialisableDevice {
     public String userName;
     public Boolean on;
 
-
+    /** Constructor.**/
     public SerialisableDevice(){ }
 
 
 
 
-
+    /** Constructor.
+     * @param id the serialisable device's id
+     * @param icon the serialisable device's icon
+     * @param intensity the serialisable device's intensity
+     * @param label the serialisable device's label
+     * @param name the serialisable device's name
+     * @param on tells whether the device is on
+     * @param roomId the serialisable device's room id
+     * @param switched list  (of ids) gitof switched  devices
+     * @param switches list of switches (by id) that the device has
+     * @param type the serialisable device's type
+     **/
     public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on) {
         this.id = id;
         this.icon = icon;
@@ -42,6 +53,10 @@ public class SerialisableDevice {
         this.on = on;
     }
 
+    /** Constructor.
+     * @param device the device to be serialised
+     * @param user the "owner" of the given device
+     **/
     public SerialisableDevice(Device device, User user) {
         this.id = device.getId();
         this.icon = device.getIcon();
