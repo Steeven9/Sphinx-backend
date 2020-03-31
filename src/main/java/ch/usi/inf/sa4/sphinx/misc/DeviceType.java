@@ -61,7 +61,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device  return the class this device belongs to, e.g. light, switch ...
+    /** Given a device, returns the DeviceType corresponding to the device's class.
      * @param d a given Device
      * @return the DeviceType of the given Device
      */
