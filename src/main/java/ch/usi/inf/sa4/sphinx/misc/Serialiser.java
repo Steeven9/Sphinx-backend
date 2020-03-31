@@ -57,8 +57,8 @@ public class Serialiser {
     }
 
     /**
-     * Serializes a User for the description of the serialized fields consult SerialisableUser
-     * the field that can't be retrieved from the device alone will be null
+     * Serialises a User. For the description of the serialised fields consult SerialisableUser.
+     * fields whose value cannot be determined by looking at the User are set to null.
      * @param user the user to serialize
      * @return the serialized user
      */
