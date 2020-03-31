@@ -29,7 +29,7 @@ public enum DeviceType {
     MOTION_SENSOR;
 
 
-    /** Given an integer  return the device assigned to that value.
+    /** Given an integer, returns the device type assigned to that value.
      * @param d the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
