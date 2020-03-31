@@ -30,7 +30,8 @@ public interface DeviceStorage {
 
 
     /**
-     * Updates the Room found with the id in updatedRoom with the fields of updatedRoom
+     * Updates the Room found with the id in updatedRoom with the fields of updatedRoom.
+     *
      * @param updatedDevice the user with the updated field
      * @return true if the operation is successful else false
      */

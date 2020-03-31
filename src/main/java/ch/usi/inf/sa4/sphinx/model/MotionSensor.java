@@ -14,11 +14,17 @@ public class MotionSensor extends Device {
         this.detected = false;
     }
 
+    /** Constructor.
+     * @param s a MotionSensor
+     **/
     protected MotionSensor(MotionSensor s) {
         super(s);
         this.detected = s.isDetected();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MotionSensor makeCopy() {
         return new MotionSensor(this);

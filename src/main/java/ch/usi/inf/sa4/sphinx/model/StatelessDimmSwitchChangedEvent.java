@@ -9,7 +9,10 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     @Autowired
     private DeviceService deviceService;
 
-
+    /** Constructor.
+     * @param deviceID the id of a device
+     * @param increment value for incrementing
+     **/
     public StatelessDimmSwitchChangedEvent(int deviceID, double increment){
         super(deviceID);
         this.device = deviceID;

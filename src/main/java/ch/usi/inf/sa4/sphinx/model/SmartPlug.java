@@ -14,11 +14,17 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
+    /** Constructor.
+     * @param s a SmartPlug
+     **/
     protected SmartPlug(SmartPlug s) {
         super(s);
         powerUsed = s.getPowerUsed();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SmartPlug makeCopy() {
         return new SmartPlug(this);

@@ -14,9 +14,7 @@ package ch.usi.inf.sa4.sphinx.misc;
 
 import ch.usi.inf.sa4.sphinx.model.*;
 
-/**
- *
- */
+
 public enum DeviceType {
     INVALID_DEVICE,
     LIGHT,
@@ -31,7 +29,8 @@ public enum DeviceType {
     MOTION_SENSOR;
 
 
-    /**
+
+    /** Given an integer, returns the device type assigned to that value.
      * @param d the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
@@ -63,7 +62,7 @@ public enum DeviceType {
     }
 
 
-    /**
+    /** Given a device, returns the DeviceType corresponding to the device's class.
      * @param d a given Device
      * @return the DeviceType of the given Device
      */
@@ -72,7 +71,7 @@ public enum DeviceType {
     }
 
 
-    /**
+    /** Given a device Class, returns the DeviceType of that class
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
@@ -111,7 +110,7 @@ public enum DeviceType {
     }
 
 
-    /**
+    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
      * @param d the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
@@ -143,7 +142,8 @@ public enum DeviceType {
     }
 
 
-    /**
+
+    /** Given a DeviceType, returns a new object of that type.
      * @param d the device type
      * @return a new Device according to the DeviceType
      */

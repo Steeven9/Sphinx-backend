@@ -33,6 +33,7 @@ public class DeviceController {
     RoomService roomService;
 
     /**
+     * Returns all the user's devices.
      * @param sessionToken session token of the user
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
@@ -61,6 +62,7 @@ public class DeviceController {
 
 
     /**
+     * Returns a specific device depending of its ID.
      * @param deviceId id of the device
      * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist
      */
@@ -86,6 +88,7 @@ public class DeviceController {
 
 
     /**
+     * Creates a new device.
      * @param device       data of the device to be created, name, label and icon are required
      * @param sessionToken sessionToken of the use
      * @param username     username of the user
@@ -116,6 +119,7 @@ public class DeviceController {
 
 
     /**
+     * Modifies a device.
      * @param deviceId id  of the device to be modified
      * @param device device to modify
      * @return a ResponseEntity with the data of the modified device (200), not found (404) if no such device exist or
@@ -154,6 +158,7 @@ public class DeviceController {
     }
 
     /**
+     * Deletes a device.
      * @param deviceId id  of the device to be deleted
      * @return a ResponseEntity
      */

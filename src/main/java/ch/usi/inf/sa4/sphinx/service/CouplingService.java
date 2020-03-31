@@ -20,20 +20,37 @@ public class CouplingService {
     private VolatileEventStorage eventStorage;
 
 
+    /** Getter for couplings in storage.
+     * @param id the id of the coupling to get
+     * @return an instance of Coupling
+     **/
     public Coupling get(int id) {
         return couplingStorage.get(id);
     }
 
+    /** Getter for effects in storage.
+     * @param id the id of the effect to get
+     * @return an instance of Effect
+     **/
     public Effect getEffect(Integer id){
         return effectStorage.get(id);
     }
 
+    /** Getter for events in storage.
+     * @param id the id of the event to get
+     * @return an instance of Event
+     **/
     public Event getEvent(Integer id){
         return eventStorage.get(id);
     }
 
 
     //TODO make safe, check the username?
+    /** Add coupling to storage.
+     * @param event the event in the coupling to be added
+     * @param effect the effect in the coupling to be added
+     * @return the id of the new coupling
+     **/
     public Integer addCoupling (Event<Double> event, Effect<Double> effect) {
         Integer storedEffect = effectStorage.insert(effect);
         Integer storedEvent = eventStorage.insert(event);
@@ -51,10 +68,18 @@ public class CouplingService {
     }
 
 
+    /** Delete coupling in storage.
+     * @param id the id of the coupling to be deleted
+     **/
     public void delete(int id) {
         couplingStorage.delete(id);
     }
 
+    /** Add effect to coupling.
+     * @param id the id of the coupling where we want to add an effect
+     * @param effect the id of the effect we want to add
+     * @return true if successfully updated, false otherwise
+     **/
     public boolean addEffect(int id, Integer effect){
         Coupling c = get(id);
         if (c == null) {

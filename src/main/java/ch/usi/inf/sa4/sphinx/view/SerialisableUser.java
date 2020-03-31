@@ -10,10 +10,18 @@ public class SerialisableUser {
     public Integer[] rooms;
 
 
+    /** Constructor.**/
     public SerialisableUser(){
 
     }
 
+    /** Constructor.
+     * @param email the email of the user
+     * @param fullname the full name of the user
+     * @param password the user's password
+     * @param rooms the list of the user's room(s)  (by id)
+     * @param username the user's username
+     **/
     public SerialisableUser(String username, String email, String fullname, String password, Integer[] rooms){
         this.username = username;
         this.email = email;
@@ -22,6 +30,9 @@ public class SerialisableUser {
         this.rooms = rooms;
     }
 
+    /** Constructor.
+     * @param user an instance of User
+     **/
     public SerialisableUser(User user){
         this.username = user.getUsername();
         this.email = user.getEmail();

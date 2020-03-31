@@ -20,6 +20,7 @@ public class User {
 
 
     /**
+     * Constructor.
      * @param email    user email: can't be the same as other users
      * @param password user password
      * @param username username: can't be the same as other users
@@ -35,6 +36,9 @@ public class User {
         this.verificationToken = UUID.randomUUID().toString();
     }
 
+    /** Constructor.
+     * @param  user a User
+     **/
     private User(User user) {
         this.email = user.email;
         this.verificationToken = user.verificationToken;
@@ -49,6 +53,7 @@ public class User {
 
 
     /**
+     * Makes a copy of User.
      * @return a deep copy of this Object
      */
     public User makeCopy() {
@@ -56,8 +61,7 @@ public class User {
     }
 
     /**
-     * getter for email
-     *
+     * Getter for email.
      * @return email of the user
      */
     public String getEmail() {
@@ -66,8 +70,7 @@ public class User {
 
 
     /**
-     * getter for password
-     *
+     * Getter for password.
      * @return password of the user
      */
     public String getPassword() {
@@ -75,8 +78,7 @@ public class User {
     }
 
     /**
-     * getter for username
-     *
+     * Getter for username.
      * @return username of the user
      */
     public String getUsername() {
@@ -85,8 +87,7 @@ public class User {
 
 
     /**
-     * getter for fullname
-     *
+     * Getter for fullname.
      * @return fullname of the user
      */
     public String getFullname() {
@@ -95,8 +96,7 @@ public class User {
 
 
     /**
-     * getter for resetcode
-     *
+     * Getter for resetcode.
      * @return reset code of the user used to ...?
      */
     public String getResetCode() {
@@ -105,8 +105,7 @@ public class User {
 
 
     /**
-     * getter for rooms
-     *
+     * Getter for rooms.
      * @return returns a list of the Ids of the rooms owned by the user
      */
     public List<Integer> getRooms() {
@@ -115,8 +114,7 @@ public class User {
 
 
     /**
-     * getter for session token
-     *
+     * Getter for session token.
      * @return the session token of the user
      */
     public String getSessionToken() {
@@ -124,13 +122,16 @@ public class User {
     }
 
 
+    /**
+     * Setter for session token.
+     * @param sessionToken  the session token
+     */
     public void setSessionToken(String sessionToken) {
         this.sessionToken = sessionToken;
     }
 
     /**
-     * getter for the verification status of the user
-     *
+     * Getter for the verification status of the user.
      * @return true if the user is verified (he clicked the confirmation link sent by mail)
      */
     public boolean isVerified() {
@@ -138,8 +139,7 @@ public class User {
     }
 
     /**
-     * getter for verification Token
-     *
+     * Getter for verification Token.
      * @return confirmation code of the user, to be sent via mail and then confirmed by the user
      */
     public String getVerificationToken() {
@@ -148,8 +148,7 @@ public class User {
 
 
     /**
-     * setter for email field
-     *
+     * Setter for email field.
      * @param email email of the user
      */
     public void setEmail(final String email) {
@@ -158,8 +157,7 @@ public class User {
     }
 
     /**
-     * setter for password
-     *
+     * Setter for password.
      * @param password new password of the user
      */
     public void setPassword(final String password) {
@@ -167,8 +165,7 @@ public class User {
     }
 
     /**
-     * sets the username
-     *
+     * Sets the username.
      * @param username username
      */
     public void setUsername(final String username) {
@@ -176,8 +173,7 @@ public class User {
     }
 
     /**
-     * setter for full user name
-     *
+     * Setter for full user name.
      * @param fullname full name of the user
      */
     public void setFullname(final String fullname) {
@@ -186,7 +182,8 @@ public class User {
 
 
     /**
-     * sets the verified status of the user to true
+     * Sets the verified status of the user to true.
+     * @param status the status of the user
      */
     public void setVerified(final boolean status) {
         this.verified = status;
@@ -194,7 +191,7 @@ public class User {
 
 
     /**
-     * Sets the status of the user to verified
+     * Sets the status of the user to verified.
      */
     public void verify() {
         setVerified(true);
@@ -202,8 +199,7 @@ public class User {
     }
 
     /**
-     * adds a the given roomId to the User
-     *
+     * Adds a the given roomId to the User.
      * @param roomId id of the room to be added
      */
     public void addRoom(final Integer roomId) {
@@ -211,8 +207,7 @@ public class User {
     }
 
     /**
-     * removes the room with the selected id
-     *
+     * Removes the room with the selected id.
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
@@ -221,8 +216,7 @@ public class User {
 
 
     /**
-     * generates and sets a session token for the  user
-     *
+     * Generates and sets a session token for the  user.
      * @return the generated session token
      */
     public String createSessionToken() {
@@ -231,8 +225,7 @@ public class User {
     }
 
     /**
-     * generates and sets a reset code for the user
-     *
+     * Generates and sets a reset code for the user.
      * @return the generated reset code
      */
     public String createResetCode() {
@@ -240,7 +233,9 @@ public class User {
         return resetCode;
     }
 
-
+    /** Serializes a User.
+     * @return a SerialisableUser
+     **/
     public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
         sd.email = this.email;

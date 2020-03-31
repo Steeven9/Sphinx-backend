@@ -6,6 +6,7 @@ package ch.usi.inf.sa4.sphinx.model;
 public class DimmableLight extends Dimmable {
 
     /**
+     * Constructor
      * Creates a special light that can be dimmable.
      */
     public DimmableLight() {

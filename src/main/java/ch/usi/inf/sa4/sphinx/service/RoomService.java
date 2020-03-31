@@ -23,6 +23,7 @@ public class RoomService {
 
 
     /**
+     * Getter for a room.
      * @param deviceId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
@@ -33,7 +34,6 @@ public class RoomService {
 
     /**
      * Given a room, return all the devices in this room.
-     *
      * @param roomId the id of the room
      * @return a list of all devices in this room
      */
@@ -46,8 +46,7 @@ public class RoomService {
     }
 
     /**
-     * Updates the given user, the username is used to find the User and the given User to update its fields
-     *
+     * Updates the given user, the username is used to find the User and the given User to update its fields.
      * @param room the room to update
      * @return true if successful update else false
      */
@@ -56,8 +55,7 @@ public class RoomService {
     }
 
     /**
-     * Adds the type of device specified by deviceType to the Room with the given roomId
-     *
+     * Adds the type of device specified by deviceType to the Room with the given roomId.
      * @param roomId     id of the Room
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
@@ -71,8 +69,7 @@ public class RoomService {
 
 
     /**
-     * Deletes the device with the given Id from the room with the given Id
-     *
+     * Deletes the device with the given Id from the room with the given Id.
      * @param roomId   the id of the room
      * @param deviceId the id of the device
      * @return true if succes else false

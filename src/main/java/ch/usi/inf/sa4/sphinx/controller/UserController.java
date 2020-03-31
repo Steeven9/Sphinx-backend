@@ -22,7 +22,7 @@ public class UserController {
 	UserService userService;
 
 	/**
-	 * gets a user.
+	 * Gets a user.
 	 * @param username the username of the requested user
 	 * @param session_token the session token used for authentication
 	 * @return a ResponseEntity with the data of the requested user if successful or
@@ -44,7 +44,7 @@ public class UserController {
 	}
 
 	/**
-	 * creates a new user.
+	 * Creates a new user.
 	 * @param username the username of the user to create
 	 * @param user a SerialisableUser with the data of the user to create
 	 * @return a ResponseEntity with status code 203 and a body with the newly-created user's data if the process was successful or
@@ -70,7 +70,7 @@ public class UserController {
 	}
 
 	/**
-	 * changes a user's information
+	 * Changes a user's information.
 	 * @param username the username of the user to change
 	 * @param user a SerialisableUser containing the new data of the user
 	 * @param session_token the session token used for authentication
@@ -99,7 +99,7 @@ public class UserController {
 	}
 
 	/**
-	 * deletes a user
+	 * Deletes a user.
 	 * @param username the username of the user to delete
 	 * @param session_token the session token used to authenticate
 	 * @return a ResponseEntity containing one of the following status codes:

@@ -10,7 +10,10 @@ public class DimmableLightStateSet extends Effect<Double> {
     @Autowired
     private DeviceService deviceService;
 
-
+    /**
+     * Constructor.
+     * @param deviceID the id to set the DimmableLightStateSet to
+     * **/
     public DimmableLightStateSet(int deviceID){
         super(deviceID);
         this.device = deviceID;
