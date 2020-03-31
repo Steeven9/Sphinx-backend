@@ -136,7 +136,7 @@ public abstract class Device {
     }
 
 
-    /** Trigger for the effect so that effect get's executed.
+    /** Triggers this effect
      **/
     //TODO fix unchecked
     protected void triggerEffects() {
