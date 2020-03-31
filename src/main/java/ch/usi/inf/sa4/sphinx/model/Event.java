@@ -24,7 +24,7 @@ public abstract class Event<T> {
     }
 
     /** Constructor.
-     * @param deviceId  the id of the device for the Event
+     * @param deviceId the id of the device for the Event
      **/
     public Event(int deviceId) {
         device = deviceId;
