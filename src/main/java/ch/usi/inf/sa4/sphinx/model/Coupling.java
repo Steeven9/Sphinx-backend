@@ -88,7 +88,7 @@ public class Coupling {
     }
 
     /**
-     * Makes a copy of the a Coupling object.
+     * Makes a copy of this Coupling object.
      * @return the copy of the Coupling object
      */
     public Coupling makeCopy(){
