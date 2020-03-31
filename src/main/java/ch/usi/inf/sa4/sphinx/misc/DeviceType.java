@@ -110,7 +110,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device return the integer it is represented by.
+    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
      * @param d the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
