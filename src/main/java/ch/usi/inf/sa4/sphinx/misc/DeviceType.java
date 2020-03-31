@@ -71,7 +71,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device class  return a specific type of device in that class.
+    /** Given a device Class, returns the DeviceType of that class
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
@@ -110,7 +110,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device return the integer it is represented by.
+    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
      * @param d the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
@@ -142,7 +142,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device type return an object of that device.
+    /** Given a DeviceType, returns a new object of that type.
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
