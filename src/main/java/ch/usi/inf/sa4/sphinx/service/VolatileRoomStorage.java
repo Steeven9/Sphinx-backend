@@ -17,16 +17,25 @@ public class VolatileRoomStorage implements RoomStorage{
     private static final HashMap<Integer, Room> rooms = new HashMap<>();
     private static Integer id = 1;
 
+    /** Id generator.
+     * @return id
+     **/
     private Integer generateId(){
         return id++;
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public Room get(Integer roomId) {
         Room storageRoom = rooms.get(roomId);
         return storageRoom == null? null:storageRoom.makeCopy();
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public Integer insert(Room room) {
         Room savedRoom = room.makeCopy();
@@ -38,12 +47,18 @@ public class VolatileRoomStorage implements RoomStorage{
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public boolean delete(Integer roomId) {
         rooms.remove(roomId);
         return this.get(roomId) == null;
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public boolean update(Room updatedRoom) {
         if(!rooms.containsKey(updatedRoom.getId())){

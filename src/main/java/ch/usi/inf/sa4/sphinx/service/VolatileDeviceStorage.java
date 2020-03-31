@@ -18,17 +18,26 @@ public class VolatileDeviceStorage implements DeviceStorage {
     private static final HashMap<Integer, Device> devices = new HashMap<>();
     private static Integer id = 1;
 
+    /** Id generator.
+     * return id
+     **/
     private Integer generateId(){
         return id++;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Device get(Integer deviceId) {
         Device storageDevice = devices.get(deviceId);
         return storageDevice == null? null: storageDevice.makeCopy();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer insert(Device device) {
         Device savedDevice = device.makeCopy();
@@ -41,11 +50,17 @@ public class VolatileDeviceStorage implements DeviceStorage {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(Integer deviceId) {
         devices.remove(deviceId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean update(Device updatedDevice) {
         if(devices.get(updatedDevice.getId()) == null || !devices.containsKey(updatedDevice.getId())){

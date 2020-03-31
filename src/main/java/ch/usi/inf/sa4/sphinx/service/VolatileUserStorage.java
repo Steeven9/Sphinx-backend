@@ -19,17 +19,26 @@ public class VolatileUserStorage implements UserStorage {
     //This is shared between all instances of the database
     private static final HashMap<String, User> users = new HashMap<>();
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public User get(final String username) {
         User user = users.get(username);
         return user == null? null : user.makeCopy();
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public User getByEmail(final String email) {
         return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public String insert(final User user) {
         String username = user.getUsername();
@@ -41,11 +50,17 @@ public class VolatileUserStorage implements UserStorage {
         return username;
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public void delete(String username) {
         users.remove(username);
     }
 
+    /**
+     * {@inheritDoc}
+     **/
     @Override
     public boolean update(final String username, final User updatedUser) {
         if (!users.containsKey(username)) {

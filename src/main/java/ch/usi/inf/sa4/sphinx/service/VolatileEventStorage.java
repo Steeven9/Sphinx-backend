@@ -11,15 +11,25 @@ public class VolatileEventStorage implements  EventStorage {
     private static final HashMap<Integer, Event> events = new HashMap<>();
     private static Integer id = 1;
 
+
+    /** Id generator.
+     * @return id
+     **/
     private Integer generateId(){
         return id++;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Event get(Integer id) {
         return events.get(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer insert(Event c) {
         if(c.setId(generateId())){
@@ -29,12 +39,18 @@ public class VolatileEventStorage implements  EventStorage {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(Integer id) {
         events.remove(id);
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean update(Event ev) {
         return false;

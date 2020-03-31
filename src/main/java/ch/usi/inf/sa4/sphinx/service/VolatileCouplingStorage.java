@@ -13,11 +13,15 @@ public class VolatileCouplingStorage implements CouplingStorage {
     private static final Map<Integer, Coupling> couplings = new HashMap<>();
 
 
+    /** Create an id
+     * @return an id
+     **/
     private int makeId() {
         return id++;
     }
 
     /**
+     * Getter for a coupling (event + effect(s)).
      * @param id of the coupling
      * @return the requested Coupling with given id
      */
@@ -27,6 +31,7 @@ public class VolatileCouplingStorage implements CouplingStorage {
     }
 
     /**
+     * Insert coupling.
      * @param c the coupling to insert in the Storage
      * @return the id of the inserted coupling
      */
@@ -41,6 +46,7 @@ public class VolatileCouplingStorage implements CouplingStorage {
     }
 
     /**
+     * Delete coupling.
      * @param id id of the coupling to delete
      */
     @Override
@@ -48,6 +54,11 @@ public class VolatileCouplingStorage implements CouplingStorage {
         couplings.remove(id);
     }
 
+    /**
+     * Update coupling.
+     * @param updatedDevice the coupling to update in the Storage
+     * @return the true if successfully updated, false otherwise
+     */
     @Override
     public boolean update(Coupling updatedDevice) {
         if (!couplings.containsKey(id)) {
