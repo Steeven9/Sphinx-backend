@@ -71,7 +71,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device class  return a specific type of device in that class.
+    /** Given a device Class, returns the DeviceType of that class
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
