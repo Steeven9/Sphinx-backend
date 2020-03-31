@@ -18,7 +18,7 @@ public class CouplingService {
     @Autowired
     private Storage<Integer, Effect<?>> effectStorage;
     @Autowired
-    private VolatileEventStorage eventStorage;
+    private Storage<Integer, Event<?> > eventStorage;
 
 
     /** Getter for couplings in storage.
