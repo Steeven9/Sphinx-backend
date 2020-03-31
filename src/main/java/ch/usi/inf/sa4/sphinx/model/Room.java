@@ -47,7 +47,7 @@ public class Room {
 
 	/** Setter for the id of a room.
 	 * @param id the id of the room
-	 * @return true if a room without identity get's assigned value "id", false otherwise
+	 * @return true iff the operation was successful
 	 **/
 	public boolean setId(Integer id) {
 		if (this.id == null) {
