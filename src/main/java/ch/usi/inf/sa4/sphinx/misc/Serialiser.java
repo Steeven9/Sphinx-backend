@@ -67,8 +67,8 @@ public class Serialiser {
     }
 
     /**
-     * Serializes a Room for the description of the serialized fields consult SerialisableRoom
-     * the field that can't be retrieved from the device alone will be null
+     * Serialises a Room. For the description of the serialised fields consult SerialisableRoom.
+     * Fields whose value cannot be determined by looking at the Room are set to null.
      * @param room the room to serialize
      * @return the serialized room
      */
