@@ -16,7 +16,7 @@ public class Mailer {
     private String fromAddress;
 
     /** Send e-mail to a given user.
-     * @param to the user the e-mail is sent to
+     * @param to the email address to send the e-mail to```
      * @param subject the subject of the email
      * @param message the message that gets sent to the user
      **/
