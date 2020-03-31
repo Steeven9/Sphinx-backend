@@ -142,7 +142,7 @@ public enum DeviceType {
     }
 
 
-    /** Given a device type return an object of that device.
+    /** Given a DeviceType, returns a new object of that type.```
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
