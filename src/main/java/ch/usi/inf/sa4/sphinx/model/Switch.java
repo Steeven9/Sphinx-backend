@@ -12,10 +12,15 @@ public class Switch extends Device {
         super();
     }
 
+    /** Constructor.
+     * @param s a Switch**/
     public Switch(Switch s) {
         super(s);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Device makeCopy() {
         return new Switch(this);

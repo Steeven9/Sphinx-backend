@@ -14,10 +14,16 @@ public class TempSensor extends Sensor {
         super(20.0);
     }
 
+    /** Constructor.
+     * @param s a TempSensor
+     **/
     public TempSensor(TempSensor s) {
         super(s);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TempSensor makeCopy() {
         return new TempSensor(this);

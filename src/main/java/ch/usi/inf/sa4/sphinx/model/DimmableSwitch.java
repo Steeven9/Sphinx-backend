@@ -6,6 +6,7 @@ package ch.usi.inf.sa4.sphinx.model;
 public class DimmableSwitch extends Dimmable  {
 
     /**
+     * Constructor.
      * Creates a dimmable switch.
      */
     public DimmableSwitch() {

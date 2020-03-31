@@ -9,6 +9,9 @@ public class Dimmable extends Device {
     private double intensity;
 
     @Override
+    /**
+     * {@inheritDoc}
+     */
     public SerialisableDevice serialise(){
         SerialisableDevice sd = super.serialise();
         sd.slider = this.intensity;
@@ -16,6 +19,7 @@ public class Dimmable extends Device {
     }
 
     /**
+     * Constructor.
      * Initialize a dimmable device, with intensity set to maximum.
      */
     protected Dimmable() {
@@ -23,19 +27,26 @@ public class Dimmable extends Device {
         this.intensity = 1.0;
     }
 
+    /**
+     * Constructor.
+     * @param d a Dimmable device
+     */
     protected Dimmable(Dimmable d) {
         super(d);
         this.intensity = d.getState();
     }
 
+
     @Override
+    /**
+     * {@inheritDoc}
+     */
     public Dimmable makeCopy() {
         return new Dimmable(this);
     }
 
     /**
      * Returns the intensity level of this DimmableSwitch.
-     *
      * @return the intensity level of this DimmableSwitch
      */
     public double getState() {
@@ -44,7 +55,6 @@ public class Dimmable extends Device {
 
     /**
      * Changes the state of this DimmableSwitch and remembers it.
-     *
      * @param newState a new intensity level to be set
      * @throws IllegalArgumentException if the intensity level is more than 1.0 or less than 0.0
      */

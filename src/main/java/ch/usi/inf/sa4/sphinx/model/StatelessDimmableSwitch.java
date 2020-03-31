@@ -14,11 +14,17 @@ public class StatelessDimmableSwitch extends Device {
         this.button = false;
     }
 
+    /** Constructor.
+     * @param s a StatelessDimmableSwitch
+     **/
     public StatelessDimmableSwitch(StatelessDimmableSwitch s) {
         super(s);
         button = s.button;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StatelessDimmableSwitch makeCopy() {
         return new StatelessDimmableSwitch(this);

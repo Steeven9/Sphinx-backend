@@ -17,11 +17,17 @@ public abstract class Sensor extends Device {
         this.quantity = quantity;
     }
 
+    /** Constructor.
+     * @param s a Sensor
+     **/
     protected Sensor(Sensor s) {
         super();
         this.quantity = s.getQuantity();
     }
 
+    /** Getter for the quantity.
+     * @return quantity
+     **/
     private double getQuantity() {
         return quantity;
     }

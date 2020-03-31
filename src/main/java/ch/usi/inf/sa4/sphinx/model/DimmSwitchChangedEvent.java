@@ -10,7 +10,10 @@ public class DimmSwitchChangedEvent extends Event<Double> {
     @Autowired
     private DeviceService deviceService;
 
-
+    /**
+     * Constructor.
+     * @param deviceID the id to set the DimmSwitchChangedEvent to
+     * **/
     public DimmSwitchChangedEvent(int deviceID){
         super(deviceID);
         this.device = deviceID;
