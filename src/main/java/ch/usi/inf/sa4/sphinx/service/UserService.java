@@ -40,6 +40,7 @@ public final class UserService {
 
 
     /**
+     * getter for User
      * @param username the username
      * @return Returns the User with the given name if present in the storage
      */
@@ -148,6 +149,7 @@ public final class UserService {
 
 
     /**
+     * Getter for device(s).
      * @param username username of the given User
      * @return Id of the Device(s) belonging to a given User
      */
@@ -167,6 +169,7 @@ public final class UserService {
 
 
     /**
+     * Assert ownership of a Device
      * @param username the username of the desired User
      * @param deviceId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
@@ -191,6 +194,7 @@ public final class UserService {
     }
 
     /**
+     * Assert ownership of a room
      * @param username the username of the desired User
      * @param roomId   the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
@@ -254,6 +258,7 @@ public final class UserService {
 
 
     /**
+     * Assert if Device has been moved
      * @param username    the owner of the device and rooms
      * @param deviceId    the id of the device to Migrate
      * @param startRoomId the room the device sits in
@@ -281,6 +286,7 @@ public final class UserService {
     }
 
     /**
+     *  Assert ownership of a room
      * returns the id of the room that owns the device given a the onwing user and the room id
      * @param username username of the room owner
      * @param deviceId id of the owned device
