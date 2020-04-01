@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public final class DeviceService {
 
     @Autowired
-    DeviceStorage deviceStorage;
+    Storage<Integer, Device> deviceStorage;
 
     /**
      * @param deviceId the Id of the device

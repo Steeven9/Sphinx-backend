@@ -19,6 +19,12 @@ public class DimmSwitchChangedEvent extends Event<Double> {
         this.device = deviceID;
     }
 
+
+    @Override
+    public DimmSwitchChangedEvent makeCopy() {
+        return new DimmSwitchChangedEvent(device);
+    }
+
     /** Get's current value of state
      * @return the value of the state of the device
      **/

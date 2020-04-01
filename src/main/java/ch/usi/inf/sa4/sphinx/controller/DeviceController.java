@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
@@ -31,9 +32,10 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    Serialiser serialiser;
 
     /**
-     * Returns all the user's devices.
      * @param sessionToken session token of the user
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
@@ -62,12 +64,11 @@ public class DeviceController {
 
 
     /**
-     * Returns a specific device depending of its ID.
      * @param deviceId id of the device
      * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist
      */
     @GetMapping("/{deviceId}")
-    public ResponseEntity<SerialisableDevice> getDevice(@PathVariable Integer deviceId,
+    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username,
                                                         Errors errors) {
@@ -76,19 +77,20 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
-        deviceService.get(deviceId);
+
         User user = userService.get(username);
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
-        return ResponseEntity.ok(new SerialisableDevice(deviceService.get(deviceId), user));
+        Device device = deviceService.get(deviceId);
+
+        return ResponseEntity.ok(serialiser.serialiseDevice(device));
     }
 
 
     /**
-     * Creates a new device.
      * @param device       data of the device to be created, name, label and icon are required
      * @param sessionToken sessionToken of the use
      * @param username     username of the user
@@ -119,7 +121,6 @@ public class DeviceController {
 
 
     /**
-     * Modifies a device.
      * @param deviceId id  of the device to be modified
      * @param device device to modify
      * @return a ResponseEntity with the data of the modified device (200), not found (404) if no such device exist or
@@ -158,7 +159,6 @@ public class DeviceController {
     }
 
     /**
-     * Deletes a device.
      * @param deviceId id  of the device to be deleted
      * @return a ResponseEntity
      */

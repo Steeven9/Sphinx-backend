@@ -8,65 +8,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 
-//METHOD ACCESS SHOULD BE DEFAULT NOT PUBLIC BUT IT CANT BE DONE SINCE IT IMPLEMENTS AN INTERFACE, MIGHT MAKE STORAGE
-//AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
-
-
-
 @Repository("volatileDeviceStorage")
-public class VolatileDeviceStorage implements DeviceStorage {
-    private static final HashMap<Integer, Device> devices = new HashMap<>();
-    private static Integer id = 1;
-
-    /** Id generator.
-     * return id
-     **/
-    private Integer generateId(){
-        return id++;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Device get(Integer deviceId) {
-        Device storageDevice = devices.get(deviceId);
-        return storageDevice == null? null: storageDevice.makeCopy();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Integer insert(Device device) {
-        Device savedDevice = device.makeCopy();
-        Integer newId = generateId();
-        if(savedDevice.setId(newId)) {
-            devices.put(newId, savedDevice);
-            return newId;
-        }
-        return null;
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void delete(Integer deviceId) {
-        devices.remove(deviceId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean update(Device updatedDevice) {
-        if(devices.get(updatedDevice.getId()) == null || !devices.containsKey(updatedDevice.getId())){
-            return false;
-        }
-        devices.put(updatedDevice.getId(), updatedDevice.makeCopy());
-        return true;
-    }
+public class VolatileDeviceStorage extends VolatileIntegerKeyStorage<Device>{
+    private VolatileDeviceStorage(){}
 }

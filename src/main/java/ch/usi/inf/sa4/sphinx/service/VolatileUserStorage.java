@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
 /*
@@ -11,58 +12,37 @@ import java.util.HashMap;
  */
 
 
-
-//METHOD ACCESS SHOULD BE DEFAULT NOT PUBLIC BUT IT CANT BE DONE SINCE IT IMPLEMENTS AN INTERFACE, MIGHT MAKE STORAGE
-//AN ABSTRACT CLASS TO SET DIFFERENT PRIVACY.
 @Repository("volatileUserStorage")
-public class VolatileUserStorage implements UserStorage {
+public class VolatileUserStorage extends VolatileStorage<String, User> {
     //This is shared between all instances of the database
     private static final HashMap<String, User> users = new HashMap<>();
 
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
-    public User get(final String username) {
-        User user = users.get(username);
-        return user == null? null : user.makeCopy();
-    }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     @Override
-    public User getByEmail(final String email) {
-        return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
+    protected String generateKey(@NotNull User user) {
+        return user.getKey();
     }
+
+
+    /**
+     *  Retrives a user given his {@param email}
+     * @param email email of the user
+     * @return the retrived User or null if not found
+     */
+    public User getByEmail(@NotNull final String email) {
+        return users.values().stream().filter(user -> email.equals(user.getEmail())).findAny().orElse(null);
+    }
+
+
+
 
     /**
      * {@inheritDoc}
-     **/
-    @Override
-    public String insert(final User user) {
-        String username = user.getUsername();
-        if (users.containsKey(username)) {
-            return null;
-        }
-        // Notice that a copy is used.
-        users.put(username, user.makeCopy());
-        return username;
-    }
-
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
-    public void delete(String username) {
-        users.remove(username);
-    }
-
-    /**
-     * {@inheritDoc}
-     **/
-    @Override
-    public boolean update(final String username, final User updatedUser) {
+     */
+    public boolean update(@NotNull final String username,@NotNull final User updatedUser) {
         if (!users.containsKey(username)) {
             return false;
         }
@@ -81,7 +61,5 @@ public class VolatileUserStorage implements UserStorage {
         users.put(updatedUser.getUsername(), updatedUser);
         return true;
     }
-
-
 
 }
