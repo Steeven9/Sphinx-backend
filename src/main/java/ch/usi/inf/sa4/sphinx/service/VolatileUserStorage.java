@@ -17,17 +17,31 @@ public class VolatileUserStorage extends VolatileStorage<String, User> {
     //This is shared between all instances of the database
     private static final HashMap<String, User> users = new HashMap<>();
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String generateKey(@NotNull User user) {
         return user.getKey();
     }
 
+
+    /**
+     *  Retrives a user given his {@param email}
+     * @param email email of the user
+     * @return the retrived User or null if not found
+     */
     public User getByEmail(@NotNull final String email) {
-        return users.values().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
+        return users.values().stream().filter(user -> email.equals(user.getEmail())).findAny().orElse(null);
     }
 
 
 
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean update(@NotNull final String username,@NotNull final User updatedUser) {
         if (!users.containsKey(username)) {
             return false;

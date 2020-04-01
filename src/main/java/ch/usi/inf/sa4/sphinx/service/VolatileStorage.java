@@ -17,13 +17,26 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
     }
 
 
+    /**
+     *  Generates a key, can use {@param item} to generate it
+     * @param item an item of the given type
+     * @return the generated key
+     */
     protected abstract K generateKey(@NotNull T item);
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected T get(K key) {
         return data.get(key);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected K insert(@NotNull T item) {
         K key = generateKey(item);
@@ -45,12 +58,18 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void delete(K key) {
         data.remove(key);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean update(@NotNull T updatedItem) {
         K key = updatedItem.getKey();
