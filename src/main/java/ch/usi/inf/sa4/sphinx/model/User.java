@@ -52,14 +52,6 @@ public class User extends Storable<String, User> {
 
 
     /**
-     * @return
-     */
-    @Override
-    public String getKey() {
-        return this.getUsername();
-    }
-
-    /**
      * @return a deep copy of this Object
      */
     public User makeCopy() {
