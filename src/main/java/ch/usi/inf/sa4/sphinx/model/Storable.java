@@ -19,7 +19,7 @@ public abstract class Storable<K, T> {
      * @param key the value to set
      * @return true if success else false
      */
-    public boolean setKey( K key){
+    public boolean setKey(K key){
         if(canSetKey()){
             this.key = key;
             return true;
