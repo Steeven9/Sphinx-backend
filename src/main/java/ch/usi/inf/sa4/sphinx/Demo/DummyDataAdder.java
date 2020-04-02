@@ -10,10 +10,12 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.UUID;
 
+@Component
 public class DummyDataAdder {
 
 
@@ -28,17 +30,17 @@ public class DummyDataAdder {
 
     private void user1() {
         User newuUser = new User("mario@usi.ch", "1234", "mario", "mario rossi");
-        userService.insert(newuUser);
+        Boolean inserted = userService.insert(newuUser);
         Room newRoom1 = new Room();
         newRoom1.setName("room1");
         Room newRoom2 = new Room();
         newRoom2.setName("room2");
         Integer roomId1 = userService.addRoom("mario", newRoom1);
         Integer roomId2 = userService.addRoom("mario", newRoom2);
-        Device newDevice = new Light();
-        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
-        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
-        roomService.addDevice(roomId2, DeviceType.LIGHT);
+//        Device newDevice = new Light();
+//        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+//        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
+//        roomService.addDevice(roomId2, DeviceType.LIGHT);
 
     }
 
@@ -98,7 +100,6 @@ public class DummyDataAdder {
      */
     public void dummy1() {
         user1();
-        user2();
     }
 
     /**
