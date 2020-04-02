@@ -10,10 +10,12 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.UUID;
+
 
 @Component
 public class DummyDataAdder {
@@ -37,7 +39,7 @@ public class DummyDataAdder {
         newRoom2.setName("room2");
         Integer roomId1 = userService.addRoom("mario", newRoom1);
         Integer roomId2 = userService.addRoom("mario", newRoom2);
-//        Device newDevice = new Light();
+        Device newDevice = new Light();
 //        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
 //        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
 //        roomService.addDevice(roomId2, DeviceType.LIGHT);

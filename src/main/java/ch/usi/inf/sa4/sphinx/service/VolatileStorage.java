@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Storage<K, T> {
-    private Map<K, T> data;
+    protected Map<K, T> data;
 
     protected VolatileStorage() {
         data = new HashMap<>();

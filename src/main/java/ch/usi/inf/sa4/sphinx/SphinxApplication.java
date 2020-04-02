@@ -17,10 +17,11 @@ import javax.annotation.PostConstruct;
 public class SphinxApplication {
 
 
+
     @Autowired
     private DummyDataAdder dummyDataAdder;
-//    @Value("${dummy_enabled:true}")
-//    private static boolean dummyDataEnabled;
+    @Value("${dummy_data:false}")
+    private boolean dummyDataEnabled;
 
 
     public static void main(String[] args) {
@@ -31,7 +32,7 @@ public class SphinxApplication {
 
     @PostConstruct
     private void init() {
-        if (true) {
+        if (dummyDataEnabled) {
             dummyDataAdder.dummy1();
         }
     }

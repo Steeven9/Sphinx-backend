@@ -15,7 +15,6 @@ import java.util.HashMap;
 @Repository("volatileUserStorage")
 public class VolatileUserStorage extends VolatileStorage<String, User> {
     //This is shared between all instances of the database
-    private static final HashMap<String, User> users = new HashMap<>();
 
 
     /**
@@ -33,7 +32,7 @@ public class VolatileUserStorage extends VolatileStorage<String, User> {
      * @return the retrived User or null if not found
      */
     public User getByEmail(@NotNull final String email) {
-        return users.values().stream().filter(user -> email.equals(user.getEmail())).findAny().orElse(null);
+        return data.values().stream().filter(user -> email.equals(user.getEmail())).findAny().orElse(null);
     }
 
 
@@ -43,22 +42,22 @@ public class VolatileUserStorage extends VolatileStorage<String, User> {
      * {@inheritDoc}
      */
     public boolean update(@NotNull final String username,@NotNull final User updatedUser) {
-        if (!users.containsKey(username)) {
+        if (!data.containsKey(username)) {
             return false;
         }
         //The new username already exists
-        if (!username.equals(updatedUser.getUsername()) && users.containsKey(updatedUser.getUsername())) {
+        if (!username.equals(updatedUser.getUsername()) && data.containsKey(updatedUser.getUsername())) {
             return false;
         }
-        final User olduser = users.get(username);
+        final User olduser = data.get(username);
         //email already used by another user
         if (!olduser.getEmail().equals(updatedUser.getEmail()) && getByEmail(updatedUser.getEmail()) != null) {
             return false;
         }
 
         //The old username could be different so we remove it
-        users.remove(username);
-        users.put(updatedUser.getUsername(), updatedUser);
+        data.remove(username);
+        data.put(updatedUser.getUsername(), updatedUser.makeCopy());
         return true;
     }
 

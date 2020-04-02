@@ -28,7 +28,6 @@ public class User extends Storable<String, User> {
      * @param fullname full name
      */
     public User(final String email, final String password, final String username, final String fullname) {
-        super.setKey(username);
         this.email = email;
         this.password = password;
         this.fullname = fullname;
@@ -49,6 +48,8 @@ public class User extends Storable<String, User> {
         this.sessionToken = user.sessionToken;
         this.verified = user.verified;
     }
+
+
 
 
     /**
