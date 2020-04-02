@@ -101,10 +101,6 @@ public final class UserService {
         return false;
     }
 
-    //TODO remove and use update(User u) in the classes
-    public boolean update(final String username, final User user){
-        return update(user);
-    }
 
 
     /**

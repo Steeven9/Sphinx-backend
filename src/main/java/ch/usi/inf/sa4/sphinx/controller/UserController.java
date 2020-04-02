@@ -5,9 +5,11 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ch.usi.inf.sa4.sphinx.service.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -79,21 +81,32 @@ public class UserController {
 	 * 		403 if the provided session token does not match the requested user (or none was provided)
 	 */
 	@PutMapping("/{username}")
-	public ResponseEntity<SerialisableUser> updateUser(@PathVariable String username, @RequestBody SerialisableUser user,
-													@RequestHeader("session-token") String session_token) {
+	public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable String username, @NotNull @RequestBody SerialisableUser user,
+													   @RequestHeader("session-token") String session_token, Errors errors) {
+
+
+		if(errors.hasErrors()){
+			return ResponseEntity.badRequest().build();
+		}
+
 		User changedUser = userService.get(username);
 
 		if (changedUser == null) {
 			return ResponseEntity.notFound().build();
 		}
-		if (session_token == null || !session_token.equals(changedUser.getSessionToken())) {
+
+		if (!userService.validSession(username, session_token)) {
 			return ResponseEntity.status(403).build();
 		}
+
 		if (user.email != null) changedUser.setEmail(user.email);
 		if (user.fullname != null) changedUser.setFullname(user.fullname);
 		if (user.password != null) changedUser.setPassword(user.password);
 
-		userService.update(username, changedUser);
+		userService.update(changedUser);
+		if (!username.equals(user.username)){
+			userService.changeUsername(username, user.username);
+		}
 
 		return ResponseEntity.ok(new SerialisableUser(changedUser));
 	}
