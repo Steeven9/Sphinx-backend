@@ -32,7 +32,12 @@ public class VolatileUserStorage extends VolatileStorage<String, User> {
      * @return the retrived User or null if not found
      */
     public User getByEmail(@NotNull final String email) {
-        return data.values().stream().filter(user -> email.equals(user.getEmail())).findAny().orElse(null);
+        User user = data.values().stream().filter(u -> email.equals(u.getEmail())).findAny().orElse(null);
+        if (user == null ) return  null;
+
+        User returnUser = user.makeCopy();
+        returnUser.lockKey();
+        return returnUser;
     }
 
 

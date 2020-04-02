@@ -100,6 +100,7 @@ public class DeviceController {
      */
     @PostMapping("/")
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
+
                                                            @RequestHeader("session-token") String sessionToken,
                                                            @RequestHeader("user") String username,
                                                            Errors errors) {
