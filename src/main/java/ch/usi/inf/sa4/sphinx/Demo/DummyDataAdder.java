@@ -2,21 +2,21 @@ package ch.usi.inf.sa4.sphinx.Demo;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Light;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.UUID;
 
 
+/**
+ *
+ */
 @Component
 public class DummyDataAdder {
 
@@ -29,26 +29,26 @@ public class DummyDataAdder {
     private RoomService roomService;
 
 
-
-    private void user1() {
-        User newuUser = new User("mario@usi.ch", "1234", "mario", "mario rossi");
+    /**
+     * adds a User called user1 into storage this user has no Device(s)
+     */
+    public void user1() {
+        User newuUser = new User("mario@usi.ch", "1234", "user1", "mario rossi");
         Boolean inserted = userService.insert(newuUser);
         Room newRoom1 = new Room();
         newRoom1.setName("room1");
         Room newRoom2 = new Room();
         newRoom2.setName("room2");
-        Integer roomId1 = userService.addRoom("mario", newRoom1);
-        Integer roomId2 = userService.addRoom("mario", newRoom2);
-        Device newDevice = new Light();
-//        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
-//        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
-//        roomService.addDevice(roomId2, DeviceType.LIGHT);
-
+        Integer roomId1 = userService.addRoom("user1", newRoom1);//leave roomId1 for debugging
+        Integer roomId2 = userService.addRoom("user1", newRoom2);
     }
 
 
-    private void user2() {
-        User newuUser = new User("mario2@usi.ch", "1234", "mario2", "mario rossi");
+    /**
+     * adds a User called user2 into storage
+     */
+    public void user2() {
+        User newuUser = new User("mario2@usi.ch", "1234", "user2", "mario rossi");
         userService.insert(newuUser);
         Room newRoom1 = new Room();
         newRoom1.setName("Living Room");
@@ -60,11 +60,11 @@ public class DummyDataAdder {
         newRoom2.setName("Room4");
         Room newRoom5 = new Room();
         newRoom2.setName("Room5");
-        Integer roomId1 = userService.addRoom("mario2", newRoom1);
-        Integer roomId2 = userService.addRoom("mario2", newRoom2);
-        Integer roomId3 = userService.addRoom("mario2", newRoom3);
-        Integer roomId4 = userService.addRoom("mario2", newRoom4);
-        Integer roomId5 = userService.addRoom("mario2", newRoom5);
+        Integer roomId1 = userService.addRoom("user2", newRoom1);
+        Integer roomId2 = userService.addRoom("user2", newRoom2);
+        Integer roomId3 = userService.addRoom("user2", newRoom3);
+        Integer roomId4 = userService.addRoom("user2", newRoom4);
+        Integer roomId5 = userService.addRoom("user2", newRoom5);
         roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
         roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
         roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
@@ -72,20 +72,26 @@ public class DummyDataAdder {
         roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
         roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);
         roomService.addDevice(roomId3, DeviceType.TEMP_SENSOR);
+        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
+        roomService.addDevice(roomId2, DeviceType.LIGHT);
 
         //ROOM4 is empty
         roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
     }
 
 
+    /**
+     * adds a user called randUser to storage that has randomly filled rooms
+     */
     //user with 20 rooms and random devices in them
-    private void randUser() {
-        User newuUser = new User("rand@usi.ch", "1234", "rand", "randomUser");
-        userService.insert(newuUser);
+    public void randUser() {
+        User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
+        userService.insert(newUser);
         for (int i = 0; i < 20; i++) {
             Room newRoom = new Room();
             newRoom.setName(UUID.randomUUID().toString());
-            Integer roomId = userService.addRoom("rand", newRoom);
+            Integer roomId = userService.addRoom("randUser", newRoom);
             Random rand = new Random();
 
             int devices = rand.nextInt(30);
@@ -98,17 +104,12 @@ public class DummyDataAdder {
     }
 
     /**
-     * When called adds various users to the storage
+     * adds a user called emptyUser in storage, it will have no rooms
      */
-    public void dummy1() {
-        user1();
+    public void emptyUser() {
+        User newUser = new User("rand@usi.ch", "1234", "emptyUser", "randomUser");
+        userService.insert(newUser);
     }
 
-    /**
-     * Adds a User with key rand with randomly generated rooms and devices
-     */
-    public void randDummy() {
-        randUser();
-    }
 
 }

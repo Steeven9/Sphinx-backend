@@ -5,19 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.PropertySource;
 
 import javax.annotation.PostConstruct;
 
 
-
-
 @SpringBootApplication
-//@PropertySource("classpath:/demo.properties")
 public class SphinxApplication {
-
-
-
     @Autowired
     private DummyDataAdder dummyDataAdder;
     @Value("${dummy_data:false}")
@@ -29,11 +22,14 @@ public class SphinxApplication {
     }
 
 
-
     @PostConstruct
     private void init() {
+        //enable dummy_data as an environment variable to add these users
+        // (in INTELLIJ SphinxApplication at the left of >
+        //edit configurations and set dummy_data=true)
         if (dummyDataEnabled) {
-            dummyDataAdder.dummy1();
+            dummyDataAdder.user1();
+            dummyDataAdder.emptyUser();
         }
     }
 }
