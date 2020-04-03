@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class Storable<K, T> {
     private K key;
+    private boolean canSetKey = true;
 
     protected Storable(){
     }
@@ -19,7 +20,7 @@ public abstract class Storable<K, T> {
      * @return true if success else false
      */
     public boolean setKey(K key){
-        if(key != null){
+        if(canSetKey()){
             this.key = key;
             return true;
         }
@@ -38,4 +39,21 @@ public abstract class Storable<K, T> {
      * @return the copy of this
      */
     public abstract @NotNull T makeCopy();
+
+
+    /**
+     * Locks the key of this item
+     */
+    public void lockKey(){
+        canSetKey = false;
+    }
+
+
+    /**
+     * Asserts if the key of this item can be set
+     * @return true if the key can be set else false
+     */
+    public boolean canSetKey(){
+        return canSetKey;
+    }
 }

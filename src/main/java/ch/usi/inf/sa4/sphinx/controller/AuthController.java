@@ -5,7 +5,10 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -51,7 +54,12 @@ public class AuthController {
      *      status 401 if the password was incorrect
      */
     @PostMapping("/login/{username}")
-    public ResponseEntity<String> login(@PathVariable String username, @RequestBody String password) {
+    public ResponseEntity<String> login(@NotBlank @PathVariable String username, @NotBlank @RequestBody String password, Errors errors) {
+
+        if (errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+
         User user;
 
         user = userService.get(username);
@@ -65,12 +73,13 @@ public class AuthController {
         if (!user.isVerified()) {
             return ResponseEntity.status(403).build();
         }
+
         if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(401).build();
         }
 
         user.createSessionToken();
-        if(!userService.update(user.getUsername(), user)){
+        if(!userService.update(user)){
             return ResponseEntity.status(500).build();
         }
 

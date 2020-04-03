@@ -7,6 +7,7 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,28 +79,28 @@ public final class UserService {
         return userStorage.insert(user) != null;
     }
 
+
     /**
      * Updates the given user, the username is used to find the User and the given User to update its fields
      *
-     * @param username the username of the User to update
      * @param user     the User with updated fields
      * @return true if successful update else false
      */
-    public boolean update(final String username, final User user) {
-        User oldUser = userStorage.get(username);
+    public boolean update(final User user) {
+        User oldUser = userStorage.get(user.getUsername());
         if (oldUser != null) {
             //Must be done manually to prevent corruption of list of owned rooms //EX: a roomId could be added to
             //User but not actually have a matching Id in the Storage. To prevent this we only update the list of
             //owned Rooms of a User in Storage from addRoom and removeRoom
-            oldUser.setUsername(user.getUsername());
             oldUser.setEmail(user.getEmail());
             oldUser.setFullname(user.getFullname());
             oldUser.setPassword(user.getPassword());
             oldUser.setSessionToken(user.getSessionToken());
-            return userStorage.update(username, oldUser);
+            return userStorage.update(oldUser);
         }
         return false;
     }
+
 
 
     /**
@@ -121,7 +122,7 @@ public final class UserService {
             return null; //something went bad
         }
         user.addRoom(roomId);
-        if (!userStorage.update(username, user)) {
+        if (!userStorage.update(user)) {
             return null;
 
         }
@@ -142,7 +143,7 @@ public final class UserService {
 
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
-        userStorage.update(username, user);
+        userStorage.update(user);
         roomStorage.delete(roomId);
         return true;
     }
@@ -300,6 +301,22 @@ public final class UserService {
             }
         }
         return null;
+    }
+
+    /**
+     * Changes the name of a User identified by {@param oldusername}
+     * @param oldUsername  the old name of the user
+     * @param newUsername the new name of the user
+     * @return true if successful else false
+     */
+    public boolean changeUsername(@NotNull final  String oldUsername, final String newUsername) {
+        if(newUsername == null) return false;
+
+        User oldUser = userStorage.get(oldUsername);
+        if(oldUser == null) return false;
+        oldUser.setUsername(newUsername);
+
+        return true;
     }
 
 

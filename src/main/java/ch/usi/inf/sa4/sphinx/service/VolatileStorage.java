@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Storage<K, T> {
-    private Map<K, T> data;
+    protected Map<K, T> data;
 
     protected VolatileStorage() {
         data = new HashMap<>();
@@ -30,7 +30,12 @@ public abstract class VolatileStorage<K, T extends Storable<K, T>> extends Stora
      */
     @Override
     protected T get(K key) {
-        return data.get(key);
+        T storageItem = data.get(key);
+        if(storageItem == null ) return  null;
+
+        T returnItem = storageItem.makeCopy();
+        returnItem.lockKey();
+        return returnItem;
     }
 
 
