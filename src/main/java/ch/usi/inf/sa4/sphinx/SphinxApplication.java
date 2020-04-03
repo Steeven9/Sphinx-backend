@@ -29,6 +29,7 @@ public class SphinxApplication {
         //edit configurations and set dummy_data=true)
         if (dummyDataEnabled) {
             dummyDataAdder.user1();
+            dummyDataAdder.user2();
             dummyDataAdder.emptyUser();
         }
     }

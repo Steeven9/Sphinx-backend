@@ -9,20 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device extends Storable<Integer, Device>{
+public abstract class Device extends Storable<Integer, Device> {
 
     @Autowired
     static CouplingService couplingService;
 
-    private String icon;
-    private String name;
-    protected boolean on;
-    protected List<Integer> couplings;
+    private  String icon;
+    private  String name;
+    protected  boolean on;
+    protected final List<Integer> couplings;
 
     public Device() {
         icon = "/images/generic_device";
         name = "Device";
         on = true;
+        this.couplings = new ArrayList<>();
 
     }
 
@@ -33,7 +34,6 @@ public abstract class Device extends Storable<Integer, Device>{
         this.on = d.isOn();
         this.couplings = new ArrayList<>(d.couplings);
     }
-
 
 
     /**
@@ -100,13 +100,11 @@ public abstract class Device extends Storable<Integer, Device>{
 
     //TODO fix unchecked
     protected void triggerEffects() {
-        for(Integer coupling: couplings){
+        for (Integer coupling : couplings) {
             Effect effect = couplingService.getEffect(coupling);
             Event event = couplingService.getEvent(coupling);
             effect.execute(event.get());
         }
-
-
 
 
     }
