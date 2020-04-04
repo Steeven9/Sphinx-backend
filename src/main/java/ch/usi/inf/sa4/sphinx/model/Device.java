@@ -14,9 +14,9 @@ public abstract class Device extends Storable<Integer, Device> {
     @Autowired
     static CouplingService couplingService;
 
-    private  String icon;
-    private  String name;
-    protected  boolean on;
+    private String icon;
+    private String name;
+    protected boolean on;
     protected final List<Integer> couplings;
 
     public Device() {
