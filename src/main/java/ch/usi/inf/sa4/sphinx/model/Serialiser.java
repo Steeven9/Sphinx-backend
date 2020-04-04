@@ -19,7 +19,7 @@ public class Serialiser {
     @Autowired
     private UserService userService;
     @Autowired
-    private  DeviceService deviceService;
+    private DeviceService deviceService;
     @Autowired
     private  RoomService roomService;
 
