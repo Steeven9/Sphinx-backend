@@ -21,7 +21,7 @@ public abstract class Sensor extends Device {
      * @param s a Sensor
      **/
     protected Sensor(Sensor s) {
-        super();
+        super(s);
         this.quantity = s.getQuantity();
     }
 

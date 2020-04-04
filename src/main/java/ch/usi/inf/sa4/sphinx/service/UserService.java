@@ -96,6 +96,7 @@ public final class UserService {
             oldUser.setFullname(user.getFullname());
             oldUser.setPassword(user.getPassword());
             oldUser.setSessionToken(user.getSessionToken());
+            oldUser.setVerified(user.isVerified());
             return userStorage.update(oldUser);
         }
         return false;
