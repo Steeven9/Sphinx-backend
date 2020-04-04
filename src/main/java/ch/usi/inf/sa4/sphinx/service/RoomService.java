@@ -61,7 +61,7 @@ public class RoomService {
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
      */
-    public final Integer addDevice(@NotNull final Integer roomId,@NotNull DeviceType deviceType) {
+    public final Integer addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
         if(newDevice == null) return  null;
 
