@@ -109,6 +109,9 @@ public class AuthController {
             return ResponseEntity.status(401).build();
         }
         verifiedUser.setVerified(true);
+        if (!userService.update(verifiedUser)) {
+            return ResponseEntity.status(500).build();
+        }
         return ResponseEntity.ok().build();
     }
 
