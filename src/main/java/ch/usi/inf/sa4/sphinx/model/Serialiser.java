@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Serialiser {
     @Autowired
-    private  UserService userService;
+    private UserService userService;
     @Autowired
     private  DeviceService deviceService;
     @Autowired
