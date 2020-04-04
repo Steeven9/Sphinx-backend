@@ -13,7 +13,10 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/model/Serialiser.java
 
+=======
+>>>>>>> 77933175517c3397066342ab26575648b5125368:src/main/java/ch/usi/inf/sa4/sphinx/misc/Serialiser.java
 @Component
 public class Serialiser {
     @Autowired
