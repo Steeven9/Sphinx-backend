@@ -96,10 +96,13 @@ public class SerialisableDeviceTest {
 
 
     @Test
-    @Disabled(value = "error in dummy user")
+    @Disabled(value = "exception in  userService.getPopulatedRooms inside the constructor")
     void testing() {
         dummyDataAdder.user2();
-        serialisableDevice = new SerialisableDevice(deviceService.get(1), userService.get("user2"));
+        User user2 = userService.get("user2");
+        Device device1 = deviceService.get(1);
+        var rooms = userService.getPopulatedRooms("user2");
+        serialisableDevice = new SerialisableDevice(device1, user2);
         assertNotNull(serialisableDevice);
     }
 
