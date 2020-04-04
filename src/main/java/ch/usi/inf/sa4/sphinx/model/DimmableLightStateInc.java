@@ -9,27 +9,30 @@ public class DimmableLightStateInc extends Effect<Double> {
 
     /**
      * Constructor.
+     *
      * @param deviceID the id to set the DimmableLightStateInc to
-     * **/
-    public DimmableLightStateInc(int deviceID){
+     **/
+    public DimmableLightStateInc(Integer deviceID) {
         super(deviceID);
     }
 
-    /** Sets current state of the Device to the given value.
+    /**
+     * Sets current state of the Device to the given value.
+     *
      * @param value: the new state value
      **/
     @Override
     public void execute(Double value) {
-        DimmableLight light = (DimmableLight) deviceService.get(device);
+        DimmableLight light = (DimmableLight) deviceService.get(getKey());
         light.setState(light.getState() + value);
         deviceService.update(light);
     }
 
     /**
-     * @return a copy of this object
+     * {@inheritDoc}
      */
     @Override
     public DimmableLightStateInc makeCopy() {
-        return new DimmableLightStateInc(getId());
+        return new DimmableLightStateInc(getKey());
     }
 }

@@ -4,32 +4,38 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
+
 public class DimmSwitchChangedEvent extends Event<Double> {
-    public final int device;
 
     @Autowired
     private DeviceService deviceService;
 
     /**
      * Constructor.
+     *
      * @param deviceID the id to set the DimmSwitchChangedEvent to
-     * **/
-    public DimmSwitchChangedEvent(int deviceID){
+     **/
+    public DimmSwitchChangedEvent(@NotNull Integer deviceID) {
         super(deviceID);
-        this.device = deviceID;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DimmSwitchChangedEvent makeCopy() {
-        return new DimmSwitchChangedEvent(device);
+        return new DimmSwitchChangedEvent(getKey());
     }
 
-    /** Get's current value of state
+    /**
+     * Get's current value of state
+     *
      * @return the value of the state of the device
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(device)).getState();
+        return ((DimmableSwitch) deviceService.get(getKey())).getState();
     }
 }

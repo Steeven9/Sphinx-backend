@@ -6,30 +6,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.constraints.NotNull;
 
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
-    public final int device;
     private double increment;
     @Autowired
     private DeviceService deviceService;
 
-    /** Constructor.
-     * @param deviceID the id of a device
+    /**
+     * Constructor.
+     *
+     * @param deviceID  the id of a device
      * @param increment value for incrementing
      **/
-    public StatelessDimmSwitchChangedEvent(int deviceID, double increment){
+    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment) {
         super(deviceID);
-        this.device = deviceID;
         this.increment = increment;
     }
 
-    /** Gets current state of device
-     * @return value of state of device **/
+    /**
+     * Gets current state of device
+     *
+     * @return value of state of device
+     **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(device)).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) deviceService.get(getKey())).isIncrementing() ? increment : -increment;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull Event<Double> makeCopy() {
-        return new StatelessDimmSwitchChangedEvent(device, increment);
+        return new StatelessDimmSwitchChangedEvent(getKey(), increment);
     }
 }
