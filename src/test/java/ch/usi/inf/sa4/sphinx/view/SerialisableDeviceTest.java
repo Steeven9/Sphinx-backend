@@ -1,10 +1,12 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Light;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.Disabled;
@@ -28,6 +30,10 @@ public class SerialisableDeviceTest {
     UserService userService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    DummyDataAdder dummyDataAdder;
+    @Autowired
+    DeviceService deviceService;
 
     SerialisableDevice serialisableDevice;
     Device device;
@@ -75,14 +81,21 @@ public class SerialisableDeviceTest {
         User user = new User("randomEmail", "randomPassword", "username", "randomFullname");
         userService.insert(user);
         Room room = new Room();
-        room.setId(2);
-        userService.addRoom("username", room);
-        roomService.addDevice(2, DeviceType.deviceToDeviceType(device));
+        Integer roomdId = userService.addRoom("username", room);
+        roomService.addDevice(roomdId, DeviceType.deviceToDeviceType(device));
         room.addDevice(device.getId());
         serialisableDevice = new SerialisableDevice(device, user);
         assertNotNull(serialisableDevice);
         assertAll("should set this.roomId to room id",
                 () -> assertEquals(serialisableDevice.roomId, room.getId()),
                 () -> assertEquals(serialisableDevice.type, DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device))));
+    }
+
+    @Test
+    @Disabled(value = "error in dummy user")
+    void testing() {
+        dummyDataAdder.user2();
+        serialisableDevice = new SerialisableDevice(deviceService.get(1), userService.get("user2"));
+        assertNotNull(serialisableDevice);
     }
 }
