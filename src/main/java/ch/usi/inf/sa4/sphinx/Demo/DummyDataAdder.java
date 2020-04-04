@@ -57,11 +57,11 @@ public class DummyDataAdder {
 
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
-     * this user has no sessionToken so it must be logged in
      */
     public void user2() {
         User newUser = new User("mario2@usi.ch", "1234", "user2", "mario rossi");
         newUser.setVerified(true);
+        newUser.setSessionToken("user2SessionToken");
         boolean inserted  = userService.insert(newUser);
         if(inserted) logger.info("user2 added to storage");
 

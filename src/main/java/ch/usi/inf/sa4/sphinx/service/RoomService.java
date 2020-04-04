@@ -6,6 +6,7 @@ import ch.usi.inf.sa4.sphinx.model.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,11 +61,20 @@ public class RoomService {
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
      */
-    public final Integer addDevice(final Integer roomId, DeviceType deviceType) {
+    public final Integer addDevice(@NotNull final Integer roomId,@NotNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
-        Room room = roomStorage.get(roomId);
+        if(newDevice == null) return  null;
 
-        return deviceStorage.insert(newDevice);
+        Room room = roomStorage.get(roomId);
+        if (room == null) return null;
+
+        Integer deviceId = deviceStorage.insert(newDevice);
+        if (deviceId == null) return null;
+
+        room.addDevice(deviceId);
+        roomStorage.update(room);
+
+        return deviceId;
     }
 
 

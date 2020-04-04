@@ -46,8 +46,10 @@ public abstract class Device extends Storable<Integer, Device> {
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.id = getKey();
         return serialisableDevice;
     }
+
 
     public boolean setId(Integer key) {
         return super.setKey(key);
@@ -105,7 +107,7 @@ public abstract class Device extends Storable<Integer, Device> {
             Event event = couplingService.getEvent(coupling);
             effect.execute(event.get());
         }
-
-
     }
+
+
 }
