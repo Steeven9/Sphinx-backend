@@ -21,7 +21,7 @@ public class Serialiser {
     @Autowired
     private DeviceService deviceService;
     @Autowired
-    private  RoomService roomService;
+    private RoomService roomService;
 
     private Serialiser(){}
 
