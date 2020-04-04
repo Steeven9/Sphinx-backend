@@ -234,7 +234,6 @@ public final class UserService {
     public boolean validSession(@NotNull String username, String sessionToken) {
         User user = userStorage.get(username);
         if (user == null) return false;
-        String s = user.getSessionToken();//TODO remove
         return user.getSessionToken().equals(sessionToken);
     }
 
