@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device extends Storable<Integer, Device>{
+public abstract class Device extends Storable<Integer, Device> {
 
     @Autowired
     static CouplingService couplingService;
@@ -17,12 +17,13 @@ public abstract class Device extends Storable<Integer, Device>{
     private String icon;
     private String name;
     protected boolean on;
-    protected List<Integer> couplings;
+    protected final List<Integer> couplings;
 
     public Device() {
         icon = "/images/generic_device";
         name = "Device";
         on = true;
+        this.couplings = new ArrayList<>();
 
     }
 
@@ -35,7 +36,6 @@ public abstract class Device extends Storable<Integer, Device>{
     }
 
 
-
     /**
      * @return a copy of this Device
      */
@@ -46,8 +46,10 @@ public abstract class Device extends Storable<Integer, Device>{
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.id = getKey();
         return serialisableDevice;
     }
+
 
     public boolean setId(Integer key) {
         return super.setKey(key);
@@ -100,14 +102,12 @@ public abstract class Device extends Storable<Integer, Device>{
 
     //TODO fix unchecked
     protected void triggerEffects() {
-        for(Integer coupling: couplings){
+        for (Integer coupling : couplings) {
             Effect effect = couplingService.getEffect(coupling);
             Event event = couplingService.getEvent(coupling);
             effect.execute(event.get());
         }
-
-
-
-
     }
+
+
 }

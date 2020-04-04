@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +29,9 @@ public class SphinxApplication {
         // (in INTELLIJ SphinxApplication at the left of >
         //edit configurations and set dummy_data=true)
         if (dummyDataEnabled) {
+            LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
             dummyDataAdder.user1();
+            dummyDataAdder.user2();
             dummyDataAdder.emptyUser();
         }
     }

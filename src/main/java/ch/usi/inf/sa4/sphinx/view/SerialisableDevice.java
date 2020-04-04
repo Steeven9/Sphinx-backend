@@ -9,7 +9,7 @@ public class SerialisableDevice {
     @Autowired
     private static UserService userService;
 
-    public int id;
+    public Integer id;
     public String icon;
     public String name;
     public String label;

@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Serialiser {
     @Autowired
-    private static UserService userService;
+    private UserService userService;
     @Autowired
-    private static DeviceService deviceService;
+    private DeviceService deviceService;
     @Autowired
-    private static RoomService roomService;
+    private RoomService roomService;
 
     private Serialiser(){}
 
