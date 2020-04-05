@@ -8,5 +8,6 @@ class DeviceSetOnEffectTest {
 
     @Test
     void execute() {
+
     }
 }
