@@ -81,8 +81,8 @@ public class SerialisableDeviceTest {
         serialisableDevice = new SerialisableDevice(device1, user2, userService);
         assertNotNull(serialisableDevice);
         assertAll("should set this.roomId to room id",
-                () -> assertEquals(serialisableDevice.roomId, 1),
-                () -> assertEquals(serialisableDevice.type, DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device1))));
+                () -> assertEquals(1, serialisableDevice.roomId),
+                () -> assertEquals(DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device1)), serialisableDevice.type));
     }
 
 }
