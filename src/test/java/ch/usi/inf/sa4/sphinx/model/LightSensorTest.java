@@ -1,10 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import java.text.*;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +19,7 @@ class LightSensorTest {
         int comma = 0;
         String s2 = "";
         int c = 0;
+
 
         for (c = 0; comma <= 0; c++) {
             s2 += s.charAt(c);
