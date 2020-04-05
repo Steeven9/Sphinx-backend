@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SmartPlugTest {
@@ -20,7 +22,6 @@ class SmartPlugTest {
     void shouldReturnTrueIfSettingIdIsNotSetBefore() {
         SmartPlug d = new SmartPlug();
         assertTrue(d.setId(1));
-        assertEquals(1, d.getId());
     }
 
     @Test
@@ -59,7 +60,7 @@ class SmartPlugTest {
         d.setId(23);
         SmartPlug sd = new SmartPlug(d);
         assertEquals("TEST_NAME", sd.getName());
-        assertEquals("20.0 kWh", sd.getLabel());
+        assertEquals("20.0 kWh",sd.getLabel());
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
     }
