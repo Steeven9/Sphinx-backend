@@ -6,8 +6,6 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SerialisableDevice {
-    @Autowired
-    private static UserService userService;
 
     public Integer id;
     public String icon;
@@ -57,7 +55,7 @@ public class SerialisableDevice {
      * @param device the device to be serialised
      * @param user the "owner" of the given device
      **/
-    public SerialisableDevice(Device device, User user) {
+    public SerialisableDevice(Device device, User user, UserService userService) {
         this.id = device.getId();
         this.icon = device.getIcon();
         this.name = device.getName();

@@ -101,7 +101,7 @@ public class RoomController {
         List<Device> list = roomService.getPopulatedDevices(roomId);
         SerialisableDevice[] arr = new SerialisableDevice[list.size()];
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = new SerialisableDevice(list.get(i), user);
+            arr[i] = new SerialisableDevice(list.get(i), user, userService);
         }
         return ResponseEntity.ok(arr);
     }

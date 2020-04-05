@@ -4,14 +4,11 @@ import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Light;
-import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -75,35 +72,18 @@ public class SerialisableDeviceTest {
                 () -> assertEquals(name, serialisableDevice.name));
     }
 
-    @Disabled(value = "fix Device.setId(Integer) method")
+
     @Test
     @DisplayName("test constructor, where the device belongs to a user")
-    void test() {
-        device = new Light();
-        device.setId(1);
-        User user = new User("randomEmail", "randomPassword", "username", "randomFullname");
-        userService.insert(user);
-        Room room = new Room();
-        Integer roomdId = userService.addRoom("username", room);
-        roomService.addDevice(roomdId, DeviceType.deviceToDeviceType(device));
-        room.addDevice(device.getId());
-        serialisableDevice = new SerialisableDevice(device, user);
-        assertNotNull(serialisableDevice);
-        assertAll("should set this.roomId to room id",
-                () -> assertEquals(serialisableDevice.roomId, room.getId()),
-                () -> assertEquals(serialisableDevice.type, DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device))));
-    }
-
-
-    @Test
-    @Disabled(value = "exception in  userService.getPopulatedRooms inside the constructor")
     void testing() {
         dummyDataAdder.user2();
         User user2 = userService.get("user2");
         Device device1 = deviceService.get(1);
-        var rooms = userService.getPopulatedRooms("user2");
-        serialisableDevice = new SerialisableDevice(device1, user2);
+        serialisableDevice = new SerialisableDevice(device1, user2, userService);
         assertNotNull(serialisableDevice);
+        assertAll("should set this.roomId to room id",
+                () -> assertEquals(serialisableDevice.roomId, 1),
+                () -> assertEquals(serialisableDevice.type, DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device1))));
     }
 
 }

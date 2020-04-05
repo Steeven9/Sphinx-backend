@@ -116,7 +116,7 @@ public class DeviceController {
         User user = userService.get(username);
         Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
 
-        return ResponseEntity.status(201).body(new SerialisableDevice(deviceService.get(deviceId), user));
+        return ResponseEntity.status(201).body(new SerialisableDevice(deviceService.get(deviceId), user, userService));
 
     }
 
@@ -154,7 +154,7 @@ public class DeviceController {
             if (!device.roomId.equals(owningRoom)) {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
-            return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user));
+            return ResponseEntity.status(200).body(new SerialisableDevice(storageDevice, user, userService));
         }
         return ResponseEntity.status(500).build();
     }
