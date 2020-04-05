@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SmartPlugTest {
@@ -60,7 +62,7 @@ class SmartPlugTest {
         d.setId(23);
         SmartPlug sd = new SmartPlug(d);
         assertEquals("TEST_NAME", sd.getName());
-        assertEquals("20.0 kWh", sd.getLabel());
+        assertEquals("20.0 kWh",sd.getLabel());
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
 
