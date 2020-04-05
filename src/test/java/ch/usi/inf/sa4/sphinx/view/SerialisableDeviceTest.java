@@ -30,7 +30,6 @@ public class SerialisableDeviceTest {
 
 
     SerialisableDevice serialisableDevice;
-    Device device;
 
     static Stream<Arguments> argumentsProvider() {
         return Stream.of(
