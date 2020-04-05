@@ -64,4 +64,5 @@ public class SerialisableDeviceTest {
                 () -> assertEquals(on, serialisableDevice.on),
                 () -> assertEquals(name, serialisableDevice.name));
     }
+
 }
