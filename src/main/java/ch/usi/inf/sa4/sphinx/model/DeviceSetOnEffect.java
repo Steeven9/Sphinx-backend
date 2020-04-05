@@ -10,8 +10,12 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
     private DeviceService deviceService;
 
 
-    public DeviceSetOnEffect(@NotNull Integer deviceID) {
+    public DeviceSetOnEffect(int deviceID) {
         super(deviceID);
+    }
+
+    private DeviceSetOnEffect(DeviceSetOnEffect other){
+        super(other);
     }
 
     /**
@@ -19,8 +23,9 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
      *
      * @param effect: the current value of the device
      **/
-    public void execute(Boolean effect) {
-        deviceService.get(getKey()).setOn(effect);
+    public void execute(Boolean effect)
+    {
+        deviceService.get(deviceId).setOn(effect);
     }
 
 
@@ -29,6 +34,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
      */
     @Override
     public @NotNull Effect<?> makeCopy() {
-        return new DeviceSetOnEffect(getKey());
+        return new DeviceSetOnEffect(this);
+
     }
 }

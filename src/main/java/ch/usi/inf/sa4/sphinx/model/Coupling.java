@@ -13,7 +13,6 @@ public class Coupling extends Storable<Integer, Coupling>{
 
     @Autowired
     DeviceService deviceService;
-
     private final Integer eventId;
     private final List<Integer> effectIds;
 

@@ -21,6 +21,10 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
         this.increment = increment;
     }
 
+    private StatelessDimmSwitchChangedEvent(StatelessDimmSwitchChangedEvent other) {
+        super(other);
+    }
+
     /**
      * Gets current state of device
      *
@@ -28,7 +32,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(getKey())).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) deviceService.get(deviceId)).isIncrementing() ? increment : -increment;
     }
 
     /**
@@ -36,6 +40,6 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      */
     @Override
     public @NotNull Event<Double> makeCopy() {
-        return new StatelessDimmSwitchChangedEvent(getKey(), increment);
+        return new StatelessDimmSwitchChangedEvent(this);
     }
 }

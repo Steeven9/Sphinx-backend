@@ -14,10 +14,12 @@ public abstract class Device extends Storable<Integer, Device>{
     @Autowired
     static CouplingService couplingService;
 
+
     private String icon;
     private String name;
     protected boolean on;
     protected List<Integer> couplings;
+
 
     public Device() {
         icon = "/images/generic_device";

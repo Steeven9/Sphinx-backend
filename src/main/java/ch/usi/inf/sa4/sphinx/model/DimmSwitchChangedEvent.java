@@ -16,8 +16,12 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      *
      * @param deviceID the id to set the DimmSwitchChangedEvent to
      **/
-    public DimmSwitchChangedEvent(@NotNull Integer deviceID) {
+    public DimmSwitchChangedEvent(int deviceID) {
         super(deviceID);
+    }
+
+    private DimmSwitchChangedEvent(DimmSwitchChangedEvent other){
+        super(other);
     }
 
 
@@ -26,8 +30,9 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      */
     @Override
     public DimmSwitchChangedEvent makeCopy() {
-        return new DimmSwitchChangedEvent(getKey());
+        return new DimmSwitchChangedEvent(this);
     }
+
 
     /**
      * Get's current value of state
@@ -36,6 +41,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(getKey())).getState();
+        return ((DimmableSwitch) deviceService.get(deviceId)).getState();
     }
+
 }
