@@ -69,7 +69,6 @@ class SerialiserTest {
      * belong to any User. Then test the case when the device belongs to a given User.
      */
     @Test
-    @Disabled(value = "Cannot create a serialisble Device")
     void testSerialiseDeviceAssociatedToRoom() {
         SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device, user);
         assertNotNull(serialisableDevice);
