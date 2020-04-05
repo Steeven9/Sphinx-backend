@@ -23,8 +23,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
      *
      * @param effect: the current value of the device
      **/
-    public void execute(Boolean effect)
-    {
+    public void execute(Boolean effect) {
         deviceService.get(deviceId).setOn(effect);
     }
 
