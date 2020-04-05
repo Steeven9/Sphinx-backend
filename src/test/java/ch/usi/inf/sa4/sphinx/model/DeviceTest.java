@@ -71,7 +71,6 @@ class DeviceTest {
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
-
         Integer observer = 10;
         d.addObserver(observer);
         assertTrue(d.couplings.contains(observer));

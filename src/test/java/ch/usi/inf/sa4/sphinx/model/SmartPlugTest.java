@@ -1,9 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
+
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +26,7 @@ class SmartPlugTest {
         SmartPlug d = new SmartPlug();
         d.setId(1);
         assertFalse(d.setId(4283));
+
         assertEquals(1, d.getId());
     }
 
