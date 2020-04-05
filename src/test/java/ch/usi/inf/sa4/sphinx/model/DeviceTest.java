@@ -74,7 +74,7 @@ class DeviceTest {
 
     @Test
     void shouldAddObserver() {
-        Device d = new Light();
+        Device d = new SmartPlug();
         d.couplings = new ArrayList<Integer>();
         Integer observer = 10;
         d.addObserver(observer);
