@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,41 +50,4 @@ public class SerialisableDevice {
         this.type = type;
         this.on = on;
     }
-
-    /** Constructor.
-     * @param device the device to be serialised
-     * @param user the "owner" of the given device
-     **/
-    public SerialisableDevice(Device device, User user) {
-        this.id = device.getId();
-        this.icon = device.getIcon();
-        this.name = device.getName();
-        this.label = device.getLabel();
-        this.on = device.isOn();
-
-
-        var rooms = userService.getPopulatedRooms(user.getUsername());
-        for(var room:rooms){
-            if(room.getDevices().contains(device.getId())){
-                this.roomId = room.getId();
-            }
-        }
-        this.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(device));
-
-
-
-
-        // TODO: fill switched
-        //In the future discard this todo and use Serialiser class and serialise method instead
-        if (device instanceof Switch || device instanceof DimmableSwitch) {
-            // TODO: fill switches
-        } else {
-            this.switches = null;
-        }
-        if (device instanceof Dimmable) {
-            this.slider = ((Dimmable)device).getState();
-        }
-    }
-
-
 }

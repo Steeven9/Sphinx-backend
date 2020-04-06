@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class UserController {
 	Mailer mailer;
 	@Autowired
 	UserService userService;
+	@Autowired
+	Serialiser serialiser;
 
 	/**
 	 * Gets a user.
@@ -42,7 +45,7 @@ public class UserController {
 		if (session_token == null || !session_token.equals(user.getSessionToken())) {
 			return ResponseEntity.status(401).build();
 		}
-		return ResponseEntity.ok(new SerialisableUser(user));
+		return ResponseEntity.ok(serialiser.serialiseUser(user));
 	}
 
 	/**
@@ -68,7 +71,7 @@ public class UserController {
 				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
 						"\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
 
-		return ResponseEntity.status(203).body(new SerialisableUser(newUser));
+		return ResponseEntity.status(203).body(serialiser.serialiseUser(newUser));
 	}
 
 	/**
@@ -108,7 +111,7 @@ public class UserController {
 			userService.changeUsername(username, user.username);
 		}
 
-		return ResponseEntity.ok(new SerialisableUser(changedUser));
+		return ResponseEntity.ok(serialiser.serialiseUser(changedUser));
 	}
 
 	/**

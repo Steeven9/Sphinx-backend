@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
@@ -29,6 +30,8 @@ public class RoomController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    Serialiser serialiser;
 
     /**
      * Returns a list of all rooms which belong to the given user.
@@ -48,7 +51,7 @@ public class RoomController {
             List<Room> rooms = userService.getPopulatedRooms(username);
             SerialisableRoom[] arr = new SerialisableRoom[rooms.size()];
             for (int i = 0; i < arr.length; i++) {
-                arr[i] = new SerialisableRoom(rooms.get(i));
+                arr[i] = serialiser.serialiseRoom(rooms.get(i));
             }
             return ResponseEntity.ok(arr);
         }
@@ -72,7 +75,7 @@ public class RoomController {
             return res;
         }
 
-        return ResponseEntity.ok(new SerialisableRoom(roomService.get(roomId)));
+        return ResponseEntity.ok(serialiser.serialiseRoom(roomService.get(roomId)));
 
     }
 
@@ -101,7 +104,7 @@ public class RoomController {
         List<Device> list = roomService.getPopulatedDevices(roomId);
         SerialisableDevice[] arr = new SerialisableDevice[list.size()];
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = new SerialisableDevice(list.get(i), user);
+            arr[i] = serialiser.serialiseDevice(list.get(i), user);
         }
         return ResponseEntity.ok(arr);
     }
@@ -132,7 +135,7 @@ public class RoomController {
         if (id == null) {
             return ResponseEntity.status(500).build();
         } else {
-            return ResponseEntity.status(203).body(new SerialisableRoom(roomService.get(id)));
+            return ResponseEntity.status(203).body(serialiser.serialiseRoom(roomService.get(id)));
         }
     }
 
