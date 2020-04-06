@@ -89,16 +89,13 @@ public final class UserService {
     public boolean update(final User user) {
         User oldUser = userStorage.get(user.getUsername());
         if (oldUser != null) {
-            //Must be done manually to prevent corruption of list of owned rooms //EX: a roomId could be added to
-            //User but not actually have a matching Id in the Storage. To prevent this we only update the list of
-            //owned Rooms of a User in Storage from addRoom and removeRoom
-            oldUser.setEmail(user.getEmail());
-            oldUser.setFullname(user.getFullname());
-            oldUser.setPassword(user.getPassword());
-            oldUser.setSessionToken(user.getSessionToken());
-            oldUser.setVerified(user.isVerified());
-            oldUser.setResetCode(user.getResetCode());
-            return userStorage.update(oldUser);
+            User newUser = new User(oldUser, user.getEmail(),
+                    user.getPassword(),
+                    user.getFullname(),
+                    user.getResetCode(),
+                    user.getSessionToken(),
+                    user.isVerified());
+            return userStorage.update(newUser);
         }
         return false;
     }
