@@ -50,7 +50,16 @@ public class User extends Storable<String, User> {
     }
 
 
-
+    public User(User user, String email, String password, String fullname, String resetCode, String sessionToken, boolean verified) {
+        this.email = email;
+        this.password = password;
+        this.fullname = fullname;
+        this.resetCode = resetCode;
+        this.sessionToken = sessionToken;
+        this.verified = verified;
+        this.verificationToken = user.verificationToken;
+        this.rooms = user.rooms;
+    }
 
     /**
      * @return a deep copy of this Object

@@ -33,6 +33,9 @@ public class SphinxApplication {
             dummyDataAdder.user1();
             dummyDataAdder.user2();
             dummyDataAdder.emptyUser();
+            dummyDataAdder.unverifiedUser();
+            dummyDataAdder.randUser();
+
         }
     }
 }

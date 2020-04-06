@@ -32,7 +32,7 @@ public class Serialiser {
      * @return the serialized device
      */
     public SerialisableDevice serialiseDevice(Device d){
-      return d.serialise();
+        return d.serialise();
     }
 
     /**
