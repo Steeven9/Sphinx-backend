@@ -118,14 +118,6 @@ public class User extends Storable<String, User> {
 
 
     /**
-     * setter for reesetCode
-     * @param resetCode the new reset code
-     */
-    public void setResetCode(String resetCode) {
-        this.resetCode = resetCode;
-    }
-
-    /**
      * getter for rooms
      *
      * @return returns a list of the Ids of the rooms owned by the user
