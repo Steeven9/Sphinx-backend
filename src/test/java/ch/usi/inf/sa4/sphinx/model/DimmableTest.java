@@ -1,28 +1,67 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableTest {
 
     @Test
-    void serialise() {
+    void shouldReturnSerialisebleVersion() {
+        Dimmable d = new Dimmable();
+        d.setOn(false);
+        d.setName("TEST_NAME");
+        d.setId(23);
+        SerialisableDevice sd = d.serialise();
+        assertEquals("TEST_NAME", sd.name);
+        assertEquals(23, sd.id);
+        assertFalse(d.isOn());
+    }
+
+    @Disabled
+    @Test
+    void shouldReturnTheStateAfterSettingItMultipleElements() {
+        Dimmable d = new Dimmable();
+        d.couplings = new ArrayList<Integer>();
+        d.couplings.add(11);
+        d.setState(0.4);
+        assertEquals(0.4, d.getState());
     }
 
     @Test
-    void makeCopy() {
+    void shouldReturnTheStateAfterSettingIt() {
+        Dimmable d = new Dimmable();
+        d.couplings = new ArrayList<Integer>();
+        d.setState(0.4);
+        assertEquals(0.4, d.getState());
     }
 
     @Test
-    void getState() {
+    void shouldThrowExceptionIfTheStateIsSetWrong() {
+        Dimmable d = new Dimmable();
+        d.couplings = new ArrayList<Integer>(Arrays.asList(10,11));
+        Dimmable d2 = new Dimmable(d);
+        assertThrows(IllegalArgumentException.class,()->d2.setState(1.1));
     }
 
     @Test
-    void setState() {
+    void shouldReturnLabelCorrectly() {
+        Dimmable d = new Dimmable();
+        assertEquals("100.0%", d.getLabel());
     }
 
     @Test
-    void getLabel() {
+    void shouldCopyDimmableCorrectly() {
+        Dimmable d = new Dimmable();
+        d.couplings = new ArrayList<Integer>(Arrays.asList(10,11));
+        Dimmable d2 = d.makeCopy();
+        assertEquals(d.couplings, d2.couplings);
     }
+
+
 }
