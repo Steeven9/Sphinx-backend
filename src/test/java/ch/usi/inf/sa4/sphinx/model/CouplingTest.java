@@ -13,18 +13,11 @@ class CouplingTest {
     @Test
     void shouldReturnTrueIfSettingIdThatIsNotSetBefore() {
         Coupling c = new Coupling(10, 11);
-        assertTrue(c.setId(1));
+        assertFalse(c.setId(1));
     }
 
     @Test
     void shouldReturnFalseIfSettingIdThatIsSetBefore() {
-        Coupling c = new Coupling(10, 11);
-        c.setId(1);
-        assertFalse(c.setId(4283));
-    }
-
-    @Test
-    void shouldReturnNullIfSettingIdThatIsNotSetBefore() {
         Coupling c = new Coupling(10, 11);
         c.setId(1);
         assertFalse(c.setId(4283));

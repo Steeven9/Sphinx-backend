@@ -82,7 +82,6 @@ class DeviceTest {
         d.setId(23);
         Device sd = new Switch(d);
         d.setId(23);
-        assertEquals("TEST_NAME", sd.getName());
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
     }
