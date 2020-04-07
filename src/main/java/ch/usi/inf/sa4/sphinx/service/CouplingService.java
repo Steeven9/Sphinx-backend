@@ -77,7 +77,6 @@ public class CouplingService {
 
         if (storedEffect != null && storedEvent != null) {
             newCoupling = new Coupling(storedEvent, storedEffect);
-            newCoupling.setKey(event.getKey());
             return couplingStorage.insert(newCoupling);
         }
 
