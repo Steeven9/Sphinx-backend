@@ -3,6 +3,8 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeviceTest {
@@ -63,6 +65,7 @@ class DeviceTest {
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
+
         Integer observer = 10;
         d.addObserver(observer);
         assertTrue(d.couplings.contains(observer));
@@ -74,6 +77,7 @@ class DeviceTest {
         d.setId(23);
         Device sd = new Switch(d);
         d.setId(23);
+
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
     }

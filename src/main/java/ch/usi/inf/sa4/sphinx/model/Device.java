@@ -107,4 +107,12 @@ public abstract class Device extends Storable<Integer, Device> {
             effect.execute(event.get());
         }
     }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
+>>>>>>> solved conflicts
 }
