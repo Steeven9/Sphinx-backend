@@ -125,7 +125,7 @@ public class DummyDataAdder {
      * sessionToken="emptyUserSessionToken"
      */
     public void emptyUser() {
-        User newUser = new User("rand@usi.ch", "1234", "emptyUser", "randomUser");
+        User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
         newUser.setVerified(true);
         newUser.setSessionToken("emptyUserSessionToken");
         if(userService.insert(newUser)) logger.info("emptyUser added to storage");
