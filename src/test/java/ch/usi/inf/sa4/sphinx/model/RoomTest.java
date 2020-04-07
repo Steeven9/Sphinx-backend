@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import org.junit.jupiter.api.Test;
 
@@ -132,7 +133,12 @@ class RoomTest {
     }
 
     @Test
-    void serialise() {
-
+    void shouldReturnSerialisebleVersion() {
+        Room d = new Room();
+        d.setName("TEST_NAME");
+        d.setId(23);
+        SerialisableRoom sd = d.serialise();
+        assertEquals("TEST_NAME", sd.name);
+        assertEquals(23, sd.id);
     }
 }
