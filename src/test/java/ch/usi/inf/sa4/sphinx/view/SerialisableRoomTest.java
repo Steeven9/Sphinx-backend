@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.model.Room;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -35,6 +36,7 @@ public class SerialisableRoomTest {
 
 
         assertAll("Should return new SerializedRoom",
+
                 () -> assertEquals(id, serialisableRoom.id),
                 () -> assertEquals(icon, serialisableRoom.icon),
                 () -> assertEquals(background, serialisableRoom.background),

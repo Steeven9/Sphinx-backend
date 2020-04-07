@@ -48,4 +48,5 @@ public class SerialisableDevice {
         this.type = type;
         this.on = on;
     }
+
 }

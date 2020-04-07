@@ -155,6 +155,7 @@ public class DeviceController {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             return ResponseEntity.status(200).body(serialiser.serialiseDevice(storageDevice, user));
+
         }
         return ResponseEntity.status(500).build();
     }

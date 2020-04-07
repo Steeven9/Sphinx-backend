@@ -43,4 +43,5 @@ class SerialisableUserTest {
         SerialisableUser serialisableUser = new SerialisableUser();
         assertNotNull(serialisableUser);
     }
+
 }
