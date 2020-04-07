@@ -139,10 +139,6 @@ class RoomTest {
         d.setId(23);
         SerialisableRoom sd = d.serialise();
         assertEquals("TEST_NAME", sd.name);
-<<<<<<< HEAD
-        assertEquals(23, sd.id);}
-=======
         assertEquals(23, sd.id);
     }
->>>>>>> #61: added tests for Device, Dimmable and child classes. Improved room test.
 }
