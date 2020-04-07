@@ -1,7 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 public abstract class Effect<T> extends Storable<Integer, Effect<?>> {
-    protected int deviceId;
+    protected final int deviceId;
 
     public Effect(Integer deviceId) {
         this.deviceId = deviceId;
