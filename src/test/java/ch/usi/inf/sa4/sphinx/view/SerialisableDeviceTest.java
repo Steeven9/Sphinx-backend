@@ -78,8 +78,8 @@ public class SerialisableDeviceTest {
         dummyDataAdder.user2();
         User user2 = userService.get("user2");
         Device device1 = deviceService.get(1);
-        serialisableDevice = new SerialisableDevice(device1, user2, userService);
-        int id = serialisableDevice.roomId;
+        this.serialisableDevice = new SerialisableDevice(device1, user2, userService);
+        int id = this.serialisableDevice.roomId;
         assertNotNull(serialisableDevice);
         assertAll("should set this.roomId to room id",
                 () -> assertEquals(1, id),
