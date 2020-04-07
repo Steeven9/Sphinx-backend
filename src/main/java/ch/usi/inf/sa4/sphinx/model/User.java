@@ -51,6 +51,7 @@ public class User extends Storable<String, User> {
 
 
     public User(User user, String email, String password, String fullname, String resetCode, String sessionToken, boolean verified) {
+        this.setKey(user.getKey());
         this.email = email;
         this.password = password;
         this.fullname = fullname;
