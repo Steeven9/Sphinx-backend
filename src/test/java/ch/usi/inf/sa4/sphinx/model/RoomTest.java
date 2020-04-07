@@ -21,6 +21,7 @@ class RoomTest {
 
     @Test
     void shouldSetARoomUsingTheConstructorSerialisable() {
+
         SerialisableRoom serialisableRoom = new SerialisableRoom(100, "test_name", "test_icon", "test_bg", new Integer[]{1, 2, 3, 4});
         Room room = new Room(serialisableRoom);
 //        assertTrue(serialisableRoom.equals(room));

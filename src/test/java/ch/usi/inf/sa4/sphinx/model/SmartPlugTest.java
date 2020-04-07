@@ -26,7 +26,6 @@ class SmartPlugTest {
         SmartPlug d = new SmartPlug();
         d.setId(1);
         assertFalse(d.setId(4283));
-
         assertEquals(1, d.getId());
     }
 
@@ -50,7 +49,6 @@ class SmartPlugTest {
         assertEquals(40, sd.getId());
         assertTrue(d.isOn());
     }
-
     @Test
     void shouldSetANewCopiedDeviceUsingConstructor() {
         SmartPlug d = new SmartPlug();

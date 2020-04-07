@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.text.*;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LightSensorTest {
@@ -18,8 +19,6 @@ class LightSensorTest {
         int comma = 0;
         String s2 = "";
         int c = 0;
-
-
         for (c = 0; comma <= 0; c++) {
             s2 += s.charAt(c);
             if (s.charAt(c) == '.') {
@@ -52,5 +51,6 @@ class LightSensorTest {
             comparing_cutted = df.format(comparing);
         }
         assertEquals(comparing_cutted + "" + l.getPhQuantity(), s2);
+
     }
 }

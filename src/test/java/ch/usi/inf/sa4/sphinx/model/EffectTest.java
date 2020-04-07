@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 class EffectTest {
+
     @Test
     void shouldReturnTrueIfSettingIdIsSetBefore() {
         DimmableLightStateSet d = new DimmableLightStateSet(9);
@@ -17,4 +18,5 @@ class EffectTest {
         d.setId(1);
         assertFalse(d.setId(4283));
     }
+
 }

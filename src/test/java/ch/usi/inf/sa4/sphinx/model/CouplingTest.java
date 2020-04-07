@@ -24,6 +24,14 @@ class CouplingTest {
     }
 
     @Test
+
+    void shouldReturnNullIfSettingIdThatIsNotSetBefore() {
+        Coupling c = new Coupling(10, 11);
+        c.setId(1);
+        assertFalse(c.setId(4283));
+    }
+
+    @Test
     void shouldReturnIntegerIfSettingIdThatIsSetBefore() {
         Coupling c = new Coupling(10, 11);
         c.setId(4283);

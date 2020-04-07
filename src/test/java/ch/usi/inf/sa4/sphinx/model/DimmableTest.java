@@ -29,6 +29,7 @@ class DimmableTest {
         Dimmable d = new Dimmable();
         d.couplings.add(11);
     }
+
         @Test
         void shouldReturnTheStateAfterSettingIt () {
             Dimmable d = new Dimmable();
