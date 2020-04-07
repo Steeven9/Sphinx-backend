@@ -105,6 +105,7 @@ public class RoomController {
         SerialisableDevice[] arr = new SerialisableDevice[list.size()];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = serialiser.serialiseDevice(list.get(i), user);
+
         }
         return ResponseEntity.ok(arr);
     }

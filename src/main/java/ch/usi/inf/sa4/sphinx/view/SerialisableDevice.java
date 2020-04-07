@@ -4,8 +4,6 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SerialisableDevice {
-    @Autowired
-    private static UserService userService;
 
     public Integer id;
     public String icon;
@@ -50,4 +48,5 @@ public class SerialisableDevice {
         this.type = type;
         this.on = on;
     }
+
 }
