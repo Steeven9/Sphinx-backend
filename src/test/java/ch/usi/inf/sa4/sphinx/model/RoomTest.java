@@ -37,12 +37,6 @@ class RoomTest {
     }
 
     @Test
-    void shouldReturnTrueOnSetIdWithIdAlreadyExisting() {
-        r.setId(2);
-        assertFalse(r.setId(1));
-    }
-
-    @Test
     void shouldReturnNullWithIdEqualToNull() {
         r.setId(null);
         assertEquals(null, r.getId());
