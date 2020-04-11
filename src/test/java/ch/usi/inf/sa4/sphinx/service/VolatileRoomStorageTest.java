@@ -15,7 +15,6 @@ class VolatileRoomStorageTest {
 
 
     @Test
-    @DisplayName("Test correct functionality of generateKey method")
     void testGenerateKey() {
         Integer id = roomStorage.generateKey(new Room());
         Integer id1 = roomStorage.generateKey(new Room());
