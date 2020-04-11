@@ -69,5 +69,6 @@ class VolatileRoomStorageTest {
 
         assertTrue(roomStorage.update(room));
         assertEquals(testName, roomStorage.get(id).getName());
+
     }
 }

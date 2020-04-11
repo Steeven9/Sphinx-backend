@@ -37,7 +37,7 @@ class VolatileEventStorageTest {
 
         Event<?> sameEvent = eventStorage.get(id);
         assertNotNull(sameEvent);
-        assertEquals(id, sameEvent.getId());
+        assertEquals(id, sameEvent.getKey());
 
         eventStorage.delete(id);
         assertNull(eventStorage.get(id));
@@ -55,7 +55,7 @@ class VolatileEventStorageTest {
         DimmSwitchChangedEvent eventWithNotExistingKey = new DimmSwitchChangedEvent(2);
 
 
-        eventWithNotExistingKey.setId(222);
+        eventWithNotExistingKey.setKey(222);
         assertFalse(eventStorage.update(eventNoKey));
         assertFalse(eventStorage.update(eventWithNotExistingKey));
 
