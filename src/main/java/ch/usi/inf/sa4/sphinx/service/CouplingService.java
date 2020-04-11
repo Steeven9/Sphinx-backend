@@ -25,7 +25,7 @@ public class CouplingService {
      * @param id the id of the coupling to get
      * @return an instance of Coupling
      **/
-    public Coupling get(int id) {
+    public Coupling get(Integer id) {
         return couplingStorage.get(id);
     }
 
@@ -46,7 +46,7 @@ public class CouplingService {
      * @return the stored Effect with the given Id
      */
     public Effect<?> getEffect(@NotNull Integer id){
-      return effectStorage.get(id);
+        return effectStorage.get(id);
     }
 
 
@@ -77,7 +77,6 @@ public class CouplingService {
 
         if (storedEffect != null && storedEvent != null) {
             newCoupling = new Coupling(storedEvent, storedEffect);
-            newCoupling.setId(event.device);
             return couplingStorage.insert(newCoupling);
         }
 
@@ -90,7 +89,7 @@ public class CouplingService {
     /** Delete coupling in storage.
      * @param id the id of the coupling to be deleted
      **/
-    public void delete(int id) {
+    public void delete(Integer id) {
         couplingStorage.delete(id);
     }
 
@@ -99,8 +98,7 @@ public class CouplingService {
      * @param effect the id of the effect we want to add
      * @return true if successfully updated, false otherwise
      **/
-    public boolean addEffect(int id, Integer effect){
-
+    public boolean addEffect(Integer id, Integer effect){
         Coupling c = get(id);
         if (c == null) {
             return false;

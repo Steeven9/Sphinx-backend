@@ -1,18 +1,16 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+public abstract class Effect<T> extends Storable<Integer, Effect<?>> {
+    protected final int deviceId;
 
-public abstract class Effect<T> extends Storable<Integer, Effect<?> > {
-    public final int device;
+    public Effect(Integer deviceId) {
+        this.deviceId = deviceId;
+    }
 
-    public Effect(int deviceId) {
-        device = deviceId;
+    protected Effect(Effect<T> effect){
+        this.deviceId = effect.deviceId;
+        setKey(effect.getKey());
     }
 
     public abstract void execute(T effect);
-
-
-    public int getId() {
-        return getKey();
-    }
 }

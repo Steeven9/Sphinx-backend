@@ -14,6 +14,7 @@ public abstract class Storable<K, T> {
     protected Storable(){
     }
 
+
     /**
      * Sets the key of this object to desired value {@param key} if uninitialized
      * @param key the value to set
