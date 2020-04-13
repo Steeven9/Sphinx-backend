@@ -27,7 +27,6 @@ class VolatileEventStorageTest {
     }
 
     @Test
-    @Disabled(value = "fix setId method and makecopy")
     void testStorageFunctionality_InsertingAndDeleting() {
 
         DimmSwitchChangedEvent event1 = new DimmSwitchChangedEvent(34);
@@ -37,7 +36,7 @@ class VolatileEventStorageTest {
 
         Event<?> sameEvent = eventStorage.get(id);
         assertNotNull(sameEvent);
-        assertEquals(id, sameEvent.getId());
+        assertEquals(34, sameEvent.getDeviceId());
 
         eventStorage.delete(id);
         assertNull(eventStorage.get(id));
@@ -49,18 +48,11 @@ class VolatileEventStorageTest {
 
     @Test
     @DisplayName("Test correct functionality of update method")
-    @Disabled(value = "fix setId method")
     void testUpdate() {
         StatelessDimmSwitchChangedEvent eventNoKey = new StatelessDimmSwitchChangedEvent(1, 21);
-        DimmSwitchChangedEvent eventWithNotExistingKey = new DimmSwitchChangedEvent(2);
-
-
-        eventWithNotExistingKey.setId(222);
         assertFalse(eventStorage.update(eventNoKey));
-        assertFalse(eventStorage.update(eventWithNotExistingKey));
 
         DimmSwitchChangedEvent event = new DimmSwitchChangedEvent(3);
-
         eventStorage.insert(event);
         assertTrue(eventStorage.update(event));
     }

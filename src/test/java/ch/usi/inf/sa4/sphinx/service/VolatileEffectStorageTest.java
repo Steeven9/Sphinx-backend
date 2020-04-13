@@ -27,7 +27,6 @@ class VolatileEffectStorageTest {
 
 
     @Test
-    @Disabled(value = "fix makecopy method")
     void testStorageFunctionality_InsertingAndDeleting() {
         DimmableLightStateInc effect = new DimmableLightStateInc(3);
 
@@ -36,7 +35,7 @@ class VolatileEffectStorageTest {
 
         Effect<?> effect1 = effectStorage.get(id);
         assertNotNull(effect1);
-        assertEquals(id, effect1.getId());
+        assertEquals(id, effect1.getKey());
 
         effectStorage.delete(id);
         assertNull(effectStorage.get(id));
