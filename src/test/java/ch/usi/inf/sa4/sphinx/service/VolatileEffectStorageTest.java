@@ -27,7 +27,6 @@ class VolatileEffectStorageTest {
 
 
     @Test
-    @Disabled(value = "fix makecopy method")
     void testStorageFunctionality_InsertingAndDeleting() {
         DimmableLightStateInc effect = new DimmableLightStateInc(3);
 
