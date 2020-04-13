@@ -22,15 +22,6 @@ class DeviceTest {
     }
 
     @Test
-    void shouldReturnFalseIfSettingIdIsSetBefore() {
-        Device c = new Light();
-        c.setId(1);
-        assertFalse(c.setId(4283));
-
-    }
-
-
-    @Test
     void shouldSetIcon() {
         Device d = new Switch();
         d.setIcon("TEST_ICON");
@@ -85,6 +76,6 @@ class DeviceTest {
         Device sd = new Switch(d);
         d.setId(23);
         assertEquals(23, sd.getId());
-        assertFalse(d.isOn());
+        assertTrue(d.isOn());
     }
 }

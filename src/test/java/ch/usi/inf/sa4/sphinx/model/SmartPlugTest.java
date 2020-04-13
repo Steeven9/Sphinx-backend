@@ -22,14 +22,6 @@ class SmartPlugTest {
     }
 
     @Test
-    void shouldReturnFalseIfSettingIdIsSetBefore() {
-        SmartPlug d = new SmartPlug();
-        d.setId(1);
-        assertFalse(d.setId(4283));
-        assertEquals(1, d.getId());
-    }
-
-    @Test
     void shouldReturn10IfReset() {
         SmartPlug d = new SmartPlug();
         assertEquals(10.0, d.getPowerUsed());
