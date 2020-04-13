@@ -17,7 +17,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RoomServiceTest {
 
     @Autowired
@@ -30,17 +29,19 @@ class RoomServiceTest {
 
     @Test
     @DisplayName("Tests both get and update methods")
-    @Order(1)
     void testGetAndUpdate() {
+        assertNull(roomService.get(9999));
+
         Room room = new Room();
         room.setName("testName");
-        assertNull(roomService.get(88));
         Integer id = roomStorage.insert(room);
         Room returnedRoom = roomService.get(id);
+        assertNotEquals(room, returnedRoom); //does not point to the same object
         assertEquals("testName", returnedRoom.getName());
 
         String name = "secondTestName";//test update method
         room.setName(name);
+
         assertTrue(roomService.update(room));
         returnedRoom = roomService.get(id);
         assertEquals(name, returnedRoom.getName());
@@ -49,9 +50,8 @@ class RoomServiceTest {
     }
 
     @Test
-    @Order(2)
     void testGetPopulatedDevices() {
-        assertEquals(new ArrayList<>(), roomService.getPopulatedDevices(1));//not existing id
+        assertEquals(new ArrayList<>(), roomService.getPopulatedDevices(9999));//not existing id
         dummyDataAdder.user2();
         List<Device> result = roomService.getPopulatedDevices(2);
         assertAll(
@@ -64,14 +64,14 @@ class RoomServiceTest {
     }
 
     @Test
-    @Order(3)
     void testAddDevice() {
-        assertNull(roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT));
-        assertThrows(NullPointerException.class, () -> roomService.addDevice(null, null));
-        assertThrows(NullPointerException.class, () -> roomService.addDevice(2, null));
-
-        assertNull(roomService.addDevice(1, DeviceType.INVALID_DEVICE));
-        assertNull(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT));
+        assertAll("test for invalid values",
+                () -> assertNull(roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT)),
+                () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(null, null)),
+                () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(2, null)),
+                () -> assertNull(roomService.addDevice(1, DeviceType.INVALID_DEVICE)),
+                () -> assertNull(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT))
+        );
 
         assertEquals(1, roomService.getPopulatedDevices(5).size());
         roomService.addDevice(5, DeviceType.MOTION_SENSOR);
@@ -82,7 +82,6 @@ class RoomServiceTest {
     }
 
     @Test
-    @Order(4)
     @Disabled(value = "fix the error in RoomService.removeDevice line 92. The device is removed based on position, not on true deviceID")
     void testRemoveDevice() {
         assertAll("test for invalid values",

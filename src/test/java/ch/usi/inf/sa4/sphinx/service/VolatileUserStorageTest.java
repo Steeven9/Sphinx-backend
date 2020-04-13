@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class VolatileUserStorageTest {
 
     @Autowired
@@ -17,15 +16,8 @@ class VolatileUserStorageTest {
     @Autowired
     DummyDataAdder dummyDataAdder;
 
-    @Test
-    @Order(1)
-    @DisplayName("Test that userStorage is initialized")
-    void testInitializer() {
-        assertEquals(0, userStorage.data.size());
-    }
 
     @Test
-    @Order(2)
     @DisplayName("Test correct functionality of generateKey method")
     void testGenerateKey() {
         String username = "emptyUser";
@@ -39,7 +31,6 @@ class VolatileUserStorageTest {
     }
 
     @Test
-    @Order(3)
     void testStorageFunctionality_InsertingAndDeleting() {
         String username = "randomUser";
         User user = new User("unv@usi.ch", "1234", "randomUser", "edeefefefef");
@@ -50,7 +41,6 @@ class VolatileUserStorageTest {
 
         User user1 = userStorage.get(key);
         assertNotNull(user1);
-        assertEquals(2, userStorage.data.size());
 
         userStorage.delete(key);
         assertNull(userStorage.get(key));
@@ -61,7 +51,6 @@ class VolatileUserStorageTest {
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test correct functionality of update method")
     void testUpdate() {
 
@@ -76,7 +65,6 @@ class VolatileUserStorageTest {
     }
 
     @Test
-    @Order(5)
     @DisplayName("Test correct functionality of update getByEmail")
     void testGetByEmail() {
         String email = "testmail@usi.ch";
