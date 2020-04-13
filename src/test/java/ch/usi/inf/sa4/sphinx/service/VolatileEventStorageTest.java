@@ -3,9 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Event;
 import ch.usi.inf.sa4.sphinx.model.StatelessDimmSwitchChangedEvent;
 import ch.usi.inf.sa4.sphinx.model.DimmSwitchChangedEvent;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,6 +12,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class VolatileEventStorageTest {
 
     @Autowired
