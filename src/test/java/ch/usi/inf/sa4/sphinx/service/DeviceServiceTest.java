@@ -20,15 +20,18 @@ class DeviceServiceTest {
     @Test
     @DisplayName("Tests both get and update methods")
     void testDeviceService() {
+        assertNull(deviceService.get(9999));
+
         Light device = new Light();
         device.setName("testName");
-        assertNull(deviceService.get(1));
         Integer id = deviceStorage.insert(device);
         Device returnedDevice = deviceService.get(id);
+        assertNotEquals(device, returnedDevice); //does not point to the same object
         assertEquals("testName", returnedDevice.getName());
 
         String name = "secondTestName";//test update method
         device.setName(name);
+
         assertTrue(deviceService.update(device));
         returnedDevice = deviceService.get(id);
         assertEquals(name, returnedDevice.getName());
