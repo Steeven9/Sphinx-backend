@@ -5,12 +5,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class VolatileRoomStorageTest {
 
     @Autowired
@@ -18,46 +15,35 @@ class VolatileRoomStorageTest {
 
 
     @Test
-    @Order(1)
-    @DisplayName("Test that roomStorage is initialized")
-    void testInitializer() {
-        Map<Integer, Room> data = roomStorage.data;
-        assertEquals(0, data.size());
-    }
-
-    @Test
-    @Order(2)
     @DisplayName("Test correct functionality of generateKey method")
     void testGenerateKey() {
         Integer id = roomStorage.generateKey(new Room());
-        assertEquals(1, id);
-        id = roomStorage.generateKey(new Room());
-        assertEquals(2, id);
+        Integer id1 = roomStorage.generateKey(new Room());
+        assertEquals(id + 1, id1);
+        assertEquals(roomStorage.data.size() + 1, id);
+        assertEquals(roomStorage.data.size() + 2, id1);
     }
 
     @Test
-    @Order(3)
     void testStorageFunctionality_InsertingAndDeleting() {
-        Integer id = 3;
         Room room1 = new Room();
         room1.setName("testRoom3");
         room1.setBackground("testBackground3");
 
-        assertNull(roomStorage.get(id));
-        Integer id3 = roomStorage.insert(room1);
-        assertEquals(id, id3);
-        assertNotEquals(room1, roomStorage.get(id3));//does not points to same object
+        Integer id = roomStorage.insert(room1);
+        assertNotEquals(room1, roomStorage.get(id));//does not points to same object
 
         Room returnedRoom = roomStorage.get(id);
         assertNotNull(returnedRoom);
         assertAll(
                 () -> assertEquals("testBackground3", returnedRoom.getBackground()),
                 () -> assertEquals("testRoom3", returnedRoom.getName()),
-                () -> assertEquals(1, roomStorage.data.size())
+                () -> assertEquals(id, returnedRoom.getId())
+
         );
 
-        roomStorage.delete(id3);
-        assertNull(roomStorage.get(id3));
+        roomStorage.delete(id);
+        assertNull(roomStorage.get(id));
 
         Room roomWithLockedKey = new Room();
         roomWithLockedKey.lockKey();
@@ -65,7 +51,6 @@ class VolatileRoomStorageTest {
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test correct functionality of update method")
     void testUpdate() {
         Room roomWithoutKey = new Room();
