@@ -78,6 +78,6 @@ class DeviceTest {
         d.setId(23);
 
         assertEquals(23, sd.getId());
-        assertFalse(d.isOn());
+        assertTrue(d.isOn());
     }
 }
