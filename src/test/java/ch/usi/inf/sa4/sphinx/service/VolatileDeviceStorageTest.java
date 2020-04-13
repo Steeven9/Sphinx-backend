@@ -5,58 +5,44 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class VolatileDeviceStorageTest {
 
     @Autowired
     VolatileDeviceStorage deviceStorage;
 
-    @Test
-    @Order(1)
-    @DisplayName("Test that deviceStorage is initialized")
-    void testInitializer() {
-        Map<Integer, Device> data = deviceStorage.data;
-        assertEquals(0, data.size());
-    }
 
     @Test
-    @Order(2)
     @DisplayName("Test correct functionality of generateKey method")
     void testGenerateKey() {
         Integer id = deviceStorage.generateKey(new Light());
-        assertEquals(1, id);
-        id = deviceStorage.generateKey(new MotionSensor());
-        assertEquals(2, id);
+        Integer id1 = deviceStorage.generateKey(new MotionSensor());
+        assertEquals(id + 1, id1);
+        assertEquals(deviceStorage.data.size() + 1, id);
+        assertEquals(deviceStorage.data.size() + 2, id1);
     }
 
     @Test
-    @Order(3)
     void testStorageFunctionality_InsertingAndDeleting() {
-        Integer id = 3;
         SmartPlug smartPlug = new SmartPlug();
 
-        assertNull(deviceStorage.get(id));
         smartPlug.setName("testName3");
         smartPlug.setIcon("testIcon");
-        Integer id3 = deviceStorage.insert(smartPlug);
-        assertEquals(id, id3);
-        assertNotEquals(smartPlug, deviceStorage.get(id3));//does not points to same object
+        Integer id = deviceStorage.insert(smartPlug);
+        assertNotEquals(smartPlug, deviceStorage.get(id));//does not points to same object
 
         Device returnedRoom = deviceStorage.get(id);
         assertNotNull(returnedRoom);
         assertAll(
                 () -> assertEquals("testIcon", returnedRoom.getIcon()),
                 () -> assertEquals("testName3", returnedRoom.getName()),
-                () -> assertEquals(1, deviceStorage.data.size())
+                () -> assertEquals(id, returnedRoom.getId())
         );
 
-        deviceStorage.delete(id3);
-        assertNull(deviceStorage.get(id3));
+        deviceStorage.delete(id);
+        assertNull(deviceStorage.get(id));
 
         Device deviceWithLockedKey = new Light();
         deviceWithLockedKey.lockKey();
@@ -64,14 +50,13 @@ class VolatileDeviceStorageTest {
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test correct functionality of update method")
     void testUpdate() {
         TempSensor tempSensorNoKey = new TempSensor();
-        HumiditySensor deviceWithNotExestingKey = new HumiditySensor();
-        deviceWithNotExestingKey.setKey(222);
+        HumiditySensor deviceWithNotExistingKey = new HumiditySensor();
+        deviceWithNotExistingKey.setKey(222);
         assertFalse(deviceStorage.update(tempSensorNoKey));
-        assertFalse(deviceStorage.update(deviceWithNotExestingKey));
+        assertFalse(deviceStorage.update(deviceWithNotExistingKey));
 
         MotionSensor motionSensor = new MotionSensor();
 
