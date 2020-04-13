@@ -1,0 +1,39 @@
+package ch.usi.inf.sa4.sphinx.service;
+
+import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.Light;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class DeviceServiceTest {
+
+    @Autowired
+    DeviceService deviceService;
+    @Autowired
+    VolatileDeviceStorage deviceStorage;
+
+    @Test
+    @DisplayName("Tests both get and update methods")
+    void testDeviceService() {
+        Light device = new Light();
+        device.setName("testName");
+        assertNull(deviceService.get(1));
+        Integer id = deviceStorage.insert(device);
+        Device returnedDevice = deviceService.get(id);
+        assertEquals("testName", returnedDevice.getName());
+
+        String name = "secondTestName";//test update method
+        device.setName(name);
+        assertTrue(deviceService.update(device));
+        returnedDevice = deviceService.get(id);
+        assertEquals(name, returnedDevice.getName());
+
+        assertFalse(deviceService.update(new Light()));
+    }
+
+}
