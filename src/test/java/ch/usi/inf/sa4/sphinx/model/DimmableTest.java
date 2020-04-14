@@ -1,5 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -55,4 +54,5 @@ class DimmableTest {
             Dimmable d2 = d.makeCopy();
             assertEquals(d.couplings, d2.couplings);
         }
+
 }

@@ -62,5 +62,6 @@ class SmartPlugTest {
         assertEquals("20.0 kWh", sd.getLabel());
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
+
     }
 }
