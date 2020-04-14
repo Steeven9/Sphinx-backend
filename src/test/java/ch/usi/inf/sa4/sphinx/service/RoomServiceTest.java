@@ -72,7 +72,7 @@ class RoomServiceTest {
                 () -> assertNull(roomService.addDevice(1, DeviceType.INVALID_DEVICE)),
                 () -> assertNull(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT))
         );
-
+        dummyDataAdder.user2();
         assertEquals(1, roomService.getPopulatedDevices(5).size());
         roomService.addDevice(5, DeviceType.MOTION_SENSOR);
         assertAll("should add a new device",
@@ -82,7 +82,7 @@ class RoomServiceTest {
     }
 
     @Test
-    @Disabled(value = "fix the error in RoomService.removeDevice line 92. The device is removed based on position, not on true deviceID")
+    @Disabled(value = "fix the error in RoomService.removeDevice line 92. java.lang.UnsupportedOperationException")
     void testRemoveDevice() {
         assertAll("test for invalid values",
                 () -> assertFalse(roomService.removeDevice(null, null)),
@@ -93,14 +93,9 @@ class RoomServiceTest {
                 () -> assertFalse(roomService.removeDevice(10, 5))
         );
 
-        List<Device> result = roomService.getPopulatedDevices(2);
-        assertEquals(2, result.size());
-        Integer key = result.get(result.size() - 1).getKey();
-
         //removing a device
-        assertEquals(DeviceType.deviceClassToDeviceType(Light.class), DeviceType.deviceToDeviceType(result.get(result.size() - 1)));
-        assertTrue(roomService.removeDevice(2, key)); //java.lang.UnsupportedOperationException for deviceId
-        assertEquals(DeviceType.deviceClassToDeviceType(HumiditySensor.class), DeviceType.deviceToDeviceType(result.get(result.size() - 1)));
-        assertEquals(1, result.size());
+        Integer key = roomStorage.insert(new Room());
+        Integer devId = roomService.addDevice(key, DeviceType.MOTION_SENSOR);
+        assertTrue(roomService.removeDevice(key, devId));   //java.lang.UnsupportedOperationException for deviceId
     }
 }
