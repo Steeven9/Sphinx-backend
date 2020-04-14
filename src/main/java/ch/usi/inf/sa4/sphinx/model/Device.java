@@ -108,5 +108,8 @@ public abstract class Device extends Storable<Integer, Device> {
             effect.execute(event.get());
         }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 936f9145011749f5adc4f22aff1500439122096d
 }
