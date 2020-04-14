@@ -40,7 +40,7 @@ public class DeviceController {
      * @param sessionToken session token of the user
      * @return a ResponseEntity with the ids of the devices owned by the user
      */
-    @GetMapping("/")
+    @GetMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
                                                                @RequestHeader("user") String username
     ) {
@@ -99,7 +99,7 @@ public class DeviceController {
      * @return a ResponseEntity with the data of the newly created device (203), or
      * 500 in case of a server error
      */
-    @PostMapping("/")
+    @PostMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
                                                            @RequestHeader("session-token") String sessionToken,
                                                            @RequestHeader("user") String username,
