@@ -9,14 +9,6 @@ class EffectTest {
     @Test
     void shouldReturnTrueIfSettingIdIsSetBefore() {
         DimmableLightStateSet d = new DimmableLightStateSet(9);
-        assertNull(d.getId());
-    }
-
-    @Disabled
-    @Test
-    void shouldReturnFalseIfSettingIdIsSetBefore() {
-        Device d = new Light();
-        d.setId(4283)
-        assertEquals(4283, d.getId());
+        assertNull(d.getKey());
     }
 }
