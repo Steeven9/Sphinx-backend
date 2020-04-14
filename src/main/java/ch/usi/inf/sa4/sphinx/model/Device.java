@@ -22,7 +22,7 @@ public abstract class Device extends Storable<Integer, Device> {
 
 
     public Device() {
-        icon = "/images/generic_device";
+        icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
         this.couplings = new ArrayList<>();
