@@ -39,7 +39,7 @@ public class RoomController {
      * @param username the username of the user
      * @return a ResponseEntity with the array of rooms owned by the user
      */
-    @GetMapping("/")
+    @GetMapping(value = {"", "/"})
     public ResponseEntity<SerialisableRoom[]> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                               @NotNull @RequestHeader("user") String username) {
 
@@ -118,7 +118,7 @@ public class RoomController {
      * @param errors in case error occur
      * @return a new room
      */
-    @PostMapping("/")
+    @PostMapping(value = {"", "/"})
     public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        @NotNull @RequestBody SerialisableRoom serialisableRoom,
