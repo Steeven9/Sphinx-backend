@@ -85,7 +85,7 @@ public class RoomController {
      * @param username the username of the user
      * @return an array of devices in given room
      */
-    @GetMapping("/{roomId}/devices/")
+    @GetMapping("/{roomId}/devices")
     public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
                                                           @NotNull @RequestHeader("session-token") String sessionToken,
                                                           @NotNull @RequestHeader("user") String username) {
@@ -149,7 +149,7 @@ public class RoomController {
      * @param errors in case error occur
      * @return A modified room
      */
-    @PutMapping("/{roomId}/")
+    @PutMapping("/{roomId}")
     public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
@@ -174,7 +174,7 @@ public class RoomController {
      * @return  A ResponseEntity containing status code 203 if the room was removed
      *       status 403 if the delete went wrong
      */
-    @DeleteMapping("/{roomId}/")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable Integer roomId,
                                                         @NotBlank @RequestHeader("session-token") String sessionToken,
                                                         @NotBlank @RequestHeader("user") String username) {
