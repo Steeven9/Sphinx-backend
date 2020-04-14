@@ -15,8 +15,8 @@ public class Room extends Storable<Integer, Room> {
 
 	public Room() {
 		name = "Room";
-		background = "/images/default_room";
-		icon = "/images/default_icon";
+		background = "./img/backgrounds/rooms/background-generic-room.svg";
+		icon = "./img/icons/rooms/icon-generic-room.svg";
 		devices = new ArrayList<>();
 	}
 
