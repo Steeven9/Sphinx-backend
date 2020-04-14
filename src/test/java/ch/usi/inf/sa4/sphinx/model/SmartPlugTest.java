@@ -4,12 +4,9 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-=======
->>>>>>> #61: added tests for Effect, LightSensor and Light, SmartPlug and Devices improved
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +16,6 @@ class SmartPlugTest {
     void shouldReturnTrueIfCronstructorCreatesNotNull() {
         SmartPlug d = new SmartPlug();
         assertNotNull(d);
-<<<<<<< HEAD
     }
 
     @Test
@@ -47,40 +43,10 @@ class SmartPlugTest {
     }
 
     @Test
-=======
-    }
-
-    @Test
-    void shouldReturnTrueIfSettingIdIsNotSetBefore() {
-        SmartPlug d = new SmartPlug();
-        assertTrue(d.setId(1));
-        assertEquals(1, d.getId());
-    }
-
-    @Test
-    void shouldReturnFalseIfSettingIdIsSetBefore() {
-        SmartPlug d = new SmartPlug();
-        d.setId(1);
-        assertFalse(d.setId(4283));
-        assertEquals(1, d.getId());
-    }
-
-    @Test
-    void shouldReturn10IfReset() {
-        SmartPlug d = new SmartPlug();
-        assertEquals(10.0,d.getPowerUsed());
-        assertEquals(20.0,d.getPowerUsed());
-        d.reset();
-        assertEquals(10,d.getPowerUsed());
-    }
-
-    @Test
->>>>>>> #61: added tests for Effect, LightSensor and Light, SmartPlug and Devices improved
     void shouldSetANewCopiedSmartPlugUsingMakeCopy() {
         SmartPlug d = new SmartPlug();
         d.setName("TEST_NAME");
         d.setId(40);
-<<<<<<< HEAD
         SmartPlug sd = d.makeCopy();
         assertEquals("TEST_NAME", sd.getName());
         assertEquals("20.0 kWh", sd.getLabel());
@@ -88,33 +54,17 @@ class SmartPlugTest {
         assertTrue(d.isOn());
     }
 
-=======
-        d.couplings= new ArrayList<Integer>();
-        SmartPlug sd = d.makeCopy();
-        assertEquals("TEST_NAME", sd.getName());
-        assertEquals("20.0 kWh",sd.getLabel());
-        assertEquals(40, sd.getId());
-        assertTrue(d.isOn());
-    }
->>>>>>> #61: added tests for Effect, LightSensor and Light, SmartPlug and Devices improved
     @Test
     void shouldSetANewCopiedDeviceUsingConstructor() {
         SmartPlug d = new SmartPlug();
         d.setOn(false);
         d.setName("TEST_NAME");
         d.setId(23);
-<<<<<<< HEAD
-=======
-        d.couplings= new ArrayList<Integer>();
->>>>>>> #61: added tests for Effect, LightSensor and Light, SmartPlug and Devices improved
         SmartPlug sd = new SmartPlug(d);
         assertEquals("TEST_NAME", sd.getName());
         assertEquals("20.0 kWh",sd.getLabel());
         assertEquals(23, sd.getId());
         assertFalse(d.isOn());
-<<<<<<< HEAD
 
-=======
->>>>>>> #61: added tests for Effect, LightSensor and Light, SmartPlug and Devices improved
     }
 }
