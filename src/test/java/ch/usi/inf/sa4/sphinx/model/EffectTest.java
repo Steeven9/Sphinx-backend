@@ -16,7 +16,7 @@ class EffectTest {
     @Test
     void shouldReturnFalseIfSettingIdIsSetBefore() {
         Device d = new Light();
-        d.setId(1);
-        assertFalse(d.setId(4283));
+        d.setId(4283)
+        assertEquals(4283, d.getId());
     }
 }
