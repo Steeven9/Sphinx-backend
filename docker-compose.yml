@@ -6,6 +6,7 @@ services:
     ports:
       - "3000:80"
     depends_on:
+      - database
       - backend
   backend:
     container_name: sphinx-backend
@@ -13,6 +14,17 @@ services:
     ports:
       - "8080:8080"
     env_file: sh_envfile
-networks: 
+  database:
+    container_name: sphinx-database
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=spHinXdAtaBa8e
+      - TZ=Europe/Zurich
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+networks:
   default:
     name: sphinx
