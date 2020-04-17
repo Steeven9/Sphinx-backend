@@ -122,10 +122,16 @@ public class DeviceController {
 
 
     /**
+     * modifies the device with the given deviceId to conform to the fields in the given SerialisableDevice,
+     * iff the user is authenticating with the correct user/session-token pair
      * @param deviceId id  of the device to be modified
-     * @param device   device to modify
-     * @return a ResponseEntity with the data of the modified device (200), not found (404) if no such device exist or
-     * 500 in case of a server error
+     * @param device device to modify
+     * @param username the username of the user to authenticate as
+     * @param sessionToken the session token of the user to authenticate as
+     * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
+     *  - 404 if no such device exist or
+     *  - 401 if authentication fails or
+     *  - 500 in case of a server error
      */
     @PutMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
@@ -133,7 +139,6 @@ public class DeviceController {
                                                            @RequestHeader("session-token") String sessionToken,
                                                            @RequestHeader("user") String username,
                                                            Errors errors) {
-
 
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().build();
@@ -151,7 +156,7 @@ public class DeviceController {
 
         if (deviceService.update(storageDevice)) {
             final Integer owningRoom = userService.owningRoom(username, deviceId);
-            if (!device.roomId.equals(owningRoom)) {
+            if (device.roomId != null && !device.roomId.equals(owningRoom)) {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             return ResponseEntity.status(200).body(serialiser.serialiseDevice(storageDevice, user));
