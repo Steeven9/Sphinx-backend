@@ -87,6 +87,10 @@ public class DeviceController {
 
         Device device = deviceService.get(deviceId);
 
+        if (device == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(serialiser.serialiseDevice(device));
     }
 
@@ -144,12 +148,18 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
+        Device storageDevice = deviceService.get(deviceId);
+
+        if (storageDevice == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
         User user = userService.get(username);
-        Device storageDevice = deviceService.get(deviceId);
+
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
         if (device.on != null) storageDevice.setOn(device.on);
@@ -179,12 +189,18 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
+        Device storageDevice = deviceService.get(deviceId);
+
+        if (storageDevice == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
             return ResponseEntity.status(401).build();
         }
         userService.removeDevice(username, deviceId);
 
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.status(204).build();
     }
 
 
