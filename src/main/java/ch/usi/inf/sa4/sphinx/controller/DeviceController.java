@@ -72,14 +72,13 @@ public class DeviceController {
                                                         @RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username) {
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            return ResponseEntity.status(401).build();
-        }
-
         Device device = deviceService.get(deviceId);
-
         if (device == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
+            return ResponseEntity.status(401).build();
         }
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device));
