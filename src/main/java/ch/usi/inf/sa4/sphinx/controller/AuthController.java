@@ -68,7 +68,7 @@ public class AuthController {
         }
 
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(401).build();
         }
         if (!user.isVerified()) {
             return ResponseEntity.status(403).build();

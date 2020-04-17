@@ -23,12 +23,12 @@ public class AuthControllerTest {
     private MockMvc mockmvc;
 
     @Test
-    public void shouldGet404OnLoginWithWrongUsername() throws Exception {
+    public void shouldGet401OnLoginWithWrongUsername() throws Exception {
         this.mockmvc.perform(post("/auth/login/test")
                     .content("{username:\"test\"}")
                     .header("content-type", "application/json"))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().is(401));
     }
 
     @Disabled
