@@ -38,12 +38,13 @@ public class DeviceController {
 
     /**
      * @param sessionToken session token of the user
-     * @return a ResponseEntity with the ids of the devices owned by the user
+     * @return a ResponseEntity with the ids of the devices owned by the user or
+     * - 404 if not found or
+     * - 401 if not authorized
      */
     @GetMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                               @RequestHeader("user") String username
-    ) {
+                                                               @RequestHeader("user") String username) {
 
 
         User user = userService.get(username);
@@ -66,26 +67,23 @@ public class DeviceController {
 
     /**
      * @param deviceId id of the device
-     * @return a ResponseEntity with the data of the requested device (200), not found (404) if no such device exist
+     * @return a ResponseEntity with the data of the requested device (200) or
+     * - 404 if not found or
+     * - 401 if not authorized
      */
     @GetMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("user") String username,
-                                                        Errors errors) {
+                                                        @RequestHeader("user") String username) {
 
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+        Device device = deviceService.get(deviceId);
+        if (device == null) {
+            return ResponseEntity.notFound().build();
         }
-
-
-        User user = userService.get(username);
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
-
-        Device device = deviceService.get(deviceId);
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device));
     }
@@ -96,8 +94,10 @@ public class DeviceController {
      * @param sessionToken sessionToken of the use
      * @param username     username of the user
      * @param errors       errors in validating the fields
-     * @return a ResponseEntity with the data of the newly created device (203), or
-     * 500 in case of a server error
+     * @return a ResponseEntity with the data of the newly created device (201), or
+     * - 400 if bad request or
+     * - 401 if not authorized or
+     * - 500 in case of a server error
      */
     @PostMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
@@ -129,6 +129,7 @@ public class DeviceController {
      * @param username the username of the user to authenticate as
      * @param sessionToken the session token of the user to authenticate as
      * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
+     *  - 400 if bad request or
      *  - 404 if no such device exist or
      *  - 401 if authentication fails or
      *  - 500 in case of a server error
@@ -144,12 +145,18 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
+        Device storageDevice = deviceService.get(deviceId);
+
+        if (storageDevice == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
         User user = userService.get(username);
-        Device storageDevice = deviceService.get(deviceId);
+
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
         if (device.on != null) storageDevice.setOn(device.on);
@@ -167,16 +174,19 @@ public class DeviceController {
 
     /**
      * @param deviceId id  of the device to be deleted
-     * @return a ResponseEntity
+     * @return a ResponseEntity with 204 if deletion is successful or
+     * - 404 if not found or
+     * - 401 if not authorized
      */
     @DeleteMapping("/{deviceId}")
     public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable Integer deviceId,
                                                @RequestHeader("session-token") String sessionToken,
-                                               @RequestHeader("user") String username,
-                                               Errors errors) {
+                                               @RequestHeader("user") String username) {
 
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+        Device storageDevice = deviceService.get(deviceId);
+
+        if (storageDevice == null) {
+            return ResponseEntity.notFound().build();
         }
 
         if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
@@ -184,7 +194,7 @@ public class DeviceController {
         }
         userService.removeDevice(username, deviceId);
 
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.status(204).build();
     }
 
 

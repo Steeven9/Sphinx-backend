@@ -136,7 +136,7 @@ public class RoomController {
         if (id == null) {
             return ResponseEntity.status(500).build();
         } else {
-            return ResponseEntity.status(203).body(serialiser.serialiseRoom(roomService.get(id)));
+            return ResponseEntity.status(201).body(serialiser.serialiseRoom(roomService.get(id)));
         }
     }
 
@@ -160,7 +160,8 @@ public class RoomController {
             return res;
         }
         if (roomService.update(new Room(serialisableRoom))) {
-            return ResponseEntity.status(204).build();
+            Room storageRoom = roomService.get(roomId);
+            return ResponseEntity.status(200).body(serialiser.serialiseRoom(storageRoom));
         } else {
             return ResponseEntity.status(500).build();
         }
@@ -183,7 +184,7 @@ public class RoomController {
             return res;
         }
         if (userService.removeRoom(username, roomId)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(204).build();
         } else {
             return ResponseEntity.status(500).build();
         }
