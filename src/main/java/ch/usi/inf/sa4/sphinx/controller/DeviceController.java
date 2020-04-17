@@ -42,8 +42,7 @@ public class DeviceController {
      */
     @GetMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                               @RequestHeader("user") String username
-    ) {
+                                                               @RequestHeader("user") String username) {
 
 
         User user = userService.get(username);
@@ -71,15 +70,7 @@ public class DeviceController {
     @GetMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("user") String username,
-                                                        Errors errors) {
-
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-
-        User user = userService.get(username);
+                                                        @RequestHeader("user") String username) {
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
@@ -182,12 +173,7 @@ public class DeviceController {
     @DeleteMapping("/{deviceId}")
     public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable Integer deviceId,
                                                @RequestHeader("session-token") String sessionToken,
-                                               @RequestHeader("user") String username,
-                                               Errors errors) {
-
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
+                                               @RequestHeader("user") String username) {
 
         Device storageDevice = deviceService.get(deviceId);
 
