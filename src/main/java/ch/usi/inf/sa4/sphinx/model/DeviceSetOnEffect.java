@@ -14,9 +14,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
         super(deviceID);
     }
 
-    private DeviceSetOnEffect(DeviceSetOnEffect other){
-        super(other);
-    }
+
 
     /**
      * checks if value of lights is off e.g, false; if so it turn them on and vice versa.

@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.OnDelete;
@@ -51,35 +52,20 @@ public class Coupling extends StorableE{
 
 
 
-
-    /**
-     * sets the id of this object to the given id
-     * @param key the id to set
-     * @return true if the id is set false otherwise if it has already been set
-     */
-    public boolean setId(int key){
-        return setKey(key);
-    }
-
-    /**
-     * gettter for  id
-     * @return the id of the coupling
-     */
-    public Integer getId() {
-        return getKey();
-    }
-
-
     public Integer getEventId() {
-        return eventId;
+        return event.getId();
     }
+
+
 
     public List<Integer> getEffectIds() {
-        return effectIds;
+        throw new NotImplementedException();
     }
 
-    public void addEffect(Integer effect){
-        effectIds.add(effect);
+
+
+    public void addEffect(Effect effect){
+        effects.add(effect);
     }
 
 

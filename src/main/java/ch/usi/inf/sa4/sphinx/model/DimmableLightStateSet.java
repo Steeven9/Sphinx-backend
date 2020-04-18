@@ -20,10 +20,6 @@ public class DimmableLightStateSet extends Effect<Double> {
 
 
 
-    private DimmableLightStateSet(DimmableLightStateSet other){
-        super(other);
-    }
-
     /**
      * Sets state to the effect value.
      *
@@ -36,11 +32,4 @@ public class DimmableLightStateSet extends Effect<Double> {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DimmableLightStateSet makeCopy() {
-        return new DimmableLightStateSet(this);
-    }
 }
