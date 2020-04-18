@@ -120,7 +120,7 @@ public final class UserService {
         if (roomId == null) {
             return null; //something went bad
         }
-        user.addRoom(roomId);
+        user.addRoomToRemove(roomId);
         if (!userStorage.update(user)) {
             return null;
 
@@ -158,10 +158,10 @@ public final class UserService {
         final User user = userStorage.get(username);
 
         if (user != null) {
-            var roomIds = user.getRooms();
+            var roomIds = user.getRoomsIds();
             for (var roomId : roomIds) {
                 var r = roomService.get(roomId);
-                devices.addAll(r.getDevices());
+                devices.addAll(r.getDevicesIds());
             }
         }
         return devices;
@@ -188,7 +188,7 @@ public final class UserService {
     public List<Room> getPopulatedRooms(String username) {
         User user = get(username);
         if (user != null) {
-            return user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
+            return user.getRoomsIds().stream().map(roomStorage::get).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -202,7 +202,7 @@ public final class UserService {
     public boolean ownsRoom(String username, Integer roomId) {
         User user = userStorage.get(username);
         if (user == null) return false;
-        return user.getRooms().contains(roomId);
+        return user.getRoomsIds().contains(roomId);
     }
 
 
@@ -215,7 +215,7 @@ public final class UserService {
     public List<Device> getPopulatedDevices(String username) {
         User user = userStorage.get(username);
         if (user != null) {
-            return user.getRooms().stream().
+            return user.getRoomsIds().stream().
                     flatMap(roomId -> roomService.getPopulatedDevices(roomId).stream()).
                     collect(Collectors.toList());
         }
@@ -247,10 +247,10 @@ public final class UserService {
         User user = userStorage.get(username);
         if (user == null) return;
 
-        List<Room> rooms = user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
+        List<Room> rooms = user.getRoomsIds().stream().map(roomStorage::get).collect(Collectors.toList());
 
         for (Room room : rooms) {
-            if (room.getDevices().contains(deviceId)) {
+            if (room.getDevicesIds().contains(deviceId)) {
                 roomService.removeDevice(room.getId(), deviceId);
             }
         }
@@ -276,8 +276,8 @@ public final class UserService {
         Room startRoom = roomService.get(startRoomId);
         Room endRoom = roomService.get(endRoomId);
 
-        startRoom.getDevices().remove(deviceId);
-        endRoom.getDevices().add(deviceId);
+        startRoom.getDevicesIds().remove(deviceId);
+        endRoom.getDevicesIds().add(deviceId);
 
         //user service would block the update  of the list of devices so we need to go directly to the db
         roomStorage.update(startRoom);
@@ -295,7 +295,7 @@ public final class UserService {
     public Integer owningRoom(final String username, final Integer deviceId){
         var rooms = getPopulatedRooms(username);
         for(Room r: rooms){
-            if(r.getDevices().contains(deviceId)){
+            if(r.getDevicesIds().contains(deviceId)){
                 return r.getId();
             }
         }

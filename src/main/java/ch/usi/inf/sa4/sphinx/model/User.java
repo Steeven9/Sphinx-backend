@@ -1,7 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import com.google.gson.annotations.Expose;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,14 +13,33 @@ import java.util.UUID;
 /**
  *
  */
-public class User extends Storable<String, User> {
+@Entity
+@Table(name = "user")
+public class User extends StorableE{
+    @Expose
+    @Column(unique = true, nullable = false)
+    private String username;
+    @Expose
+    @Column(nullable = false)
     private String email;
+    @Expose(serialize = false)
     private String password;
+    @Expose
     private String fullname;
+    @Column(name = "reset_code")
     private String resetCode;
-    private final List<Integer> rooms;
+    @Expose(deserialize = false)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "user",
+            orphanRemoval = true)
+    private final List<Room> rooms;
+    @Column(name = "session_token")
     private String sessionToken;
-    private final String verificationToken;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "verification_token")
+    private  String verificationToken;
+    @Expose(deserialize = false)
     private boolean verified;
 
 
@@ -33,41 +55,9 @@ public class User extends Storable<String, User> {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.verificationToken = UUID.randomUUID().toString();
-        super.setKey(username);
-    }
-
-    private User(User user) {
-        super.setKey(user.getKey());
-        this.email = user.email;
-        this.verificationToken = user.verificationToken;
-        this.password = user.password;
-        this.fullname = user.fullname;
-        this.resetCode = user.resetCode;
-        this.rooms = new ArrayList<>(user.rooms);
-        this.sessionToken = user.sessionToken;
-        this.verified = user.verified;
     }
 
 
-    public User(User user, String email, String password, String fullname, String resetCode, String sessionToken, boolean verified) {
-        this.setKey(user.getKey());
-        this.email = email;
-        this.password = password;
-        this.fullname = fullname;
-        this.resetCode = resetCode;
-        this.sessionToken = sessionToken;
-        this.verified = verified;
-        this.verificationToken = user.verificationToken;
-        this.rooms = user.rooms;
-    }
-
-    /**
-     * @return a deep copy of this Object
-     */
-    public User makeCopy() {
-        return new User(this);
-    }
 
     /**
      * getter for email
@@ -94,7 +84,7 @@ public class User extends Storable<String, User> {
      * @return username of the user
      */
     public String getUsername() {
-        return getKey();
+        return username;
     }
 
 
@@ -118,13 +108,18 @@ public class User extends Storable<String, User> {
     }
 
 
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
     /**
      * getter for rooms
      *
      * @return returns a list of the Ids of the rooms owned by the user
      */
-    public List<Integer> getRooms() {
-        return rooms;
+    public List<Integer> getRoomsIds() {
+        //TODO REMOVE @lagraf
+        throw new NotImplementedException();
     }
 
 
@@ -186,7 +181,8 @@ public class User extends Storable<String, User> {
      * @param username username
      */
     public boolean setUsername(final String username) {
-        return setKey(username);
+        this.username =username;
+        return true;
     }
 
     /**
@@ -212,7 +208,6 @@ public class User extends Storable<String, User> {
      */
     public void verify() {
         setVerified(true);
-
     }
 
     /**
@@ -220,8 +215,17 @@ public class User extends Storable<String, User> {
      *
      * @param roomId id of the room to be added
      */
-    public void addRoom(final Integer roomId) {
-        rooms.add(roomId);
+    public void addRoomToRemove(final Integer roomId) {//TODO REMOVE
+
+        throw new NotImplementedException();
+    }
+
+    public void addRoom(final Room room){
+        if(room == null){
+            throw new IllegalArgumentException("Room can't be null");
+        }
+        room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
+        rooms.add(room);
     }
 
     /**

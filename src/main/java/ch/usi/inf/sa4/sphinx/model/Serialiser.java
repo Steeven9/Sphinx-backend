@@ -1,9 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -48,7 +45,7 @@ public class Serialiser {
 
         var rooms = userService.getPopulatedRooms(user.getUsername());
         for(var room:rooms){
-            if(room.getDevices().contains(device.getId())){
+            if(room.getDevicesIds().contains(device.getId())){
                 sd.roomId = room.getId();
                 sd.roomName = room.getName();
                 sd.userName = user.getUsername();

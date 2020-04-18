@@ -1,54 +1,79 @@
 package ch.usi.inf.sa4.sphinx.model;
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import com.google.gson.annotations.Expose;
 
+import javax.persistence.*;
 import java.util.*;
 
 
 
-public class Room extends Storable<Integer, Room> {
+@Entity
+public class Room extends StorableE{
+	@Expose
 	private String name;
+	@Expose
 	private String background;
+	@Expose
 	private String icon;
-	private List<Integer> devices;
+	@Expose
+	@OneToMany(orphanRemoval = false, //A device can migrate Room
+			cascade = CascadeType.ALL,
+			mappedBy = "room",
+			fetch = FetchType.LAZY)
+	private List<Device> devices;
+	@Expose
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 
 
-	public Room() {
+//	public Room() {
+//		name = "Room";
+//		background = "/images/default_room";
+//		icon = "/images/default_icon";
+//		devices = new ArrayList<>();
+//	}
+
+	public Room(User user){
 		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
 		devices = new ArrayList<>();
+		this.user = user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Room(SerialisableRoom room) {
 		this.name = room.name;
 		this.icon = room.icon;
 		this.background = room.background;
-		this.devices = Arrays.asList(room.devices);
+		//this.devices = Arrays.asList(room.devices);
+	}
+
+
+	public void addDevice(Device device){
+		if (device == null){
+			throw new IllegalArgumentException("device can not be null");
+		}
+		devices.add(device);
 	}
 
 
 
-	/**
-	 * @return a copy of this object
-	 */
-	public Room makeCopy(){
-		Room newRoom = new Room();
-		newRoom.setKey(getKey());
-		newRoom.name = this.name;
-		newRoom.icon = this.icon;
-		newRoom.background = this.background;
-		newRoom.devices = new ArrayList<>(devices);
-		return newRoom;
+	public List<Device> getDevices() {
+		return devices;
 	}
 
 
-	public boolean setId(Integer key) {
-		return setKey(key);
-	}
 
-	public Integer getId(){
-		return getKey();
+	public User getUser() {
+		return user;
 	}
 
 	//-------- getter and setter for name ----------------------
@@ -79,16 +104,17 @@ public class Room extends Storable<Integer, Room> {
 	}
 
 	//---------- getter for devices ----------------
-	public List<Integer> getDevices(){
-		return Collections.unmodifiableList(devices);
+	public List<Integer> getDevicesIds(){
+		throw  new NotImplementedException();
 	}
 
-	public void addDevice(Integer device){
-		devices.add(device);
+	public void addDeviceTODELETE(Device device){
+		throw  new NotImplementedException(); //TODO DELET DIS
 	}
-	
-	public void removeDevice(Integer device){
-		devices.remove(device);
+
+	//THIS WONT REMOVE THE DEVICE FROM STORAGE!
+	public void removeDevice(Integer deviceId){
+		devices.remove(deviceId);//TODO fix
 
 	}
 
@@ -98,7 +124,7 @@ public class Room extends Storable<Integer, Room> {
 		sd.background = background;
 		sd.icon = icon;
 		sd.name = name;
-		sd.id = getKey();
+		sd.id = getId();
 		return sd;
 
 	}
