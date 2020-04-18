@@ -61,16 +61,17 @@ public class Coupling extends StorableE {
         return effects;
     }
 
+
     public Integer getEventId() {
         return event.getId();
     }
 
     public void run() {
-
         for (Effect effect : effects) {
             effect.execute(event.get());
         }
     }
+
 
 
     public List<Integer> getEffectIds() {

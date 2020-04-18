@@ -45,6 +45,10 @@ public abstract class Device extends StorableE {
 
 
 
+
+
+
+
     public Device() {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";

@@ -28,6 +28,7 @@ public class HumiditySensor extends Sensor {
         return "%";
     }
 
+
     @Override
     protected DeviceType getDeviceType() {
         return DeviceType.HUMIDITY_SENSOR;
