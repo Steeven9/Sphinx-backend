@@ -26,14 +26,4 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
     public void execute(Boolean effect) {
         deviceService.get(deviceId).setOn(effect);
     }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull Effect<?> makeCopy() {
-        return new DeviceSetOnEffect(this);
-
-    }
 }

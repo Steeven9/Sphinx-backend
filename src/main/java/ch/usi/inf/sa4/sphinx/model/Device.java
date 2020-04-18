@@ -1,24 +1,39 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device extends Storable<Integer, Device> {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Entity
+public abstract class Device extends StorableE {
 
     @Autowired
-    static CouplingService couplingService;
+    private CouplingService couplingService;
 
-
+    @Expose
     private String icon;
+    @Expose
     private String name;
+    @Expose
     protected boolean on;
-    protected final List<Integer> couplings;
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "device"
+    )
+    protected final List<Coupling> couplings;
+    @Expose
+    @JoinColumn(name = "room_id")
+    private Room room;
 
 
     public Device() {
@@ -30,7 +45,7 @@ public abstract class Device extends Storable<Integer, Device> {
     }
 
     protected Device(Device d) {
-        super.setKey(d.getKey());
+        //super.setKey(d.getKey());
         this.icon = d.getIcon();
         this.name = d.getName();
         this.on = d.isOn();
@@ -48,15 +63,11 @@ public abstract class Device extends Storable<Integer, Device> {
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
-        serialisableDevice.id = getKey();
-        serialisableDevice.label = getLabel();
+
+        //serialisableDevice.id = getKey();
         return serialisableDevice;
     }
 
-    public boolean setId(Integer key) {
-        return super.setKey(key);
-
-    }
 
     public void setIcon(String icon) {
         this.icon = icon;
@@ -66,9 +77,6 @@ public abstract class Device extends Storable<Integer, Device> {
         this.name = name;
     }
 
-    public Integer getId() {
-        return getKey();
-    }
 
     public String getIcon() {
         return icon;
@@ -99,17 +107,24 @@ public abstract class Device extends Storable<Integer, Device> {
      * @param observer The observer to run when this device's state changes
      */
     public void addObserver(Integer observer) {
-        couplings.add(observer);
+        //couplings.add(observer);
     }
 
 
     //TODO fix unchecked
     protected void triggerEffects() {
-        for (Integer coupling : couplings) {
-            Effect effect = couplingService.getEffect(coupling);
-            Event event = couplingService.getEvent(coupling);
-            effect.execute(event.get());
-        }
+//        for (Integer coupling : couplings) {
+//            Effect effect = couplingService.getEffect(coupling);
+//            Event event = couplingService.getEvent(coupling);
+//            effect.execute(event.get());
+//        }
+
+        throw new NotImplementedException();
     }
 
+
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 }
