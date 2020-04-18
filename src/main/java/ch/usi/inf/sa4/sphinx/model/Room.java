@@ -22,26 +22,16 @@ public class Room extends StorableE{
 			mappedBy = "room",
 			fetch = FetchType.LAZY)
 	private List<Device> devices;
-	@Expose
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 
-
-//	public Room() {
-//		name = "Room";
-//		background = "/images/default_room";
-//		icon = "/images/default_icon";
-//		devices = new ArrayList<>();
-//	}
-
-	public Room(User user){
+	public Room(){
 		name = "Room";
 		background = "/images/default_room";
 		icon = "/images/default_icon";
 		devices = new ArrayList<>();
-		this.user = user;
 	}
 
 
