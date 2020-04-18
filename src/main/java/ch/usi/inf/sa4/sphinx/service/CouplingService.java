@@ -77,7 +77,7 @@ public class CouplingService {
      * @param effect the id of the effect we want to add
      * @return true if successfully updated, false otherwise
      **/
-    public boolean addEffect(Integer id, Effect effect) {
+    public boolean addEffect(Integer id, @NotNull Effect effect) {
         return couplingStorage.findById(id).map(coupling -> {
                     try {
                         coupling.addEffect(effect);
