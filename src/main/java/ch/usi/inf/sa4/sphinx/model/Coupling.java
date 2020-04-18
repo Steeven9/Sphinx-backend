@@ -20,11 +20,7 @@ public class Coupling extends StorableE{
     @Autowired
     DeviceService deviceService;
 
-    @Expose
-    @ManyToOne(optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "device_id")
-    private final Device device;
+
 
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
@@ -40,9 +36,11 @@ public class Coupling extends StorableE{
     private final List<Effect> effects;
 
 
-    public Coupling(Device device) {
-        this.device = device;
-        this.effects = new ArrayList<>();
+
+
+    public <T> Coupling(Event<T> event, List<Effect<T>> effects){
+        this.effects = new ArrayList<>(effects);
+
     }
 
 
@@ -51,6 +49,13 @@ public class Coupling extends StorableE{
     }
 
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public List<Effect> getEffects() {
+        return effects;
+    }
 
     public Integer getEventId() {
         return event.getId();

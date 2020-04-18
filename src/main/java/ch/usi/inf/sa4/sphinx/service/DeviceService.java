@@ -104,10 +104,14 @@ public final class DeviceService {
         }
 
         if (ordered) {
-            couplingService.addCoupling(eventHelper(type1, device1.getKey()), effectHelper(type1, type2, device2.getKey()));
+            couplingService.addCoupling(eventHelper(type1, device1.getId()), effectHelper(type1, type2, device2.getId()));
         } else {
-            couplingService.addCoupling(eventHelper(type2, device2.getKey()), effectHelper(type2, type1, device1.getKey()));
+            couplingService.addCoupling(eventHelper(type2, device2.getId()), effectHelper(type2, type1, device1.getId()));
         }
         return true;
+    }
+
+    public void remove(Integer deviceId){
+        deviceStorage.deleteById(deviceId);
     }
 }
