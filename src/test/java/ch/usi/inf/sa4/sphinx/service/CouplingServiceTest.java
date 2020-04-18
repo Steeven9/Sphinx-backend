@@ -16,6 +16,8 @@ class CouplingServiceTest {
     CouplingService couplingService;
     @Autowired
     VolatileEffectStorage effectStorage;
+    @Autowired
+    VolatileEventStorage eventStorage;
 
     @Test
     @DisplayName("Test adding a new coupling")
@@ -24,22 +26,33 @@ class CouplingServiceTest {
         Effect<Double> effect = new DimmableLightStateInc(2);
 
         assertAll("test with invalid values",
-                () -> assertNull(couplingService.getEffect(1)),
-                () -> assertNull(couplingService.getEvent(1)),
-                () -> assertNull(couplingService.get(1)),
+                () -> assertNull(couplingService.getEffect(1111)),
+                () -> assertNull(couplingService.getEvent(1111)),
+                () -> assertNull(couplingService.get(1111)),
                 () -> assertNull(couplingService.get(null)),
                 () -> assertNull(couplingService.getEvent(null)),
                 () -> assertNull(couplingService.getEffect(null)),
                 () -> assertNull(couplingService.getEffects(null)),
-                () -> assertNull(couplingService.getEffects(1))
+                () -> assertNull(couplingService.getEffects(1111))
         );
 
         Integer id = couplingService.addCoupling(event, effect);
         assertNotNull(couplingService.get(id));
-        assertEquals(1, couplingService.getEvent(id).getDeviceId());
 
         couplingService.delete(id);
         assertNull(couplingService.get(id));
+    }
+
+    @Test
+    @DisplayName("test getting effect and event")
+    void testGet() {
+        StatelessDimmSwitchChangedEvent event = new StatelessDimmSwitchChangedEvent(30, 0.6);
+        DimmableLightStateSet effect = new DimmableLightStateSet(90);
+
+        Integer eventId = eventStorage.insert(event);
+        Integer effectId = effectStorage.insert(effect);
+        assertEquals(event.getDeviceId(), couplingService.getEvent(eventId).getDeviceId());
+//        assertEquals(effect.getEffectId(), couplingService.getEffect(effectId).getDeviceId()); future check
     }
 
 
