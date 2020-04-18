@@ -17,20 +17,22 @@ import java.util.List;
 @Entity
 public class Coupling extends StorableE {
 
+
     @Autowired
     @Transient
     DeviceService deviceService;
 
 
-
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    orphanRemoval = true,
+    mappedBy = "coupling")
     private  Event event;
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            mappedBy = "coupling"
     )
     private final List<Effect> effects;
 
@@ -43,6 +45,8 @@ public class Coupling extends StorableE {
 
     }
 
+
+
     public void setEvent(Event event) {
         this.event = event;
     }
@@ -51,6 +55,7 @@ public class Coupling extends StorableE {
     public Event getEvent() {
         return event;
     }
+
 
     public List<Effect> getEffects() {
         return effects;
@@ -82,6 +87,7 @@ public class Coupling extends StorableE {
         if (other instanceof Coupling) return this.getId().equals(((Coupling) other).getId());
         return false;
     }
+
 
 
 }

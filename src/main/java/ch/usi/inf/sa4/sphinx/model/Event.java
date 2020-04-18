@@ -20,6 +20,11 @@ public abstract class Event<T> extends StorableE {
     }
 
 
+    public Event(Event<T> event){
+        this.deviceId = event.deviceId;
+    }
+
+
     public int getDeviceId() {
         return deviceId;
     }

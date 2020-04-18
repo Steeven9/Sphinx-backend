@@ -4,6 +4,10 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,15 +18,18 @@ import java.util.List;
 @Entity
 public abstract class Device extends StorableE {
 
+    @Autowired
+    private CouplingService couplingService;
+
     @Expose
     private String icon;
     @Expose
     private String name;
     @Expose
-    @Transient
-    @Column(name = "on")
+    @Column(name = "active")
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
-    @OneToMany(orphanRemoval = true,
+
+    @OneToMany(orphanRemoval = false,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "device"
@@ -38,9 +45,6 @@ public abstract class Device extends StorableE {
 
 
 
-
-
-
     public Device() {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
@@ -49,6 +53,7 @@ public abstract class Device extends StorableE {
         this.deviceType = getDeviceType();
 
     }
+
 
 
     /**
@@ -67,6 +72,8 @@ public abstract class Device extends StorableE {
 
 
     protected abstract DeviceType getDeviceType();
+
+
 
     public void setIcon(String icon) {
         this.icon = icon;
@@ -109,6 +116,7 @@ public abstract class Device extends StorableE {
         couplings.add(observer);
     }
 
+
     // TODO: when couplingService deletes a coupling, it must call removeObserver on all registered Devices
     public void removeObserver(Coupling observer) {
         couplings.remove(observer);
@@ -120,11 +128,6 @@ public abstract class Device extends StorableE {
         for (Coupling coupling : couplings) {
             coupling.run();
         }
-    }
-
-
-    public void setId(Integer i){
-        throw new NotImplementedException(); //TODO DELETE
     }
 
 

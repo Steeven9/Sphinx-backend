@@ -112,6 +112,7 @@ public class UserService {
     public Integer addRoom(final String username, final Room room) {
         final Optional<User> user = userStorage.findByUsername(username);
 
+
         return user.map(u-> {
             u.addRoom(room);
             return userStorage.save(u).getId();
@@ -151,6 +152,7 @@ public class UserService {
         return userStorage.findByUsername(username).map(
                 user -> user.getRooms().stream().map(Room::getId).collect(Collectors.toList())
         ).orElse(new ArrayList<>());
+
     }
 
 
@@ -185,6 +187,7 @@ public class UserService {
        return userStorage.findByUsername(username)
                .map(user -> user.getRooms().stream().anyMatch(r->r.getId().equals(roomId)))
                .orElse(false);
+
     }
 
 
@@ -200,6 +203,7 @@ public class UserService {
                         u->u.getRooms().stream().flatMap(
                                 r->r.getDevices().stream()).collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
+
     }
 
 

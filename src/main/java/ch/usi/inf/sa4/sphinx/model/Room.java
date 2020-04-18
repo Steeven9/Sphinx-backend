@@ -35,6 +35,9 @@ public class Room extends StorableE{
 	}
 
 
+
+
+
 	public void setUser(User user) {
 		this.user = user;
 	}
