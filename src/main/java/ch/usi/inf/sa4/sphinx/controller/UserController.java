@@ -71,7 +71,7 @@ public class UserController {
 				"Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
 						"\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
 
-		return ResponseEntity.status(203).body(serialiser.serialiseUser(newUser));
+		return ResponseEntity.status(201).body(serialiser.serialiseUser(newUser));
 	}
 
 	/**
@@ -81,12 +81,11 @@ public class UserController {
 	 * @param session_token the session token used for authentication
 	 * @return a ResponseEntity with status 200 and body containing the data of the changed user or
 	 * 		404 if no user with the requested username exists
-	 * 		403 if the provided session token does not match the requested user (or none was provided)
+	 * 		401 if the provided session token does not match the requested user (or none was provided)
 	 */
 	@PutMapping("/{username}")
 	public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable String username, @NotNull @RequestBody SerialisableUser user,
 													   @RequestHeader("session-token") String session_token, Errors errors) {
-
 
 		if(errors.hasErrors()){
 			return ResponseEntity.badRequest().build();
@@ -99,7 +98,7 @@ public class UserController {
 		}
 
 		if (!userService.validSession(username, session_token)) {
-			return ResponseEntity.status(403).build();
+			return ResponseEntity.status(401).build();
 		}
 
 		if (user.email != null) changedUser.setEmail(user.email);
@@ -120,7 +119,7 @@ public class UserController {
 	 * @param session_token the session token used to authenticate
 	 * @return a ResponseEntity containing one of the following status codes:
 	 * 		404 if no user with the given username exists
-	 * 		403 if the session token does not match
+	 * 		401 if the session token does not match
 	 * 		204 if the operation was successful
 	 */
 	@DeleteMapping("/{username}")
@@ -132,7 +131,7 @@ public class UserController {
 			return ResponseEntity.notFound().build();
 		}
 		if (session_token == null || !session_token.equals(deletedUser.getSessionToken())) {
-			return ResponseEntity.status(403).build();
+			return ResponseEntity.status(401).build();
 		}
 
 		userService.delete(username);
