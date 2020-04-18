@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -20,9 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public final class UserService {
     @Autowired
-    private VolatileUserStorage userStorage;
+    private UserStorage userStorage;
     @Autowired
-    private Storage<Integer, Room> roomStorage;
+    private RoomStorage roomStorage;
     @Autowired
     private RoomService roomService;
     @Autowired
@@ -46,7 +47,12 @@ public final class UserService {
      * @return Returns the User with the given name if present in the storage
      */
     public User get(final String username) {
-        return userStorage.get(username);
+        Optional<User> user = userStorage.findByUsername(username);
+        if(user.isPresent()){
+            return user.get();
+        }
+
+        return null;
     }
 
 
@@ -55,7 +61,7 @@ public final class UserService {
      * @return the user with the given email or null if not found
      */
     public User getByMail(final String email) {
-        return userStorage.getByEmail(email);
+        return userStorage.findByEmail(email);
     }
 
 
@@ -65,7 +71,7 @@ public final class UserService {
      * @param username username of the user to delete
      */
     public void delete(final String username) {
-        userStorage.delete(username);
+        userStorage.deleteByUsername(username);
     }
 
 
@@ -76,7 +82,8 @@ public final class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        return userStorage.insert(user) != null;
+        userStorage.save(user);
+        return true;
     }
 
 
@@ -87,15 +94,8 @@ public final class UserService {
      * @return true if successful update else false
      */
     public boolean update(final User user) {
-        User oldUser = userStorage.get(user.getUsername());
-        if (oldUser != null) {
-            User newUser = new User(oldUser, user.getEmail(),
-                    user.getPassword(),
-                    user.getFullname(),
-                    user.getResetCode(),
-                    user.getSessionToken(),
-                    user.isVerified());
-            return userStorage.update(newUser);
+        if(userStorage.existsById(user.getId())){
+            userStorage.save(user); //Now the newly added rooms will be inserted in storage by jpa
         }
         return false;
     }
@@ -111,21 +111,12 @@ public final class UserService {
      * @return the id of the room
      */
     public Integer addRoom(final String username, final Room room) {
-        final User user = userStorage.get(username);
-        if (user == null) {
-            return null; //something went bad
-        }
+        final Optional<User> user = userStorage.findByUsername(username);
 
-        var roomId = roomStorage.insert(room);
-        if (roomId == null) {
-            return null; //something went bad
-        }
-        user.addRoomToRemove(roomId);
-        if (!userStorage.update(user)) {
-            return null;
-
-        }
-        return roomId;
+        return user.map(u-> {
+            u.addRoom(room);
+            return userStorage.save(u).getId();
+        }).orElse(null);
     }
 
 
@@ -140,10 +131,13 @@ public final class UserService {
             return false;
         }
 
-        final User user = userStorage.get(username);
-        user.removeRoom(roomId);
-        userStorage.update(user);
-        roomStorage.delete(roomId);
+        final Optional<User> user = userStorage.findByUsername(username);
+        user.ifPresent(
+                u->{
+                    u.removeRoom(roomId);
+                    userStorage.save(u);
+                }
+        );
         return true;
     }
 
@@ -154,17 +148,9 @@ public final class UserService {
      * @return Id of the Device(s) belonging to a given User
      */
     public List<Integer> getDevices(final String username) {
-        var devices = new ArrayList<Integer>();
-        final User user = userStorage.get(username);
-
-        if (user != null) {
-            var roomIds = user.getRoomsIds();
-            for (var roomId : roomIds) {
-                var r = roomService.get(roomId);
-                devices.addAll(r.getDevicesIds());
-            }
-        }
-        return devices;
+        return userStorage.findByUsername(username).map(
+                user -> user.getRooms().stream().map(Room::getId).collect(Collectors.toList())
+        ).orElse(new ArrayList<>());
     }
 
 
@@ -186,11 +172,7 @@ public final class UserService {
      * @return a list of rooms
      */
     public List<Room> getPopulatedRooms(String username) {
-        User user = get(username);
-        if (user != null) {
-            return user.getRoomsIds().stream().map(roomStorage::get).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
     }
 
     /**
@@ -200,9 +182,9 @@ public final class UserService {
      * @return true if the User with the given Username owns the room with the given Id
      */
     public boolean ownsRoom(String username, Integer roomId) {
-        User user = userStorage.get(username);
-        if (user == null) return false;
-        return user.getRoomsIds().contains(roomId);
+       return userStorage.findByUsername(username)
+               .map(user -> user.getRooms().stream().anyMatch(r->r.getId().equals(roomId)))
+               .orElse(false);
     }
 
 
@@ -213,13 +195,10 @@ public final class UserService {
      * @return Devices owned by User
      */
     public List<Device> getPopulatedDevices(String username) {
-        User user = userStorage.get(username);
-        if (user != null) {
-            return user.getRoomsIds().stream().
-                    flatMap(roomId -> roomService.getPopulatedDevices(roomId).stream()).
-                    collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return userStorage.findByUsername(username)
+                .map(
+                        u->u.getRooms().stream().flatMap(r->r.getDevices().stream()).collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
     }
 
 
