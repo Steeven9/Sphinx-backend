@@ -29,4 +29,8 @@ public final class DeviceService {
         deviceStorage.save(device);
         return true;
     }
+
+    public void remove(Integer deviceId){
+        deviceStorage.deleteById(deviceId);
+    }
 }
