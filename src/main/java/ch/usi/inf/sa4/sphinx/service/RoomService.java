@@ -87,15 +87,7 @@ public class RoomService {
      * @return true if succes else false
      */
     public final boolean removeDevice(final Integer roomId, final Integer deviceId) {
-        Room room = roomStorage.get(roomId);
-        if (room == null) {
-            return false;
-        }
-        if (!room.getDevicesIds().remove(deviceId)) {
-            return false;
-        }
-        roomStorage.update(room);
-        deviceStorage.delete(deviceId);
+        deviceStorage.deleteById(deviceId);
         return true;
     }
 

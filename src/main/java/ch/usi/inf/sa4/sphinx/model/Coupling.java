@@ -40,9 +40,10 @@ public class Coupling extends StorableE{
     private final List<Effect> effects;
 
 
-    public Coupling(Device device) {
-        this.device = device;
-        this.effects = new ArrayList<>();
+
+
+    public Coupling(){
+
     }
 
 
@@ -51,6 +52,13 @@ public class Coupling extends StorableE{
     }
 
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public List<Effect> getEffects() {
+        return effects;
+    }
 
     public Integer getEventId() {
         return event.getId();
