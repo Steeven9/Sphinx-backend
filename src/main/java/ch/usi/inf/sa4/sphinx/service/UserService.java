@@ -196,8 +196,8 @@ public final class UserService {
     /**
      * Assert ownership of a room
      * @param username the username of the desired User
-     * @param roomId   the id of the device
-     * @return true if the User with the given Username owns the divice with the given Id
+     * @param roomId   the id of the room
+     * @return true if the User with the given Username owns the room with the given Id
      */
     public boolean ownsRoom(String username, Integer roomId) {
         User user = userStorage.get(username);
@@ -287,7 +287,7 @@ public final class UserService {
 
     /**
      *  Assert ownership of a room
-     * returns the id of the room that owns the device given a the onwing user and the room id
+     * returns the id of the room that owns the device given a the owning user and the room id
      * @param username username of the room owner
      * @param deviceId id of the owned device
      * @return the id of the room containing the device
@@ -303,7 +303,7 @@ public final class UserService {
     }
 
     /**
-     * Changes the name of a User identified by {@param oldusername}
+     * Changes the name of a User identified by {@param oldUsername}
      * @param oldUsername  the old name of the user
      * @param newUsername the new name of the user
      * @return true if successful else false

@@ -25,11 +25,11 @@ public class RoomService {
 
     /**
      * Getter for a room.
-     * @param deviceId the roomId
+     * @param roomId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Room get(final Integer deviceId) {
-        return roomStorage.get(deviceId);
+    public final Room get(final Integer roomId) {
+        return roomStorage.get(roomId);
     }
 
 
