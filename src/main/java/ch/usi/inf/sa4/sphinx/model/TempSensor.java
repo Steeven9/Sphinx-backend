@@ -21,13 +21,6 @@ public class TempSensor extends Sensor {
         super(s);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TempSensor makeCopy() {
-        return new TempSensor(this);
-    }
 
     /**
      * {@inheritDoc}

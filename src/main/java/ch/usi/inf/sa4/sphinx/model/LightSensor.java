@@ -19,13 +19,6 @@ public class LightSensor extends Sensor {
         super(s);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public LightSensor makeCopy() {
-        return new LightSensor(this);
-    }
 
     /**
      * {@inheritDoc}

@@ -18,13 +18,6 @@ public class Switch extends Device {
         super(s);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Device makeCopy() {
-        return new Switch(this);
-    }
 
     /**
      * Returns true if and only if the switch is powered.

@@ -37,13 +37,6 @@ public class Dimmable extends Device {
     }
 
 
-    @Override
-    /**
-     * {@inheritDoc}
-     */
-    public Dimmable makeCopy() {
-        return new Dimmable(this);
-    }
 
     /**
      * Returns the intensity level of this DimmableSwitch.

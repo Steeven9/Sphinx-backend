@@ -1,5 +1,12 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Event<T> extends StorableE {
     protected final int deviceId;
 
@@ -7,14 +14,9 @@ public abstract class Event<T> extends StorableE {
         this.deviceId = deviceId;
     }
 
-    public Event(Event<T> event){
-        this.deviceId = event.deviceId;
-    }
-
     public int getDeviceId() {
         return deviceId;
     }
-
 
     public abstract T get();
 

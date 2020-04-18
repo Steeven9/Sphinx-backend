@@ -36,6 +36,10 @@ public abstract class Device extends StorableE {
     private Room room;
 
 
+
+
+
+
     public Device() {
         icon = "/images/generic_device";
         name = "Device";
