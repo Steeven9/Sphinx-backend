@@ -15,15 +15,6 @@ class VolatileRoomStorageTest {
 
 
     @Test
-    void testGenerateKey() {
-        Integer id = roomStorage.generateKey(new Room());
-        Integer id1 = roomStorage.generateKey(new Room());
-        assertEquals(id + 1, id1);
-        assertEquals(roomStorage.data.size() + 1, id);
-        assertEquals(roomStorage.data.size() + 2, id1);
-    }
-
-    @Test
     void testStorageFunctionality_InsertingAndDeleting() {
         Room room1 = new Room();
         room1.setName("testRoom3");

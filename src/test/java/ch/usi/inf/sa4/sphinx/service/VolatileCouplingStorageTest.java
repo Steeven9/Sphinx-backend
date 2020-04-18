@@ -18,16 +18,6 @@ class VolatileCouplingStorageTest {
 
 
     @Test
-    @DisplayName("Test correct functionality of generateKey method")
-    void testGenerateKey() {
-        Integer id = couplingStorage.generateKey(new Coupling(1, 13));
-        Integer id1 = couplingStorage.generateKey(new Coupling(2, 13));
-        assertEquals(id + 1, id1);
-        assertEquals(couplingStorage.data.size() + 1, id);
-        assertEquals(couplingStorage.data.size() + 2, id1);
-    }
-
-    @Test
     void testStorageFunctionality_InsertingAndDeleting() {
 
         Coupling coupling = new Coupling(3, 22);

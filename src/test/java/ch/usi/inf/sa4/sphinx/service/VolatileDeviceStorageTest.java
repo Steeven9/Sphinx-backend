@@ -15,16 +15,6 @@ class VolatileDeviceStorageTest {
 
 
     @Test
-    @DisplayName("Test correct functionality of generateKey method")
-    void testGenerateKey() {
-        Integer id = deviceStorage.generateKey(new Light());
-        Integer id1 = deviceStorage.generateKey(new MotionSensor());
-        assertEquals(id + 1, id1);
-        assertEquals(deviceStorage.data.size() + 1, id);
-        assertEquals(deviceStorage.data.size() + 2, id1);
-    }
-
-    @Test
     void testStorageFunctionality_InsertingAndDeleting() {
         SmartPlug smartPlug = new SmartPlug();
 

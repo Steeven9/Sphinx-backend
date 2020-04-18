@@ -17,16 +17,6 @@ class VolatileEventStorageTest {
 
 
     @Test
-    @DisplayName("Test correct functionality of generateKey method")
-    void testGenerateKey() {
-        Integer id = eventStorage.generateKey(new StatelessDimmSwitchChangedEvent(1, 1));
-        Integer id1 = eventStorage.generateKey(new StatelessDimmSwitchChangedEvent(2, 1));
-        assertEquals(id + 1, id1);
-        assertEquals(eventStorage.data.size() + 1, id);
-        assertEquals(eventStorage.data.size() + 2, id1);
-    }
-
-    @Test
     void testStorageFunctionality_InsertingAndDeleting() {
 
         DimmSwitchChangedEvent event1 = new DimmSwitchChangedEvent(34);

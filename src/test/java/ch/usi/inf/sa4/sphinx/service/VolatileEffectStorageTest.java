@@ -16,17 +16,6 @@ class VolatileEffectStorageTest {
 
 
     @Test
-    @DisplayName("Test correct functionality of generateKey method")
-    void testGenerateKey() {
-        Integer id = effectStorage.generateKey(new DimmableLightStateInc(1));
-        Integer id1 = effectStorage.generateKey(new DimmableLightStateInc(1));
-        assertEquals(id + 1, id1);
-        assertEquals(effectStorage.data.size() + 1, id);
-        assertEquals(effectStorage.data.size() + 2, id1);
-    }
-
-
-    @Test
     void testStorageFunctionality_InsertingAndDeleting() {
         DimmableLightStateInc effect = new DimmableLightStateInc(3);
 

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -74,13 +76,24 @@ class CouplingServiceTest {
         Integer id = couplingService.addCoupling(event, effect);
         assertNotNull(couplingService.get(id));
 
+        List<Integer> list = couplingService.get(id).getEffectIds();
+        assertEquals(1, list.size());
         assertEquals(1, couplingService.getEffects(id).size());
+
+        Integer serachId = (Integer) couplingService.getEffects(id).get(0).getKey();
+        assertTrue(list.contains(serachId));
 
         DimmableLightStateSet effect1 = new DimmableLightStateSet(5);
         Integer effectId = effectStorage.insert(effect1);
         assertFalse(couplingService.addEffect(id, null));
         assertTrue(couplingService.addEffect(id, effectId));
 
+        list = couplingService.get(id).getEffectIds();
         assertEquals(2, couplingService.getEffects(id).size());
+        assertEquals(2, list.size());
+
+        Integer serachId1 = (Integer) couplingService.getEffects(id).get(1).getKey();
+        assertTrue(list.contains(serachId1));
+        assertTrue(list.contains(serachId));
     }
 }
