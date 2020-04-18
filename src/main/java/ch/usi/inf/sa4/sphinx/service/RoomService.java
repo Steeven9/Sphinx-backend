@@ -41,7 +41,7 @@ public class RoomService {
     public final List<Device> getPopulatedDevices(final Integer roomId) {
         Room room = roomStorage.get(roomId);
         if (room != null) {
-            return room.getDevices().stream().map(deviceStorage::get).collect(Collectors.toList());
+            return room.getDevicesIds().stream().map(deviceStorage::get).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -89,7 +89,7 @@ public class RoomService {
         if (room == null) {
             return false;
         }
-        if (!room.getDevices().remove(deviceId)) {
+        if (!room.getDevicesIds().remove(deviceId)) {
             return false;
         }
         roomStorage.update(room);

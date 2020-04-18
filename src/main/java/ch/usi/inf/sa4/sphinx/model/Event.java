@@ -1,8 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
-public abstract class Event<T> extends Storable<Integer, Event<?>> {
+public abstract class Event<T> extends StorableE {
     protected final int deviceId;
     protected DeviceService deviceService;
 
@@ -14,7 +15,7 @@ public abstract class Event<T> extends Storable<Integer, Event<?>> {
     public Event(Event<T> event){
         this.deviceId = event.deviceId;
         this.deviceService = event.deviceService;
-        setKey(event.getKey());
+
     }
 
     public int getDeviceId() {
