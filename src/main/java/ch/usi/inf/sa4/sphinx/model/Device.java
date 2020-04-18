@@ -31,7 +31,6 @@ public abstract class Device extends StorableE {
             mappedBy = "device"
     )
     protected final List<Coupling> couplings;
-    @Expose
     @JoinColumn(name = "room_id")
     private Room room;
 

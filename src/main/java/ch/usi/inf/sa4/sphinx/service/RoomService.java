@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -18,68 +17,70 @@ import java.util.stream.Collectors;
 public class RoomService {
 
     @Autowired
-    Storage<Integer, Room> roomStorage;
+    RoomStorage roomStorage;
     @Autowired
-    Storage<Integer, Device> deviceStorage;
+    DeviceStorage deviceStorage;
 
 
     /**
      * Getter for a room.
-     * @param roomId the roomId
+     *
+     * @param deviceId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Room get(final Integer roomId) {
-        return roomStorage.get(roomId);
+    public final Room get(final Integer deviceId) {
+        return roomStorage.findById(deviceId).orElse(null);
     }
 
 
     /**
      * Given a room, return all the devices in this room.
+     *
      * @param roomId the id of the room
      * @return a list of all devices in this room
      */
     public final List<Device> getPopulatedDevices(final Integer roomId) {
-        Room room = roomStorage.get(roomId);
-        if (room != null) {
-            return room.getDevicesIds().stream().map(deviceStorage::get).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return roomStorage.findById(roomId).map(Room::getDevices).orElse(new ArrayList<>());
     }
 
     /**
      * Updates the given user, the username is used to find the User and the given User to update its fields.
+     *
      * @param room the room to update
      * @return true if successful update else false
      */
-    public final boolean update(final Room room) {
-        return roomStorage.update(room);
+    public final boolean update(@NotNull final Room room) {
+        if (roomStorage.existsById(room.getId())) {
+            return false;
+        }
+
+        roomStorage.save(room);
+        return true;
     }
 
     /**
      * Adds the type of device specified by deviceType to the Room with the given roomId.
+     *
      * @param roomId     id of the Room
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
      */
     public final Integer addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
-        if(newDevice == null) return  null;
+        if (newDevice == null) return null;
 
-        Room room = roomStorage.get(roomId);
-        if (room == null) return null;
+        return roomStorage.findById(roomId).map(r -> {
+                    newDevice.setRoom(r);
+                    return deviceStorage.save(newDevice).getId();
+                }
 
-        Integer deviceId = deviceStorage.insert(newDevice);
-        if (deviceId == null) return null;
-
-        room.addDevice(deviceId);
-        roomStorage.update(room);
-
-        return deviceId;
+        ).orElse(null);
     }
 
 
     /**
      * Deletes the device with the given Id from the room with the given Id.
+     *
      * @param roomId   the id of the room
      * @param deviceId the id of the device
      * @return true if succes else false

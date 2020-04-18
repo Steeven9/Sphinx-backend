@@ -4,14 +4,10 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url" />
-        <property name="connection.driver_class"/>
-<!--        org.postgresql.Driver-->
-<!--         <property name="connection.username"/> -->
-        <!-- <property name="connection.password"/> -->
-
-        <!-- DB schema will be updated if needed -->
-        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+        <property name="hibernate.connection.url">"jdbc:postgresql://localhost:5432"</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.username">{$SH_DBUSER}</property>
+        <property name="connection.password">{$SH_DBPASS}</property>
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>

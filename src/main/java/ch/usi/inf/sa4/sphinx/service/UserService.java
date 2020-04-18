@@ -7,6 +7,8 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
  * Service layer of the application, the various Storage follows the CRUD principle
  */
 @Service
-public final class UserService {
+public class UserService {
     @Autowired
     private UserStorage userStorage;
     @Autowired
@@ -28,6 +30,8 @@ public final class UserService {
     private RoomService roomService;
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private DeviceStorage deviceStorage;
 
     //Will be used to check that each room belongs to a single user
     private static final HashMap<String, String> roomToUser = new HashMap<>();
@@ -47,12 +51,7 @@ public final class UserService {
      * @return Returns the User with the given name if present in the storage
      */
     public User get(final String username) {
-        Optional<User> user = userStorage.findByUsername(username);
-        if(user.isPresent()){
-            return user.get();
-        }
-
-        return null;
+        return userStorage.findByUsername(username).orElse(null);
     }
 
 
@@ -198,7 +197,8 @@ public final class UserService {
     public List<Device> getPopulatedDevices(String username) {
         return userStorage.findByUsername(username)
                 .map(
-                        u->u.getRooms().stream().flatMap(r->r.getDevices().stream()).collect(Collectors.toList()))
+                        u->u.getRooms().stream().flatMap(
+                                r->r.getDevices().stream()).collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
     }
 
@@ -211,9 +211,8 @@ public final class UserService {
      * @return true if they match, false if the User does not exist or they don't match
      */
     public boolean validSession(@NotNull String username, String sessionToken) {
-        User user = userStorage.get(username);
-        if (user == null) return false;
-        return user.getSessionToken().equals(sessionToken);
+        return userStorage.findByUsername(username)
+                .map(user -> user.getSessionToken().equals(sessionToken)).orElse(false);
     }
 
 
@@ -224,15 +223,8 @@ public final class UserService {
      * @param deviceId the id of the device to be removed
      */
     public void removeDevice(String username, Integer deviceId) {
-        User user = userStorage.get(username);
-        if (user == null) return;
-
-        List<Room> rooms = user.getRoomsIds().stream().map(roomStorage::get).collect(Collectors.toList());
-
-        for (Room room : rooms) {
-            if (room.getDevicesIds().contains(deviceId)) {
-                roomService.removeDevice(room.getId(), deviceId);
-            }
+        if(ownsDevice(username, deviceId)){
+            deviceStorage.deleteById(deviceId);
         }
     }
 
@@ -245,6 +237,7 @@ public final class UserService {
      * @param endRoomId   the room the device should end in
      * @return true if success else false
      */
+    @Transactional
     public boolean migrateDevice(final String username, final Integer deviceId, final Integer startRoomId,
                                  final Integer endRoomId) {
 
@@ -252,16 +245,14 @@ public final class UserService {
             return false;
         }
 
-        Device device = deviceService.get(deviceId);
-        Room startRoom = roomService.get(startRoomId);
-        Room endRoom = roomService.get(endRoomId);
+        roomStorage.findById(endRoomId).ifPresent(room -> {
+            deviceStorage.findById(deviceId).ifPresent(device -> {
+                device.setRoom(room);
+                deviceStorage.save(device);
+            });
 
-        startRoom.getDevicesIds().remove(deviceId);
-        endRoom.getDevicesIds().add(deviceId);
+        });
 
-        //user service would block the update  of the list of devices so we need to go directly to the db
-        roomStorage.update(startRoom);
-        roomStorage.update(endRoom);
         return true;
     }
 
@@ -288,14 +279,16 @@ public final class UserService {
      * @param newUsername the new name of the user
      * @return true if successful else false
      */
-    public boolean changeUsername(@NotNull final  String oldUsername, final String newUsername) {
-        if(newUsername == null) return false;
-
-        User oldUser = userStorage.get(oldUsername);
-        if(oldUser == null) return false;
-        oldUser.setUsername(newUsername);
-
-        return true;
+    public boolean changeUsername(@NotNull final  String oldUsername, @NotNull final String newUsername) {
+        try {
+            return userStorage.findByUsername(oldUsername).map(user -> {
+                user.setUsername(newUsername);
+                userStorage.save(user);
+                return true;
+            }).orElse(false);
+        } catch (ConstraintViolationException e){
+            return false;
+        }
     }
 
 

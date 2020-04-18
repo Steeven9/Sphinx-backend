@@ -15,14 +15,15 @@ public final class DeviceService {
     @Autowired
     CouplingService couplingService;
     @Autowired
-    Storage<Integer, Device> deviceStorage;
+    DeviceStorage deviceStorage;
 
     /**
      * @param deviceId the Id of the device
      * @return the Device with corresponding deviceId
      */
-    public Device get(Integer deviceId) {
-        return deviceStorage.get(deviceId);
+
+    public Device get(Integer deviceId){
+        return deviceStorage.findById(deviceId).orElse(null);
     }
 
 
@@ -30,8 +31,9 @@ public final class DeviceService {
      * @param device the device to update
      * @return true if the update succeds else false
      */
-    public boolean update(Device device) {
-        return deviceStorage.update(device);
+    public boolean update(Device device){
+        deviceStorage.save(device);
+        return true;
     }
 
 
