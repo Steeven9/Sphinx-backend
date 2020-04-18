@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,13 +19,17 @@ import java.util.UUID;
 public class User extends StorableE{
     @Expose
     @Column(unique = true, nullable = false)
+    @NotBlank
     private String username;
     @Expose
     @Column(nullable = false)
+    @NotBlank
     private String email;
     @Expose(serialize = false)
+    @NotBlank
     private String password;
     @Expose
+    @NotBlank
     private String fullname;
     @Column(name = "reset_code")
     private String resetCode;
