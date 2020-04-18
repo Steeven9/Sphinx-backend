@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +36,6 @@ public class User extends StorableE{
     private String password;
     @Expose
     @NotBlank
-
     private String fullname;
     @Column(name = "reset_code")
     private String resetCode;

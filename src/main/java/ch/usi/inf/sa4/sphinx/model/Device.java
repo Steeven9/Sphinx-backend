@@ -35,8 +35,12 @@ public abstract class Device extends StorableE {
             mappedBy = "device"
     )
     protected final List<Coupling> couplings;
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+=======
+    @JoinColumn(name = "room_id")
+>>>>>>> #90 change hib config
     private Room room;
     @Expose
     @Transient

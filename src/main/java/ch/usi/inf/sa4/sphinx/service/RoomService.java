@@ -40,15 +40,7 @@ public class RoomService {
      * @return a list of all devices in this room
      */
     public final List<Device> getPopulatedDevices(final Integer roomId) {
-<<<<<<< HEAD
         return roomStorage.findById(roomId).map(Room::getDevices).orElse(new ArrayList<>());
-=======
-        Room room = roomStorage.get(roomId);
-        if (room != null) {
-            return room.getDevicesIds().stream().map(deviceStorage::get).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
->>>>>>> #90 work in progress
     }
 
     /**
@@ -94,19 +86,7 @@ public class RoomService {
      * @return true if succes else false
      */
     public final boolean removeDevice(final Integer roomId, final Integer deviceId) {
-<<<<<<< HEAD
         deviceStorage.deleteById(deviceId);
-=======
-        Room room = roomStorage.get(roomId);
-        if (room == null) {
-            return false;
-        }
-        if (!room.getDevicesIds().remove(deviceId)) {
-            return false;
-        }
-        roomStorage.update(room);
-        deviceStorage.delete(deviceId);
->>>>>>> #90 work in progress
         return true;
     }
 
