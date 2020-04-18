@@ -14,6 +14,5 @@ public abstract class Effect<T> extends StorableE {
         this.deviceId = deviceId;
     }
 
-
     public abstract void execute(T effect);
 }

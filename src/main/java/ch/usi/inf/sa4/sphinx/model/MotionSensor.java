@@ -22,13 +22,6 @@ public class MotionSensor extends Device {
         this.detected = s.isDetected();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MotionSensor makeCopy() {
-        return new MotionSensor(this);
-    }
 
     /**
      * Changes state to true.

@@ -20,18 +20,6 @@ public class DimmSwitchChangedEvent extends Event<Double> {
         super(deviceID);
     }
 
-    private DimmSwitchChangedEvent(DimmSwitchChangedEvent other){
-        super(other);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DimmSwitchChangedEvent makeCopy() {
-        return new DimmSwitchChangedEvent(this);
-    }
 
 
     /**

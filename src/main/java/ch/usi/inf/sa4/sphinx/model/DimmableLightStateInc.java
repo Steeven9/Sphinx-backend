@@ -17,9 +17,6 @@ public class DimmableLightStateInc extends Effect<Double> {
     }
 
 
-    private DimmableLightStateInc(DimmableLightStateInc other){
-        super(other);
-    }
 
     /**
      * Sets current state of the Device to the given value.
@@ -33,11 +30,4 @@ public class DimmableLightStateInc extends Effect<Double> {
         deviceService.update(light);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DimmableLightStateInc makeCopy() {
-        return new DimmableLightStateInc(this);
-    }
 }
