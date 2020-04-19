@@ -242,5 +242,32 @@ public class DeviceController {
         return ResponseEntity.status(204).build();
     }
 
+    @PostMapping("/couple/{device1_id}/{device2_id}")
+    public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") String sessionToken,
+                                                          @RequestHeader("user") String username,
+                                                          @PathVariable String device1_id,
+                                                          @PathVariable String device2_id,
+                                                          Errors errors) {
 
+        if (errors.hasErrors() || Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!userService.validSession(username, sessionToken)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        Device device1 = deviceService.get(Integer.parseInt(device1_id));
+        Device device2 = deviceService.get(Integer.parseInt(device2_id));
+
+        if (device1 == null || device2 == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            if (deviceService.createCoupling(device1, device2)) {
+                return ResponseEntity.status(204).build();
+            } else {
+                return ResponseEntity.status(500).build();
+            }
+        }
+    }
 }
