@@ -37,5 +37,5 @@ desktop.ini
 ### Custom env file ###
 sh_envfile
 
-### DB data ###
-db_data
+### DB data directory ###
+db_data/
