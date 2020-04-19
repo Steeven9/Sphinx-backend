@@ -7,8 +7,23 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 class EffectTest {
     @Test
-    void shouldReturnTrueIfSettingIdIsSetBefore() {
+    void shouldReturnNullIfIdIsNotSet() {
         DimmableLightStateSet d = new DimmableLightStateSet(9);
         assertNull(d.getKey());
     }
+
+    @Test
+    void shouldCreateANewEffectUsingConstructoDeviceSetOnEffect(){
+        DeviceSetOnEffect other = new DeviceSetOnEffect(2);
+        Effect<?> d = other.makeCopy();
+        assertEquals(other.deviceId, d.deviceId);
+    }
+
+    @Test
+    void shouldCreateANewEffectUsingConstructorDimmable(){
+        DimmableLightStateSet other = new DimmableLightStateSet(2);
+        Effect<?> d = other.makeCopy();
+        assertEquals(other.deviceId, d.deviceId);
+    }
+
 }

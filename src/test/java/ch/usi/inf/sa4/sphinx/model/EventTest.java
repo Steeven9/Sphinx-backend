@@ -14,7 +14,7 @@ class EventTest {
     }
 
     /*
-        Throws NullPointerException when I call get()
+        Issue number #109. Throws NullPointerException when I call get()
     */
     @Disabled
     @Test

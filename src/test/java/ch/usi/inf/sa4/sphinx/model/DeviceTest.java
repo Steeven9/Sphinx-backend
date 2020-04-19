@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DeviceTest {
 
     @Test
-    void shouldReturnTrueIfCronstructorCreatesNotNull() {
+    void shouldReturnTrueIfConstructorCreatesNotNull() {
         Device d = new Dimmable();
         assertNotNull(d);
     }
@@ -72,7 +72,7 @@ class DeviceTest {
     }
 
     @Test
-    void shouldSetANewCopiedDeviceUsingConstructor() {
+    void shouldSetANewCopiedSwitchUsingConstructor() {
         Switch d = new Switch();
         d.setId(23);
         Device sd = new Switch(d);
@@ -80,5 +80,61 @@ class DeviceTest {
 
         assertEquals(23, sd.getId());
         assertTrue(d.isOn());
+    }
+    @Test
+    void shouldSetANewCopiedSwitchUsingMakeCopy() {
+        Switch d = new Switch();
+        d.setId(23);
+        Device sd = d.makeCopy();
+        d.setId(23);
+
+        assertEquals(sd.getIcon(), sd.getIcon());
+        assertEquals(sd.isOn(), d.isOn());
+        assertEquals(sd.getId(), d.getId());
+    }
+
+    @Test
+    void shouldReturnCorrectLabelSwitch(){
+        Switch s = new Switch();
+        s.setOn(true);
+        assertEquals(s.isOn(), s.getState());
+        assertEquals(s.getLabel(), "on");
+
+        s.click();
+        assertEquals(s.isOn(), false);
+    }
+
+    @Test
+    void shouldCreateCorrectStatelessDimmableSwitch(){
+        StatelessDimmableSwitch s = new StatelessDimmableSwitch();
+        assertNotNull(s);
+        assertEquals(s.getLabel(), "-");
+    }
+
+
+    @Test
+    void shouldCreateCopyStatelessDimmableSwitchUsingConstructor(){
+        StatelessDimmableSwitch s = new StatelessDimmableSwitch();
+        StatelessDimmableSwitch s2 = new StatelessDimmableSwitch(s);
+        assertNotNull(s);
+        assertEquals(s2.getLabel(), s.getLabel());
+        assertEquals(s.isIncrementing(), s2.isIncrementing());
+
+    }
+    @Test
+    void shouldCreateCopyStatelessDimmableSwitchMakeCopy(){
+        StatelessDimmableSwitch s = new StatelessDimmableSwitch();
+        StatelessDimmableSwitch s2 = s.makeCopy();
+        assertNotNull(s);
+        assertEquals(s2.getLabel(), s.getLabel());
+        assertEquals(s.isIncrementing(), s2.isIncrementing());
+    }
+
+    @Test
+    void shouldIncrementStatelessDimmableSwitch(){
+        StatelessDimmableSwitch s = new StatelessDimmableSwitch();
+        s.setIncrement(true);
+        assertEquals(s.isIncrementing(), true);
+        assertEquals(s.getLabel(), "+");
     }
 }

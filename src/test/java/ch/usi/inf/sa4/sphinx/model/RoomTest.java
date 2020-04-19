@@ -17,23 +17,14 @@ class RoomTest {
     @Test
     void shouldReturnTrueIfTheTwoCopiesAreEqual() {
         Room newRoom = r.makeCopy();
-//      assertTrue(r.equals(newRoom));
+        assertEquals(newRoom.getDevices(),r.getDevices());
+        assertEquals(newRoom.getName(),r.getName());
+        assertEquals(newRoom.getId(),r.getId());
+        assertEquals(newRoom.getBackground(),r.getBackground());
     }
 
     @Test
-    void shouldSetARoomUsingTheConstructorSerialisable() {
-        SerialisableRoom serialisableRoom = new SerialisableRoom(100, "test_name", "test_icon", "test_bg", new Integer[]{1, 2, 3, 4});
-        Room room = new Room(serialisableRoom);
-//        assertTrue(serialisableRoom.equals(room));
-    }
-
-    @Test
-    void shouldReturnFalseOnSetIdToNull() {
-        assertTrue(r.setId(null));
-    }
-
-    @Test
-    void shouldReturnTrueOnSetIdToInteger() {
+    void shouldSetIdToInteger() {
         assertTrue(r.setId(1));
     }
 
