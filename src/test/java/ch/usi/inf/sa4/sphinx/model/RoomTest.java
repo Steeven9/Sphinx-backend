@@ -15,6 +15,17 @@ class RoomTest {
     Room r = new Room();
 
     @Test
+    void shouldCreateRoomLikeSerialisableRoom(){
+        SerialisableRoom sr = new SerialisableRoom();
+        sr.devices = new Integer[]{1,2,4};
+        Room room = new Room(sr);
+        assertEquals(sr.id, room.getId());
+        assertEquals(sr.name, room.getName());
+        assertEquals(sr.background, room.getBackground());
+        assertEquals(sr.icon, room.getIcon());
+    }
+
+    @Test
     void shouldReturnTrueIfTheTwoCopiesAreEqual() {
         Room newRoom = r.makeCopy();
         assertEquals(newRoom.getDevices(),r.getDevices());

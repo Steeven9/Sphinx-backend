@@ -13,18 +13,11 @@ class EventTest {
         assertNotNull(s);
     }
 
-    /*
-        Issue number #109. Throws NullPointerException when I call get()
-    */
-    @Disabled
     @Test
-    void testingMakeCopyStateless(){
+    void testingMakeCopyStateless() {
         StatelessDimmSwitchChangedEvent s = new StatelessDimmSwitchChangedEvent(4, 100.0);//mock-up object testing if is not null
-        Event<Double>s2 = s.makeCopy();
-        Device device = new Switch();
-        device.setId(4);
-        DeviceService d = new DeviceService();
-        assertEquals(4, s2.get());
+        Event<Double> s2 = s.makeCopy();
+        assertEquals(s.deviceId, s2.deviceId);
     }
 
     @Test
@@ -41,10 +34,12 @@ class EventTest {
         assertEquals(s.getDeviceId(), s2.getDeviceId());
     }
 
-    @Disabled
+    @Disabled("Issue number #109. Throws a NullPointerException since deviceService is null inside get() method")
     @Test
     void testingGetReturnsCorrectDoubleDimmSwitch(){
         DimmSwitchChangedEvent s = new DimmSwitchChangedEvent(4);//mock-up object testing if is not null
-        double d = s.get(); //throws an exception since deviceService is null inside get() method
+        double d = s.get();
     }
+
+
 }

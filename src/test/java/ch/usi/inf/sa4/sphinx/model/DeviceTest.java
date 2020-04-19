@@ -16,6 +16,15 @@ class DeviceTest {
         assertNotNull(d);
     }
 
+
+    @Test
+    void shouldReturnFalseIfSetKetCannotBeSet() {
+        Device d = new Dimmable();
+        d.setKey(3);
+        d.lockKey();
+        assertFalse(d.setKey(1));
+    }
+
     @Test
     void shouldReturnTrueIfSettingIdIsNotSetBefore() {
         Device d = new DimmableSwitch();

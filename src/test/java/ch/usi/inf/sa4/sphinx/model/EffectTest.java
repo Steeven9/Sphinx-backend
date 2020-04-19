@@ -26,4 +26,23 @@ class EffectTest {
         assertEquals(other.deviceId, d.deviceId);
     }
 
+    @Test
+    void shouldReturnNullIfIdIsNotSetDimmableInc() {
+        DimmableLightStateInc d = new DimmableLightStateInc(9);
+        assertNull(d.getKey());
+    }
+
+    @Test
+    void shouldCreateANewEffectUsingConstructoDimmablenc(){
+        DimmableLightStateInc other = new DimmableLightStateInc(2);
+        Effect<?> d = other.makeCopy();
+        assertEquals(other.deviceId, d.deviceId);
+    }
+
+    @Test
+    void shouldCreateANewEffectUsingConstructorDimmableInc(){
+        DimmableLightStateInc other = new DimmableLightStateInc(2);
+        Effect<?> d = other.makeCopy();
+        assertEquals(other.deviceId, d.deviceId);
+    }
 }
