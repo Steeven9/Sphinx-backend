@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Room extends StorableE{
 	@Expose
 	private String icon;
 	@Expose
+	@JsonBackReference
 	@OneToMany(orphanRemoval = false, //A device can migrate Room
 			cascade = CascadeType.ALL,
 			mappedBy = "room",

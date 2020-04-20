@@ -20,7 +20,7 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name="user")
+@Table(name="sh_user")
 public class User extends StorableE{
     @Expose
     @Column(unique = true, nullable = false)
