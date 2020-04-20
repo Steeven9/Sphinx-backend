@@ -72,7 +72,7 @@ public class CouplingService {
      * @param effect the effect in the coupling to be added
      * @return the id of the new coupling
      **/
-    public Integer addCoupling(Event<?> event, Effect<?> effect) {
+    public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
         Integer storedEffect = effectStorage.insert(effect);
         Integer storedEvent = eventStorage.insert(event);
         Coupling newCoupling;
