@@ -9,6 +9,8 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -34,6 +36,7 @@ public class DeviceController {
     RoomService roomService;
     @Autowired
     Serialiser serialiser;
+    private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
 
     /**
@@ -47,6 +50,7 @@ public class DeviceController {
                                                                @RequestHeader("user") String username) {
 
 
+
         User user = userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -56,11 +60,12 @@ public class DeviceController {
             return ResponseEntity.status(401).build();
         }
 
-        List<Integer> devicesIds = userService.getDevices(username);
-        SerialisableDevice[] serializedDevices = devicesIds.stream()
-                .map(id -> serialiser.serialiseDevice(deviceService.get(id), user))
+        List<Device> devices = userService.getPopulatedDevices(username);
+        SerialisableDevice[] serializedDevices = devices.stream()
+                .map(device -> serialiser.serialiseDevice(device, user))
                 .toArray(SerialisableDevice[]::new);
-        
+
+
         return ResponseEntity.ok(serializedDevices);
     }
 

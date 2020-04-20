@@ -4,8 +4,6 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.constraints.NotNull;
-
 public class DimmSwitchChangedEvent extends Event<Double> {
 
     @Autowired
@@ -29,7 +27,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(deviceId)).getState();
+        return ((DimmableSwitch) deviceService.get(deviceId)).getIntensity();
     }
 
 }

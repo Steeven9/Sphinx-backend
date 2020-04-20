@@ -23,7 +23,7 @@ public class DimmableLight extends Dimmable {
      * @return the intensity level of this DimmableSwitch
      */
     public double getIntensity() {
-        return super.getState();
+        return super.getIntensity();
     }
 
 

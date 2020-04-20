@@ -1,10 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
 
 /**
  * A dimmable is a dimmable device, that has an internal state (the intensity level).
@@ -12,6 +11,7 @@ import javax.persistence.Inheritance;
 @Entity
 public abstract class Dimmable extends Device {
 
+    @Expose
     private double intensity;
 
     @Override
@@ -40,7 +40,7 @@ public abstract class Dimmable extends Device {
      * Returns the intensity level of this DimmableSwitch.
      * @return the intensity level of this DimmableSwitch
      */
-    public double getState() {
+    public double getIntensity() {
         return intensity;
     }
 
@@ -63,7 +63,7 @@ public abstract class Dimmable extends Device {
      */
     @Override
     public String getLabel() {
-        return this.getState() * 100 + "%";
+        return this.getIntensity() * 100 + "%";
     }
 
 

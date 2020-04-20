@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public abstract class Device extends StorableE {
     )
     protected final List<Coupling> couplings;
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
     @Expose
