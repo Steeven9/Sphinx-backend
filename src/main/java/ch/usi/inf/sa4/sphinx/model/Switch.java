@@ -1,30 +1,30 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
- * A switch is a switch that can turn on and off a device.
+ * A switch is a switch that can turn active and off a device.
  */
+@Entity
 public class Switch extends Device {
 
     /**
-     * Creates a switch, which is on.
+     * Creates a switch, which is active.
      */
     public Switch() {
         super();
     }
 
-    /** Constructor.
-     * @param s a Switch**/
-    public Switch(Switch s) {
-        super(s);
-    }
 
 
     /**
      * Returns true if and only if the switch is powered.
-     * @return true if the switch is on, otherwise false
+     * @return true if the switch is active, otherwise false
      */
     public boolean getState(){
-        return on;
+        return active;
     }
 
     /**
@@ -32,19 +32,22 @@ public class Switch extends Device {
      * and vice versa.
      */
     public void click(){
-        this.on = !this.on;
+        this.active = !this.active;
         triggerEffects();
     }
 
     /**
-     * Computes whether the power is 'on' or 'off'.
-     * @return a String stating whether switch is 'on' or 'off'
+     * Computes whether the power is 'active' or 'off'.
+     * @return a String stating whether switch is 'active' or 'off'
      */
     @Override
     public String getLabel(){
-        return this.on ? "on" : "off";
+        return this.active ? "active" : "off";
     }
 
 
-
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SWITCH;
+    }
 }

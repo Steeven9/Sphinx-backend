@@ -41,7 +41,7 @@ public class UserService {
      *
      */
     //Used with spring injection can't be instantiated directly
-    private UserService() {
+    public UserService() {
     }
 
 

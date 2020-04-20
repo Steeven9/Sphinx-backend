@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
+@Entity
 public class MotionSensor extends Device {
     private boolean detected;
 
@@ -14,13 +19,6 @@ public class MotionSensor extends Device {
         this.detected = false;
     }
 
-    /** Constructor.
-     * @param s a MotionSensor
-     **/
-    protected MotionSensor(MotionSensor s) {
-        super(s);
-        this.detected = s.isDetected();
-    }
 
 
     /**
@@ -51,5 +49,11 @@ public class MotionSensor extends Device {
     @Override
     public String getLabel() {
         return "" + this.isDetected();
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.MOTION_SENSOR;
     }
 }

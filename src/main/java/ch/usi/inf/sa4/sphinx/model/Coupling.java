@@ -15,40 +15,34 @@ import java.util.List;
 
 //TODO fix atm couplings of different parameters can be created
 @Entity
-public class Coupling extends StorableE{
+public class Coupling extends StorableE {
 
     @Autowired
+    @Transient
     DeviceService deviceService;
 
     @Expose
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "device_id")
-    private final Device device;
+    private Device device;
 
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
-    orphanRemoval = true,
-    mappedBy = "coupling")
-    private  Event event;
+            orphanRemoval = true)
+    private final Event event;
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            mappedBy = "coupling"
+            orphanRemoval = true
     )
     private final List<Effect> effects;
 
 
-
-
-    public Coupling(){
-
-    }
-
-
-    public void setEvent(Event event) {
+    public Coupling(Device device, Event event, Collection<Effect> effects) {
+        this.device = device;
         this.event = event;
+        this.effects = new ArrayList<>(effects);
     }
 
 
@@ -64,6 +58,12 @@ public class Coupling extends StorableE{
         return event.getId();
     }
 
+    public void run() {
+
+        for (Effect effect : effects) {
+            effect.execute(event.get());
+        }
+    }
 
 
     public List<Integer> getEffectIds() {
@@ -71,9 +71,14 @@ public class Coupling extends StorableE{
     }
 
 
-
-    public void addEffect(Effect effect){
+    public void addEffect(Effect effect) {
         effects.add(effect);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Coupling) return this.getId().equals(((Coupling) other).getId());
+        return false;
     }
 
 

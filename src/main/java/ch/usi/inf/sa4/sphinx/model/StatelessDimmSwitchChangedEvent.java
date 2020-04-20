@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 
+
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     private double increment;
     @Autowired

@@ -31,13 +31,11 @@ class SerialiserTest {
     @BeforeEach
     void createDeviceAndUser() {
         device = new Light();
-        this.device.setId(1);
         room = new Room();
-        this.room.setId(2);
+        this.room.addDevice(device);
         user = new User("randomEmail", "randomPassword", username, "randomFullname");
+        user.addRoom(room);
         userService.insert(user);
-        userService.addRoom(username, this.room);
-
     }
 
     @Test
@@ -80,7 +78,7 @@ class SerialiserTest {
         userService.insert(user);
         userService.addRoom(username, room);
         roomService.addDevice(2, DeviceType.deviceToDeviceType(device));
-        room.addDevice(device.getId());
+        room.addDevice(device);
         SerialisableDevice serialisableDeviceWithRoom = serialiser.serialiseDevice(device, user);
         assertAll("this device does not belong to any room",
                 () -> assertEquals(serialisableDeviceWithRoom.roomId, room.getId()),

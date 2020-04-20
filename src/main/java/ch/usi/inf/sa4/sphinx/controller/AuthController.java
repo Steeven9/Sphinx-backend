@@ -132,7 +132,7 @@ public class AuthController {
         String resetCode = resetUser.createResetCode();
 
         mailer.send(email,
-                "Reset your password on smarthut.xyz",
+                "Reset your password active smarthut.xyz",
                 "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode +
                 "\nOr, from local, http://localhost:3000/changepassword?email=" + email + "&code=" + resetCode);
 

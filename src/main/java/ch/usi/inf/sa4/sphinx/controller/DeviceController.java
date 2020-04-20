@@ -166,7 +166,7 @@ public class DeviceController {
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
-        if (device.on != null) storageDevice.setOn(device.on);
+        if (device.on != null) storageDevice.setActive(device.on);
 
         if (deviceService.update(storageDevice)) {
             final Integer owningRoom = userService.owningRoom(username, deviceId);
