@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A Temperature sensor measures a temperature (in C) in a given room.
  */
+@Entity
 public class TempSensor extends Sensor {
 
     //future development: support different measurements of temperature.
@@ -14,19 +19,17 @@ public class TempSensor extends Sensor {
         super(20.0);
     }
 
-    /** Constructor.
-     * @param s a TempSensor
-     **/
-    public TempSensor(TempSensor s) {
-        super(s);
-    }
-
-
     /**
      * {@inheritDoc}
      */
     @Override
     protected String getPhQuantity() {
         return " C";
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.TEMP_SENSOR;
     }
 }

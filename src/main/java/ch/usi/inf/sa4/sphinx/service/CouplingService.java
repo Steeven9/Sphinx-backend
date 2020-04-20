@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.Event;
@@ -51,14 +52,15 @@ public class CouplingService {
      * Add coupling to storage.
      *
      * @param event  the event in the coupling to be added
-     * @param effect the effect in the coupling to be added
+     * @param effects the effect in the coupling to be added
      * @return the id of the new coupling
      **/
     public Integer addCoupling(Integer deviceId, Event<Double> event, Collection<Effect> effects) {
-        return  deviceStorage.findById(deviceId).map(device -> {
-                   new Coupling()
-                }
-        ).orElse(null);
+        throw new NotImplementedException();
+//        return  deviceStorage.findById(deviceId).map(device -> {
+//                   new Coupling()
+//                }
+//        ).orElse(null);
     }
 
 

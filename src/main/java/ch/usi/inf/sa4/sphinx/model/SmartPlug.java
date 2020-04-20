@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A smart-plug is a plug that can be added by user. It consumes some energy while in use.
  */
+@Entity
 public class SmartPlug extends Device {
     private double powerUsed;
 
@@ -14,13 +19,6 @@ public class SmartPlug extends Device {
         this.powerUsed = 0.0;
     }
 
-    /** Constructor.
-     * @param s a SmartPlug
-     **/
-    protected SmartPlug(SmartPlug s) {
-        super(s);
-        powerUsed = s.getPowerUsed();
-    }
 
 
     /**
@@ -45,5 +43,11 @@ public class SmartPlug extends Device {
     @Override
     public String getLabel() {
         return this.getPowerUsed() + " kWh";
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SMART_PLUG;
     }
 }

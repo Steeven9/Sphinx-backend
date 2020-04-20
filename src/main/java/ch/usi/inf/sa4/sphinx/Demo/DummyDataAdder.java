@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -37,8 +38,10 @@ public class DummyDataAdder {
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
      */
+
+ @Transactional
     public void user1() {
-        User newUser = new User("mario@usi.ch", "1234", "user1", "mario rossi");
+        User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
         newUser.setVerified(true);
         newUser.setSessionToken("user1SessionToken");
         boolean inserted = userService.insert(newUser);
@@ -58,8 +61,9 @@ public class DummyDataAdder {
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
+    @Transactional
     public void user2() {
-        User newUser = new User("mario2@usi.ch", "1234", "user2", "mario rossi");
+        User newUser = new User("mario2@usi.ch", "1234", "user2", "mariorossi");
         newUser.setVerified(true);
         newUser.setSessionToken("user2SessionToken");
         boolean inserted  = userService.insert(newUser);
@@ -101,6 +105,7 @@ public class DummyDataAdder {
      * logged in
      */
     //user with 20 rooms and random devices in them
+    @Transactional
     public void randUser() {
         User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
         newUser.setVerified(true);
@@ -124,6 +129,7 @@ public class DummyDataAdder {
      * adds a user called emptyUser in storage, it will have no rooms. This user has
      * sessionToken="emptyUserSessionToken"
      */
+    @Transactional
     public void emptyUser() {
         User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
         newUser.setVerified(true);
@@ -134,6 +140,7 @@ public class DummyDataAdder {
     /**
      * adds an unverified user called unverifiedUser in storage
      */
+    @Transactional
     public void unverifiedUser(){
         User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
         if(userService.insert(newUser)) logger.info("unverifiedUser added to storage");
