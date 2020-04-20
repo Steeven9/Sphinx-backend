@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 
-public class SwitchChangedEvent extends Event<Double> {
+public class SwitchChangedEvent extends Event<Boolean> {
 
     @Autowired
     private DeviceService deviceService;
@@ -29,15 +29,15 @@ public class SwitchChangedEvent extends Event<Double> {
      * @return 1.0 if the switch is on, 0.0 otherwise
      **/
     @Override
-    public Double get() {
-        return ((Switch) deviceService.get(deviceId)).isOn() ? 1.0 : 0.0;
+    public Boolean get() {
+        return ((Switch) deviceService.get(deviceId)).isOn();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Event<Double> makeCopy() {
+    public @NotNull Event<Boolean> makeCopy() {
         return new SwitchChangedEvent(this);
     }
 }
