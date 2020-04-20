@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 /**
@@ -46,7 +47,7 @@ public abstract class Sensor extends Device {
      */
     @Override
     public String getLabel() {
-        return this.getValue() + " " + this.getPhQuantity();
+        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity();
     }
 
     /**
