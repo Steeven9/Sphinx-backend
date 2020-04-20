@@ -49,6 +49,7 @@ public abstract class Device extends Storable<Integer, Device> {
         serialisableDevice.name = this.name;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
         serialisableDevice.id = getKey();
+        serialisableDevice.label = getLabel();
         return serialisableDevice;
     }
 
