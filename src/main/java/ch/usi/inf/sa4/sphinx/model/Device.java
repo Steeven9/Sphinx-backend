@@ -53,9 +53,9 @@ public abstract class Device extends Storable<Integer, Device> {
         return serialisableDevice;
     }
 
-
     public boolean setId(Integer key) {
         return super.setKey(key);
+
     }
 
     public void setIcon(String icon) {
@@ -111,6 +111,5 @@ public abstract class Device extends Storable<Integer, Device> {
             effect.execute(event.get());
         }
     }
-
 
 }
