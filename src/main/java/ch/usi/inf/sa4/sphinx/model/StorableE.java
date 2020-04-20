@@ -16,7 +16,6 @@ public abstract class StorableE {
     protected Integer id;
 
 
-
     @Expose
     @CreationTimestamp
     private LocalDateTime createDateTime;

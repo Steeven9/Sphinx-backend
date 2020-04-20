@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import java.text.DecimalFormat;
+import javax.persistence.Entity;
 import java.util.Random;
 import javax.persistence.Entity;
 

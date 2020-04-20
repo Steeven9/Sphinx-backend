@@ -39,8 +39,11 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>2.2.6.RELEASE</version>
+<<<<<<< HEAD
 <!--            <version>2.0.5.RELEASE</version>-->
 
+=======
+>>>>>>> #90 refactor volatile db to permanent with mysql, controllers need to be fixed to work with it
         </dependency>
 
 
@@ -61,7 +64,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<<<<<<< HEAD
 
+=======
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.5</version>
+        </dependency>
+>>>>>>> #90 refactor volatile db to permanent with mysql, controllers need to be fixed to work with it
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -101,7 +112,9 @@
             <artifactId>gson</artifactId>
             <version>2.6</version>
         </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>

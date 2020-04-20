@@ -30,7 +30,7 @@ public class SerialisableDevice {
      * @param intensity the serialisable device's intensity
      * @param label the serialisable device's label
      * @param name the serialisable device's name
-     * @param on tells whether the device is on
+     * @param on tells whether the device is active
      * @param roomId the serialisable device's room id
      * @param switched list  (of ids) gitof switched  devices
      * @param switches list of switches (by id) that the device has

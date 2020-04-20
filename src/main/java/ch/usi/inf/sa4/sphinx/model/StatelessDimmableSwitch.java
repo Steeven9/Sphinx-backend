@@ -20,8 +20,6 @@ public class StatelessDimmableSwitch extends Device {
     }
 
 
-
-
     /**
      * Returns true if the intensity was incremented or false if it was decremented.
      * @return true if the intensity was incremented, false otherwise

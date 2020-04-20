@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,9 +16,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public abstract class Device extends StorableE {
-
-    @Autowired
-    private CouplingService couplingService;
 
     @Expose
     private String icon;
@@ -35,12 +31,9 @@ public abstract class Device extends StorableE {
             mappedBy = "device"
     )
     protected final List<Coupling> couplings;
-<<<<<<< HEAD
+
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
-=======
-    @JoinColumn(name = "room_id")
->>>>>>> #90 change hib config
     private Room room;
     @Expose
     @Transient
@@ -104,8 +97,8 @@ public abstract class Device extends StorableE {
         return on;
     }
 
-    public void setOn(boolean on) {
-        this.on = on;
+    public void setOn(boolean active) {
+        this.on = active;
     }
 
     /**
@@ -125,7 +118,6 @@ public abstract class Device extends StorableE {
     }
 
 
-    // TODO: when couplingService deletes a coupling, it must call removeObserver on all registered Devices
     public void removeObserver(Coupling observer) {
         couplings.remove(observer);
     }
