@@ -45,7 +45,7 @@ class SensorTest {
         String label = s.getLabel();
         for(int i =0; i<=10;i++){
             double value = s.getValue();
-            assertTrue(label.contains("lumen"));
+            assertTrue(label.contains("lm"));
             if(label.contains("500")){
                 assertTrue(label.contains("500"));
             }else{
