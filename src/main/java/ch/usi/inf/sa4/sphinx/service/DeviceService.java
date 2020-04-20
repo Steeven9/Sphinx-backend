@@ -44,13 +44,13 @@ public final class DeviceService {
      * @param key  the id of the switch
      * @return event corresponding to the switch
      */
-    private Event<?> eventHelper(DeviceType type, Integer key) {
+    private <T> Event<T> eventHelper(DeviceType type, Integer key) {
         if (DeviceType.SWITCH.equals(type)) {
-            return new SwitchChangedEvent(key);
+            return (Event<T>) new SwitchChangedEvent(key);
         } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
-            return new StatelessDimmSwitchChangedEvent(key, 1.0);
+            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 1.0);
         } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
-            return new DimmSwitchChangedEvent(key);
+            return (Event<T>) new DimmSwitchChangedEvent(key);
         } else {
             return null;
         }
@@ -64,7 +64,7 @@ public final class DeviceService {
      * @param key        the id of the switch
      * @return corresponding effect
      */
-    private <T> Effect<T> effectHelper(DeviceType switchType, DeviceType lightType, Integer key, Event<T> effect) {
+    private <T> Effect<T> effectHelper(DeviceType switchType, DeviceType lightType, Integer key) {
         if (DeviceType.SWITCH.equals(switchType)) {
             return (Effect<T>) (new DeviceSetOnEffect(key));
         } else if (DeviceType.DIMMABLE_LIGHT.equals(lightType)) {
@@ -87,7 +87,7 @@ public final class DeviceService {
      * @param device2 second device to couple
      * @return true if coupling was succeed, false otherwise
      */
-    public <T> boolean createCoupling(Device device1, Device device2) {
+    public boolean createCoupling(Device device1, Device device2) {
         ArrayList<DeviceType> switches = new ArrayList<>(Arrays.asList(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH));
         ArrayList<DeviceType> lights = new ArrayList<>(Arrays.asList(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT));
         DeviceType type1 = DeviceType.deviceToDeviceType(device1);
@@ -104,11 +104,9 @@ public final class DeviceService {
         }
 
         if (ordered) {
-            Event<?> event = eventHelper(type1, device1.getKey());
-            couplingService.addCoupling(event, effectHelper(type1, type2, device2.getKey(), event));
+            couplingService.addCoupling(eventHelper(type1, device1.getKey()), effectHelper(type1, type2, device2.getKey()));
         } else {
-            Event<?> event = eventHelper(type2, device2.getKey());
-            couplingService.addCoupling(event, effectHelper(type2, type1, device1.getKey(), event));
+            couplingService.addCoupling(eventHelper(type2, device2.getKey()), effectHelper(type2, type1, device1.getKey()));
         }
         return true;
     }
