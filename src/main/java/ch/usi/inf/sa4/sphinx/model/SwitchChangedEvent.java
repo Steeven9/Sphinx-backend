@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 
 public class SwitchChangedEvent extends Event<Boolean> {
 
-
     @Autowired
     private DeviceService deviceService;
 
@@ -32,7 +31,6 @@ public class SwitchChangedEvent extends Event<Boolean> {
     @Override
     public Boolean get() {
         return ((Switch) deviceService.get(deviceId)).isOn();
-
     }
 
     /**
