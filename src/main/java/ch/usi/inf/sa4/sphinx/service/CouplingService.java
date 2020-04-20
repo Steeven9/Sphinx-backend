@@ -100,7 +100,7 @@ public class CouplingService {
      **/
     public boolean addEffect(Integer id, Integer effect){
         Coupling c = get(id);
-        if (c == null) {
+        if (c == null || effect == null) {
             return false;
         }
 
