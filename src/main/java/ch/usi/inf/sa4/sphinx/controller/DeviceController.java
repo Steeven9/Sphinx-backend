@@ -90,14 +90,16 @@ public class DeviceController {
 
 
     /**
-     * @param device       data of the device to be created, name, label and icon are required
-     * @param sessionToken sessionToken of the use
+     * Creates a new device given a SerialisableDevice containing its initial data and a user/sessionToken pair which
+     * owns the room that the device should be created in.
+     * @param device       data of the device to be created, name, roomId, type and icon are required
+     * @param sessionToken sessionToken of the user
      * @param username     username of the user
      * @param errors       errors in validating the fields
      * @return a ResponseEntity with the data of the newly created device (201), or
      * - 400 if bad request or
      * - 401 if not authorized or
-     * - 500 in case of a server error
+     * - 500 if an internal server error occurred
      */
     @PostMapping(value = {"", "/"})
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
@@ -109,12 +111,17 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (!userService.validSession(username, sessionToken)) {
+        if (!userService.validSession(username, sessionToken) || !userService.ownsRoom(username, device.roomId)) {
             return ResponseEntity.status(401).build();
         }
 
         User user = userService.get(username);
         Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
+        Device d = deviceService.get(deviceId);
+        if (d == null) return ResponseEntity.status(500).build();
+        if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
+        if (device.name != null && !device.name.isBlank()) d.setName(device.name);
+        if (!deviceService.update(d)) return ResponseEntity.status(500).build();
 
         return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId), user));
 
