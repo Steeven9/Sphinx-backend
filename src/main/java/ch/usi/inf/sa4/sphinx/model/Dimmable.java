@@ -1,11 +1,17 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 /**
  * A dimmable is a dimmable device, that has an internal state (the intensity level).
  */
-public class Dimmable extends Device {
+@Entity
+public abstract class Dimmable extends Device {
+
     private double intensity;
 
     @Override
@@ -27,14 +33,6 @@ public class Dimmable extends Device {
         this.intensity = 1.0;
     }
 
-    /**
-     * Constructor.
-     * @param d a Dimmable device
-     */
-    protected Dimmable(Dimmable d) {
-        super(d);
-        this.intensity = d.getState();
-    }
 
 
 
@@ -67,4 +65,7 @@ public class Dimmable extends Device {
     public String getLabel() {
         return this.getState() * 100 + "%";
     }
+
+
+
 }

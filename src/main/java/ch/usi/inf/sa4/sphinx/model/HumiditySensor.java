@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A humidity sensor measures humidity (in %) in a given room.
  */
+@Entity
 public class HumiditySensor extends Sensor {
 
     /**
@@ -13,14 +18,6 @@ public class HumiditySensor extends Sensor {
         super(32.0);
     }
 
-    /**
-     * Constructor.
-     * Given a HumiditySensor, creates a copy of it.
-     * @param s The HumiditySensor to copy
-     */
-    public HumiditySensor(HumiditySensor s) {
-        super(s);
-    }
 
 
     /**
@@ -29,5 +26,10 @@ public class HumiditySensor extends Sensor {
     @Override
     protected String getPhQuantity() {
         return "%";
+    }
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.HUMIDITY_SENSOR;
     }
 }

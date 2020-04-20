@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A Light is a normal light that can be either on either off.
  */
+@Entity
 public class Light extends Device {
 
     /**
@@ -13,14 +18,6 @@ public class Light extends Device {
         super();
     }
 
-    /**
-     * Constructor.
-     * Creates a light.
-     * @param l a Light instance
-     */
-    public Light(Light l) {
-        super(l);
-    }
 
 
     /**
@@ -29,5 +26,10 @@ public class Light extends Device {
     @Override
     public String getLabel() {
         return this.on ? "on" : "off";
+    }
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.LIGHT;
     }
 }

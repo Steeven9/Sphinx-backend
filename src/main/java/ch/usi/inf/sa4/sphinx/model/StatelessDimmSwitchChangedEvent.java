@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 import javax.validation.constraints.NotNull;
 
+
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     private double increment;
 

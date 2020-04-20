@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.Event;
@@ -56,7 +57,7 @@ public class CouplingService {
 
 
     public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
-            return addCoupling(event, List.of(effect));
+        return addCoupling(event, List.of(effect));
     }
 
 

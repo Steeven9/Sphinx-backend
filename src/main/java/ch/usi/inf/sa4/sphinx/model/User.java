@@ -3,9 +3,14 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.id.IdentifierGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,11 +20,12 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name = "user")
+@Table(name="user")
 public class User extends StorableE{
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
+    @Size(max=32, min=4)
     private String username;
     @Expose
     @Column(nullable = false)
@@ -38,15 +44,21 @@ public class User extends StorableE{
             cascade = CascadeType.ALL,
             mappedBy = "user",
             orphanRemoval = true)
-    private final List<Room> rooms;
+    private  List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuidGenerator")
+    @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
     private  String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
 
+    private final class uuidGenerator implements IdentifierGenerator {
+        public Serializable generate(SharedSessionContractImplementor s, Object o) {
+            return UUID.randomUUID().toString();
+        }
+    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -55,6 +67,7 @@ public class User extends StorableE{
      * @param fullname full name
      */
     public User(final String email, final String password, final String username, final String fullname) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.fullname = fullname;
@@ -62,6 +75,8 @@ public class User extends StorableE{
         this.verified = false;
     }
 
+
+    public User(){};
 
 
     /**

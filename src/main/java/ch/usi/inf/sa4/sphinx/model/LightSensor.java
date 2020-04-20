@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 /**
  * A light sensor measures the quantity of light (in lumen) in a given room.
  */
+@Entity
 public class LightSensor extends Sensor {
 
     /**
@@ -12,12 +17,6 @@ public class LightSensor extends Sensor {
         super(500.0);
     }
 
-    /** Constructor.
-     * @param s a LightSensor
-     **/
-    public LightSensor(LightSensor s){
-        super(s);
-    }
 
 
     /**
@@ -27,5 +26,9 @@ public class LightSensor extends Sensor {
     protected String getPhQuantity() {
         return "lm";
     }
-}
 
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.LIGHT_SENSOR;
+    }
+}

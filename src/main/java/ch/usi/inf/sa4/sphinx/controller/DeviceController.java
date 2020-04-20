@@ -164,6 +164,7 @@ public class DeviceController {
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
+
         if (device.on != null) storageDevice.setOn(device.on);
         if (storageDevice instanceof Dimmable && device.slider != null) {
             ((Dimmable) storageDevice).setState(device.slider);
@@ -171,6 +172,7 @@ public class DeviceController {
         if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
             ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
         }
+
 
         if (deviceService.update(storageDevice)) {
             final Integer owningRoom = userService.owningRoom(username, deviceId);

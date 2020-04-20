@@ -2,10 +2,13 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import java.text.DecimalFormat;
 import java.util.Random;
+import javax.persistence.Entity;
+
 
 /**
  * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
  */
+@Entity
 public abstract class Sensor extends Device {
     private double quantity;
 
@@ -18,13 +21,6 @@ public abstract class Sensor extends Device {
         this.quantity = quantity;
     }
 
-    /** Constructor.
-     * @param s a Sensor
-     **/
-    protected Sensor(Sensor s) {
-        super(s);
-        this.quantity = s.getQuantity();
-    }
 
     /** Getter for the quantity.
      * @return quantity

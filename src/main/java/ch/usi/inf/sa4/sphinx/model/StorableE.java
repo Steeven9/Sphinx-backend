@@ -13,7 +13,7 @@ public abstract class StorableE {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Expose
-    private Integer id;
+    protected Integer id;
 
 
     @Expose
