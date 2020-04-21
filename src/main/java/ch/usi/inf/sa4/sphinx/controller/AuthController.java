@@ -179,8 +179,11 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
         User user = userService.getByMail(email);
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
         if(!user.isVerified()){
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.notFound().build();
         }
         mailer.send(email,
                 "Confirm your email modification for SmartHut account",
