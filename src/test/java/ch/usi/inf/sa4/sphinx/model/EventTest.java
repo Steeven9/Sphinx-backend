@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import ch.usi.inf.sa4.sphinx.service.VolatileEventStorage;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ class EventTest {
 
     @Autowired
     DeviceService deviceService;
+    @Autowired
+    VolatileEventStorage eventStorage;
 
     @Test
     void testingConstructorCreatesNotNullObjectForStatelessDimmSwitch() {
@@ -39,13 +42,6 @@ class EventTest {
         DimmSwitchChangedEvent s2 = s.makeCopy();
         assertNotNull(s2);
         assertEquals(s.getDeviceId(), s2.getDeviceId());
-    }
-
-    @Disabled("Issue number #109. Throws a NullPointerException since deviceService is null inside get() method")
-    @Test
-    void testingGetReturnsCorrectDoubleDimmSwitch(){
-        DimmSwitchChangedEvent s = new DimmSwitchChangedEvent(4, deviceService);//mock-up object testing if is not null
-        double d = s.get();
     }
 
 
