@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import javax.annotation.PostConstruct;
 
 
+
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "ch.usi.inf.sa4.sphinx.service")
 public class SphinxApplication {
@@ -33,12 +34,12 @@ public class SphinxApplication {
         //edit configurations and set dummy_data=true)
         if (dummyDataEnabled) {
             LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
+            dummyDataAdder.emptyUser();
+            dummyDataAdder.randUser();
             dummyDataAdder.deleteUsers();
             dummyDataAdder.user1();
             dummyDataAdder.user2();
-            dummyDataAdder.emptyUser();
             dummyDataAdder.unverifiedUser();
-            dummyDataAdder.randUser();
 
         }
     }

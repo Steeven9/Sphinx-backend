@@ -18,8 +18,7 @@ public class Room extends StorableE{
 	@Expose
 	private String icon;
 	@Expose
-	@JsonBackReference
-	@OneToMany(orphanRemoval = false, //A device can migrate Room
+	@OneToMany(orphanRemoval = true, //A device can migrate Room
 			cascade = CascadeType.ALL,
 			mappedBy = "room",
 			fetch = FetchType.LAZY)
@@ -45,10 +44,10 @@ public class Room extends StorableE{
 	}
 
 	public Room(SerialisableRoom room) {
-		this.name = room.name;
-		this.icon = room.icon;
-		this.background = room.background;
-		//this.devices = Arrays.asList(room.devices);
+		this();
+		if(room.name != null) this.name = room.name;
+		if(room.icon != null) this.icon = room.icon;
+		if(room.background != null) this.background = room.background;
 	}
 
 
@@ -115,7 +114,7 @@ public class Room extends StorableE{
 
 	public SerialisableRoom serialise(){
 		SerialisableRoom sd = new SerialisableRoom();
-		sd.devices = devices.toArray(new Integer[0]);
+		sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
 		sd.background = background;
 		sd.icon = icon;
 		sd.name = name;

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -97,6 +98,7 @@ public class UserController {
      * 404 if no user with the requested username exists
      * 401 if the provided session token does not match the requested user (or none was provided)
      */
+    @Transactional
     @PutMapping("/{username}")
     public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable String username, @NotNull @RequestBody SerialisableUser user,
                                                        @RequestHeader("session-token") String session_token, Errors errors) {
@@ -116,11 +118,11 @@ public class UserController {
         if (user.password != null) changedUser.setPassword(user.password);
 
         userService.update(changedUser);
-        if (!username.equals(user.username)) {
+        if (user.username != null && !username.equals(user.username)) {
             userService.changeUsername(username, user.username);
         }
 
-        return ResponseEntity.ok(serialiser.serialiseUser(changedUser));
+        return ResponseEntity.ok(serialiser.serialiseUser(userService.getById(changedUser.getId()).get()));
     }
 
     /**
@@ -137,9 +139,9 @@ public class UserController {
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
                                                        @RequestHeader("session-token") String session_token) {
 
-        User deletedUser = userService.get(username).orElseThrow(()->new NotFoundException("Could not find user"));
+        userService.get(username).orElseThrow(()->new NotFoundException("Could not find user"));
 
-        if(userService.validSession(username, session_token)){
+        if(!userService.validSession(username, session_token)){
             throw new UnauthorizedException("");
         }
 

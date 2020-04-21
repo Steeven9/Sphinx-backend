@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -91,10 +93,12 @@ public class DummyDataAdder {
             Integer roomId3 = userService.addRoom("user2", newRoom3).get();
             Integer roomId4 = userService.addRoom("user2", newRoom4).get();
             Integer roomId5 = userService.addRoom("user2", newRoom5).get();
-            roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+            Optional<Integer> device1Id =roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
             roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
             roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
-            roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
+            Optional<Integer> deviceId2 = roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
+            Integer ownerRoomId = deviceService.get(deviceId2.get()).get().getRoom().getId();
+
             roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
             roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);
             roomService.addDevice(roomId3, DeviceType.TEMP_SENSOR);

@@ -47,10 +47,7 @@ public class RoomController {
     public ResponseEntity<Collection<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                                     @NotNull @RequestHeader("user") String username) {
 
-        Optional<User> user = userService.get(username);
-        if (user.isEmpty()) {
-            throw new NotFoundException("");
-        }
+         userService.get(username).orElseThrow(()-> new NotFoundException(""));
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
@@ -126,8 +123,11 @@ public class RoomController {
 
         Room room = new Room(serialisableRoom);
         Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(""));
+        SerialisableRoom res = serialiser.serialiseRoom(roomService.get(id).orElseThrow(
+                ()->new ServerErrorException("failed to save the room")
+        ));
 
-        return ResponseEntity.status(201).body(serialiser.serialiseRoom(roomService.get(id).get()));
+        return ResponseEntity.status(201).body(res);
 
     }
 
@@ -149,12 +149,31 @@ public class RoomController {
                                                        @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
         check(sessionToken, username, errors, roomId);
-        if (!roomService.update(new Room(serialisableRoom))) {
+        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new NotFoundException("Room does not exist"));
+
+
+        String newName = serialisableRoom.name;
+        String newIcon = serialisableRoom.icon;
+        String newBackground = serialisableRoom.background;
+
+        if (newName != null) {
+            storageRoom.setName(newName);
+        }
+        if (newIcon != null) {
+            storageRoom.setName(newIcon);
+        }
+        if (newBackground != null) {
+            storageRoom.setBackground(newBackground);
+        }
+
+        if (!roomService.update(storageRoom)) {
             throw new ServerErrorException("");
         }
 
-        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException(""));
-        return ResponseEntity.status(200).body(serialiser.serialiseRoom(storageRoom));
+        SerialisableRoom res = serialiser.serialiseRoom(storageRoom);
+        int i = 1;
+
+        return ResponseEntity.status(200).body(res);
     }
 
     /**
