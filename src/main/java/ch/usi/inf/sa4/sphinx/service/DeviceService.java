@@ -88,8 +88,8 @@ public final class DeviceService {
      * @return true if coupling was succeed, false otherwise
      */
     public boolean createCoupling(Device device1, Device device2) {
-        ArrayList<DeviceType> switches = new ArrayList<>(List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH));
-        ArrayList<DeviceType> lights = new ArrayList<>(List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT));
+        List<DeviceType> switches = List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH);
+        List<DeviceType> lights = List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT);
         DeviceType type1 = DeviceType.deviceToDeviceType(device1);
         DeviceType type2 = DeviceType.deviceToDeviceType(device2);
         boolean ordered;
