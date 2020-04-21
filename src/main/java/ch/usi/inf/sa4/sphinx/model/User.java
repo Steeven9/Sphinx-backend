@@ -281,10 +281,11 @@ public class User extends StorableE{
 
     public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
+        sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
         sd.password = this.password;
-        sd.rooms = this.rooms.toArray(new Integer[0]);
+        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
     }
 }

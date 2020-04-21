@@ -50,13 +50,12 @@ public class DeviceController {
      */
     @GetMapping(value = {"", "/"})
     public ResponseEntity<Collection<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                                        @RequestHeader("user") String username) {
-
+                                                                         @RequestHeader("user") String username) {
 
 
         Optional<User> user = userService.get(username);
 
-        if(user.isPresent()){
+        if (user.isPresent()) {
             if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException();
             }
@@ -68,7 +67,7 @@ public class DeviceController {
             return ResponseEntity.ok(serializedDevices);
 
         }
-            throw new NotFoundException("");
+        throw new NotFoundException("");
 
     }
 
@@ -86,12 +85,12 @@ public class DeviceController {
 
         Optional<Device> device = deviceService.get(deviceId);
 
-        if(device.isEmpty()) {
-            throw new NotFoundException("");
+        if (device.isEmpty()) {
+            throw new NotFoundException("this device does not exist");
         }
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            throw  new UnauthorizedException("");
+            throw new UnauthorizedException("");
         }
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
@@ -101,6 +100,7 @@ public class DeviceController {
     /**
      * Creates a new device given a SerialisableDevice containing its initial data and a user/sessionToken pair which
      * owns the room that the device should be created in.
+     *
      * @param device       data of the device to be created, name, roomId, type and icon are required
      * @param sessionToken sessionToken of the user
      * @param username     username of the user
@@ -120,41 +120,47 @@ public class DeviceController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsRoom(username, device.roomId)) {
+        if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
+        }
+
+        if (!userService.ownsRoom(username, device.roomId)) {
+            throw new ForbiddenException("u dont't own this room");
         }
 
         User user = userService.get(username).get(); //If the session is valid the User exists
 
 
-        Optional<Integer> deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
-        if(deviceId.isEmpty()) throw new ServerErrorException("");
+        Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
+                .orElseThrow(() -> new ServerErrorException(""));
 
-        Device d = deviceService.get(deviceId.get()).get(); //Since the previous exists then this does too
+        Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
 
 
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
         if (device.name != null && !device.name.isBlank()) d.setName(device.name);
 
-        if (!deviceService.update(d)) throw  new ServerErrorException("");
+        if (!deviceService.update(d)) throw new ServerErrorException("");
 
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId.get()).get(), user));
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get(), user));
 
     }
 
 //
+
     /**
      * modifies the device with the given deviceId to conform to the fields in the given SerialisableDevice,
      * iff the user is authenticating with the correct user/session-token pair
-     * @param deviceId id  of the device to be modified
-     * @param device device to modify
-     * @param username the username of the user to authenticate as
+     *
+     * @param deviceId     id  of the device to be modified
+     * @param device       device to modify
+     * @param username     the username of the user to authenticate as
      * @param sessionToken the session token of the user to authenticate as
      * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
-     *  - 400 if bad request or
-     *  - 404 if no such device exist or
-     *  - 401 if authentication fails or
-     *  - 500 in case of a server error
+     * - 400 if bad request or
+     * - 404 if no such device exist or
+     * - 401 if authentication fails or
+     * - 500 in case of a server error
      */
     @PutMapping("/{deviceId}")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
@@ -167,11 +173,15 @@ public class DeviceController {
             throw new BadRequestException("check that all the required fields are not blank");
         }
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-           throw  new UnauthorizedException("");
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("");
         }
 
-        Device storageDevice = deviceService.get(deviceId).orElseThrow( ()->new NotFoundException(""));
+        if (!userService.ownsDevice(username, deviceId)) {
+            throw new ForbiddenException("you don't own this device!");
+        }
+
+        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
         User user = userService.get(username).get(); //exists if prev is valid
 
@@ -191,7 +201,6 @@ public class DeviceController {
     }
 
 
-
     /**
      * @param deviceId id  of the device to be deleted
      * @return a ResponseEntity with 204 if deletion is successful or
@@ -204,7 +213,7 @@ public class DeviceController {
                                                @RequestHeader("user") String username) {
 
         Optional<Device> storageDevice = deviceService.get(deviceId);
-        if (storageDevice.isEmpty()){
+        if (storageDevice.isEmpty()) {
             throw new NotFoundException("");
         }
 
@@ -212,8 +221,7 @@ public class DeviceController {
             throw new UnauthorizedException("");
         }
 
-
-        userService.removeDevice(username, deviceId);
+        deviceService.remove(deviceId);
 
         return ResponseEntity.status(204).build();
     }

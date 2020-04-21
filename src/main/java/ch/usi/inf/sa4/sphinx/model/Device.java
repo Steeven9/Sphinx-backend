@@ -29,8 +29,7 @@ public abstract class Device extends StorableE {
     )
     protected final List<Coupling> couplings;
     @ManyToOne
-    @JsonManagedReference
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "room_id", nullable = false, referencedColumnName = "id")
     private Room room;
     @Expose
     @Transient

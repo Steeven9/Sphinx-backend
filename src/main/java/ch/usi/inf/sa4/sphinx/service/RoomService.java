@@ -50,7 +50,7 @@ public class RoomService {
      * @return true if successful update else false
      */
     public final boolean update(@NotNull final Room room) {
-        if (roomStorage.existsById(room.getId())) {
+        if (!roomStorage.existsById(room.getId())) {
             return false;
         }
 

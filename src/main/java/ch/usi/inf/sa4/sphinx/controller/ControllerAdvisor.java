@@ -1,13 +1,10 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 
 
 @ControllerAdvice
@@ -35,5 +32,21 @@ public class ControllerAdvisor {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Bad request: " + e.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity handleException(ForbiddenException e) {
+        // log exception
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body("Forbidden: " + e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleException(NotFoundException e) {
+        // log exception
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Not found: " + e.getMessage());
     }
 }

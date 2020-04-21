@@ -84,7 +84,7 @@ public class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        if (user.getId() != null)return  false;
+        if (user.getId() != null) return false;
 
         userStorage.save(user);
         return true;
@@ -117,8 +117,8 @@ public class UserService {
         final Optional<User> user = userStorage.findByUsername(username);
 
         return user.map(u -> {
-            u.addRoom(room);
-            return Optional.of(userStorage.save(u).getId());
+            room.setUser(u);
+            return Optional.of(roomStorage.save(room).getId());
         }).orElse(Optional.empty());
     }
 
@@ -152,8 +152,8 @@ public class UserService {
      * @return Id of the Device(s) belonging to a given User
      */
     public Optional<List<Integer>> getDevices(final String username) {
-        return userStorage.findByUsername(username).map(
-                user -> user.getRooms().stream().map(Room::getId).collect(Collectors.toList())
+        return getPopulatedDevices(username).map(devices ->
+                devices.stream().map(Device::getId).collect(Collectors.toList())
         );
     }
 
@@ -166,6 +166,8 @@ public class UserService {
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(String username, Integer deviceId) {
+        Optional<List<Integer>> devices = getDevices(username);
+
         return getDevices(username)
                 .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
                 ).orElse(false);
@@ -232,6 +234,11 @@ public class UserService {
         if (ownsDevice(username, deviceId)) {
             deviceStorage.deleteById(deviceId);
         }
+    }
+
+
+    public Optional<User> getById(Integer id){
+        return userStorage.findById(id);
     }
 
 
