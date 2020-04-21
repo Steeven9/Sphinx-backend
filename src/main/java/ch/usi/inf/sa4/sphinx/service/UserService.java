@@ -73,6 +73,7 @@ public final class UserService {
         for (Integer device : devices) {
             removeDevice(username, device);
         }
+        userStorage.delete(username);
     }
 
 
