@@ -1,14 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     private double increment;
-    @Autowired
-    private DeviceService deviceService;
 
     /**
      * Constructor.
@@ -16,8 +13,8 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      * @param deviceID  the id of a device
      * @param increment value for incrementing
      **/
-    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment) {
-        super(deviceID);
+    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment, DeviceService deviceService) {
+        super(deviceID, deviceService);
         this.increment = increment;
     }
 
@@ -32,7 +29,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(deviceId)).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) this.deviceService.get(deviceId)).isIncrementing() ? increment : -increment;
     }
 
     /**
