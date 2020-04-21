@@ -11,7 +11,7 @@ public class SerialisableDevice {
     public String label;
     public int[] switched;
     public int[] switches;
-    public double slider;
+    public Double slider;
     public Integer roomId;
     public String roomName;
     public Integer type;
