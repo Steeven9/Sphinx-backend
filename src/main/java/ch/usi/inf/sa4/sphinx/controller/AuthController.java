@@ -22,16 +22,20 @@ public class AuthController {
 
     /**
      * Validates a given session token
-     * @param username the username of the user to authenticate
-     * @param sessionToken the session token to validate
-     * @return A ResponseEntity containing status code 200 if the username and session token match or
-     *      status 404 if no user with the given username exists
-     *      status 401 id the username and session token do not match
+     *
+     * @param usernameOrEmail the username or email of the user to authenticate
+     * @param sessionToken    the session token to validate
+     * @return A ResponseEntity containing status code 200 if the username or email and session token match or
+     * status 404 if no user with the given username or email exists
+     * status 401 id the usernameOrEmail and session token do not match
      */
     @PostMapping("/validate")
-    public ResponseEntity<Boolean> validate(@RequestHeader("user") String username,
-                                            @RequestHeader("session-token") String sessionToken) {
-        User user = userService.get(username);
+    public ResponseEntity<String> validate(@RequestHeader("user") String usernameOrEmail,
+                                           @RequestHeader("session-token") String sessionToken) {
+        User user = userService.get(usernameOrEmail);
+        if (user == null) {
+            user = userService.getByMail(usernameOrEmail);
+        }
 
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -39,7 +43,7 @@ public class AuthController {
         if (!user.getSessionToken().equals(sessionToken)) {
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(user.getUsername());
     }
 
 
