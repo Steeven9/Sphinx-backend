@@ -1,22 +1,19 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 
 public class SwitchChangedEvent extends Event<Boolean> {
 
-    @Autowired
-    private DeviceService deviceService;
 
     /**
      * Constructor.
      *
      * @param deviceId the id of a device
      */
-    public SwitchChangedEvent(Integer deviceId) {
-        super(deviceId);
+    public SwitchChangedEvent(@NotNull int deviceId, DeviceService deviceService) {
+        super(deviceId, deviceService);
     }
 
     private SwitchChangedEvent(SwitchChangedEvent other) {
@@ -26,11 +23,11 @@ public class SwitchChangedEvent extends Event<Boolean> {
     /**
      * Gets current state of device
      *
-     * @return 1.0 if the switch is on, 0.0 otherwise
+     * @return true if the switch is on, false otherwise
      **/
     @Override
     public Boolean get() {
-        return ((Switch) deviceService.get(deviceId)).isOn();
+        return ((Switch) this.deviceService.get(deviceId)).isOn();
     }
 
     /**
