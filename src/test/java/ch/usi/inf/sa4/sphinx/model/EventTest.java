@@ -43,5 +43,4 @@ class EventTest {
         assertNotNull(s2);
         assertEquals(s.getDeviceId(), s2.getDeviceId());
     }
-
 }
