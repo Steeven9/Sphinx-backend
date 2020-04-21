@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -34,34 +33,34 @@ public class DummyDataAdder {
     private static Logger logger = LoggerFactory.getLogger(DummyDataAdder.class);
 
 
-     //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
+    //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
+
     /**
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
      */
-
- @Transactional
+    @Transactional
     public void user1() {
-     try {
+        try {
 
-         User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
-         newUser.setVerified(true);
-         newUser.setSessionToken("user1SessionToken");
-         boolean inserted = userService.insert(newUser);
+            User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
+            newUser.setVerified(true);
+            newUser.setSessionToken("user1SessionToken");
+            boolean inserted = userService.insert(newUser);
 
-         if(inserted) logger.info("user1 added to storage");
+            if (inserted) logger.info("user1 added to storage");
 
-         Room newRoom1 = new Room();
-         newRoom1.setName("room1");
-         Room newRoom2 = new Room();
-         newRoom2.setName("room2");
-         Integer roomId1 = userService.addRoom("user1", newRoom1).get();//leave roomId1 for debugging
-         Integer roomId2 = userService.addRoom("user1", newRoom2).get();
-         roomService.addDevice(roomId1, DeviceType.LIGHT);
-     }catch (Exception e){
-         logger.warn("SOMETHING IS WRONG IN user1");
-         e.printStackTrace();
-     }
+            Room newRoom1 = new Room();
+            newRoom1.setName("room1");
+            Room newRoom2 = new Room();
+            newRoom2.setName("room2");
+            Integer roomId1 = userService.addRoom("user1", newRoom1).get();//leave roomId1 for debugging
+            Integer roomId2 = userService.addRoom("user1", newRoom2).get();
+            roomService.addDevice(roomId1, DeviceType.LIGHT);
+        } catch (Exception e) {
+            logger.warn("SOMETHING IS WRONG IN user1");
+            e.printStackTrace();
+        }
     }
 
 
@@ -105,7 +104,7 @@ public class DummyDataAdder {
 
             //ROOM4 is empty
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.warn("Something is wrong in user2");
         }
     }
@@ -136,7 +135,7 @@ public class DummyDataAdder {
 
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.warn("Something is wrong in randUser");
         }
     }
@@ -147,12 +146,12 @@ public class DummyDataAdder {
      */
     @Transactional
     public void emptyUser() {
-        try{
-        User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
-        newUser.setVerified(true);
-        newUser.setSessionToken("emptyUserSessionToken");
-        if(userService.insert(newUser)) logger.info("emptyUser added to storage");}
-        catch (Exception e){
+        try {
+            User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
+            newUser.setVerified(true);
+            newUser.setSessionToken("emptyUserSessionToken");
+            if (userService.insert(newUser)) logger.info("emptyUser added to storage");
+        } catch (Exception e) {
             logger.warn("Something is wrong in emptyUser");
         }
     }
@@ -161,14 +160,24 @@ public class DummyDataAdder {
      * adds an unverified user called unverifiedUser in storage
      */
     @Transactional
-    public void unverifiedUser(){
+    public void unverifiedUser() {
         try {
             User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
             if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.warn("Something is wrong in unverifiedUser");
         }
     }
 
+
+    @Transactional
+    public void deleteUsers() {
+        userService.delete("user1");
+        userService.delete("user2");
+        userService.delete("unverifiedUser");
+        userService.delete("emptyUser");
+        userService.delete("randUser");
+
+    }
 
 }
