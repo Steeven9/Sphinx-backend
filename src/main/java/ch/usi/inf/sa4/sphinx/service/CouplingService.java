@@ -65,12 +65,14 @@ public class CouplingService {
      * @return The id of the newly stored Coupling
      */
     //TODO make safe, check the username?
-    /** Add coupling to storage.
-     * @param event the event in the coupling to be added
+    /**
+     * Add coupling to storage.
+     *
+     * @param event  the event in the coupling to be added
      * @param effect the effect in the coupling to be added
      * @return the id of the new coupling
      **/
-    public Integer addCoupling (Event<Double> event, Effect<Double> effect) {
+    public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
         Integer storedEffect = effectStorage.insert(effect);
         Integer storedEvent = eventStorage.insert(event);
         Coupling newCoupling;

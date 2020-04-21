@@ -30,7 +30,7 @@ public class AuthController {
      */
     @PostMapping("/validate")
     public ResponseEntity<String> validate(@RequestHeader("user") String usernameOrEmail,
-                                            @RequestHeader("session-token") String sessionToken) {
+                                           @RequestHeader("session-token") String sessionToken) {
         User user = userService.get(usernameOrEmail);
         if (user == null) {
             user = userService.getByMail(usernameOrEmail);

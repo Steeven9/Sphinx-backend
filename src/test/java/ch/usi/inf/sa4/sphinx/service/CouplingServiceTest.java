@@ -20,11 +20,13 @@ class CouplingServiceTest {
     VolatileEffectStorage effectStorage;
     @Autowired
     VolatileEventStorage eventStorage;
+    @Autowired
+    DeviceService deviceService;
 
     @Test
     @DisplayName("Test adding a new coupling")
     void testSimpleScenario() {
-        Event<Double> event = new DimmSwitchChangedEvent(1);
+        Event<Double> event = new DimmSwitchChangedEvent(1, deviceService);
         Effect<Double> effect = new DimmableLightStateInc(2);
 
         assertAll("test with invalid values",
@@ -48,7 +50,7 @@ class CouplingServiceTest {
     @Test
     @DisplayName("test getting effect and event")
     void testGet() {
-        StatelessDimmSwitchChangedEvent event = new StatelessDimmSwitchChangedEvent(30, 0.6);
+        StatelessDimmSwitchChangedEvent event = new StatelessDimmSwitchChangedEvent(30, 0.6, deviceService);
         DimmableLightStateSet effect = new DimmableLightStateSet(90);
 
         Integer eventId = eventStorage.insert(event);
@@ -62,7 +64,7 @@ class CouplingServiceTest {
     @DisplayName("test adding effects")
     @Disabled(value = "fix addEffect method: should check that second parameter is not null")
     void test() {
-        StatelessDimmSwitchChangedEvent event = new StatelessDimmSwitchChangedEvent(3, 0.6);
+        StatelessDimmSwitchChangedEvent event = new StatelessDimmSwitchChangedEvent(3, 0.1, deviceService);
         DimmableLightStateSet effect = new DimmableLightStateSet(4);
 
         assertAll("test with invalid values",
