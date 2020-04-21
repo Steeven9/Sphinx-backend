@@ -44,5 +44,4 @@ class EventTest {
         assertEquals(s.getDeviceId(), s2.getDeviceId());
     }
 
-
 }
