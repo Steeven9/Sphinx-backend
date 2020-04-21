@@ -180,6 +180,18 @@ public class DeviceController {
         return ResponseEntity.status(500).build();
     }
 
+    /**
+     * resets the SmartPlug with the given deviceId,
+     * iff the user is authenticating with the correct user/session-token pair
+     * @param deviceId id  of the smart plug to be reset
+     * @param username the username of the user to authenticate as
+     * @param sessionToken the session token of the user to authenticate as
+     * @return a ResponseEntity with status code 204 if operation is successful or
+     *  - 401 if authentication fails or
+     *  - 404 if no device with the given DeviceId exists or
+     *  - 400 if the indicated device is not a SmartPlug or
+     *  - 500 in case of an internal server error
+     */
     @PutMapping("/reset/{deviceId}")
     public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
                                                   @RequestHeader("session-token") String sessionToken,
