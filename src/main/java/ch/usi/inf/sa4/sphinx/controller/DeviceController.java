@@ -242,23 +242,36 @@ public class DeviceController {
         return ResponseEntity.status(204).build();
     }
 
+    /**
+     * Creates a coupling between two devices.
+     *
+     * @param sessionToken the session token of the user to authenticate as
+     * @param username     the username of the user to authenticate as
+     * @param device1_id   id of the first device to couple
+     * @param device2_id   id of the second device to couple
+     * @return a ResponseEntity with 204 if coupling is successful or
+     * - 404 if not found or
+     * - 401 if not authorized or
+     * - 500 in case of a server error
+     */
     @PostMapping("/couple/{device1_id}/{device2_id}")
     public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username,
                                                           @PathVariable String device1_id,
-                                                          @PathVariable String device2_id,
-                                                          Errors errors) {
+                                                          @PathVariable String device2_id) {
 
-        if (errors.hasErrors() || Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
+        if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
             return ResponseEntity.badRequest().build();
         }
 
-        if (!userService.validSession(username, sessionToken)) {
+        Integer id1 = Integer.parseInt(device1_id);
+        Integer id2 = Integer.parseInt(device2_id);
+        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             return ResponseEntity.status(401).build();
         }
 
-        Device device1 = deviceService.get(Integer.parseInt(device1_id));
-        Device device2 = deviceService.get(Integer.parseInt(device2_id));
+        Device device1 = deviceService.get(id1);
+        Device device2 = deviceService.get(id2);
 
         if (device1 == null || device2 == null) {
             return ResponseEntity.notFound().build();

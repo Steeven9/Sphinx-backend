@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Service
@@ -45,11 +46,11 @@ public final class DeviceService {
      */
     private <T> Event<T> eventHelper(DeviceType type, Integer key) {
         if (DeviceType.SWITCH.equals(type)) {
-            return (Event<T>) new SwitchChangedEvent(key);
+            return (Event<T>) new SwitchChangedEvent(key, this);
         } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
+            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1, this);
         } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new DimmSwitchChangedEvent(key);
+            return (Event<T>) new DimmSwitchChangedEvent(key, this);
         } else {
             return null;
         }
@@ -87,8 +88,8 @@ public final class DeviceService {
      * @return true if coupling was succeed, false otherwise
      */
     public boolean createCoupling(Device device1, Device device2) {
-        ArrayList<DeviceType> switches = new ArrayList<>(Arrays.asList(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH));
-        ArrayList<DeviceType> lights = new ArrayList<>(Arrays.asList(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT));
+        ArrayList<DeviceType> switches = new ArrayList<>(List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH));
+        ArrayList<DeviceType> lights = new ArrayList<>(List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT));
         DeviceType type1 = DeviceType.deviceToDeviceType(device1);
         DeviceType type2 = DeviceType.deviceToDeviceType(device2);
         boolean ordered;
