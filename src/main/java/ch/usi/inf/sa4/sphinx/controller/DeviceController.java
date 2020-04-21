@@ -4,6 +4,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
+import ch.usi.inf.sa4.sphinx.model.SmartPlug;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
@@ -177,6 +178,31 @@ public class DeviceController {
 
         }
         return ResponseEntity.status(500).build();
+    }
+
+    @PutMapping("/reset/{deviceId}")
+    public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
+                                                  @RequestHeader("session-token") String sessionToken,
+                                                  @RequestHeader("user") String username) {
+        Device plug = deviceService.get(deviceId);
+
+        if (plug == null) return ResponseEntity.notFound().build();
+
+        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        if (!DeviceType.SMART_PLUG.equals(DeviceType.deviceToDeviceType(plug))) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // safe because of the if statement immediately above this
+        ((SmartPlug) plug).reset();
+
+        if (!deviceService.update(plug)) {
+            return ResponseEntity.status(500).build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
     /**
