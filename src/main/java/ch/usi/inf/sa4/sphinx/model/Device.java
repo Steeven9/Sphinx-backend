@@ -68,11 +68,17 @@ public abstract class Device extends StorableE {
         serialisableDevice.on = this.on;
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
+        serialisableDevice.id = this.id;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
         serialisableDevice.label = getLabel();
+
         return serialisableDevice;
     }
 
+
+    public Room getRoom() {
+        return room;
+    }
 
     protected abstract DeviceType getDeviceType();
 

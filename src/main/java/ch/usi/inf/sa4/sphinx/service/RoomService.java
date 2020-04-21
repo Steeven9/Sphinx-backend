@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -28,8 +28,8 @@ public class RoomService {
      * @param deviceId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Room get(final Integer deviceId) {
-        return roomStorage.findById(deviceId).orElse(null);
+    public final Optional<Room> get(final Integer deviceId) {
+        return roomStorage.findById(deviceId);
     }
 
 
@@ -39,8 +39,8 @@ public class RoomService {
      * @param roomId the id of the room
      * @return a list of all devices in this room
      */
-    public final List<Device> getPopulatedDevices(final Integer roomId) {
-        return roomStorage.findById(roomId).map(Room::getDevices).orElse(new ArrayList<>());
+    public final Optional<List<Device>> getPopulatedDevices(final Integer roomId) {
+        return roomStorage.findById(roomId).map(Room::getDevices);
     }
 
     /**
@@ -65,16 +65,16 @@ public class RoomService {
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
      */
-    public final Integer addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
+    public final Optional<Integer> addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
-        if (newDevice == null) return null;
+        if (newDevice == null) return Optional.empty();
 
         return roomStorage.findById(roomId).map(r -> {
                     newDevice.setRoom(r);
                     return deviceStorage.save(newDevice).getId();
                 }
 
-        ).orElse(null);
+        );
     }
 
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class DummyDataAdder {
     private static Logger logger = LoggerFactory.getLogger(DummyDataAdder.class);
 
 
-
+     //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
     /**
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
@@ -41,20 +42,26 @@ public class DummyDataAdder {
 
  @Transactional
     public void user1() {
-        User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
-        newUser.setVerified(true);
-        newUser.setSessionToken("user1SessionToken");
-        boolean inserted = userService.insert(newUser);
+     try {
 
-        if(inserted) logger.info("user1 added to storage");
+         User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
+         newUser.setVerified(true);
+         newUser.setSessionToken("user1SessionToken");
+         boolean inserted = userService.insert(newUser);
 
-        Room newRoom1 = new Room();
-        newRoom1.setName("room1");
-        Room newRoom2 = new Room();
-        newRoom2.setName("room2");
-        Integer roomId1 = userService.addRoom("user1", newRoom1);//leave roomId1 for debugging
-        Integer roomId2 = userService.addRoom("user1", newRoom2);
-        roomService.addDevice(roomId1, DeviceType.LIGHT);
+         if(inserted) logger.info("user1 added to storage");
+
+         Room newRoom1 = new Room();
+         newRoom1.setName("room1");
+         Room newRoom2 = new Room();
+         newRoom2.setName("room2");
+         Integer roomId1 = userService.addRoom("user1", newRoom1).get();//leave roomId1 for debugging
+         Integer roomId2 = userService.addRoom("user1", newRoom2).get();
+         roomService.addDevice(roomId1, DeviceType.LIGHT);
+     }catch (Exception e){
+         logger.warn("SOMETHING IS WRONG IN user1");
+         e.printStackTrace();
+     }
     }
 
 
@@ -63,40 +70,44 @@ public class DummyDataAdder {
      */
     @Transactional
     public void user2() {
-        User newUser = new User("mario2@usi.ch", "1234", "user2", "mariorossi");
-        newUser.setVerified(true);
-        newUser.setSessionToken("user2SessionToken");
-        boolean inserted  = userService.insert(newUser);
-        if(inserted) logger.info("user2 added to storage");
+        try {
+            User newUser = new User("mario2@usi.ch", "1234", "user2", "mariorossi");
+            newUser.setVerified(true);
+            newUser.setSessionToken("user2SessionToken");
+            boolean inserted = userService.insert(newUser);
+            if (inserted) logger.info("user2 added to storage");
 
-        Room newRoom1 = new Room();
-        newRoom1.setName("Living Room");
-        Room newRoom2 = new Room();
-        newRoom2.setName("Bed Room");
-        Room newRoom3 = new Room();
-        newRoom2.setName("Room3");
-        Room newRoom4 = new Room();
-        newRoom2.setName("Room4");
-        Room newRoom5 = new Room();
-        newRoom2.setName("Room5");
-        Integer roomId1 = userService.addRoom("user2", newRoom1);
-        Integer roomId2 = userService.addRoom("user2", newRoom2);
-        Integer roomId3 = userService.addRoom("user2", newRoom3);
-        Integer roomId4 = userService.addRoom("user2", newRoom4);
-        Integer roomId5 = userService.addRoom("user2", newRoom5);
-        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
-        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
-        roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
-        roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
-        roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
-        roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);
-        roomService.addDevice(roomId3, DeviceType.TEMP_SENSOR);
-        roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
-        roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
-        roomService.addDevice(roomId2, DeviceType.LIGHT);
+            Room newRoom1 = new Room();
+            newRoom1.setName("Living Room");
+            Room newRoom2 = new Room();
+            newRoom2.setName("Bed Room");
+            Room newRoom3 = new Room();
+            newRoom2.setName("Room3");
+            Room newRoom4 = new Room();
+            newRoom2.setName("Room4");
+            Room newRoom5 = new Room();
+            newRoom2.setName("Room5");
+            Integer roomId1 = userService.addRoom("user2", newRoom1).get();
+            Integer roomId2 = userService.addRoom("user2", newRoom2).get();
+            Integer roomId3 = userService.addRoom("user2", newRoom3).get();
+            Integer roomId4 = userService.addRoom("user2", newRoom4).get();
+            Integer roomId5 = userService.addRoom("user2", newRoom5).get();
+            roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+            roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
+            roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
+            roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
+            roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
+            roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);
+            roomService.addDevice(roomId3, DeviceType.TEMP_SENSOR);
+            roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+            roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
+            roomService.addDevice(roomId2, DeviceType.LIGHT);
 
-        //ROOM4 is empty
-        roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
+            //ROOM4 is empty
+            roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
+        }catch (Exception e){
+            logger.warn("Something is wrong in user2");
+        }
     }
 
 
@@ -107,21 +118,26 @@ public class DummyDataAdder {
     //user with 20 rooms and random devices in them
     @Transactional
     public void randUser() {
-        User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
-        newUser.setVerified(true);
-        userService.insert(newUser);
-        for (int i = 0; i < 20; i++) {
-            Room newRoom = new Room();
-            newRoom.setName(UUID.randomUUID().toString());
-            Integer roomId = userService.addRoom("randUser", newRoom);
-            Random rand = new Random();
+        try {
+            User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
+            newUser.setVerified(true);
+            userService.insert(newUser);
+            for (int i = 0; i < 20; i++) {
+                Room newRoom = new Room();
+                newRoom.setName(UUID.randomUUID().toString());
+                Integer roomId = userService.addRoom("randUser", newRoom).get();
+                Random rand = new Random();
 
-            int devices = rand.nextInt(30);
-            for (i = 0; i < devices; i++) {
-                DeviceType dt = DeviceType.intToDeviceType(rand.nextInt(9) + 1);
-                roomService.addDevice(roomId, dt);
+                int devices = rand.nextInt(30);
+                for (i = 0; i < devices; i++) {
+                    DeviceType dt = DeviceType.intToDeviceType(rand.nextInt(9) + 1);
+                    roomService.addDevice(roomId, dt);
+                }
+
+
             }
-
+        }catch (Exception e){
+            logger.warn("Something is wrong in randUser");
         }
     }
 
@@ -131,10 +147,14 @@ public class DummyDataAdder {
      */
     @Transactional
     public void emptyUser() {
+        try{
         User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
         newUser.setVerified(true);
         newUser.setSessionToken("emptyUserSessionToken");
-        if(userService.insert(newUser)) logger.info("emptyUser added to storage");
+        if(userService.insert(newUser)) logger.info("emptyUser added to storage");}
+        catch (Exception e){
+            logger.warn("Something is wrong in emptyUser");
+        }
     }
 
     /**
@@ -142,8 +162,12 @@ public class DummyDataAdder {
      */
     @Transactional
     public void unverifiedUser(){
-        User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
-        if(userService.insert(newUser)) logger.info("unverifiedUser added to storage");
+        try {
+            User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
+            if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
+        }catch (Exception e){
+            logger.warn("Something is wrong in unverifiedUser");
+        }
     }
 
 

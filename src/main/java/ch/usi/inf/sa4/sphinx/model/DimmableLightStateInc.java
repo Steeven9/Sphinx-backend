@@ -25,7 +25,7 @@ public class DimmableLightStateInc extends Effect<Double> {
      **/
     @Override
     public void execute(Double value) {
-        DimmableLight light = (DimmableLight) deviceService.get(deviceId);
+        DimmableLight light = (DimmableLight) deviceService.get(deviceId).get();
         light.setState(light.getIntensity() + value);
         deviceService.update(light);
     }
