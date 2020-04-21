@@ -8,11 +8,11 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 public class Dimmable extends Device {
     private double intensity;
 
-    @Override
     /**
      * {@inheritDoc}
      */
-    public SerialisableDevice serialise(){
+    @Override
+    public SerialisableDevice serialise() {
         SerialisableDevice sd = super.serialise();
         sd.slider = this.intensity;
         return sd;
@@ -29,6 +29,7 @@ public class Dimmable extends Device {
 
     /**
      * Constructor.
+     *
      * @param d a Dimmable device
      */
     protected Dimmable(Dimmable d) {
@@ -37,16 +38,17 @@ public class Dimmable extends Device {
     }
 
 
-    @Override
     /**
      * {@inheritDoc}
      */
+    @Override
     public Dimmable makeCopy() {
         return new Dimmable(this);
     }
 
     /**
      * Returns the intensity level of this DimmableSwitch.
+     *
      * @return the intensity level of this DimmableSwitch
      */
     public double getState() {
