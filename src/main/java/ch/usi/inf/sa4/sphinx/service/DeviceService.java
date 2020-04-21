@@ -35,7 +35,6 @@ public final class DeviceService {
         return deviceStorage.update(device);
     }
 
-    //todo fix increment in StatelessDimmSwitchChangedEvent(key, 1.0)
 
     /**
      * Generates an Event basing on switch type.
@@ -48,7 +47,7 @@ public final class DeviceService {
         if (DeviceType.SWITCH.equals(type)) {
             return (Event<T>) new SwitchChangedEvent(key);
         } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 1.0);
+            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
         } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
             return (Event<T>) new DimmSwitchChangedEvent(key);
         } else {
