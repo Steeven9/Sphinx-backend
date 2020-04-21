@@ -170,4 +170,29 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Re-sends a verification email to a User.
+     * @param email the email address of the User
+     * @return A ResponseEntity containing status code 204 if operation completed successfully or
+     *      404 id the provided email address does not exist.
+     */
+    @PostMapping("/auth/resend/{email}")
+    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
+        if(email == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userService.getByMail(email);
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+        if(!user.isVerified()){
+            return ResponseEntity.notFound().build();
+        }
+        mailer.send(email,
+                "Confirm your email modification for SmartHut account",
+                "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + email + "&code=" + user.getVerificationToken() +
+                        "\nOr, from local, http://localhost:3000/verification?email=" + email + "&code=" + user.getVerificationToken());
+
+        return ResponseEntity.status(204).build();
+    }
 }
