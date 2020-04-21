@@ -1,7 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -46,27 +49,27 @@ public class DeviceController {
      * - 401 if not authorized
      */
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<SerialisableDevice[]> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                               @RequestHeader("user") String username) {
+    public ResponseEntity<Collection<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
+                                                                        @RequestHeader("user") String username) {
 
 
 
-        User user = userService.get(username);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+        Optional<User> user = userService.get(username);
+
+        if(user.isPresent()){
+            if (!userService.validSession(username, sessionToken)) {
+                throw new UnauthorizedException();
+            }
+
+            List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+            List<SerialisableDevice> serializedDevices = devices.stream()
+                    .map(device -> serialiser.serialiseDevice(device, user.get()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(serializedDevices);
+
         }
+            throw new NotFoundException("");
 
-        if (!userService.validSession(username, sessionToken)) {
-            return ResponseEntity.status(401).build();
-        }
-
-        List<Device> devices = userService.getPopulatedDevices(username);
-        SerialisableDevice[] serializedDevices = devices.stream()
-                .map(device -> serialiser.serialiseDevice(device, user))
-                .toArray(SerialisableDevice[]::new);
-
-
-        return ResponseEntity.ok(serializedDevices);
     }
 
 
@@ -81,16 +84,17 @@ public class DeviceController {
                                                         @RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username) {
 
-        Device device = deviceService.get(deviceId);
-        if (device == null) {
-            return ResponseEntity.notFound().build();
+        Optional<Device> device = deviceService.get(deviceId);
+
+        if(device.isEmpty()) {
+            throw new NotFoundException("");
         }
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            return ResponseEntity.status(401).build();
+            throw  new UnauthorizedException("");
         }
 
-        return ResponseEntity.ok(serialiser.serialiseDevice(device));
+        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
     }
 
 
@@ -117,22 +121,28 @@ public class DeviceController {
         }
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsRoom(username, device.roomId)) {
-            return ResponseEntity.status(401).build();
+            throw new UnauthorizedException("");
         }
 
-        User user = userService.get(username);
-        Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
-        Device d = deviceService.get(deviceId);
-        if (d == null) return ResponseEntity.status(500).build();
+        User user = userService.get(username).get(); //If the session is valid the User exists
+
+
+        Optional<Integer> deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type));
+        if(deviceId.isEmpty()) throw new ServerErrorException("");
+
+        Device d = deviceService.get(deviceId.get()).get(); //Since the previous exists then this does too
+
+
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
         if (device.name != null && !device.name.isBlank()) d.setName(device.name);
-        if (!deviceService.update(d)) return ResponseEntity.status(500).build();
 
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId), user));
+        if (!deviceService.update(d)) throw  new ServerErrorException("");
+
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId.get()).get(), user));
 
     }
 
-
+//
     /**
      * modifies the device with the given deviceId to conform to the fields in the given SerialisableDevice,
      * iff the user is authenticating with the correct user/session-token pair
@@ -154,35 +164,33 @@ public class DeviceController {
                                                            Errors errors) {
 
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Device storageDevice = deviceService.get(deviceId);
-
-        if (storageDevice == null) {
-            return ResponseEntity.notFound().build();
+            throw new BadRequestException("check that all the required fields are not blank");
         }
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            return ResponseEntity.status(401).build();
+           throw  new UnauthorizedException("");
         }
 
-        User user = userService.get(username);
+        Device storageDevice = deviceService.get(deviceId).orElseThrow( ()->new NotFoundException(""));
+
+        User user = userService.get(username).get(); //exists if prev is valid
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
         if (device.on != null) storageDevice.setActive(device.on);
 
         if (deviceService.update(storageDevice)) {
-            final Integer owningRoom = userService.owningRoom(username, deviceId);
+            final Integer owningRoom = storageDevice.getRoom().getId();
             if (device.roomId != null && !device.roomId.equals(owningRoom)) {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             return ResponseEntity.status(200).body(serialiser.serialiseDevice(storageDevice, user));
 
         }
-        return ResponseEntity.status(500).build();
+        throw new ServerErrorException("");
     }
+
+
 
     /**
      * @param deviceId id  of the device to be deleted
@@ -195,15 +203,16 @@ public class DeviceController {
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
 
-        Device storageDevice = deviceService.get(deviceId);
-
-        if (storageDevice == null) {
-            return ResponseEntity.notFound().build();
+        Optional<Device> storageDevice = deviceService.get(deviceId);
+        if (storageDevice.isEmpty()){
+            throw new NotFoundException("");
         }
 
         if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
-            return ResponseEntity.status(401).build();
+            throw new UnauthorizedException("");
         }
+
+
         userService.removeDevice(username, deviceId);
 
         return ResponseEntity.status(204).build();

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public final class DeviceService {
@@ -16,8 +18,8 @@ public final class DeviceService {
      * @param deviceId the Id of the device
      * @return the Device with corresponding deviceId
      */
-    public Device get(Integer deviceId){
-        return deviceStorage.findById(deviceId).orElse(null);
+    public Optional<Device> get(Integer deviceId){
+        return deviceStorage.findById(deviceId);
     }
 
 

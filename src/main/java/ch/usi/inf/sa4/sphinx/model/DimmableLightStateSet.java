@@ -26,7 +26,7 @@ public class DimmableLightStateSet extends Effect<Double> {
      * @param effect: new value of the state
      **/
     public void execute(Double effect) {
-        DimmableLight dl = ((DimmableLight) deviceService.get(deviceId));
+        DimmableLight dl = ((DimmableLight) deviceService.get(deviceId).get());
         dl.setState(effect);
         deviceService.update(dl);
     }
