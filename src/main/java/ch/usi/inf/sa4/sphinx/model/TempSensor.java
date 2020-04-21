@@ -34,6 +34,6 @@ public class TempSensor extends Sensor {
      */
     @Override
     protected String getPhQuantity() {
-        return " °C";
+        return "°C";
     }
 }

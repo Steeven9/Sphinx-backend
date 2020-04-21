@@ -35,6 +35,6 @@ public class HumiditySensor extends Sensor {
      */
     @Override
     protected String getPhQuantity() {
-        return " %";
+        return "%";
     }
 }

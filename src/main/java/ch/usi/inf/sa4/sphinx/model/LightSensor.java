@@ -32,7 +32,7 @@ public class LightSensor extends Sensor {
      */
     @Override
     protected String getPhQuantity() {
-        return " lm";
+        return "lm";
     }
 }
 
