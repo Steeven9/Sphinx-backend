@@ -70,9 +70,6 @@ public final class UserService {
         for (Room room : rooms) {
             removeRoom(username, room.getId());
         }
-        for (Integer device : devices) {
-            removeDevice(username, device);
-        }
         userStorage.delete(username);
     }
 
@@ -147,7 +144,10 @@ public final class UserService {
         if(!ownsRoom(username, roomId)){
             return false;
         }
-
+        List<Integer> devices  = getDevices(username);
+        for (Integer device : devices) {
+            removeDevice(username, device);
+        }
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(user);
