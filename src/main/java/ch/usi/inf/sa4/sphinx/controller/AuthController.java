@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -165,5 +166,31 @@ public class AuthController {
             throw new ServerErrorException("");
         }
         return ResponseEntity.noContent().build();
+
+    }
+
+    /**
+     * Re-sends a verification email to a User.
+     * @param email the email address of the User
+     * @return A ResponseEntity containing status code 204 if operation completed successfully or
+     *      404 id the provided email address does not exist.
+     */
+    @PostMapping("/resend/{email}")
+    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
+        if(email == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userService.getByMail(email).orElseThrow(()->new NotFoundException("no user with this mail"));
+
+        if(user.isVerified()){
+            throw new BadRequestException("User is already verified");
+        }
+
+        mailer.send(email,
+                "Confirm your email account for SmartHut",
+                "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + email + "&code=" + user.getVerificationToken() +
+                        "\nOr, from local, http://localhost:3000/verification?email=" + email + "&code=" + user.getVerificationToken());
+
+        return ResponseEntity.status(204).build();
     }
 }
