@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,16 +34,18 @@ class UserServiceTest {
 //        String email = "casual@usi.ch";
 //        User newUser = new User(email, "1234", username, "mario rossi");
 //        assertAll("test with not existing data",
-//                () -> assertNull(userService.get("notExistingUser")),
-//                () -> assertNull(userService.get(username)),
-//                () -> assertNull(userService.getByMail(email)),
-//                () -> assertNull(userService.getByMail("notExisting@usi.ch")),
+//                () -> assertTrue(userService.get("notExistingUser").isEmpty()),
+//                () -> assertTrue(userService.get(username).isEmpty()),
+//                () -> assertTrue(userService.getByMail(email).isEmpty()),
+//                () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
 //                () -> assertFalse(userService.validSession(username, "test"))
 //        );
 //
+//
+//
 //        assertTrue(userService.insert(newUser));
-//        User returnedUserByUsername = userService.get(username);
-//        User returnedUserByEmail = userService.getByMail(email);
+//        User returnedUserByUsername = userService.get(username).get();
+//        User returnedUserByEmail = userService.getByMail(email).get();
 //        assertAll("should return correct user",
 //                () -> assertEquals(username, returnedUserByUsername.getUsername()),
 //                () -> assertEquals(username, returnedUserByEmail.getUsername()),
@@ -66,35 +69,34 @@ class UserServiceTest {
 //        assertThrows(NullPointerException.class, () -> userService.update(null));
 //
 //        assertTrue(userService.insert(newUser));
-//        assertEquals(username, userService.get(username).getUsername());
+//        assertEquals(username, userService.get(username).get().getUsername());
 //
 //        String newFullname = "newTestFullname";
 //        newUser.setFullname(newFullname);
 //        assertTrue(userService.update(newUser));
-//        assertEquals(username, userService.get(username).getUsername());
-//        assertEquals(newFullname, userService.get(username).getFullname());
+//        assertEquals(username, userService.get(username).get().getUsername());
+//        assertEquals(newFullname, userService.get(username).get().getFullname());
 //        userService.delete(username);
 //    }
 //
 //    @Test
-//    @Disabled(value = "fix changeUsername: change effectively the username")
 //    void testUsername() {
 //        String username = "serviceUsername2";
 //        String email = "casual2@usi.ch";
 //        User newUser = new User(email, "1234", username, "mario rossi");
 //
 //        assertAll("test with invalid values",
-//                () -> assertFalse(userService.changeUsername(username, null)),
-//                () -> assertFalse(userService.changeUsername(username, "test")),
-//                () -> assertFalse(userService.changeUsername(null, "test"))
+//                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(username, null)),
+//                //() -> assertFalse(userService.changeUsername(username, "test")), Why?
+//                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(null, "test"))
 //        );
 //        userService.insert(newUser);
 //
 //        String newUsername = "newUsername";
 //        assertTrue(userService.changeUsername(username, newUsername));
-//        assertEquals(newUsername, userService.get(newUsername).getUsername());
+//        assertEquals(newUsername, userService.get(newUsername).get().getUsername());
 //    }
-//
+////
 //    @Test
 //    @DisplayName("Test adding and removing rooms")
 //    void testRooms() {
@@ -105,21 +107,17 @@ class UserServiceTest {
 //        room.setName("testName");
 //
 //        assertFalse(userService.ownsRoom(username, 1));
-//        assertEquals(new ArrayList<Integer>(), userService.getPopulatedRooms("notExisting"));
+//        assertEquals(new ArrayList<Room>(), userService.getPopulatedRooms("notExisting"));
 //
-//        assertNull(userService.addRoom(username, room));
+//        assertTrue(userService.addRoom(username, room).isEmpty());
 //        assertTrue(userService.insert(newUser));
 //        assertFalse(userService.ownsRoom(username, 1));//no rooms
 //
-//        Room lockedKeyRoom = new Room();
-//        lockedKeyRoom.lockKey();
-//        assertNull(userService.addRoom(username, lockedKeyRoom));
 //
 //        Room nullKeyRoom = new Room();
-//        nullKeyRoom.setKey(null);
-//        assertEquals(Integer.class, userService.addRoom(username, nullKeyRoom).getClass());
+//        assertEquals(Integer.class, userService.addRoom(username, nullKeyRoom).get().getClass());
 //
-//        Integer id = userService.addRoom(username, room);
+//        Integer id = userService.addRoom(username, room).get();
 //        assertFalse(userService.ownsRoom(username, 9999)); //not existing id
 //        assertTrue(userService.ownsRoom(username, id));
 //
@@ -141,29 +139,29 @@ class UserServiceTest {
 //        room2.setName("testName2");
 //        room3.setName("testName3");
 //
-//        assertEquals(new ArrayList<Integer>(), userService.getDevices("notExisting"));
+//        assertEquals(new ArrayList<Integer>(), userService.getDevices("notExisting").get());
 //        userService.insert(newUser);
-//        assertEquals(new ArrayList<Integer>(), userService.getDevices(username)); //no device
-//        assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username)); //no device
-//        assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices("notExisting")); //no device
+//        assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no device
+//        assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username).get()); //no device
+//        assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices("notExisting").get()); //no device
 //
-//        Integer id1 = userService.addRoom(username, room1); // no devices
-//        Integer id2 = userService.addRoom(username, room2); // 3 devices
-//        Integer id3 = userService.addRoom(username, room3); // 1 device
+//        Integer id1 = userService.addRoom(username, room1).get(); // no devices
+//        Integer id2 = userService.addRoom(username, room2).get(); // 3 devices
+//        Integer id3 = userService.addRoom(username, room3).get(); // 1 device
 //        assertAll("should return list with 3 rooms",
 //                () -> assertEquals(room1.getName(), userService.getPopulatedRooms(username).get(0).getName()),
 //                () -> assertEquals(room2.getName(), userService.getPopulatedRooms(username).get(1).getName()),
 //                () -> assertEquals(room3.getName(), userService.getPopulatedRooms(username).get(2).getName()),
 //                () -> assertEquals(3, userService.getPopulatedRooms(username).size()),
-//                () -> assertEquals(0, userService.getPopulatedDevices(username).size()), //should not have any devices
-//                () -> assertEquals(0, userService.getDevices(username).size()) //should not have any devices
+//                () -> assertTrue( userService.getPopulatedDevices(username).get().isEmpty()), //should not have any devices
+//                () -> assertTrue(userService.getDevices(username).get().isEmpty()) //should not have any devices
 //        );
 //
-//        Integer room2Device1 = roomService.addDevice(id2, DeviceType.LIGHT_SENSOR);
-//        Integer room2Device2 = roomService.addDevice(id2, DeviceType.LIGHT);
-//        Integer room2Device3 = roomService.addDevice(id2, DeviceType.SMART_PLUG);
-//        Integer room3Device1 = roomService.addDevice(id3, DeviceType.SWITCH);
-//        List<Integer> devices = userService.getDevices(username);
+//        Integer room2Device1 = roomService.addDevice(id2, DeviceType.LIGHT_SENSOR).get();
+//        Integer room2Device2 = roomService.addDevice(id2, DeviceType.LIGHT).get();
+//        Integer room2Device3 = roomService.addDevice(id2, DeviceType.SMART_PLUG).get();
+//        Integer room3Device1 = roomService.addDevice(id3, DeviceType.SWITCH).get();
+//        List<Integer> devices = userService.getDevices(username).get();
 //        assertEquals(4, devices.size());
 //
 //        ArrayList<Integer> listId = new ArrayList<Integer>(Arrays.asList(room2Device1, room2Device2, room2Device3, room3Device1));
@@ -174,8 +172,8 @@ class UserServiceTest {
 //        assertFalse(userService.ownsDevice("notExisting", 9999)); // not existing username
 //
 //        var deviceList = userService.getPopulatedDevices(username);
-//        assertEquals(4, deviceList.size());
-//        List<Integer> listOfId = deviceList.stream().map(Device::getId).collect(Collectors.toList());
+//        assertEquals(4, deviceList.get().size());
+//        List<Integer> listOfId = deviceList.map(ds->ds.stream().map(Device::getId).collect(Collectors.toList())).get();
 //        for (Integer id : listOfId) {
 //            assertTrue(userService.ownsDevice(username, id));
 //        }
@@ -204,22 +202,22 @@ class UserServiceTest {
 //                () -> assertNull(userService.owningRoom("notExistingUsername", 1)),
 //                () -> assertNull(userService.owningRoom("notExistingUsername", null))
 //        );
-//        Integer id1 = userService.addRoom(username, room1);
-//        Integer id2 = userService.addRoom(username, room2);
-//        Integer deviceId = roomService.addDevice(id1, DeviceType.TEMP_SENSOR);
+//        Integer id1 = userService.addRoom(username, room1).get();
+//        Integer id2 = userService.addRoom(username, room2).get();
+//        Integer deviceId = roomService.addDevice(id1, DeviceType.TEMP_SENSOR).get();
 //
 //        assertEquals(id1, userService.owningRoom(username, deviceId));
 //        assertNull(userService.owningRoom(username, 9999));
 ////        userService.removeDevice(username, deviceId);
 ////        assertNull(userService.owningRoom(username, deviceId));
 //
-//        deviceId = roomService.addDevice(id1, DeviceType.SMART_PLUG);
+//        deviceId = roomService.addDevice(id1, DeviceType.SMART_PLUG).get();
 //        assertTrue(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2
 //        assertEquals(id2, userService.owningRoom(username, deviceId));
 //
 //        //todo check more in userService.migrateDevice, because the method does not check that device effectively belongs to startRoomId
 //        assertFalse(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2 (no more devices)
 //        userService.removeDevice(username, deviceId);
-//        assertEquals(new ArrayList<Integer>(), userService.getDevices(username)); //no devices
+//        assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no devices
 //    }
 }

@@ -19,14 +19,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class RoomServiceTest {
 
-//    @Autowired
-//    RoomService roomService;
-//    @Autowired
-//    VolatileRoomStorage roomStorage;
-//    @Autowired
-//    DummyDataAdder dummyDataAdder;
-//
-//
+    @Autowired
+    RoomService roomService;
+    @Autowired
+    RoomStorage roomStorage;
+    @Autowired
+    DummyDataAdder dummyDataAdder;
+
+
+    //TODO Storage layer should never be used directly, use the services
 //    @Test
 //    @DisplayName("Tests both get and update methods")
 //    void testGetAndUpdate() {
@@ -49,8 +50,8 @@ class RoomServiceTest {
 //        assertFalse(roomService.update(new Room()));
 //    }
 //
-//    @Test
-//    void testGetPopulatedDevices() {
+    @Test
+    void testGetPopulatedDevices() {
 //        assertEquals(new ArrayList<>(), roomService.getPopulatedDevices(9999));//not existing id
 //        dummyDataAdder.user2();
 //        List<Device> result = roomService.getPopulatedDevices(2);
@@ -61,7 +62,7 @@ class RoomServiceTest {
 //        );
 //        List<Device> res = roomService.getPopulatedDevices(4);
 //        assertEquals(0, res.size());
-//    }
+    }
 //
 //    @Test
 //    void testAddDevice() {

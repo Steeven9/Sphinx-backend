@@ -11,6 +11,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+//TODO why is the storage being used directly
 @SpringBootTest
 class CouplingServiceTest {
 

@@ -4,6 +4,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -296,6 +297,7 @@ public class UserService {
      * @return true if successful else false
      */
     public boolean changeUsername(@NotNull final String oldUsername, @NotNull final String newUsername) {
+        if(newUsername == null) return false;
         try {
             return userStorage.findByUsername(oldUsername).map(user -> {
                 user.setUsername(newUsername);
@@ -306,6 +308,9 @@ public class UserService {
             return false;
         }
     }
+
+
+
 
 
 }

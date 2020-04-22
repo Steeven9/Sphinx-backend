@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import com.google.gson.annotations.Expose;
+import lombok.NonNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,18 +40,23 @@ public class Coupling extends StorableE {
 
 
 
-
-    public <T> Coupling(Event<T> event, List<Effect<T>> effects){
-        this.event = event;
-        this.effects = new ArrayList<>(effects);
-    }
-
-
-    public Coupling(Device device, Event event, Collection<Effect> effects) {
+    public Coupling(@NonNull Device device,@NonNull Event event,@NonNull Collection<Effect> effects) {
         this.device = device;
         this.event = event;
         this.effects = new ArrayList<>(effects);
     }
+
+    public Coupling(Device device, Event event){
+        this(device, event, new ArrayList<>());
+    }
+
+    public Coupling(Device device, Event event, Effect effect){
+        this(device,event);
+        addEffect(effect);
+    }
+
+
+
 
 
     public Event getEvent() {
@@ -80,7 +86,7 @@ public class Coupling extends StorableE {
     }
 
 
-    public void addEffect(Effect effect) {
+    public void addEffect(@NonNull Effect effect) {
         effects.add(effect);
     }
 

@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class DeviceServiceTest {
-
+//
 //    @Autowired
 //    DeviceService deviceService;
 //    @Autowired
-//    VolatileDeviceStorage deviceStorage;
-//
+//    RoomService roomService;
+
 //    @Test
 //    @DisplayName("Tests both get and update methods")
 //    void testDeviceService() {

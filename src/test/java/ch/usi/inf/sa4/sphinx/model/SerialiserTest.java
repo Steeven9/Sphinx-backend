@@ -22,9 +22,9 @@ class SerialiserTest {
     @Autowired
     DummyDataAdder dummyDataAdder;
 
-    Device device;
-    User user;
-    Room room;
+    private Device device;
+    private User user;
+    private Room room;
     @Autowired
     RoomService roomService;
 
