@@ -60,11 +60,16 @@ public final class UserService {
 
 
     /**
-     * Deletes the user with the given Username from storage
+     * Deletes the user and its rooms and devices
      *
-     * @param username username of the user to delete
+     * @param username username of the User that needs to be deleted
      */
     public void delete(final String username) {
+        List<Room> rooms = getPopulatedRooms(username);
+        List<Integer> devices  = getDevices(username);
+        for (Room room : rooms) {
+            removeRoom(username, room.getId());
+        }
         userStorage.delete(username);
     }
 
@@ -139,7 +144,10 @@ public final class UserService {
         if(!ownsRoom(username, roomId)){
             return false;
         }
-
+        List<Integer> devices  = getDevices(username);
+        for (Integer device : devices) {
+            removeDevice(username, device);
+        }
         final User user = userStorage.get(username);
         user.removeRoom(roomId);
         userStorage.update(user);
