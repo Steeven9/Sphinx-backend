@@ -2,10 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
-import ch.usi.inf.sa4.sphinx.model.SmartPlug;
-import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.model.*;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -168,6 +165,12 @@ public class DeviceController {
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
         if (device.on != null) storageDevice.setOn(device.on);
+        if (storageDevice instanceof Dimmable && device.slider != null) {
+            ((Dimmable) storageDevice).setState(device.slider);
+        }
+        if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
+            ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
+        }
 
         if (deviceService.update(storageDevice)) {
             final Integer owningRoom = userService.owningRoom(username, deviceId);
