@@ -25,7 +25,7 @@ public class Light extends Device {
      */
     @Override
     public String getLabel() {
-        return this.active ? "active" : "off";
+        return this.on ? "active" : "off";
     }
 
     @Override
@@ -33,8 +33,4 @@ public class Light extends Device {
         return DeviceType.LIGHT;
     }
 
-    @Override
-    protected DeviceType getDeviceType() {
-        return DeviceType.LIGHT;
-    }
 }

@@ -7,11 +7,14 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Event<T> extends StorableE {
     protected final int deviceId;
+
+    @Transient
     protected DeviceService deviceService;
 
     public Event(Integer deviceId, DeviceService deviceService) {

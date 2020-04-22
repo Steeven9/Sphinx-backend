@@ -27,9 +27,8 @@ public abstract class Device extends StorableE {
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
 
     @OneToMany(orphanRemoval = false,
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "device"
+            cascade = CascadeType.PERSIST,
+            fetch = FetchType.LAZY
     )
     protected final List<Coupling> couplings;
 

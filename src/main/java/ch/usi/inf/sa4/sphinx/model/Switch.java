@@ -24,7 +24,7 @@ public class Switch extends Device {
      * @return true if the switch is active, otherwise false
      */
     public boolean getState(){
-        return active;
+        return on;
     }
 
     /**
@@ -32,7 +32,7 @@ public class Switch extends Device {
      * and vice versa.
      */
     public void click(){
-        this.active = !this.active;
+        this.on = !this.on;
         triggerEffects();
     }
 
@@ -42,7 +42,7 @@ public class Switch extends Device {
      */
     @Override
     public String getLabel(){
-        return this.active ? "active" : "off";
+        return this.on ? "active" : "off";
     }
 
 
