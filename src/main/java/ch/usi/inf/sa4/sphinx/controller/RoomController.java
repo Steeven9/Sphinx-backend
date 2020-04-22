@@ -73,7 +73,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
         Room room = roomService.get(roomId);
-        if (room == null || roomId == null) {
+        if (room == null) {
             return ResponseEntity.notFound().build();
         }
         ResponseEntity<SerialisableRoom> res = check(sessionToken, username, null, roomId);
