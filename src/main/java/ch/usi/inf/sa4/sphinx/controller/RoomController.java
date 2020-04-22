@@ -95,13 +95,7 @@ public class RoomController {
     public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
                                                           @NotNull @RequestHeader("session-token") String sessionToken,
                                                           @NotNull @RequestHeader("user") String username) {
-        if(roomId == null){
-            return ResponseEntity.notFound().build();
-        }
-        Room room = roomService.get(roomId);
-        if (room == null) {
-            return ResponseEntity.notFound().build();
-        }
+
         User user = userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -109,7 +103,13 @@ public class RoomController {
         if (!user.getSessionToken().equals(sessionToken)) {
             return ResponseEntity.status(401).build();
         }
-
+        if(roomId == null){
+            return ResponseEntity.notFound().build();
+        }
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
         List<Device> list = roomService.getPopulatedDevices(roomId);
         SerialisableDevice[] arr = new SerialisableDevice[list.size()];
         for (int i = 0; i < arr.length; i++) {
@@ -219,10 +219,6 @@ public class RoomController {
      * @return null if correct, otherwise a ResponseEntity
      */
     private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, Integer roomId) {
-        Room room = roomService.get(roomId);
-        if (room == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         if(errors != null && errors.hasErrors()){
             return ResponseEntity.badRequest().build();
@@ -230,6 +226,11 @@ public class RoomController {
         if(!userService.validSession(username, sessionToken)){
             return ResponseEntity.status(401).build();
         }
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         return null;
     }
 }
