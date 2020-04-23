@@ -20,13 +20,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
-//
-//    @Autowired
-//    UserService userService;
-//    @Autowired
-//    RoomService roomService;
-//
-//
+
+    @Autowired
+    UserService userService;
+    @Autowired
+    RoomService roomService;
+
+    @Test
+    @DisplayName("test different getters, deletion, updating and inserting methods")
+    void testsAreRunning(){
+
+    }
+
+
 //    @Test
 //    @DisplayName("test different getters, deletion, updating and inserting methods")
 //    void testUser() {
