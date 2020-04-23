@@ -49,9 +49,6 @@ public class RoomController {
                 return ResponseEntity.status(401).build();
             }
             List<Room> rooms = userService.getPopulatedRooms(username);
-            if(rooms == null){
-                return ResponseEntity.notFound().build();
-            }
             SerialisableRoom[] arr = new SerialisableRoom[rooms.size()];
             for (int i = 0; i < arr.length; i++) {
                 arr[i] = serialiser.serialiseRoom(rooms.get(i));
@@ -73,7 +70,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
         Room room = roomService.get(roomId);
-        if (room == null || roomId == null) {
+        if (room == null) {
             return ResponseEntity.notFound().build();
         }
         ResponseEntity<SerialisableRoom> res = check(sessionToken, username, null, roomId);
