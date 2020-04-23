@@ -69,7 +69,10 @@ public class RoomController {
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
-
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
         ResponseEntity<SerialisableRoom> res = check(sessionToken, username, null, roomId);
         if (res != null) {
             return res;
@@ -89,6 +92,7 @@ public class RoomController {
     public ResponseEntity<SerialisableDevice[]> getDevice(@PathVariable Integer roomId,
                                                           @NotNull @RequestHeader("session-token") String sessionToken,
                                                           @NotNull @RequestHeader("user") String username) {
+
         User user = userService.get(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -96,7 +100,9 @@ public class RoomController {
         if (!user.getSessionToken().equals(sessionToken)) {
             return ResponseEntity.status(401).build();
         }
-
+        if(roomId == null){
+            return ResponseEntity.notFound().build();
+        }
         Room room = roomService.get(roomId);
         if (room == null) {
             return ResponseEntity.notFound().build();
@@ -155,6 +161,12 @@ public class RoomController {
                                                        @NotBlank @RequestHeader("user") String username,
                                                        @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
+
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         var res = check(sessionToken, username, errors, roomId);
         if (res != null) {
             return res;
@@ -179,6 +191,11 @@ public class RoomController {
     public ResponseEntity<SerialisableRoom> deleteRoom (@NotBlank @PathVariable Integer roomId,
                                                         @NotBlank @RequestHeader("session-token") String sessionToken,
                                                         @NotBlank @RequestHeader("user") String username) {
+        Room room = roomService.get(roomId);
+        if (room == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         var res = check(sessionToken, username, null, roomId);
         if (res != null) {
             return res;
@@ -199,6 +216,7 @@ public class RoomController {
      * @return null if correct, otherwise a ResponseEntity
      */
     private ResponseEntity<SerialisableRoom> check(String sessionToken, String username, Errors errors, Integer roomId) {
+
         if(errors != null && errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
@@ -209,6 +227,7 @@ public class RoomController {
         if (room == null) {
             return ResponseEntity.notFound().build();
         }
+
         return null;
     }
 }
