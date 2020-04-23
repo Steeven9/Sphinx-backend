@@ -24,7 +24,7 @@ public class TestConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         String url = env.getProperty("jdbc.url");
-        String driver = env.getProperty("jdbc.driver");
+        String driver = env.getProperty("jdbc.driverClassName");
         String user = env.getProperty("jdbc.user");
         String password = env.getProperty("jdbc.pass");
         dataSource.setUrl(url);
