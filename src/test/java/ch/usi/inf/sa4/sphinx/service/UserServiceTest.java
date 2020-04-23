@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -26,12 +27,27 @@ class UserServiceTest {
     @Autowired
     RoomService roomService;
 
+    @Autowired
+    Environment env;
+
+
+//    @Test
+//    @DisplayName("to use with the debug to check if property is read, delete when working")
+//    void testsAreRunning(){
+//         //assert (false);
+//       String hi = (env.getProperty("jdbc.url"));
+//
+//    }
+
+
     @Test
-    @DisplayName("test different getters, deletion, updating and inserting methods")
-    void testsAreRunning(){
-
+    @DisplayName("creates a user")
+    void testCreatesUser(){
+        User newUser = new User("name@it", "1234", "username", "fullname");
+        userService.insert(newUser);
+        boolean found = userService.get("username").isPresent();
+        assert(found);
     }
-
 
 //    @Test
 //    @DisplayName("test different getters, deletion, updating and inserting methods")
