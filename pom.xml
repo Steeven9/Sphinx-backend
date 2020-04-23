@@ -72,9 +72,16 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.2.14.Final</version>
+<!--            <version>5.2.14.Final</version>-->
+            <version>5.4.11.Final</version>
         </dependency>
 
+<!--        to check-->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
