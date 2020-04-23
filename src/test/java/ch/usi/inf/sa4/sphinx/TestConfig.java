@@ -23,10 +23,14 @@ public class TestConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
+        String url = env.getProperty("jdbc.url");
+        String driver = env.getProperty("jdbc.driver");
+        String user = env.getProperty("jdbc.user");
+        String password = env.getProperty("jdbc.pass");
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setDriverClassName(driver);
+        dataSource.setPassword(password);
 
         return dataSource;
     }
