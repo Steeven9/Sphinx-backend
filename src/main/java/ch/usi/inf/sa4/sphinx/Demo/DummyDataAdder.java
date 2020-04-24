@@ -12,9 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -24,6 +23,7 @@ import java.util.UUID;
  *
  */
 @Component
+@Transactional()
 public class DummyDataAdder {
 
 
@@ -59,6 +59,9 @@ public class DummyDataAdder {
             newRoom2.setName("room2");
             Integer roomId1 = userService.addRoom("user1", newRoom1).get();//leave roomId1 for debugging
             Integer roomId2 = userService.addRoom("user1", newRoom2).get();
+            var room = roomService.get(roomId1);
+            var rooms = userService.get("user1").get().getRooms();
+
             roomService.addDevice(roomId1, DeviceType.LIGHT);
         } catch (Exception e) {
             logger.warn("SOMETHING IS WRONG IN user1");
@@ -66,6 +69,19 @@ public class DummyDataAdder {
         }
     }
 
+    //@Transactional
+    public User foo() {
+        user1();
+        User user = userService.get("user1").get();
+//        room = user.getRooms().get(0);
+        // Hibernate.initialize(user.getRooms());
+        var rooms = user.getRooms();
+        //room = rooms.get(0);
+//        Hibernate.initialize(room.getDevices());
+        var devices = userService.getPopulatedDevices("user");
+        //device = devices.get().get(0);
+        return user;
+    }
 
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
@@ -94,7 +110,7 @@ public class DummyDataAdder {
             Integer roomId3 = userService.addRoom("user2", newRoom3).get();
             Integer roomId4 = userService.addRoom("user2", newRoom4).get();
             Integer roomId5 = userService.addRoom("user2", newRoom5).get();
-            Optional<Integer> device1Id =roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+            Optional<Integer> device1Id = roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
             roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
             roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
             Optional<Integer> deviceId2 = roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
@@ -186,7 +202,7 @@ public class DummyDataAdder {
     }
 
 
-    public void test(@NonNull String a){
+    public void test(@NonNull String a) {
         a.length();
     }
 }

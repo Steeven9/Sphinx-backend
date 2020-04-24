@@ -24,8 +24,8 @@ public class AuthControllerTest {
 
     @Test
     public void shouldGet401OnLoginWithWrongUsername() throws Exception {
-        this.mockmvc.perform(post("/auth/login/test")
-                    .content("{username:\"test\"}")
+        this.mockmvc.perform(post("/auth/login/test321")
+                    .content("gfgfgfgf")
                     .header("content-type", "application/json"))
                 .andDo(print())
                 .andExpect(status().is(401));

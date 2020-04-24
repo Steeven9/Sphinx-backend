@@ -14,7 +14,7 @@ public class ControllerAdvisor {
     public ResponseEntity handleException(UnauthorizedException e) {
         // log exception
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body("Credentials are not valid: " + e.getMessage());
     }
 

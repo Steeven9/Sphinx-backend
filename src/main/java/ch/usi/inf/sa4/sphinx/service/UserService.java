@@ -7,8 +7,8 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -182,6 +182,7 @@ public class UserService {
      * @param username User of these/this room/s
      * @return a list of rooms
      */
+    @Transactional
     public List<Room> getPopulatedRooms(String username) {
         return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
     }
@@ -220,9 +221,9 @@ public class UserService {
      * @param sessionToken the session token
      * @return true if they match, false if the User does not exist or they don't match
      */
-    public boolean validSession(@NotNull String username, String sessionToken) {
+    public boolean validSession(@NotNull String username, @NonNull String sessionToken) {
         return userStorage.findByUsername(username)
-                .map(user -> user.getSessionToken().equals(sessionToken)).orElse(false);
+                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
     }
 
 

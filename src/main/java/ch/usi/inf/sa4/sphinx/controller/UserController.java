@@ -10,6 +10,7 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -50,7 +51,7 @@ public class UserController {
         if (user.isPresent()){
             return userService.validSession(user.get().getUsername(),session_token)?
                     ResponseEntity.ok(serialiser.serialiseUser(user.get()))
-                    : ResponseEntity.status(401).build();
+                    : ResponseEntity.status(404).build();
         }
         return ResponseEntity.notFound().build();
 
@@ -75,7 +76,7 @@ public class UserController {
 
         try{
             userService.insert(newUser);
-        }catch (ConstraintViolationException e){
+        }catch (ConstraintViolationException | DataIntegrityViolationException e){
             throw new BadRequestException("", e);
         }
         newUser = userService.get(username).orElseThrow(()->new ServerErrorException(""));

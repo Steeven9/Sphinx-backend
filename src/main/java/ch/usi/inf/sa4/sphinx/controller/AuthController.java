@@ -66,7 +66,7 @@ public class AuthController {
 
         user = userService.get(username)
                 .orElse(userService.getByMail(username)
-                        .orElseThrow(() -> new NotFoundException("")));
+                        .orElseThrow(() -> new UnauthorizedException("")));
 
         if (!user.isVerified()) {
             return ResponseEntity.status(403).build();

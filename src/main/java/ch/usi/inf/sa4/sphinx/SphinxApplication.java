@@ -1,16 +1,17 @@
 package ch.usi.inf.sa4.sphinx;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-
 
 
 @SpringBootApplication
@@ -18,6 +19,8 @@ import javax.annotation.PostConstruct;
 public class SphinxApplication {
     @Autowired
     private DummyDataAdder dummyDataAdder;
+    @Autowired
+    UserService userService;
     @Value("${dummy_data:false}")
     private boolean dummyDataEnabled;
 
@@ -28,7 +31,7 @@ public class SphinxApplication {
 
 
     @PostConstruct
-    private void init() {
+    public void init() {
         //enable dummy_data as an environment variable to add these users
         // (in INTELLIJ SphinxApplication at the left of >
         //edit configurations and set dummy_data=true)
@@ -38,6 +41,7 @@ public class SphinxApplication {
             dummyDataAdder.randUser();
             dummyDataAdder.deleteUsers();
             dummyDataAdder.user1();
+            var rooms = userService.get("user1").get().getRooms().size();
             dummyDataAdder.user2();
             dummyDataAdder.unverifiedUser();
 

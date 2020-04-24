@@ -43,7 +43,7 @@ public class UserControllerTest {
                     )
                     .contentType("application/json"))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
         this.mockmvc.perform(post("/user/test").content(
                 "{\"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
         )
