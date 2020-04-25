@@ -74,6 +74,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("user") String username) {
 
         check(sessionToken, username, null, roomId);
+         //if check didn't throw the room is here
         return ResponseEntity.ok(serialiser.serialiseRoom(roomService.get(roomId).get()));
 
     }
@@ -88,7 +89,6 @@ public class RoomController {
     @GetMapping("/{roomId}/devices")
     public ResponseEntity<Collection<SerialisableDevice>> getDevice(@PathVariable Integer roomId,
                                                                     @NotNull @RequestHeader("session-token") String sessionToken,
-
                                                                     @NotNull @RequestHeader("user") String username) {
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
@@ -159,6 +159,7 @@ public class RoomController {
 
         if (newName != null) {
             storageRoom.setName(newName);
+
         }
         if (newIcon != null) {
             storageRoom.setName(newIcon);
@@ -218,6 +219,7 @@ public class RoomController {
         }
 
         roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));
+
     }
 }
 
