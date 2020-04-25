@@ -105,9 +105,10 @@ public class RoomService {
     }
 
     /**
-     * Returns the  average temperature from all temperature sensors in a given room.
+     * Returns the average temperature from all temperature sensors and the thermostat in a given room.
      *
-     * @param roomId the id of the room
+     * @param roomId       the id of the room
+     * @param thermostatId the id og the thermostat
      * @return the average temperature
      */
     /*public double getAverageTemp(final Integer roomId, final Integer thermostatId) {

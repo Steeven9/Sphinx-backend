@@ -31,7 +31,8 @@ public enum DeviceType {
     TEMP_SENSOR,
     MOTION_SENSOR,
     SMART_CURTAIN,
-    SECURITY_CAMERA;
+    SECURITY_CAMERA,
+    THERMOSTAT;
 
 
     /**
@@ -66,6 +67,8 @@ public enum DeviceType {
                 return SMART_CURTAIN;
             case 13:
                 return SECURITY_CAMERA;
+            case 11:
+                return THERMOSTAT;
             default:
                 return INVALID_DEVICE;
         }
@@ -122,8 +125,12 @@ public enum DeviceType {
         if (SecurityCamera.class.equals(c)) {
             return SECURITY_CAMERA;
         }
+        if (Thermostat.class.equals(c)) {
+            return THERMOSTAT;
+        }
         return INVALID_DEVICE;
     }
+
 
 
     /** Given a DeviceType returns the integer value used to transmit the enum over the network.
@@ -156,6 +163,8 @@ public enum DeviceType {
                 return 12;
             case SECURITY_CAMERA:
                 return 13;
+            case THERMOSTAT:
+                return 11;
             default:
                 return 0;
         }
@@ -194,6 +203,8 @@ public enum DeviceType {
                 return new SmartCurtain();
             case SECURITY_CAMERA:
                 return new SecurityCamera();
+            case THERMOSTAT:
+                return new Thermostat();
             default:
                 return null;
         }
