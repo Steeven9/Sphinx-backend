@@ -4,9 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -27,17 +25,19 @@ class UserServiceTest {
     @Autowired
     RoomService roomService;
 
-    @Autowired
-    Environment env;
 
-
-//    @Test
-//    @DisplayName("to use with the debug to check if property is read, delete when working")
-//    void testsAreRunning(){
-//         //assert (false);
-//       String hi = (env.getProperty("jdbc.url"));
-//
+//    @BeforeAll
+//    void createDeviceAndUser() {
+//        dummyDataAdder.user1();
+//        user = userService.get("user1").get();
 //    }
+//
+//    @BeforeEach
+//    public void readRoomAndDevice(){
+//        room = user.getRooms().get(0);
+//        device = room.getDevices().get(0);
+//    }
+
 
 
     @Test
@@ -49,43 +49,44 @@ class UserServiceTest {
         assert(found);
     }
 
-//    @Test
-//    @DisplayName("test different getters, deletion, updating and inserting methods")
-//    void testUser() {
-//        String username = "serviceUsername";
-//        String email = "casual@usi.ch";
-//        User newUser = new User(email, "1234", username, "mario rossi");
-//        assertAll("test with not existing data",
-//                () -> assertTrue(userService.get("notExistingUser").isEmpty()),
-//                () -> assertTrue(userService.get(username).isEmpty()),
-//                () -> assertTrue(userService.getByMail(email).isEmpty()),
-//                () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
-//                () -> assertFalse(userService.validSession(username, "test"))
-//        );
-//
-//
-//
-//        assertTrue(userService.insert(newUser));
-//        User returnedUserByUsername = userService.get(username).get();
-//        User returnedUserByEmail = userService.getByMail(email).get();
-//        assertAll("should return correct user",
-//                () -> assertEquals(username, returnedUserByUsername.getUsername()),
-//                () -> assertEquals(username, returnedUserByEmail.getUsername()),
-//                () -> assertEquals(email, returnedUserByUsername.getEmail()),
-//                () -> assertEquals(email, returnedUserByEmail.getEmail()),
-//                () -> assertEquals("1234", returnedUserByEmail.getPassword()),
-//                () -> assertEquals("1234", returnedUserByUsername.getPassword()),
-//                () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
-//                () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
-//                () -> assertNull(returnedUserByUsername.getSessionToken()),
-//                () -> assertThrows(NullPointerException.class, () -> userService.validSession(username, "test"))
-//        );
-//        newUser.setSessionToken("token");
-//        userService.update(newUser);
-//        assertTrue(userService.validSession(username, "token"));
-//        userService.delete(username);
-//        assertNull(userService.get(username));
-//
+    @Test
+    @DisplayName("test different getters, deletion, updating and inserting methods")
+    void testUser() {
+        String username = "serviceUsername";
+        String email = "casual@usi.ch";
+        User newUser = new User(email, "1234", username, "mario rossi");
+        assertAll("test with not existing data",
+                () -> assertTrue(userService.get("notExistingUser").isEmpty()),
+                () -> assertTrue(userService.get(username).isEmpty()),
+                () -> assertTrue(userService.getByMail(email).isEmpty()),
+                () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
+                () -> assertFalse(userService.validSession(username, "test"))
+        );
+
+
+
+        boolean inserted = userService.insert(newUser);
+        assert(inserted);
+        User returnedUserByUsername = userService.get(username).get();
+        User returnedUserByEmail = userService.getByMail(email).get();
+        assertAll("should return correct user",
+                () -> assertEquals(username, returnedUserByUsername.getUsername()),
+                () -> assertEquals(username, returnedUserByEmail.getUsername()),
+                () -> assertEquals(email, returnedUserByUsername.getEmail()),
+                () -> assertEquals(email, returnedUserByEmail.getEmail()),
+                () -> assertEquals("1234", returnedUserByEmail.getPassword()),
+                () -> assertEquals("1234", returnedUserByUsername.getPassword()),
+                () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
+                () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
+                () -> assertNull(returnedUserByUsername.getSessionToken()),
+                () -> assertFalse( userService.validSession(username, "test"))
+        );
+        newUser.setSessionToken("token");
+        userService.update(newUser);
+        assertTrue(userService.validSession(username, "token"));
+        userService.delete(username);
+        assertTrue(userService.get(username).isEmpty());
+
 //
 //        assertFalse(userService.update(newUser));//does not exists
 //        assertThrows(NullPointerException.class, () -> userService.update(null));
@@ -99,8 +100,8 @@ class UserServiceTest {
 //        assertEquals(username, userService.get(username).get().getUsername());
 //        assertEquals(newFullname, userService.get(username).get().getFullname());
 //        userService.delete(username);
-//    }
-//
+    }
+
 //    @Test
 //    void testUsername() {
 //        String username = "serviceUsername2";

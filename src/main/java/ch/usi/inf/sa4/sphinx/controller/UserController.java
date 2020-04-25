@@ -53,7 +53,7 @@ public class UserController {
                     ResponseEntity.ok(serialiser.serialiseUser(user.get()))
                     : ResponseEntity.status(404).build();
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException("");
 
 //THIS GIVES UNCHECKED WARNING USE THE PATTERN ABOVE
 //        return user.map(u -> userService.validSession(username, session_token) ?

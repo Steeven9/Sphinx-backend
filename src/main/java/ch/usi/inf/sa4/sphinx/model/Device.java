@@ -136,6 +136,9 @@ public abstract class Device extends StorableE {
         }
     }
 
+    public List<Coupling> getCouplings() {
+        return couplings;
+    }
 
     public void setRoom(Room room) {
         this.room = room;

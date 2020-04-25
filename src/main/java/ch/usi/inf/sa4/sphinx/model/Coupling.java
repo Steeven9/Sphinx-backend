@@ -87,9 +87,12 @@ public class Coupling extends StorableE {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other instanceof Coupling) return this.getId().equals(((Coupling) other).getId());
-        return false;
+    public boolean equals(@NonNull Object other) {
+        if(!(other instanceof Coupling)) return false;
+        if(other == this) return true;
+        Coupling otherCoupling = (Coupling) other;
+        if(id == null || otherCoupling.getId() == null) return false;
+        return  id.equals(((Coupling) other).getId());
     }
 
 

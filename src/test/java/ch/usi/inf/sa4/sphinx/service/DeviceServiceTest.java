@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class DeviceServiceTest {
-//
-//    @Autowired
-//    DeviceService deviceService;
-//    @Autowired
-//    RoomService roomService;
+
+    @Autowired
+    DeviceService deviceService;
+    @Autowired
+    RoomService roomService;
 
 //    @Test
 //    @DisplayName("Tests both get and update methods")
@@ -38,5 +38,12 @@ class DeviceServiceTest {
 //
 //        assertFalse(deviceService.update(new Light()));
 //    }
+
+
+
+
+
+
+
 
 }

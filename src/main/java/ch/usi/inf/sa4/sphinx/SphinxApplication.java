@@ -39,9 +39,7 @@ public class SphinxApplication {
             LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
             dummyDataAdder.emptyUser();
             dummyDataAdder.randUser();
-            dummyDataAdder.deleteUsers();
             dummyDataAdder.user1();
-            var rooms = userService.get("user1").get().getRooms().size();
             dummyDataAdder.user2();
             dummyDataAdder.unverifiedUser();
 

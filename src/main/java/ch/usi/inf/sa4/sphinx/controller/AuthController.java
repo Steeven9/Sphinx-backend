@@ -5,7 +5,6 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -32,16 +31,18 @@ public class AuthController {
      * status 401 id the username and session token do not match
      */
     @PostMapping("/validate")
-    public ResponseEntity<Boolean> validate(@RequestHeader("user") String username,
-                                            @RequestHeader("session-token") String sessionToken) {
+    public ResponseEntity<String> validate(@RequestHeader("user") String username,
+                                           @RequestHeader("session-token") String sessionToken) {
 
-        userService.get(username).orElseThrow(() -> new NotFoundException(""));
+
+        User user = userService.get(username).orElse(userService.getByMail(username)
+                .orElseThrow(() -> new NotFoundException("Could not find any user with matching mail/name")));
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(user.getUsername());
     }
 
 
@@ -65,20 +66,19 @@ public class AuthController {
         User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username)
-                        .orElseThrow(() -> new UnauthorizedException("")));
+                .orElse(userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("")));
 
         if (!user.isVerified()) {
-            return ResponseEntity.status(403).build();
+            throw new ForbiddenException("");
         }
 
         if (!user.getPassword().equals(password)) {
-            return ResponseEntity.status(401).build();
+            throw new UnauthorizedException("");
         }
 
         user.createSessionToken();
         if (!userService.update(user)) {
-            return ResponseEntity.status(500).build();
+            throw new ServerErrorException("");
         }
 
         return ResponseEntity.ok(user.getSessionToken());
@@ -103,7 +103,7 @@ public class AuthController {
             throw new BadRequestException("User is already verified");
         }
         if (!verifiedUser.getVerificationToken().equals(verificationCode)) {
-            throw new UnauthorizedException("verificationCode is not valid/has expired");
+            throw new UnauthorizedException("verificationCode is not valid");
         }
 
         verifiedUser.setVerified(true);
@@ -147,17 +147,17 @@ public class AuthController {
      * 403 if the provided reset code does not match the true code.
      */
     @PostMapping("/reset/{email}/{resetCode}")
-    public ResponseEntity<Boolean> changePassword(@PathVariable String email, @PathVariable String resetCode,
-                                                  @RequestBody String newPassword, Errors errors) {
+    public ResponseEntity<Boolean> changePassword(@NotBlank @PathVariable String email, @NotBlank @PathVariable String resetCode,
+                                                  @NotBlank @RequestBody String newPassword, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("request fields are not valid");
+            throw new BadRequestException("email,resetCode or password is blank or missing");
         }
 
         User changedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("user not found"));
 
         if (!resetCode.equals(changedUser.getResetCode())) {
-            throw new ForbiddenException("wrong reset code");
+            throw new UnauthorizedException("wrong reset code");
         }
 
         changedUser.setPassword(newPassword);
@@ -171,18 +171,19 @@ public class AuthController {
 
     /**
      * Re-sends a verification email to a User.
+     *
      * @param email the email address of the User
      * @return A ResponseEntity containing status code 204 if operation completed successfully or
-     *      404 id the provided email address does not exist.
+     * 404 id the provided email address does not exist.
      */
     @PostMapping("/resend/{email}")
     public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
-        if(email == null) {
+        if (email == null) {
             return ResponseEntity.badRequest().build();
         }
-        User user = userService.getByMail(email).orElseThrow(()->new NotFoundException("no user with this mail"));
+        User user = userService.getByMail(email).orElseThrow(() -> new NotFoundException("no user with this mail"));
 
-        if(user.isVerified()){
+        if (user.isVerified()) {
             throw new BadRequestException("User is already verified");
         }
 

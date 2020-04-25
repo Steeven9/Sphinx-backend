@@ -38,17 +38,8 @@ class SerialiserTest {
 
     @BeforeAll
      void createDeviceAndUser() {
-  //      dummyDataAdder.user1();
-//        user =userService.get("user1").get();
         dummyDataAdder.user1();
         user = userService.get("user1").get();
-//        room = user.getRooms().get(0);
-        //Hibernate.initialize(user.getRooms());
-        //var rooms = user.getRooms();
-        //boolean ooo =  Hibernate.isInitialized(rooms);
-//        room = rooms.get(0);
-       // var devices = userService.getPopulatedDevices("user");
-       // device = devices.get().get(0);
     }
 
     @BeforeEach

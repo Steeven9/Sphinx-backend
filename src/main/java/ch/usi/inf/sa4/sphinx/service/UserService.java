@@ -221,7 +221,7 @@ public class UserService {
      * @param sessionToken the session token
      * @return true if they match, false if the User does not exist or they don't match
      */
-    public boolean validSession(@NotNull String username, @NonNull String sessionToken) {
+    public boolean validSession(@NonNull String username, @NonNull String sessionToken) {
         return userStorage.findByUsername(username)
                 .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
     }

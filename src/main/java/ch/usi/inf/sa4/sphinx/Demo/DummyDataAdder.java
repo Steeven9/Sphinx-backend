@@ -69,19 +69,7 @@ public class DummyDataAdder {
         }
     }
 
-    //@Transactional
-    public User foo() {
-        user1();
-        User user = userService.get("user1").get();
-//        room = user.getRooms().get(0);
-        // Hibernate.initialize(user.getRooms());
-        var rooms = user.getRooms();
-        //room = rooms.get(0);
-//        Hibernate.initialize(room.getDevices());
-        var devices = userService.getPopulatedDevices("user");
-        //device = devices.get().get(0);
-        return user;
-    }
+
 
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
