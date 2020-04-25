@@ -77,7 +77,7 @@ public class UserController {
         try{
             userService.insert(newUser);
         }catch (ConstraintViolationException | DataIntegrityViolationException e){
-            throw new BadRequestException("", e);
+            throw new BadRequestException("");
         }
         newUser = userService.get(username).orElseThrow(()->new ServerErrorException(""));
         mailer.send(newUser.getEmail(),

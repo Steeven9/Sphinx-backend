@@ -1,14 +1,14 @@
 package ch.usi.inf.sa4.sphinx.misc;
 
-public class ForbiddenException extends RuntimeException {
-    public ForbiddenException() {
-    }
+import org.springframework.http.HttpStatus;
 
+public class ForbiddenException extends HttpException {
     public ForbiddenException(String message) {
-        super(message);
+        super("Forbidden: " + message);
     }
 
-    public ForbiddenException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public HttpStatus getStatus() {
+        return HttpStatus.FORBIDDEN;
     }
 }

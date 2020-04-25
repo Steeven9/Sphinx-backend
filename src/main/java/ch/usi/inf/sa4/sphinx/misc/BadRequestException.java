@@ -1,14 +1,14 @@
 package ch.usi.inf.sa4.sphinx.misc;
 
-public class BadRequestException extends RuntimeException {
-    public BadRequestException() {
-    }
+import org.springframework.http.HttpStatus;
 
+public class BadRequestException extends HttpException {
     public BadRequestException(String message) {
-        super(message);
+        super("Bad request: " + message );
     }
 
-    public BadRequestException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public HttpStatus getStatus() {
+        return HttpStatus.BAD_REQUEST;
     }
 }

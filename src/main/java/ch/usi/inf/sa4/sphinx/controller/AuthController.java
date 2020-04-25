@@ -38,7 +38,7 @@ public class AuthController {
         userService.get(username).orElseThrow(() -> new NotFoundException(""));
 
         if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException("");
         }
 
         return ResponseEntity.ok().build();

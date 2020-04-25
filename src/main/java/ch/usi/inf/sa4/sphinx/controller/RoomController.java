@@ -213,7 +213,7 @@ public class RoomController {
             throw new BadRequestException("");
         }
         if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException("");
         }
 
         roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));

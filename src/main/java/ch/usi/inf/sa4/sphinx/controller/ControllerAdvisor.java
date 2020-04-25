@@ -10,43 +10,52 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerAdvisor {
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity handleException(UnauthorizedException e) {
+//    @ExceptionHandler(UnauthorizedException.class)
+//    public ResponseEntity handleException(UnauthorizedException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.UNAUTHORIZED)
+//                .body("Credentials are not valid: " + e.getMessage());
+//    }
+//
+//    @ExceptionHandler(ServerErrorException.class)
+//    public ResponseEntity handleException(ServerErrorException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body("oops our fault: " + e.getMessage());
+//    }
+//
+//    @ExceptionHandler(BadRequestException.class)
+//    public ResponseEntity handleException(BadRequestException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.BAD_REQUEST)
+//                .body("Bad request: " + e.getMessage());
+//    }
+//
+//    @ExceptionHandler(ForbiddenException.class)
+//    public ResponseEntity handleException(ForbiddenException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.FORBIDDEN)
+//                .body("Forbidden: " + e.getMessage());
+//    }
+//
+//    @ExceptionHandler(NotFoundException.class)
+//    public ResponseEntity handleException(NotFoundException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.NOT_FOUND)
+//                .body("Not found: " + e.getMessage());
+//    }
+
+    @ExceptionHandler(HttpException.class)
+    public ResponseEntity handleException(HttpException e) {
         // log exception
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body("Credentials are not valid: " + e.getMessage());
+                .status(e.getStatus())
+                .body(e.getMessage());
     }
 
-    @ExceptionHandler(ServerErrorException.class)
-    public ResponseEntity handleException(ServerErrorException e) {
-        // log exception
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("oops our fault: " + e.getMessage());
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity handleException(BadRequestException e) {
-        // log exception
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Bad request: " + e.getMessage());
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity handleException(ForbiddenException e) {
-        // log exception
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("Forbidden: " + e.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleException(NotFoundException e) {
-        // log exception
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("Not found: " + e.getMessage());
-    }
 }

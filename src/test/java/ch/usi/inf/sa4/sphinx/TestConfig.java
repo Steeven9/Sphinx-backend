@@ -12,8 +12,8 @@
 //import javax.sql.DataSource;
 //
 //@Configuration
-////@EnableJpaRepositories() // already done by @SpringApplication?
-//@PropertySource("classpath:application-test.properties")
+////@EnableJpaRepositories(basePackages = "com.baeldung.persistence.dao") // already done by @SpringApplication?
+//@PropertySource("classpath:application.properties")
 //@EnableTransactionManagement
 //public class TestConfig {
 //
@@ -24,12 +24,12 @@
 //    public DataSource dataSource() {
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 //        String url = env.getProperty("jdbc.url");
-//        String driver = env.getProperty("jdbc.driver");
+//        String driver = env.getProperty("jdbc.driverClassName");
 //        String user = env.getProperty("jdbc.user");
 //        String password = env.getProperty("jdbc.pass");
 //        dataSource.setUrl(url);
 //        dataSource.setUsername(user);
-//        dataSource.setDriverClassName("org.h2.Driver");
+//        dataSource.setDriverClassName(driver);
 //        dataSource.setPassword(password);
 //
 //        return dataSource;

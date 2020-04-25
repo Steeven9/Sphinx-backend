@@ -59,7 +59,7 @@ public class DeviceController {
 
         if (user.isPresent()) {
             if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException();
+                throw new UnauthorizedException("");
             }
 
             List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present

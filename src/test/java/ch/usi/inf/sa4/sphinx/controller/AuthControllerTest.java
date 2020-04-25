@@ -31,14 +31,14 @@ public class AuthControllerTest {
                 .andExpect(status().is(401));
     }
 
-    @Disabled
+//    @Disabled //TODO this should be 401?
     @Test
-    public void shouldGet400OnLoginWithWrongEmail() throws Exception {
-        this.mockmvc.perform(post("/auth/login")
+    public void shouldGet401OnLoginWithWrongEmail() throws Exception {
+        this.mockmvc.perform(post("/auth/login/username:wrong")
                 .content("{email:\"test@email.io\"}")
                 .header("content-type", "application/json"))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is(401));
     }
 
 }

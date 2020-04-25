@@ -84,7 +84,7 @@ class SerialiserTest {
     }
 
 
-    //Device cant exist without a Room
+    //Device cant exist without a Room right? //TODO
 //    /**
 //     * First test <code>serialiser.serialiseDevice(Device, User)</code>, where device does not
 //     * belong to any User. Then test the case when the device belongs to a given User.
