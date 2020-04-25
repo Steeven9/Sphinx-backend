@@ -13,6 +13,10 @@ public class Thermostat extends TempSensor {
     private double averageTemp;
     private int state;
 
+    /**
+     * Constructor.
+     * Initialize a thermostat, which is on and has idle as internal state. Its initial is set to its actual value.
+     */
     public Thermostat(RoomService roomService, CouplingService couplingService) {
         super(roomService, couplingService);
         this.targetTemp = this.getValue();
@@ -49,6 +53,21 @@ public class Thermostat extends TempSensor {
         this.targetTemp = target;
     }
 
+    /**
+     * Turns off the thermostat.
+     */
+    public void turnOff() {
+        this.on = false;
+        this.state = 0; //off
+    }
+
+    /**
+     * Turns on the thermostat.
+     */
+    public void turnOn() {
+        this.on = true;
+        this.state = 1; //idle
+    }
 
     /**
      * {@inheritDoc}
