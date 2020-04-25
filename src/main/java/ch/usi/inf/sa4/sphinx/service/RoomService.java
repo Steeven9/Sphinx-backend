@@ -4,6 +4,8 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import lombok.NonNull;
+import ch.usi.inf.sa4.sphinx.model.TempSensor;
+import ch.usi.inf.sa4.sphinx.model.Thermostat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class RoomService {
     DeviceStorage deviceStorage;
     @Autowired
     CouplingService couplingService;
+    @Autowired
+    DeviceService deviceService;
+
 
 
     /**
@@ -99,5 +104,33 @@ public class RoomService {
         return true;
     }
 
+    /**
+     * Returns the  average temperature from all temperature sensors in a given room.
+     *
+     * @param roomId the id of the room
+     * @return the average temperature
+     */
+    /*public double getAverageTemp(final Integer roomId, final Integer thermostatId) {
+        List<Device> list = this.getPopulatedDevices(roomId);
+        double averageTemp = 0.0, sensors = 0.0;
+
+        for (Device device : list) {
+            if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                averageTemp += ((TempSensor) device).getValue();
+                sensors++;
+            }
+        }
+        Thermostat thermostat = (Thermostat) deviceService.get(thermostatId);
+        averageTemp += thermostat.getValue();
+
+        if (sensors > 0) { // some sensors are detected
+            ++sensors; // +1 thermostat
+            averageTemp = averageTemp / sensors;
+        }
+
+        thermostat.setAverageTemp(averageTemp);
+        deviceService.update(thermostat);
+        return averageTemp;
+    }*/
 
 }
