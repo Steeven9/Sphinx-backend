@@ -1,12 +1,8 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.model.*;
 import ch.usi.inf.sa4.sphinx.misc.*;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
-import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.model.*;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -51,7 +47,7 @@ public class DeviceController {
      */
     @GetMapping(value = {"", "/"})
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                                         @RequestHeader("user") String username) {
+                                                                   @RequestHeader("user") String username) {
 
 
         Optional<User> user = userService.get(username);
@@ -213,20 +209,21 @@ public class DeviceController {
     /**
      * resets the SmartPlug with the given deviceId,
      * iff the user is authenticating with the correct user/session-token pair
-     * @param deviceId id  of the smart plug to be reset
-     * @param username the username of the user to authenticate as
+     *
+     * @param deviceId     id  of the smart plug to be reset
+     * @param username     the username of the user to authenticate as
      * @param sessionToken the session token of the user to authenticate as
      * @return a ResponseEntity with status code 204 if operation is successful or
-     *  - 401 if authentication fails or
-     *  - 404 if no device with the given DeviceId exists or
-     *  - 400 if the indicated device is not a SmartPlug or
-     *  - 500 in case of an internal server error
+     * - 401 if authentication fails or
+     * - 404 if no device with the given DeviceId exists or
+     * - 400 if the indicated device is not a SmartPlug or
+     * - 500 in case of an internal server error
      */
     @PutMapping("/reset/{deviceId}")
     public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
                                                   @RequestHeader("session-token") String sessionToken,
                                                   @RequestHeader("user") String username) {
-        Device plug = deviceService.get(deviceId).orElseThrow(()->new NotFoundException(""));
+        Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
@@ -257,10 +254,8 @@ public class DeviceController {
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
 
-        Optional<Device> storageDevice = deviceService.get(deviceId);
-        if (storageDevice.isEmpty()) {
-            throw new NotFoundException("");
-        }
+        deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+
 
         if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
@@ -299,14 +294,14 @@ public class DeviceController {
             return ResponseEntity.status(401).build();
         }
 
-        Device device1 = deviceService.get(id1).orElseThrow(()->new NotFoundException(""));
-        Device device2 = deviceService.get(id2).orElseThrow(()->new NotFoundException(""));
+        Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
+        Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
 
 
-            if (deviceService.createCoupling(device1, device2)) {
-                return ResponseEntity.status(204).build();
-            } else {
-                return ResponseEntity.status(500).build();
+        if (deviceService.createCoupling(device1, device2)) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(500).build();
         }
     }
 }

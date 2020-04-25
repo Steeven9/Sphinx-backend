@@ -178,8 +178,4 @@ public class DummyDataAdder {
         }
     }
 
-
-    public void test(@NonNull String a) {
-        a.length();
-    }
 }

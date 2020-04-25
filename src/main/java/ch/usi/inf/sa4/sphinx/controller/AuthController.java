@@ -35,7 +35,8 @@ public class AuthController {
                                            @RequestHeader("session-token") String sessionToken) {
 
 
-        User user = userService.get(username).orElse(userService.getByMail(username)
+        User user = userService.get(username)
+                .orElse(userService.getByMail(username)
                 .orElseThrow(() -> new NotFoundException("Could not find any user with matching mail/name")));
 
         if (!userService.validSession(username, sessionToken)) {
@@ -66,7 +67,8 @@ public class AuthController {
         User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("")));
+                .orElse(userService.getByMail(username)
+                .orElseThrow(() -> new UnauthorizedException("")));
 
         if (!user.isVerified()) {
             throw new ForbiddenException("");
@@ -97,7 +99,8 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        User verifiedUser = userService.getByMail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         if (verifiedUser.isVerified()) {
             throw new BadRequestException("User is already verified");
@@ -123,7 +126,8 @@ public class AuthController {
      */
     @PostMapping("/reset/{email}")
     public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
-        User resetUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("user not found"));
+        User resetUser = userService.getByMail(email)
+                .orElseThrow(() -> new NotFoundException("user not found"));
 
 
         String resetCode = resetUser.createResetCode();
@@ -154,7 +158,8 @@ public class AuthController {
             throw new BadRequestException("email,resetCode or password is blank or missing");
         }
 
-        User changedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("user not found"));
+        User changedUser = userService.getByMail(email)
+                .orElseThrow(() -> new NotFoundException("user not found"));
 
         if (!resetCode.equals(changedUser.getResetCode())) {
             throw new UnauthorizedException("wrong reset code");
@@ -181,7 +186,8 @@ public class AuthController {
         if (email == null) {
             return ResponseEntity.badRequest().build();
         }
-        User user = userService.getByMail(email).orElseThrow(() -> new NotFoundException("no user with this mail"));
+        User user = userService.getByMail(email)
+                .orElseThrow(() -> new NotFoundException("no user with this mail"));
 
         if (user.isVerified()) {
             throw new BadRequestException("User is already verified");

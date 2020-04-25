@@ -21,7 +21,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -48,7 +47,7 @@ public class RoomController {
     public ResponseEntity<List<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                               @NotNull @RequestHeader("user") String username) {
 
-         userService.get(username).orElseThrow(()-> new NotFoundException(""));
+        userService.get(username).orElseThrow(() -> new NotFoundException(""));
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
@@ -74,7 +73,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("user") String username) {
 
         check(sessionToken, username, null, roomId);
-         //if check didn't throw the room is here
+        //if check didn't throw the room is here
         return ResponseEntity.ok(serialiser.serialiseRoom(roomService.get(roomId).get()));
 
     }
@@ -125,7 +124,7 @@ public class RoomController {
         Room room = new Room(serialisableRoom);
         Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(""));
         SerialisableRoom res = serialiser.serialiseRoom(roomService.get(id).orElseThrow(
-                ()->new ServerErrorException("failed to save the room")
+                () -> new ServerErrorException("failed to save the room")
         ));
 
         return ResponseEntity.status(201).body(res);
