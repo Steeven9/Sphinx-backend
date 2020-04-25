@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,7 +50,7 @@ public class DeviceController {
      * - 401 if not authorized
      */
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<Collection<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
                                                                          @RequestHeader("user") String username) {
 
 

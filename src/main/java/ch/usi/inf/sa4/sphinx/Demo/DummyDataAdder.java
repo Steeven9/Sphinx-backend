@@ -179,17 +179,6 @@ public class DummyDataAdder {
     }
 
 
-    @Transactional
-    public void deleteUsers() {
-        userService.delete("user1");
-        userService.delete("user2");
-        userService.delete("unverifiedUser");
-        userService.delete("emptyUser");
-        userService.delete("randUser");
-
-    }
-
-
     public void test(@NonNull String a) {
         a.length();
     }

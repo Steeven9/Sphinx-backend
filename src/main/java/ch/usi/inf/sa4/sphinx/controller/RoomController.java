@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -44,8 +45,8 @@ public class RoomController {
      * @return a ResponseEntity with the array of rooms owned by the user
      */
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<Collection<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
-                                                                    @NotNull @RequestHeader("user") String username) {
+    public ResponseEntity<List<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
+                                                              @NotNull @RequestHeader("user") String username) {
 
          userService.get(username).orElseThrow(()-> new NotFoundException(""));
 
