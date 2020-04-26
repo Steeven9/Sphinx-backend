@@ -53,9 +53,7 @@ public class RoomController {
             throw new UnauthorizedException("");
         }
 
-        userService.getPopulatedRooms(username);
-
-        return ResponseEntity.ok(serialiser.serialiseRoom(userService.getPopulatedRooms(username)));
+        return ResponseEntity.ok(serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
     }
 
 
@@ -95,7 +93,7 @@ public class RoomController {
         User user = userService.get(username).get();//It exists from previous check
 
         Room room = roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));
-        return ResponseEntity.ok(serialiser.serialiseDevice(room.getDevices(), user));
+        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
     }
 
 
@@ -161,7 +159,7 @@ public class RoomController {
 
         }
         if (newIcon != null) {
-            storageRoom.setName(newIcon);
+            storageRoom.setIcon(newIcon);
         }
         if (newBackground != null) {
             storageRoom.setBackground(newBackground);
@@ -172,8 +170,6 @@ public class RoomController {
         }
 
         SerialisableRoom res = serialiser.serialiseRoom(storageRoom);
-        int i = 1;
-
         return ResponseEntity.status(200).body(res);
     }
 
@@ -193,7 +189,7 @@ public class RoomController {
         check(sessionToken, username, null, roomId);
 
         if (!userService.removeRoom(username, roomId)) {
-            return ResponseEntity.status(500).build();
+           throw new ServerErrorException("");
         }
 
         return ResponseEntity.status(204).build();

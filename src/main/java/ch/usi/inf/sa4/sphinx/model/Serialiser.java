@@ -58,7 +58,7 @@ public class Serialiser {
         return sd;
     }
 
-    public List<SerialisableDevice> serialiseDevice(Collection<Device> devices, User user){
+    public List<SerialisableDevice> serialiseDevices(Collection<Device> devices, User user){
         return devices.stream().map(device -> serialiseDevice(device, user)).collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class Serialiser {
     }
 
 
-    public List<SerialisableRoom> serialiseRoom(Collection<Room> rooms){
+    public List<SerialisableRoom> serialiseRooms(Collection<Room> rooms){
         return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 

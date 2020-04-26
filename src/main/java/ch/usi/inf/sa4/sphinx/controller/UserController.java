@@ -11,7 +11,6 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -48,10 +46,8 @@ public class UserController {
     public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
 
         Optional<User> user = userService.get(username);
-        if (user.isPresent()){
-            return userService.validSession(user.get().getUsername(),session_token)?
-                    ResponseEntity.ok(serialiser.serialiseUser(user.get()))
-                    : ResponseEntity.status(404).build();
+        if (user.isPresent() && userService.validSession(user.get().getUsername(), session_token)) {
+            return ResponseEntity.ok(serialiser.serialiseUser(user.get()));
         }
         throw new NotFoundException("");
 
@@ -74,12 +70,12 @@ public class UserController {
     public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
         User newUser = new User(user.email, user.password, username, user.fullname);
 
-        try{
+        try {
             userService.insert(newUser);
-        }catch (ConstraintViolationException | DataIntegrityViolationException e){
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("");
         }
-        newUser = userService.get(username).orElseThrow(()->new ServerErrorException(""));
+        newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
         mailer.send(newUser.getEmail(),
                 "Confirm your email account for SmartHut",
                 "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
@@ -108,7 +104,7 @@ public class UserController {
             throw new BadRequestException("");
         }
 
-        User changedUser = userService.get(username).orElseThrow(()->new NotFoundException("username not found"));
+        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
 
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("");
@@ -140,9 +136,9 @@ public class UserController {
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
                                                        @RequestHeader("session-token") String session_token) {
 
-        userService.get(username).orElseThrow(()->new NotFoundException("Could not find user"));
+        userService.get(username).orElseThrow(() -> new NotFoundException("Could not find user"));
 
-        if(!userService.validSession(username, session_token)){
+        if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("");
         }
 

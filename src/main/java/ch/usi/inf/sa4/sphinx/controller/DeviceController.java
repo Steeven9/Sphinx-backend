@@ -122,7 +122,7 @@ public class DeviceController {
         }
 
         if (!userService.ownsRoom(username, device.roomId)) {
-            throw new ForbiddenException("u dont't own this room");
+            throw new ForbiddenException("you dont't own this room");
         }
 
         User user = userService.get(username).get(); //If the session is valid the User exists
