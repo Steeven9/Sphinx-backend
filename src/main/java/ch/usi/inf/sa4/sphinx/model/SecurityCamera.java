@@ -1,5 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
@@ -51,6 +50,7 @@ public class SecurityCamera extends Device {
     public String getLabel() {
         return isOn() + " URL:"+ getUrl();
     }
+
 
     public Device makeCopy() {
         return new SecurityCamera(this);
