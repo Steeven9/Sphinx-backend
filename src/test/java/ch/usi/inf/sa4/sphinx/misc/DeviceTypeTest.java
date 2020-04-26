@@ -68,7 +68,7 @@ class DeviceTypeTest {
 
     @ParameterizedTest
     @MethodSource("valueDeviceAndDeviceTypeProvider")
-    @DisplayName("Create a Device based active given DeviceType")
+    @DisplayName("Create a Device based on given DeviceType")
     void TestMakeDevice(Device device, DeviceType type) {
         assertEquals(DeviceType.makeDevice(type).getClass(), device.getClass());
         assertNull(DeviceType.makeDevice(DeviceType.INVALID_DEVICE));

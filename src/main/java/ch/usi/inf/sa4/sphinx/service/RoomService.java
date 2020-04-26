@@ -3,7 +3,9 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -25,11 +27,11 @@ public class RoomService {
     /**
      * Getter for a room.
      *
-     * @param deviceId the roomId
+     * @param roomId the roomId
      * @return Returns the Room with the given Id if present in the storage
      */
-    public final Optional<Room> get(final Integer deviceId) {
-        return roomStorage.findById(deviceId);
+    public final Optional<Room> get(final Integer roomId) {
+        return roomStorage.findById(roomId);
     }
 
 
@@ -49,8 +51,8 @@ public class RoomService {
      * @param room the room to update
      * @return true if successful update else false
      */
-    public final boolean update(@NotNull final Room room) {
-        if (!roomStorage.existsById(room.getId())) {
+    public final boolean update(@NonNull final Room room) {
+        if (room.getId() == null || !roomStorage.existsById(room.getId())) {
             return false;
         }
 
@@ -65,12 +67,12 @@ public class RoomService {
      * @param deviceType the type of Device (ex DimmableLight)
      * @return the id of the device or null if it fails
      */
-    public final Optional<Integer> addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
+    public final Optional<Integer> addDevice(@NonNull final Integer roomId, @NonNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
         if (newDevice == null) return Optional.empty();
 
         return roomStorage.findById(roomId).map(r -> {
-                    newDevice.setRoom(r);
+                    r.addDevice(newDevice);
                     return deviceStorage.save(newDevice).getId();
                 }
 
@@ -85,8 +87,12 @@ public class RoomService {
      * @param deviceId the id of the device
      * @return true if succes else false
      */
-    public final boolean removeDevice(final Integer roomId, final Integer deviceId) {
-        deviceStorage.deleteById(deviceId);
+    public final boolean removeDevice(@NonNull final Integer roomId,@NonNull final Integer deviceId) {
+        try {
+            deviceStorage.deleteById(deviceId);
+        } catch (EmptyResultDataAccessException e){
+            return false;
+        }
         return true;
     }
 

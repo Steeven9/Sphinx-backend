@@ -32,8 +32,11 @@ public abstract class Device extends StorableE {
     )
     protected final List<Coupling> couplings;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false, referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "room_id",
+            nullable = false,
+            referencedColumnName = "id"
+    )
     private Room room;
     @Expose
     @Transient
@@ -103,8 +106,8 @@ public abstract class Device extends StorableE {
         return on;
     }
 
-    public void setOn(boolean active) {
-        this.on = active;
+    public void setOn(boolean on) {
+        this.on = on;
     }
 
     /**

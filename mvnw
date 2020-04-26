@@ -11,7 +11,7 @@
 #    https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed active an
+# software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
@@ -126,7 +126,7 @@ fi
 if [ -z "$JAVA_HOME" ]; then
   javaExecutable="$(which javac)"
   if [ -n "$javaExecutable" ] && ! [ "$(expr \"$javaExecutable\" : '\([^ ]*\)')" = "no" ]; then
-    # readlink(1) is not available as standard active Solaris 10.
+    # readlink(1) is not available as standard on Solaris 10.
     readLink=$(which readlink)
     if [ ! $(expr "$readLink" : '\([^ ]*\)') = "no" ]; then
       if $darwin; then
@@ -146,7 +146,7 @@ fi
 if [ -z "$JAVACMD" ]; then
   if [ -n "$JAVA_HOME" ]; then
     if [ -x "$JAVA_HOME/jre/sh/java" ]; then
-      # IBM's JDK active AIX uses strange locations for the executables
+      # IBM's JDK on AIX uses strange locations for the executables
       JAVACMD="$JAVA_HOME/jre/sh/java"
     else
       JAVACMD="$JAVA_HOME/bin/java"
@@ -184,7 +184,7 @@ find_maven_basedir() {
       basedir=$wdir
       break
     fi
-    # workaround for JBEAP-8937 (active Solaris 10/Sparc)
+    # workaround for JBEAP-8937 (on Solaris 10/Sparc)
     if [ -d "${wdir}" ]; then
       wdir=$(
         cd "$wdir/.."

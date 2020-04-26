@@ -15,7 +15,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
 
 
     /**
-     * checks if value of lights is off e.g, false; if so it turn them active and vice versa.
+     * checks if value of lights is off e.g, false; if so it turn them on and vice versa.
      *
      * @param effect: the current value of the device
      **/

@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -98,9 +99,10 @@ public class UserService {
      * @param user the User with updated fields
      * @return true if successful update else false
      */
-    public boolean update(final User user) {
+    public boolean update(@NonNull final User user) {
         if (userStorage.existsById(user.getId())) {
             userStorage.save(user); //Now the newly added rooms will be inserted in storage by jpa
+            return true;
         }
         return false;
     }
@@ -262,6 +264,13 @@ public class UserService {
             return false;
         }
 
+        Room startRoom = roomStorage.findById(startRoomId)
+                .orElseThrow(()->new ImproperImplementationException("the method ownsRoom doesnt work properly"));
+
+        if(!startRoom.getDevicesIds().contains(deviceId)){
+            return false;
+        }
+
         return roomStorage.findById(endRoomId).map(room -> {
             return deviceStorage.findById(deviceId).map(device -> {
                 device.setRoom(room);
@@ -297,7 +306,7 @@ public class UserService {
      * @param newUsername the new name of the user
      * @return true if successful else false
      */
-    public boolean changeUsername(@NotNull final String oldUsername, @NotNull final String newUsername) {
+    public boolean changeUsername(@NonNull final String oldUsername, @NonNull final String newUsername) {
         if(newUsername == null) return false;
         try {
             return userStorage.findByUsername(oldUsername).map(user -> {

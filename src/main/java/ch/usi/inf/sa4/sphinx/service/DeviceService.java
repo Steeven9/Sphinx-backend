@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,11 @@ public final class DeviceService {
      * @return true if the update succeds else false
      */
     public boolean update(Device device){
-        deviceStorage.save(device);
+        try {
+            deviceStorage.save(device);
+        }catch (DataIntegrityViolationException e){
+            return false;
+        }
         return true;
     }
 

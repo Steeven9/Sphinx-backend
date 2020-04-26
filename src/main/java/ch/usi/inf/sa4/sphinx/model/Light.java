@@ -5,7 +5,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import javax.persistence.Entity;
 
 /**
- * A Light is a normal light that can be either active either off.
+ * A Light is a normal light that can be either on either off.
  */
 @Entity
 public class Light extends Device {
@@ -25,7 +25,7 @@ public class Light extends Device {
      */
     @Override
     public String getLabel() {
-        return this.on ? "active" : "off";
+        return this.on ? "on" : "off";
     }
 
     @Override

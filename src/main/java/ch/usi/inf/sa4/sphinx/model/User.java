@@ -255,7 +255,11 @@ public class User extends StorableE{
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
-        rooms.remove(roomId);//Needed otherwise it will just remove the index
+        for(Room r: rooms){
+            if(r.getId().equals(roomId)){
+                rooms.remove(r);
+            }
+        }
     }
 
 

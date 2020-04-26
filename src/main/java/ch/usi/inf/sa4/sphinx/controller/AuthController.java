@@ -99,7 +99,8 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService.getByMail(email)
+        User verifiedUser = userService
+                .getByMail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         if (verifiedUser.isVerified()) {
@@ -133,7 +134,7 @@ public class AuthController {
         String resetCode = resetUser.createResetCode();
 
         mailer.send(email,
-                "Reset your password active smarthut.xyz",
+                "Reset your password on smarthut.xyz",
                 "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode +
                         "\nOr, from local, http://localhost:3000/changepassword?email=" + email + "&code=" + resetCode);
 

@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -23,7 +23,8 @@ public class Room extends StorableE{
 			mappedBy = "room",
 			fetch = FetchType.LAZY)
 	private List<Device> devices;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
+	//not all since otherwise it will try to persist the User
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
@@ -55,6 +56,7 @@ public class Room extends StorableE{
 		if (device == null){
 			throw new IllegalArgumentException("device can not be null");
 		}
+		device.setRoom(this);
 		devices.add(device);
 	}
 
@@ -99,7 +101,7 @@ public class Room extends StorableE{
 
 	//---------- getter for devices ----------------
 	public List<Integer> getDevicesIds(){
-		throw  new NotImplementedException();
+		return devices.stream().map(Device::getId).collect(Collectors.toList());
 	}
 
 	public void addDeviceTODELETE(Device device){
