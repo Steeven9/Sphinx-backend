@@ -6,9 +6,10 @@ import java.text.DecimalFormat;
  * A Thermostat is a device, which can control the temperature in a given room. It is embedded to a Temperature sensor.
  */
 public class Thermostat extends TempSensor {
+
     private double targetTemp;
     private double averageTemp;
-    private int state;
+    private States state;
 
     /**
      * Constructor.
@@ -17,8 +18,22 @@ public class Thermostat extends TempSensor {
     public Thermostat() {
         super();
         this.targetTemp = this.getValue();
-        this.state = 1; //idle
+        this.state = States.IDLE;
         this.averageTemp = this.targetTemp;
+    }
+
+    /**
+     * Sets a target temperature to this thermostat and changes the internal state.
+     *
+     * @param target the target temperature
+     */
+    public void setTargetTemp(double target) {
+        if (target > this.getValue()) {
+            this.state = States.HEATING;
+        } else if (target < this.getValue()) {
+            this.state = States.COOLING;
+        }
+        this.targetTemp = target;
     }
 
     public Thermostat(Thermostat d) {
@@ -37,33 +52,40 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * Sets a target temperature to this thermostat and changes the internal state.
-     *
-     * @param target the target temperature
-     */
-    public void setTargetTemp(double target) {
-        if (target > this.getValue()) {
-            this.state = 3; //heating
-        } else if (target < this.getValue()) {
-            this.state = 2; //cooling
-        }
-        this.targetTemp = target;
-    }
-
-    /**
      * Turns off the thermostat.
      */
     public void turnOff() {
         this.on = false;
-        this.state = 0; //off
+        this.state = States.OFF;
     }
 
     /**
-     * Turns on the thermostat.
+     * Sets the thermostat to idle state. In case it is off, then the thermostat is switched on.
+     */
+    public void setIdle() {
+        this.on = true;
+        this.state = States.IDLE;
+    }
+
+    /**
+     * Turns on the thermostat computing the correct state
      */
     public void turnOn() {
         this.on = true;
-        this.state = 1; //idle
+        if (this.averageTemp > this.targetTemp) {
+            this.state = States.COOLING;
+        } else if (this.averageTemp < this.targetTemp) {
+            this.state = States.HEATING;
+        } else {
+            this.state = States.IDLE;
+        }
+    }
+
+    /**
+     * The four possible states of thermostat.
+     */
+    private enum States {
+        OFF, IDLE, HEATING, COOLING;
     }
 
     /**
