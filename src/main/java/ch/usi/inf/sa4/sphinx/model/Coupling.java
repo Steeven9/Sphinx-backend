@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 
 
-//TODO fix atm couplings of different parameters can be created
 @Entity
 public class Coupling extends StorableE {
     @Autowired

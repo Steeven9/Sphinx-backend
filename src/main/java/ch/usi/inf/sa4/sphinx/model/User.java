@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -139,8 +140,7 @@ public class User extends StorableE{
      * @return returns a list of the Ids of the rooms owned by the user
      */
     public List<Integer> getRoomsIds() {
-        //TODO REMOVE @lagraf
-        throw new NotImplementedException();
+        return rooms.stream().map(Room::getId).collect(Collectors.toList());
     }
 
 
@@ -232,15 +232,10 @@ public class User extends StorableE{
     }
 
     /**
-     * adds a the given roomId to the User
+     * adds a the given room to the User notice that this won't update the storage version
      *
-     * @param roomId id of the room to be added
+     * @param room  the room to be added
      */
-    public void addRoomToRemove(final Integer roomId) {//TODO REMOVE
-
-        throw new NotImplementedException();
-    }
-
     public void addRoom(final Room room){
         if(room == null){
             throw new IllegalArgumentException("Room can't be null");

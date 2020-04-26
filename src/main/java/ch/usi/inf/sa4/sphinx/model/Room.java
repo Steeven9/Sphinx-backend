@@ -104,14 +104,10 @@ public class Room extends StorableE{
 		return devices.stream().map(Device::getId).collect(Collectors.toList());
 	}
 
-	public void addDeviceTODELETE(Device device){
-		throw  new NotImplementedException(); //TODO DELET DIS
-	}
-
-	//THIS WONT REMOVE THE DEVICE FROM STORAGE!
+	//Notice that calling this method alone WON'T alter the corresponding Room saved in storage,
+	// to remove a device call roomService.removeDevice(...)
 	public void removeDevice(Integer deviceId){
-		devices.remove(deviceId);//TODO fix
-
+		devices.remove(deviceId);
 	}
 
 	public SerialisableRoom serialise(){
