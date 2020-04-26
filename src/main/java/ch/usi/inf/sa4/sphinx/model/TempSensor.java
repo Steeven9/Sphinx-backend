@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A Temperature sensor measures a temperature (in C) in a given room.
  */
@@ -10,8 +13,8 @@ public class TempSensor extends Sensor {
     /**
      * Creates a temperature sensor set to 20.0 degrees celsius.
      */
-    public TempSensor() {
-        super(20.0);
+    public TempSensor(RoomService roomService, CouplingService couplingService) {
+        super(20.0, roomService, couplingService);
     }
 
     /** Constructor.

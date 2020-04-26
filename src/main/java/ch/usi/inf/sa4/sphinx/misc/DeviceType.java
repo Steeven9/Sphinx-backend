@@ -14,6 +14,8 @@ package ch.usi.inf.sa4.sphinx.misc;
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 
 public enum DeviceType {
@@ -152,35 +154,36 @@ public enum DeviceType {
     }
 
 
-
-    /** Given a DeviceType, returns a new object of that type.
+    /**
+     * Given a DeviceType, returns a new object of that type.
+     *
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
-    public static Device makeDevice(DeviceType d) {
+    public static Device makeDevice(DeviceType d, RoomService roomService, CouplingService couplingService) {
         switch (d) {
             case LIGHT:
-                return new Light();
+                return new Light(roomService, couplingService);
             case DIMMABLE_LIGHT:
-                return new DimmableLight();
+                return new DimmableLight(roomService, couplingService);
             case SWITCH:
-                return new Switch();
+                return new Switch(roomService, couplingService);
             case DIMMABLE_SWITCH:
-                return new DimmableSwitch();
+                return new DimmableSwitch(roomService, couplingService);
             case STATELESS_DIMMABLE_SWITCH:
-                return new StatelessDimmableSwitch();
+                return new StatelessDimmableSwitch(roomService, couplingService);
             case SMART_PLUG:
-                return new SmartPlug();
+                return new SmartPlug(roomService, couplingService);
             case HUMIDITY_SENSOR:
-                return new HumiditySensor();
+                return new HumiditySensor(roomService, couplingService);
             case LIGHT_SENSOR:
-                return new LightSensor();
+                return new LightSensor(roomService, couplingService);
             case TEMP_SENSOR:
-                return new TempSensor();
+                return new TempSensor(roomService, couplingService);
             case MOTION_SENSOR:
-                return new MotionSensor();
+                return new MotionSensor(roomService, couplingService);
             case SMART_CURTAIN:
-                return new SmartCurtain();
+                return new SmartCurtain(roomService, couplingService);
             default:
                 return null;
         }

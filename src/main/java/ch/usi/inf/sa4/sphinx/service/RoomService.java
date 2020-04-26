@@ -21,6 +21,8 @@ public class RoomService {
     Storage<Integer, Room> roomStorage;
     @Autowired
     Storage<Integer, Device> deviceStorage;
+    @Autowired
+    CouplingService couplingService;
 
 
     /**
@@ -62,7 +64,7 @@ public class RoomService {
      * @return the id of the device or null if it fails
      */
     public final Integer addDevice(@NotNull final Integer roomId, @NotNull DeviceType deviceType) {
-        Device newDevice = DeviceType.makeDevice(deviceType);
+        Device newDevice = DeviceType.makeDevice(deviceType, this, couplingService);
         if(newDevice == null) return  null;
 
         Room room = roomStorage.get(roomId);

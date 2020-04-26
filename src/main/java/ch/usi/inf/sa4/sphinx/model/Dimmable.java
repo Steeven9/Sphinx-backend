@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 /**
@@ -22,8 +24,8 @@ public class Dimmable extends Device {
      * Constructor.
      * Initialize a dimmable device, with intensity set to maximum.
      */
-    protected Dimmable() {
-        super();
+    protected Dimmable(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
         this.intensity = 1.0;
     }
 

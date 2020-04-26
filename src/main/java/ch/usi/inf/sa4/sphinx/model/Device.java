@@ -2,8 +2,8 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +11,21 @@ import java.util.List;
 
 public abstract class Device extends Storable<Integer, Device> {
 
-    @Autowired
-    static CouplingService couplingService;
-
-
     private String icon;
     private String name;
     protected boolean on;
+    protected RoomService roomService;
+    protected CouplingService couplingService;
     protected final List<Integer> couplings;
 
 
-    public Device() {
+    public Device(RoomService roomService, CouplingService couplingService) {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
         this.couplings = new ArrayList<>();
-
+        this.roomService = roomService;
+        this.couplingService = couplingService;
     }
 
     protected Device(Device d) {
@@ -35,6 +34,8 @@ public abstract class Device extends Storable<Integer, Device> {
         this.name = d.getName();
         this.on = d.isOn();
         this.couplings = new ArrayList<>(d.couplings);
+        this.roomService = d.roomService;
+        this.couplingService = d.couplingService;
     }
 
 

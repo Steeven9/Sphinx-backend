@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A humidity sensor measures humidity (in %) in a given room.
  */
@@ -9,8 +12,8 @@ public class HumiditySensor extends Sensor {
      * Constructor.
      * Creates a humidity sensor set to 32.0 percent.
      */
-    public HumiditySensor() {
-        super(32.0);
+    public HumiditySensor(RoomService roomService, CouplingService couplingService) {
+        super(32.0, roomService, couplingService);
     }
 
     /**

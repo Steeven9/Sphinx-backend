@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.*;
@@ -27,10 +28,12 @@ class SerialiserTest {
     Room room;
     @Autowired
     RoomService roomService;
+    @Autowired
+    CouplingService couplingService;
 
     @BeforeEach
     void createDeviceAndUser() {
-        device = new Light();
+        device = new Light(roomService, couplingService);
         this.device.setId(1);
         room = new Room();
         this.room.setId(2);

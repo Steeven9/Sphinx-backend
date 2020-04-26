@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A smart-plug is a plug that can be added by user. It consumes some energy while in use.
  */
@@ -9,8 +12,8 @@ public class SmartPlug extends Device {
     /**
      * Creates a new smart-plug with 0 consumed energy.
      */
-    public SmartPlug() {
-        super();
+    public SmartPlug(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
         this.powerUsed = 0.0;
     }
 

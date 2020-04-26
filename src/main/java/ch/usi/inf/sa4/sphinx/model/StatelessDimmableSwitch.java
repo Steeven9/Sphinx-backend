@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A StatelessDimmableSwitch is a dimmable switch that can change the intensity level of
  * a dimmable light, without storing the intensity level.
@@ -10,7 +13,8 @@ public class StatelessDimmableSwitch extends Device {
     /**
      * Creates an initial StatelessDimmableSwitch with state set to '-'.
      */
-    public StatelessDimmableSwitch() {
+    public StatelessDimmableSwitch(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
         this.button = false;
     }
 

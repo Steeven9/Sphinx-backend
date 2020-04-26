@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
@@ -9,8 +12,8 @@ public class MotionSensor extends Device {
     /**
      * Creates a MotionSensor with initial state set to false.
      */
-    public MotionSensor() {
-        super();
+    public MotionSensor(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
         this.detected = false;
     }
 
