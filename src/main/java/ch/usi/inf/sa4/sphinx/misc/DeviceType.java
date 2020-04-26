@@ -11,6 +11,7 @@ package ch.usi.inf.sa4.sphinx.misc;
 9 (=TempSensor)
 10 (=MotionSensor)
 12 (=SmartCurtain)
+11 (=Thermostat)
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;

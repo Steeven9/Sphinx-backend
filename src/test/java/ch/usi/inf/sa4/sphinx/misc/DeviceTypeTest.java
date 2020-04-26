@@ -37,13 +37,18 @@ class DeviceTypeTest {
                 arguments(8, DeviceType.LIGHT_SENSOR),
                 arguments(9, DeviceType.TEMP_SENSOR),
                 arguments(10, DeviceType.MOTION_SENSOR),
+<<<<<<< HEAD
                 arguments(12, DeviceType.SMART_CURTAIN),
+=======
+                arguments(11, DeviceType.THERMOSTAT),
+>>>>>>> #70: add Thermostat to DeviceTypeTest
                 arguments(0, DeviceType.INVALID_DEVICE)
         );
     }
 
     private Stream<Arguments> streamProvider() {
         return Stream.of(
+<<<<<<< HEAD
                 arguments(new Light(roomService, couplingService), DeviceType.LIGHT),
                 arguments(new DimmableLight(roomService, couplingService), DeviceType.DIMMABLE_LIGHT),
                 arguments(new Switch(roomService, couplingService), DeviceType.SWITCH),
@@ -55,6 +60,19 @@ class DeviceTypeTest {
                 arguments(new TempSensor(roomService, couplingService), DeviceType.TEMP_SENSOR),
                 arguments(new MotionSensor(roomService, couplingService), DeviceType.MOTION_SENSOR),
                 arguments(new SmartCurtain(roomService, couplingService), DeviceType.SMART_CURTAIN)
+=======
+                arguments(new Light(), DeviceType.LIGHT),
+                arguments(new DimmableLight(), DeviceType.DIMMABLE_LIGHT),
+                arguments(new Switch(), DeviceType.SWITCH),
+                arguments(new DimmableSwitch(), DeviceType.DIMMABLE_SWITCH),
+                arguments(new StatelessDimmableSwitch(), DeviceType.STATELESS_DIMMABLE_SWITCH),
+                arguments(new SmartPlug(), DeviceType.SMART_PLUG),
+                arguments(new HumiditySensor(), DeviceType.HUMIDITY_SENSOR),
+                arguments(new LightSensor(), DeviceType.LIGHT_SENSOR),
+                arguments(new TempSensor(), DeviceType.TEMP_SENSOR),
+                arguments(new MotionSensor(), DeviceType.MOTION_SENSOR),
+                arguments(new Thermostat(), DeviceType.THERMOSTAT)
+>>>>>>> #70: add Thermostat to DeviceTypeTest
         );
     }
 
