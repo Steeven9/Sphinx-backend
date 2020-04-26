@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import ch.usi.inf.sa4.sphinx.model.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,7 +42,7 @@ class DeviceTypeTest {
         );
     }
 
-    public Stream<Arguments> valueDeviceAndDeviceTypeProvider(RoomService roomService, CouplingService couplingService) {
+    private Stream<Arguments> streamProvider() {
         return Stream.of(
                 arguments(new Light(roomService, couplingService), DeviceType.LIGHT),
                 arguments(new DimmableLight(roomService, couplingService), DeviceType.DIMMABLE_LIGHT),
@@ -71,21 +72,41 @@ class DeviceTypeTest {
         assertEquals(DeviceType.deviceTypetoInt(type), device);
     }
 
-    @ParameterizedTest(name = "Device {0} is associated to DeviceType {1}")
-    @MethodSource("valueDeviceAndDeviceTypeProvider")
+    @Test
     @DisplayName("Compare Device with its DeviceType")
-    @Disabled(value = "fix static argument provider")
-    void TestDeviceClassToDeviceType(Device device, DeviceType type) {
-        assertEquals(DeviceType.deviceToDeviceType(device), type);
+    void TestDeviceClassToDeviceType() {
+        assertAll(
+                () -> assertEquals(DeviceType.deviceToDeviceType(new Light(roomService, couplingService)), DeviceType.LIGHT),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new DimmableLight(roomService, couplingService)), DeviceType.DIMMABLE_LIGHT),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new Switch(roomService, couplingService)), DeviceType.SWITCH),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new DimmableSwitch(roomService, couplingService)), DeviceType.DIMMABLE_SWITCH),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new StatelessDimmableSwitch(roomService, couplingService)), DeviceType.STATELESS_DIMMABLE_SWITCH),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new SmartPlug(roomService, couplingService)), DeviceType.SMART_PLUG),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new HumiditySensor(roomService, couplingService)), DeviceType.HUMIDITY_SENSOR),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new LightSensor(roomService, couplingService)), DeviceType.LIGHT_SENSOR),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new TempSensor(roomService, couplingService)), DeviceType.TEMP_SENSOR),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new MotionSensor(roomService, couplingService)), DeviceType.MOTION_SENSOR),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new SmartCurtain(roomService, couplingService)), DeviceType.SMART_CURTAIN)
+        );
         assertEquals(DeviceType.deviceClassToDeviceType(User.class), DeviceType.INVALID_DEVICE);
     }
 
-    @ParameterizedTest
-    @MethodSource("valueDeviceAndDeviceTypeProvider")
+    @Test
     @DisplayName("Create a Device based on given DeviceType")
-    @Disabled(value = "fix static argument provider")
-    void TestMakeDevice(Device device, DeviceType type) {
-        assertEquals(DeviceType.makeDevice(type, roomService, couplingService).getClass(), device.getClass());
+    void TestMakeDevice() {
+        assertAll(
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.LIGHT, roomService, couplingService).getClass(), Light.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.DIMMABLE_LIGHT, roomService, couplingService).getClass(), DimmableLight.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.SWITCH, roomService, couplingService).getClass(), Switch.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.DIMMABLE_SWITCH, roomService, couplingService).getClass(), DimmableSwitch.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.STATELESS_DIMMABLE_SWITCH, roomService, couplingService).getClass(), StatelessDimmableSwitch.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.SMART_PLUG, roomService, couplingService).getClass(), SmartPlug.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.HUMIDITY_SENSOR, roomService, couplingService).getClass(), HumiditySensor.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.LIGHT_SENSOR, roomService, couplingService).getClass(), LightSensor.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.TEMP_SENSOR, roomService, couplingService).getClass(), TempSensor.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.MOTION_SENSOR, roomService, couplingService).getClass(), MotionSensor.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.SMART_CURTAIN, roomService, couplingService).getClass(), SmartCurtain.class)
+        );
         assertNull(DeviceType.makeDevice(DeviceType.INVALID_DEVICE, roomService, couplingService));
     }
 }
