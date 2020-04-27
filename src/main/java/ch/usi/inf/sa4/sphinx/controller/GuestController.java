@@ -2,14 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> #124: added methods for guests management
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-
 
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -31,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 
@@ -41,6 +35,9 @@ public class GuestController {
     @Autowired
     private UserService userService;
 
+
+    @Autowired
+    private UserStorage userStorage;
     @Autowired
     private Serialiser serialiser;
 
@@ -280,6 +277,7 @@ public class GuestController {
 
 
 
+
     }
 
 
@@ -319,6 +317,7 @@ public class GuestController {
 
 
     }
+
 
 
 }
