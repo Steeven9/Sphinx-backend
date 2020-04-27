@@ -421,41 +421,7 @@ public class UserService {
     }
 
 
-    public boolean removeGuest(final String username1, final String username2){
-        if(!isGuestOf(username1,username2)){
-            return false;
-        }
-        final Optional<User> user = userStorage.findByUsername(username1);
-        final Optional<User> guest = userStorage.findByUsername(username2);
 
-        user.get().removeGuestOf(guest.get());
-
-
-        user.ifPresent(
-                u -> {
-                    u.removeGuestOf(guest.get());
-                    userStorage.save(u);
-                }
-        );
-
-        //userStorage.update(user);
-        return true;
-    }
-
-    public Optional<User> addGuest(final String username1, final String username2){
-        final Optional<User> user = userStorage.findByUsername(username1);
-        final Optional<User> guest = userStorage.findByUsername(username2);
-
-        if(user == null || guest ==null){
-            return null;
-        }
-
-       user.get().addGuestOf( guest.get());
-
-        return guest;
-
-
-    }
 
 
     /** Returns a list of the guests.
@@ -467,20 +433,7 @@ public class UserService {
         return user.orElse(null).getGuestsOf();
     }
 
-    /**
-     * Determines if user is a guest of second user.
-     * @param username1 the user's' username
-     * @param username2  the second user's username
-     * @return true if the user is considered the second's guest
-     */
-    public boolean isGuestOf(String username1, String username2){
-        Optional<User> user = userStorage.findByUsername(username1);
-        Optional<User> guest = userStorage.findByUsername(username2);
-        if(user == null || guest == null){
-            return false;
-        }
-        return user.get().getGuestsOf().contains(guest.get());
-    }
+
 
     /**
      * @param username the name of the user

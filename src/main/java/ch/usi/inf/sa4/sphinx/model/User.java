@@ -53,8 +53,7 @@ public class User extends StorableE {
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
-
-    private  List<User> hosts;
+    private List<User> hosts;
     private boolean camsVisible = false;
 
 
@@ -86,7 +85,8 @@ public class User extends StorableE {
     }
 
 
-    public User() {}
+    public User() {
+    }
 
 
     /**
@@ -301,37 +301,40 @@ public class User extends StorableE {
 
 
     /**
+     * <<<<<<< HEAD
      * asserts if there's a match between the User's hashed password and the one in plaintext
+     *
      * @param password the plaintext password to check
      * @return true if matching else false
      */
 
-    public boolean matchesPassword(@NonNull String password){
+    public boolean matchesPassword(@NonNull String password) {
         return BCrypt.checkpw(password, this.password);
     }
 
 
-    private String hashPassword( String password) {
-        if(password == null) return null;
+    private String hashPassword(String password) {
+        if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
 
 
     }
 
-    /** Check if cameras are accessible by guests.
-     * @return  true if the cameras are visible to the guests
+    /**
+     * Check if cameras are accessible by guests.
+     *
+     * @return true if the cameras are visible to the guests
      **/
-    public boolean visibilityStatus(){
+    public boolean visibilityStatus() {
         return visibleCams;
     }
 
     /**
      * Switches the cam visibility from on to off and vice versa.
      **/
-    public void oppositeSwitch(){
+    public void oppositeSwitch() {
         visibleCams = !visibleCams;
     }
-
 
 
     /**
@@ -347,31 +350,37 @@ public class User extends StorableE {
 
     }
 
-    /** Add user to the list of user hub's our user has access to as guest.
+    /**
+     * Add user to the list of user hub's our user has access to as guest.
+     *
      * @param user the user to add
      **/
 
-    public void addHost(final User user){
+    public void addHost(final User user) {
 
         hosts.add(user);
 
 
     }
 
-    /** Removes a house access from deleting a user's name from our list.
+    /**
+     * Removes a house access from deleting a user's name from our list.
+     *
      * @param user the user to remove
      **/
-    public void removeHost(final User user){
+    public void removeHost(final User user) {
         hosts.remove(user);
 
 
     }
 
-    /** Check if cameras are accessible by guests.
-     * @return  true if the cameras are visible to the guests
+    /**
+     * Check if cameras are accessible by guests.
+     *
+     * @return true if the cameras are visible to the guests
      **/
 
-    public boolean areCamsVisible(){
+    public boolean areCamsVisible() {
         return camsVisible;
 
     }
@@ -379,13 +388,38 @@ public class User extends StorableE {
     /**
      * Switches the cam visibility from on to off and vice versa.
      **/
-    public void switchCamerasAccessibility(){
+    public void switchCamerasAccessibility() {
         camsVisible = !camsVisible;
 
     }
 
 
+    /**
+     * getter for guest
+     *
+     * @return returns a list of the user who have access to the hub
+     */
+    public List<User> getGuestsOf() {
+        return hosts;
+    }
 
+    /**
+     * Add user to the list of user hub's he is guest.
+     *
+     * @param user the user to add
+     **/
+    public void addGuestOf(final User user) {
+        hosts.add(user);
+    }
+
+    /**
+     * Remove user from the list of user hub's he is guest.
+     *
+     * @param user the user to remove
+     **/
+    public void removeGuestOf(final User user) {
+        hosts.remove(user);
+    }
 
 
 }
