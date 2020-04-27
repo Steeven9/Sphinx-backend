@@ -15,10 +15,6 @@ public class SecurityCamera extends Device {
         super();
     }
 
-    private SecurityCamera(SecurityCamera other){
-        super();
-        this.url = other.getUrl();
-    }
 
     public String getUrl(){
         return this.url;
