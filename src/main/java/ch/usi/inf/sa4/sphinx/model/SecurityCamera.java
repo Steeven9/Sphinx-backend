@@ -4,7 +4,11 @@ public class SecurityCamera extends Device {
     private boolean on;
     private String url;
 
-    private  SecurityCamera(SecurityCamera other){
+    public SecurityCamera(){
+        super();
+    }
+
+    private SecurityCamera(SecurityCamera other){
         this.on = other.isOn();
         this.url = other.getUrl();
     }
