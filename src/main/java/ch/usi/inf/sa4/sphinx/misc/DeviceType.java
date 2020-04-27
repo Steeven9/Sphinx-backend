@@ -26,6 +26,7 @@ public enum DeviceType {
     HUMIDITY_SENSOR,
     LIGHT_SENSOR,
     TEMP_SENSOR,
+    SECURITY_CAMERA,
     MOTION_SENSOR;
 
 
@@ -56,6 +57,8 @@ public enum DeviceType {
                 return TEMP_SENSOR;
             case 10:
                 return MOTION_SENSOR;
+            case 13:
+                return SECURITY_CAMERA;
             default:
                 return INVALID_DEVICE;
         }
@@ -136,6 +139,8 @@ public enum DeviceType {
                 return 9;
             case MOTION_SENSOR:
                 return 10;
+            case SECURITY_CAMERA:
+                return 13;
             default:
                 return 0;
         }
@@ -169,6 +174,8 @@ public enum DeviceType {
                 return new TempSensor();
             case MOTION_SENSOR:
                 return new MotionSensor();
+            case SECURITY_CAMERA:
+                return new SecurityCamera();
             default:
                 return null;
         }
