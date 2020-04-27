@@ -170,8 +170,6 @@ public class UserService {
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(String username, Integer deviceId) {
-        Optional<List<Integer>> devices = getDevices(username);
-
         return getDevices(username)
                 .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
                 ).orElse(false);

@@ -67,8 +67,7 @@ public class AuthController {
         User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username)
-                .orElseThrow(() -> new UnauthorizedException("")));
+                .orElse(userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("")));
 
         if (!user.isVerified()) {
             throw new ForbiddenException("");
@@ -99,9 +98,7 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService
-                .getByMail(email)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("User not found"));
 
         if (verifiedUser.isVerified()) {
             throw new BadRequestException("User is already verified");

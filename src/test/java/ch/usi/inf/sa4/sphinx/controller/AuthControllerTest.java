@@ -26,10 +26,9 @@ public class AuthControllerTest {
                 .andExpect(status().is(401));
     }
 
-    //TODO changed to 401 or should it be 400 as it was before?
     @Test
     public void shouldGet401OnLoginWithWrongEmail() throws Exception {
-        this.mockmvc.perform(post("/auth/login/username:wrong")
+        this.mockmvc.perform(post("/auth/login/wrong")
                 .content("{email:\"test@email.io\"}")
                 .header("content-type", "application/json"))
                 .andDo(print())
