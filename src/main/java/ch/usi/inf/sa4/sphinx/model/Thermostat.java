@@ -25,7 +25,7 @@ public class Thermostat extends TempSensor {
         super();
         this.targetTemp = this.getValue();
         this.state = States.IDLE;
-        this.getAverageTemp();
+        this.averageTemp = this.targetTemp;
     }
 
     /**
