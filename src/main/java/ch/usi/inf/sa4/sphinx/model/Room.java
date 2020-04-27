@@ -14,8 +14,10 @@ public class Room extends StorableE{
 	@Expose
 	private String name;
 	@Expose
+	@Lob
 	private String background;
 	@Expose
+	@Lob
 	private String icon;
 	@Expose
 	@OneToMany(orphanRemoval = true, //A device can migrate Room

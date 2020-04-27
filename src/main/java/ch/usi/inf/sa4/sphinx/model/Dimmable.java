@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -14,6 +15,7 @@ import javax.persistence.Entity;
 public abstract class Dimmable extends Device {
 
     @Expose
+    @Column
     private double intensity;
 
     /**
