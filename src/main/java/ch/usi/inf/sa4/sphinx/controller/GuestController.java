@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 
@@ -25,9 +26,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -37,14 +35,7 @@ public class GuestController {
     @Autowired
     private UserService userService;
 
-
-
-
-
-
-
     @Autowired
-
     private Serialiser serialiser;
 
 
@@ -239,6 +230,7 @@ public class GuestController {
 
 
 
+
     }
 
 
@@ -279,7 +271,6 @@ public class GuestController {
 
 
     }
-
 
 
 }
