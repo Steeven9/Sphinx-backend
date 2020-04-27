@@ -12,6 +12,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,10 +77,16 @@ public class UserController {
             throw new BadRequestException("");
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
-        mailer.send(newUser.getEmail(),
-                "Confirm your email account for SmartHut",
-                "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
-                        "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
+
+        try {
+            mailer.send(newUser.getEmail(),
+                    "Confirm your email account for SmartHut",
+                    "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
+                            "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
+        } catch (MailException e){
+            throw new ServerErrorException("failed to send confirmation mail");
+
+        }
 
         return ResponseEntity.status(201).body(serialiser.serialiseUser(newUser));
     }
