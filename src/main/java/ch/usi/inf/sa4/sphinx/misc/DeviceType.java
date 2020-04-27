@@ -119,6 +119,9 @@ public enum DeviceType {
         if (SmartCurtain.class.equals(c)) {
             return SMART_CURTAIN;
         }
+        if (SecurityCamera.class.equals(c)) {
+            return SECURITY_CAMERA;
+        }
         return INVALID_DEVICE;
     }
 
