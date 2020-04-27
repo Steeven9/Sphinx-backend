@@ -2,7 +2,6 @@ package ch.usi.inf.sa4.sphinx.misc;
 
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.junit.jupiter.api.Test;
@@ -37,44 +36,12 @@ class DeviceTypeTest {
                 arguments(8, DeviceType.LIGHT_SENSOR),
                 arguments(9, DeviceType.TEMP_SENSOR),
                 arguments(10, DeviceType.MOTION_SENSOR),
-<<<<<<< HEAD
-                arguments(12, DeviceType.SMART_CURTAIN),
-=======
                 arguments(11, DeviceType.THERMOSTAT),
->>>>>>> #70: add Thermostat to DeviceTypeTest
+                arguments(12, DeviceType.SMART_CURTAIN),
                 arguments(0, DeviceType.INVALID_DEVICE)
         );
     }
 
-    private Stream<Arguments> streamProvider() {
-        return Stream.of(
-<<<<<<< HEAD
-                arguments(new Light(roomService, couplingService), DeviceType.LIGHT),
-                arguments(new DimmableLight(roomService, couplingService), DeviceType.DIMMABLE_LIGHT),
-                arguments(new Switch(roomService, couplingService), DeviceType.SWITCH),
-                arguments(new DimmableSwitch(roomService, couplingService), DeviceType.DIMMABLE_SWITCH),
-                arguments(new StatelessDimmableSwitch(roomService, couplingService), DeviceType.STATELESS_DIMMABLE_SWITCH),
-                arguments(new SmartPlug(roomService, couplingService), DeviceType.SMART_PLUG),
-                arguments(new HumiditySensor(roomService, couplingService), DeviceType.HUMIDITY_SENSOR),
-                arguments(new LightSensor(roomService, couplingService), DeviceType.LIGHT_SENSOR),
-                arguments(new TempSensor(roomService, couplingService), DeviceType.TEMP_SENSOR),
-                arguments(new MotionSensor(roomService, couplingService), DeviceType.MOTION_SENSOR),
-                arguments(new SmartCurtain(roomService, couplingService), DeviceType.SMART_CURTAIN)
-=======
-                arguments(new Light(), DeviceType.LIGHT),
-                arguments(new DimmableLight(), DeviceType.DIMMABLE_LIGHT),
-                arguments(new Switch(), DeviceType.SWITCH),
-                arguments(new DimmableSwitch(), DeviceType.DIMMABLE_SWITCH),
-                arguments(new StatelessDimmableSwitch(), DeviceType.STATELESS_DIMMABLE_SWITCH),
-                arguments(new SmartPlug(), DeviceType.SMART_PLUG),
-                arguments(new HumiditySensor(), DeviceType.HUMIDITY_SENSOR),
-                arguments(new LightSensor(), DeviceType.LIGHT_SENSOR),
-                arguments(new TempSensor(), DeviceType.TEMP_SENSOR),
-                arguments(new MotionSensor(), DeviceType.MOTION_SENSOR),
-                arguments(new Thermostat(), DeviceType.THERMOSTAT)
->>>>>>> #70: add Thermostat to DeviceTypeTest
-        );
-    }
 
     @ParameterizedTest(name = "Integer {0} is associated to DeviceType {1}")
     @MethodSource("valueIntegerAndDeviceTypeProvider")
@@ -104,6 +71,7 @@ class DeviceTypeTest {
                 () -> assertEquals(DeviceType.deviceToDeviceType(new LightSensor(roomService, couplingService)), DeviceType.LIGHT_SENSOR),
                 () -> assertEquals(DeviceType.deviceToDeviceType(new TempSensor(roomService, couplingService)), DeviceType.TEMP_SENSOR),
                 () -> assertEquals(DeviceType.deviceToDeviceType(new MotionSensor(roomService, couplingService)), DeviceType.MOTION_SENSOR),
+                () -> assertEquals(DeviceType.deviceToDeviceType(new Thermostat(roomService, couplingService)), DeviceType.THERMOSTAT),
                 () -> assertEquals(DeviceType.deviceToDeviceType(new SmartCurtain(roomService, couplingService)), DeviceType.SMART_CURTAIN)
         );
         assertEquals(DeviceType.deviceClassToDeviceType(User.class), DeviceType.INVALID_DEVICE);
@@ -123,6 +91,7 @@ class DeviceTypeTest {
                 () -> assertEquals(DeviceType.makeDevice(DeviceType.LIGHT_SENSOR, roomService, couplingService).getClass(), LightSensor.class),
                 () -> assertEquals(DeviceType.makeDevice(DeviceType.TEMP_SENSOR, roomService, couplingService).getClass(), TempSensor.class),
                 () -> assertEquals(DeviceType.makeDevice(DeviceType.MOTION_SENSOR, roomService, couplingService).getClass(), MotionSensor.class),
+                () -> assertEquals(DeviceType.makeDevice(DeviceType.THERMOSTAT, roomService, couplingService).getClass(), Thermostat.class),
                 () -> assertEquals(DeviceType.makeDevice(DeviceType.SMART_CURTAIN, roomService, couplingService).getClass(), SmartCurtain.class)
         );
         assertNull(DeviceType.makeDevice(DeviceType.INVALID_DEVICE, roomService, couplingService));

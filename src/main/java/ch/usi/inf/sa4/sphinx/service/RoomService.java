@@ -89,7 +89,7 @@ public class RoomService {
      * Deletes the device with the given Id from the room with the given Id.
      * @param roomId   the id of the room
      * @param deviceId the id of the device
-     * @return true if succes else false
+     * @return true if success else false
      */
     public final boolean removeDevice(final Integer roomId, final Integer deviceId) {
         Room room = roomStorage.get(roomId);

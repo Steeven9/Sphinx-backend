@@ -44,9 +44,12 @@ public class Thermostat extends TempSensor {
         this.targetTemp = d.targetTemp;
         this.state = d.state;
         this.averageTemp = d.averageTemp;
+        this.couplingService = d.couplingService;
+        this.roomService = d.roomService;
     }
 
     public double getAverageTemp() {
+//        averageTemp = roomService.getAverageTemp(roomId, this.getKey());
         return averageTemp;
     }
 
