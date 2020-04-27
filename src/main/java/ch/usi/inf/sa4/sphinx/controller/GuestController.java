@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 
@@ -45,6 +46,7 @@ public class GuestController {
     private UserService deviceService;
 
     @Autowired
+
 
     private Serialiser serialiser;
 
@@ -280,7 +282,6 @@ public class GuestController {
 
 
 
-
         if (  !userService.validSession(username, sessionToken)) {
 
 
@@ -297,6 +298,7 @@ public class GuestController {
 
             return ResponseEntity.noContent().build();
         }
+
 
 
     }
