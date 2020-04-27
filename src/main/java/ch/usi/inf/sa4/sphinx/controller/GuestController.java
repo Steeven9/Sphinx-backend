@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -101,7 +102,6 @@ public class GuestController {
 
 
     /**
-<<<<<<< HEAD
      * Get the list of houses the is allowed to access as guest.
      *
      * @param username      the username of the user.
@@ -244,5 +244,6 @@ public class GuestController {
 
         return null;
     }
+
 
 }
