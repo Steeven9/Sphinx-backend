@@ -319,9 +319,11 @@ public class UserService {
     }
 
 
+
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
     }
+
 
 }
