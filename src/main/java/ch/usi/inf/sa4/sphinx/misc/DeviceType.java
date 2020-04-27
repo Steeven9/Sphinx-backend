@@ -10,8 +10,8 @@ package ch.usi.inf.sa4.sphinx.misc;
 8 (=LightSensor)
 9 (=TempSensor)
 10 (=MotionSensor)
-12 (=SmartCurtain)
 11 (=Thermostat)
+12 (=SmartCurtain)
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
@@ -64,12 +64,12 @@ public enum DeviceType {
                 return TEMP_SENSOR;
             case 10:
                 return MOTION_SENSOR;
+            case 11:
+                return THERMOSTAT;
             case 12:
                 return SMART_CURTAIN;
             case 13:
                 return SECURITY_CAMERA;
-            case 11:
-                return THERMOSTAT;
             default:
                 return INVALID_DEVICE;
         }
@@ -160,12 +160,12 @@ public enum DeviceType {
                 return 9;
             case MOTION_SENSOR:
                 return 10;
+            case THERMOSTAT:
+                return 11;
             case SMART_CURTAIN:
                 return 12;
             case SECURITY_CAMERA:
                 return 13;
-            case THERMOSTAT:
-                return 11;
             default:
                 return 0;
         }
