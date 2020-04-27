@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
@@ -226,5 +227,6 @@ public class GuestController {
 
 
     }
+
 
 }
