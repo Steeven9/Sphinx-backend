@@ -17,6 +17,7 @@ public class SerialisableDevice {
     public Integer type;
     public String userName;
     public Boolean on;
+    public String url;
 
     /** Constructor.**/
     public SerialisableDevice(){ }
@@ -36,7 +37,7 @@ public class SerialisableDevice {
      * @param switches list of switches (by id) that the device has
      * @param type the serialisable device's type
      **/
-    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on) {
+    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -47,6 +48,7 @@ public class SerialisableDevice {
         this.roomId = roomId;
         this.type = type;
         this.on = on;
+        this.url= url;
     }
 
 }
