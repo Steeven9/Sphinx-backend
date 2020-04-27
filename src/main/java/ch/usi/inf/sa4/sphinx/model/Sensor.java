@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import java.text.DecimalFormat;
 import javax.persistence.Entity;
@@ -35,11 +36,22 @@ public abstract class Sensor extends Device {
 
     /**
      * Returns the measured physical quantity in given room, with small random error [-0.5, +0.5].
+     *
      * @return the physical quantity
      */
     public double getValue() {
         double var = new Random().nextDouble();
         return this.quantity + var - 0.5;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected SerialisableDevice serialise() {
+        SerialisableDevice sd = super.serialise();
+        sd.quantity = this.getQuantity();
+        return sd;
     }
 
     /**
