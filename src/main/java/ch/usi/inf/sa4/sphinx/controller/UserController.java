@@ -71,7 +71,7 @@ public class UserController {
     public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
         User newUser = new User(user.email, user.password, username, user.fullname);
         User findUser = userService.get(username)
-                .orElse(userService.getByMail(username).orElse(null));
+                .orElse(userService.getByMail(user.email).orElse(null));
 
         if (findUser != null) {
             throw new BadRequestException("This user already exists!");
