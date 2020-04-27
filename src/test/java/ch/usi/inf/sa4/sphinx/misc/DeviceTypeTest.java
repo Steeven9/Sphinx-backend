@@ -25,6 +25,7 @@ class DeviceTypeTest {
                 arguments(8, DeviceType.LIGHT_SENSOR),
                 arguments(9, DeviceType.TEMP_SENSOR),
                 arguments(10, DeviceType.MOTION_SENSOR),
+                arguments(11, DeviceType.THERMOSTAT),
                 arguments(12, DeviceType.SMART_CURTAIN),
                 arguments(11, DeviceType.THERMOSTAT),
                 arguments(0, DeviceType.INVALID_DEVICE)

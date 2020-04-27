@@ -93,7 +93,7 @@ public class RoomService {
      *
      * @param roomId   the id of the room
      * @param deviceId the id of the device
-     * @return true if succes else false
+     * @return true if success else false
      */
     public final boolean removeDevice(@NonNull final Integer roomId,@NonNull final Integer deviceId) {
         try {
