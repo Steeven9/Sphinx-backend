@@ -54,8 +54,10 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+
     private  List<User> hosts;
     private boolean camsVisible = false;
+
 
 
 
@@ -292,7 +294,6 @@ public class User extends StorableE {
 
 
     /**
-
      * asserts if there's a match between the User's hashed password and the one in plaintext
      * @param password the plaintext password to check
      * @return true if matching else false
@@ -311,6 +312,7 @@ public class User extends StorableE {
         if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
+
 
 
 
@@ -357,6 +359,7 @@ public class User extends StorableE {
     public void switchCamerasAccessibility(){
         camsVisible = !camsVisible;
     }
+
 
 
 
