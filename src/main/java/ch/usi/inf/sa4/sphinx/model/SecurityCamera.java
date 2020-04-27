@@ -48,7 +48,4 @@ public class SecurityCamera extends Device {
     }
 
 
-    public Device makeCopy() {
-        return new SecurityCamera(this);
-    }
 }
