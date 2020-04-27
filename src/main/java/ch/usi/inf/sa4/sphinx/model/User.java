@@ -52,7 +52,9 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+
     private  List<User> hosts;
+
 
     private boolean visibleCams = false;
 //TODO find way to auto generate verificationToken
@@ -328,6 +330,29 @@ public class User extends StorableE {
     }
 
 
+
+    /**
+     * getter for guest
+     *
+     * @return returns a list of the user who have access to the hub
+     */
+    public List<User> getGuestsOf() {
+        return hosts;
+    }
+
+    /** Add user to the list of user hub's he is guest.
+     * @param user the user to add
+     **/
+    public void addGuestOf(final User user){
+        hosts.add(user);
+    }
+
+    /** Remove user from the list of user hub's he is guest.
+     * @param user the user to remove
+     **/
+    public void removeGuestOf(final User user){
+        hosts.remove(user);
+    }
 
 }
 
