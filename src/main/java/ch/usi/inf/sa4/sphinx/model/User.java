@@ -62,6 +62,7 @@ public class User extends StorableE {
 
 
 
+
 //TODO find way to auto generate verificationToken
 
     /**
@@ -300,7 +301,6 @@ public class User extends StorableE {
      * @return true if matching else false
      */
 
-
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -326,6 +326,7 @@ public class User extends StorableE {
      * @param user the user to add
      **/
 
+
     public void addHost(final User user){
 
         hosts.add(user);
@@ -336,6 +337,7 @@ public class User extends StorableE {
     /** Removes a house access from deleting a user's name from our list.
      * @param user the user to remove
      **/
+
 
 
     public void removeHost(final User user){
@@ -352,6 +354,7 @@ public class User extends StorableE {
 
     public boolean areCamsVisible() {
         return camsVisible;
+
 
     }
 

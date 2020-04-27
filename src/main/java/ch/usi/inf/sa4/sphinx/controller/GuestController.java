@@ -2,9 +2,12 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> #124: added methods for guests management
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 
