@@ -49,6 +49,8 @@ public class User extends StorableE{
     private  String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private  List<User> guestOf;
 
 
 
@@ -291,5 +293,30 @@ public class User extends StorableE{
         sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
     }
+
+
+    /**
+     * getter for guest
+     *
+     * @return returns a list of the user who have access to the hub
+     */
+    public List<User> getGuestsOf() {
+        return guestOf;
+    }
+
+    /** Add user to the list of user hub's he is guest.
+     * @param user the user to add
+     **/
+    public void addGuestOf(final User user){
+        guestOf.add(user);
+    }
+
+    /** Remove user from the list of user hub's he is guest.
+     * @param user the user to remove
+     **/
+    public void removeGuestOf(final User user){
+        guestOf.remove(user);
+    }
+
 }
 
