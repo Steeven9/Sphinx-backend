@@ -1,8 +1,9 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-<<<<<<< HEAD
+
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
@@ -23,9 +24,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
+
+
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -35,9 +37,11 @@ public class GuestController {
     @Autowired
     private UserService userService;
 
-
     @Autowired
     private UserStorage userStorage;
+
+    @Autowired
+    private UserService deviceService;
     @Autowired
 
     private Serialiser serialiser;
@@ -69,6 +73,7 @@ public class GuestController {
 
 
         return ResponseEntity.ok(users);
+
 
     }
 
@@ -217,9 +222,9 @@ public class GuestController {
         userService.addGuest(username, guest_username);
         return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
 
-
-
     }
+
+
 
 
     /**
@@ -227,7 +232,9 @@ public class GuestController {
      *
      * @param username       the user who want to delete a guest
      * @param guest_username the guest to delete
+
      * @param sessionToken   the session token used to authenticate
+
      * @return a ResponseEntity containing one of the following status codes:
      * 404 if no user with the given username exists
      * 401 if the session token does not match
@@ -257,5 +264,6 @@ public class GuestController {
 
 
     }
+
 }
 
