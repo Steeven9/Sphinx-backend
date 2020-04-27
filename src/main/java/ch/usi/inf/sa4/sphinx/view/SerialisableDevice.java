@@ -19,7 +19,7 @@ public class SerialisableDevice {
     public Boolean on;
     public String url;
     public double quantity;
-    public double avgerageTemp;
+    public double averageTemp;
     public double targetTemp;
 
     /**
@@ -44,10 +44,10 @@ public class SerialisableDevice {
      * @param type         the serialisable device's type
      * @param url          the url of a video
      * @param quantity     the serialisable device's value of a sensor
-     * @param avgerageTemp the serialisable device's room average temperature
+     * @param averageTemp the serialisable device's room average temperature
      * @param targetTemp   the serialisable device's thermostat target temperature
      **/
-    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double quantity, double avgerageTemp, double targetTemp) {
+    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double quantity, double averageTemp, double targetTemp) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -60,7 +60,7 @@ public class SerialisableDevice {
         this.on = on;
         this.url = url;
         this.quantity = quantity;
-        this.avgerageTemp = avgerageTemp;
+        this.averageTemp = averageTemp;
         this.targetTemp = targetTemp;
     }
 
