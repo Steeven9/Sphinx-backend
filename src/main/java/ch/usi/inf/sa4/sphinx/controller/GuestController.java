@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -22,9 +23,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
+
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -42,12 +43,12 @@ public class GuestController {
     private UserService deviceService;
     @Autowired
 
+
     private Serialiser serialiser;
 
 
     /**
      * Get all the guests of a certain user.
-     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of guests  or
@@ -240,7 +241,6 @@ public class GuestController {
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String
                                                                   guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
-
         Optional<User> user = userService.get(username);
 
 
@@ -257,6 +257,7 @@ public class GuestController {
 
             return ResponseEntity.status(204).build();
         }
+
 
 
     }
