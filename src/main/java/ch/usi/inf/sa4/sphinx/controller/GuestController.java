@@ -1,6 +1,10 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -20,7 +24,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 import java.util.stream.Collectors;
+
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -30,12 +36,14 @@ public class GuestController {
     private UserService userService;
 
     @Autowired
+    private UserStorage userStorage;
+
+
     private Serialiser serialiser;
 
 
     /**
      * Get all the guests of a certain user.
-     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of guests  or
@@ -195,14 +203,14 @@ public class GuestController {
 
     /**
      * Deletes a guest.
+     *
      * @param username       the user who want to delete a guest
      * @param guest_username the guest to delete
      * @param sessionToken  the session token used to authenticate
-     * @return a ResponseEntity containing one of the following status codes:
-     * 404 if no user with the given username exists
      * 401 if the session token does not match
      * 204 if the operation was successful
      */
+
     @DeleteMapping(value = {"/{guest_username}","/{guest_username}/"})
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String guest_username,
                                                           @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
@@ -222,6 +230,7 @@ public class GuestController {
 
             return ResponseEntity.status(204).build();
         }
+
 
 
     }
