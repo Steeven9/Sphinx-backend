@@ -50,16 +50,11 @@ public class User extends StorableE{
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+
     private  List<User> hosts;
 
-<<<<<<< HEAD
-
-
-
-
-=======
     private boolean areCamsVisible = false;
->>>>>>> #124: Gitlab suggestions applied (#6)
+
 //TODO find way to auto generate verificationToken
 
 //    @Component
@@ -336,6 +331,7 @@ public class User extends StorableE{
     public void camerasAccessibilitySwitch(){
         areCamsVisible = !areCamsVisible;
     }
+
 
 
 
