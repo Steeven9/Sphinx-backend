@@ -52,7 +52,12 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+
+
     private  List<User> hosts;
+
+    private boolean areCamsVisible = false;
+
 
 //TODO find way to auto generate verificationToken
 
@@ -320,6 +325,7 @@ public class User extends StorableE {
     public void camerasAccessibilitySwitch(){
         areCamsVisible = !areCamsVisible;
     }
+
 
 
 
