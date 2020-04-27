@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.lang.NonNull;
 
 public class DimmSwitchChangedEvent extends Event<Double> {
@@ -11,10 +10,9 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      *
      * @param deviceID the id to set the DimmSwitchChangedEvent to
      **/
-    public DimmSwitchChangedEvent(@NonNull  int deviceID, DeviceService deviceService) {
-        super(deviceID, deviceService);
+    public DimmSwitchChangedEvent(@NonNull int deviceID) {
+        super(deviceID);
     }
-
 
 
     /**

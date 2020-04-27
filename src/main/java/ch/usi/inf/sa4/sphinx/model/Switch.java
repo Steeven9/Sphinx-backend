@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
 
+
 /**
  * A switch is a switch that can turn on and off a device.
  */
@@ -14,7 +15,7 @@ public class Switch extends Device {
      * Creates a switch, which is on.
      */
     public Switch() {
-        super();
+
     }
 
 

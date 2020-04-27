@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 
@@ -17,9 +18,11 @@ public abstract class Event<T> extends StorableE {
     @Transient
     protected DeviceService deviceService;
 
-    public Event(Integer deviceId, DeviceService deviceService) {
+
+    public Event(Integer deviceId) {
         this.deviceId = deviceId;
-        this.deviceService = deviceService;
+        this.deviceService = ServiceProvider.getStaticDeviceService();
+        assert(deviceService != null);
     }
 
 

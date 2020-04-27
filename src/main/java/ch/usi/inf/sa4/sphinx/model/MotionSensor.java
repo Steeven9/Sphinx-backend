@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
 
+
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
@@ -15,7 +16,6 @@ public class MotionSensor extends Device {
      * Creates a MotionSensor with initial state set to false.
      */
     public MotionSensor() {
-        super();
         this.detected = false;
     }
 

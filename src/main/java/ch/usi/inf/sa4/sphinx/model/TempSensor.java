@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
 
+
 /**
  * A Temperature sensor measures a temperature (in C) in a given room.
  */

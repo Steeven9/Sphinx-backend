@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
 
+
 /**
  * A StatelessDimmableSwitch is a dimmable switch that can change the intensity level of
  * a dimmable light, without storing the intensity level.

@@ -64,7 +64,7 @@ class DeviceTest {
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
-        Event event = new DimmSwitchChangedEvent(1, new DeviceService());
+        Event event = new DimmSwitchChangedEvent(1);
         Effect effect = new DimmableLightStateInc(1);
         Coupling observer = new Coupling(event, effect);
         d.addObserver(observer);

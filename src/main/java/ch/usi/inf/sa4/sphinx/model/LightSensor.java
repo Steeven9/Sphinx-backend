@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
 
+
 /**
  * A light sensor measures the quantity of light (in lumen) in a given room.
  */

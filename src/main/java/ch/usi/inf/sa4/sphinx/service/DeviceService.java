@@ -52,11 +52,11 @@ public final class DeviceService {
      */
     private <T> Event<T> eventHelper(DeviceType type, Integer key) {
         if (DeviceType.SWITCH.equals(type)) {
-            return (Event<T>) new SwitchChangedEvent(key, this);
+            return (Event<T>) new SwitchChangedEvent(key);
         } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1, this);
+            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
         } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new DimmSwitchChangedEvent(key, this);
+            return (Event<T>) new DimmSwitchChangedEvent(key);
         } else {
             return null;
         }

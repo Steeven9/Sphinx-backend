@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
@@ -14,11 +16,11 @@ public abstract class Dimmable extends Device {
     @Expose
     private double intensity;
 
-    @Override
     /**
      * {@inheritDoc}
      */
-    public SerialisableDevice serialise(){
+    @Override
+    public SerialisableDevice serialise() {
         SerialisableDevice sd = super.serialise();
         sd.slider = this.intensity;
         return sd;
@@ -29,15 +31,13 @@ public abstract class Dimmable extends Device {
      * Initialize a dimmable device, with intensity set to maximum.
      */
     protected Dimmable() {
-        super();
         this.intensity = 1.0;
     }
 
 
-
-
     /**
      * Returns the intensity level of this DimmableSwitch.
+     *
      * @return the intensity level of this DimmableSwitch
      */
     public double getIntensity() {

@@ -12,8 +12,8 @@ public class SwitchChangedEvent extends Event<Boolean> {
      *
      * @param deviceId the id of a device
      */
-    public SwitchChangedEvent(@NotNull int deviceId, DeviceService deviceService) {
-        super(deviceId, deviceService);
+    public SwitchChangedEvent(@NotNull int deviceId) {
+        super(deviceId);
     }
 
     private SwitchChangedEvent(SwitchChangedEvent other) {

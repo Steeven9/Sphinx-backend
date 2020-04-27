@@ -1,26 +1,24 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-
-import javax.persistence.Entity;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 /**
- * A DimmableSwitch is a switch that can set and store the intensity for given device.
+ * A SmartCurtain is a type of device that can be shadowed.
  */
-@Entity
-public class DimmableSwitch extends Dimmable {
+public class SmartCurtain extends Dimmable {
+
     /**
      * Constructor.
-     * Creates a dimmable switch.
+     * Creates a smart curtain that can be shadowed.
      */
-    public DimmableSwitch() {
+    public SmartCurtain() {
+        super();
     }
-
 
     @Override
     protected DeviceType getDeviceType() {
-        return DeviceType.DIMMABLE_SWITCH;
+        return DeviceType.SMART_CURTAIN;
     }
 }

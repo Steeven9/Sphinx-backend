@@ -10,9 +10,12 @@ package ch.usi.inf.sa4.sphinx.misc;
 8 (=LightSensor)
 9 (=TempSensor)
 10 (=MotionSensor)
+12 (=SmartCurtain)
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 
 public enum DeviceType {
@@ -26,11 +29,13 @@ public enum DeviceType {
     HUMIDITY_SENSOR,
     LIGHT_SENSOR,
     TEMP_SENSOR,
-    MOTION_SENSOR;
+    MOTION_SENSOR,
+    SMART_CURTAIN;
 
 
-
-    /** Given an integer, returns the device type assigned to that value.
+    /**
+     * Given an integer, returns the device type assigned to that value.
+     *
      * @param d the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
@@ -56,6 +61,8 @@ public enum DeviceType {
                 return TEMP_SENSOR;
             case 10:
                 return MOTION_SENSOR;
+            case 12:
+                return SMART_CURTAIN;
             default:
                 return INVALID_DEVICE;
         }
@@ -106,6 +113,9 @@ public enum DeviceType {
         if (MotionSensor.class.equals(c)) {
             return MOTION_SENSOR;
         }
+        if (SmartCurtain.class.equals(c)) {
+            return SMART_CURTAIN;
+        }
         return INVALID_DEVICE;
     }
 
@@ -136,14 +146,17 @@ public enum DeviceType {
                 return 9;
             case MOTION_SENSOR:
                 return 10;
+            case SMART_CURTAIN:
+                return 12;
             default:
                 return 0;
         }
     }
 
 
-
-    /** Given a DeviceType, returns a new object of that type.
+    /**
+     * Given a DeviceType, returns a new object of that type.
+     *
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
@@ -169,6 +182,8 @@ public enum DeviceType {
                 return new TempSensor();
             case MOTION_SENSOR:
                 return new MotionSensor();
+            case SMART_CURTAIN:
+                return new SmartCurtain();
             default:
                 return null;
         }

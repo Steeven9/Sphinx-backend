@@ -6,12 +6,15 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -45,18 +48,14 @@ public abstract class Device extends StorableE {
 
 
 
-
-
-
-
     public Device() {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
         this.couplings = new ArrayList<>();
         this.deviceType = getDeviceType();
-
     }
+
 
 
 

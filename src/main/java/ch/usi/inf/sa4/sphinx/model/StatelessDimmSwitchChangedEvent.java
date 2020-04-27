@@ -14,8 +14,8 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      * @param deviceID  the id of a device
      * @param increment value for incrementing
      **/
-    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment, DeviceService deviceService) {
-        super(deviceID, deviceService);
+    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment) {
+        super(deviceID);
         this.increment = increment;
     }
 

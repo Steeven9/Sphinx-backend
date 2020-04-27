@@ -22,6 +22,8 @@ public class RoomService {
     RoomStorage roomStorage;
     @Autowired
     DeviceStorage deviceStorage;
+    @Autowired
+    CouplingService couplingService;
 
 
     /**
@@ -70,6 +72,7 @@ public class RoomService {
     public final Optional<Integer> addDevice(@NonNull final Integer roomId, @NonNull DeviceType deviceType) {
         Device newDevice = DeviceType.makeDevice(deviceType);
         if (newDevice == null) return Optional.empty();
+
 
         return roomStorage.findById(roomId).map(r -> {
                     r.addDevice(newDevice);
