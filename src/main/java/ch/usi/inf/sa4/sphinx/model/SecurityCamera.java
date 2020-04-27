@@ -1,20 +1,41 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public class SecurityCamera extends Device {
-    private boolean on;
-    private String url;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
-    public SecurityCamera(){
-        super();
+public class SecurityCamera extends Device {
+    public String url;
+
+    /**
+     * Constructor.
+     * Creates a camera.
+     */
+    public SecurityCamera(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
     }
 
     private SecurityCamera(SecurityCamera other){
-        this.on = other.isOn();
+        super(other);
         this.url = other.getUrl();
     }
 
-    protected String getUrl(){
+    public String getUrl(){
         return this.url;
+    }
+
+    public void setUrl(String url){
+        this.url = url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SerialisableDevice serialise() {
+        SerialisableDevice s = super.serialise();
+        s.url = getUrl();
+        return s;
     }
 
     /**
@@ -22,7 +43,7 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return this.on + "";
+        return isOn() + " URL:"+ getUrl();
     }
 
     @Override

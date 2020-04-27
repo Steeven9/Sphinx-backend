@@ -119,6 +119,9 @@ public enum DeviceType {
         if (SmartCurtain.class.equals(c)) {
             return SMART_CURTAIN;
         }
+        if (SecurityCamera.class.equals(c)) {
+            return SECURITY_CAMERA;
+        }
         return INVALID_DEVICE;
     }
 
@@ -190,7 +193,7 @@ public enum DeviceType {
             case SMART_CURTAIN:
                 return new SmartCurtain(roomService, couplingService);
             case SECURITY_CAMERA:
-                return new SecurityCamera();
+                return new SecurityCamera(roomService, couplingService);
             default:
                 return null;
         }

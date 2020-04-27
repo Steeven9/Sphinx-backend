@@ -48,7 +48,7 @@ public class SerialisableDevice {
         this.roomId = roomId;
         this.type = type;
         this.on = on;
-        this.url = url;
+        this.url= url;
     }
 
 }

@@ -52,7 +52,7 @@ public class SerialisableDeviceTest {
     @MethodSource("argumentsProvider")
     @DisplayName("Testing constructor with multiple arguments")
     void testLongConstructor(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on) {
-        serialisableDevice = new SerialisableDevice(id, icon, name, label, switched, switches, intensity, roomId, type, on);
+        serialisableDevice = new SerialisableDevice(id, icon, name, label, switched, switches, intensity, roomId, type, on, null);
         assertAll("Should return new SerialisableDevice",
                 () -> assertEquals(id, serialisableDevice.id),
                 () -> assertEquals(name, serialisableDevice.name),

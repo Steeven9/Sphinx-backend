@@ -119,6 +119,7 @@ public class DeviceController {
         if (d == null) return ResponseEntity.status(500).build();
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
         if (device.name != null && !device.name.isBlank()) d.setName(device.name);
+        if (device.url != null && !device.url.isBlank()) ((SecurityCamera) d).setUrl(device.url);
         if (!deviceService.update(d)) return ResponseEntity.status(500).build();
 
         return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId), user));
