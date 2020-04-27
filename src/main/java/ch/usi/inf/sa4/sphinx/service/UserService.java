@@ -315,6 +315,7 @@ public class UserService {
 
 
 
+
     /** Returns a list of the guests.
      * @param username the user's username
      * @return a list of the guests
@@ -446,11 +447,11 @@ public class UserService {
     }
 
 
-
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
     }
+
 
 
     /**
@@ -470,4 +471,5 @@ public class UserService {
             }
         }
     }
+
 }
