@@ -1,15 +1,17 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Effect<T> extends Storable<Integer, Effect<?>> {
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Effect<T> extends StorableE {
     protected final int deviceId;
 
     public Effect(Integer deviceId) {
         this.deviceId = deviceId;
-    }
-
-    protected Effect(Effect<T> effect){
-        this.deviceId = effect.deviceId;
-        setKey(effect.getKey());
     }
 
     public abstract void execute(T effect);

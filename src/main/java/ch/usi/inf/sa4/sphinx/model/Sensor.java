@@ -4,11 +4,15 @@ import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 import java.text.DecimalFormat;
+import javax.persistence.Entity;
 import java.util.Random;
+import javax.persistence.Entity;
+
 
 /**
  * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
  */
+@Entity
 public abstract class Sensor extends Device {
     private double quantity;
 
@@ -17,18 +21,10 @@ public abstract class Sensor extends Device {
      *
      * @param quantity a physical quantity
      */
-    protected Sensor(double quantity, RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    protected Sensor(double quantity) {
         this.quantity = quantity;
     }
 
-    /** Constructor.
-     * @param s a Sensor
-     **/
-    protected Sensor(Sensor s) {
-        super(s);
-        this.quantity = s.getQuantity();
-    }
 
     /** Getter for the quantity.
      * @return quantity

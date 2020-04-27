@@ -1,9 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-
-import javax.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 public class DimmSwitchChangedEvent extends Event<Double> {
 
@@ -12,21 +10,8 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      *
      * @param deviceID the id to set the DimmSwitchChangedEvent to
      **/
-    public DimmSwitchChangedEvent(@NotNull int deviceID, DeviceService deviceService) {
-        super(deviceID, deviceService);
-    }
-
-    private DimmSwitchChangedEvent(DimmSwitchChangedEvent other){
-        super(other);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DimmSwitchChangedEvent makeCopy() {
-        return new DimmSwitchChangedEvent(this);
+    public DimmSwitchChangedEvent(@NonNull int deviceID) {
+        super(deviceID);
     }
 
 
@@ -37,7 +22,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) this.deviceService.get(deviceId)).getState();
+        return ((DimmableSwitch) deviceService.get(deviceId).get()).getIntensity();
     }
 
 }

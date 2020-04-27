@@ -1,16 +1,21 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -18,15 +23,17 @@ import java.util.stream.Collectors;
  * Service layer of the application, the various Storage follows the CRUD principle
  */
 @Service
-public final class UserService {
+public class UserService {
     @Autowired
-    private VolatileUserStorage userStorage;
+    private UserStorage userStorage;
     @Autowired
-    private Storage<Integer, Room> roomStorage;
+    private RoomStorage roomStorage;
     @Autowired
     private RoomService roomService;
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private DeviceStorage deviceStorage;
 
     //Will be used to check that each room belongs to a single user
     private static final HashMap<String, String> roomToUser = new HashMap<>();
@@ -36,26 +43,29 @@ public final class UserService {
      *
      */
     //Used with spring injection can't be instantiated directly
-    private UserService() {
+    public UserService() {
     }
 
 
     /**
      * getter for User
+     *
      * @param username the username
      * @return Returns the User with the given name if present in the storage
      */
-    public User get(final String username) {
-        return userStorage.get(username);
+    public Optional<User> get(final String username) {
+        return userStorage.findByUsername(username);
     }
 
 
-    /** gets a User by mail {@param email} from storage
+    /**
+     * gets a User by mail {@param email} from storage
+     *
      * @param email email of the user
      * @return the user with the given email or null if not found
      */
-    public User getByMail(final String email) {
-        return userStorage.getByEmail(email);
+    public Optional<User> getByMail(final String email) {
+        return userStorage.findByEmail(email);
     }
 
 
@@ -65,12 +75,7 @@ public final class UserService {
      * @param username username of the User that needs to be deleted
      */
     public void delete(final String username) {
-        List<Room> rooms = getPopulatedRooms(username);
-        List<Integer> devices  = getDevices(username);
-        for (Room room : rooms) {
-            removeRoom(username, room.getId());
-        }
-        userStorage.delete(username);
+        userStorage.deleteByUsername(username);
     }
 
 
@@ -81,30 +86,26 @@ public final class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        return userStorage.insert(user) != null;
+        if (user.getId() != null) return false;
+
+        userStorage.save(user);
+        return true;
     }
 
 
     /**
      * Updates the given user, the username is used to find the User and the given User to update its fields
      *
-     * @param user     the User with updated fields
+     * @param user the User with updated fields
      * @return true if successful update else false
      */
-    public boolean update(final User user) {
-        User oldUser = userStorage.get(user.getUsername());
-        if (oldUser != null) {
-            User newUser = new User(oldUser, user.getEmail(),
-                    user.getPassword(),
-                    user.getFullname(),
-                    user.getResetCode(),
-                    user.getSessionToken(),
-                    user.isVerified());
-            return userStorage.update(newUser);
+    public boolean update(@NonNull final User user) {
+        if (userStorage.existsById(user.getId())) {
+            userStorage.save(user); //Now the newly added rooms will be inserted in storage by jpa
+            return true;
         }
         return false;
     }
-
 
 
     /**
@@ -115,22 +116,13 @@ public final class UserService {
      * @param room     the Room to be added to the User
      * @return the id of the room
      */
-    public Integer addRoom(final String username, final Room room) {
-        final User user = userStorage.get(username);
-        if (user == null) {
-            return null; //something went bad
-        }
+    public Optional<Integer> addRoom(final String username, final Room room) {
+        final Optional<User> user = userStorage.findByUsername(username);
 
-        var roomId = roomStorage.insert(room);
-        if (roomId == null) {
-            return null; //something went bad
-        }
-        user.addRoom(roomId);
-        if (!userStorage.update(user)) {
-            return null;
-
-        }
-        return roomId;
+        return user.map(u -> {
+            room.setUser(u);
+            return Optional.of(roomStorage.save(room).getId());
+        }).orElse(Optional.empty());
     }
 
 
@@ -141,49 +133,46 @@ public final class UserService {
      * @param roomId   the id of the room to remove
      */
     public boolean removeRoom(final String username, final Integer roomId) {
-        if(!ownsRoom(username, roomId)){
+        if (!ownsRoom(username, roomId)) {
             return false;
         }
-        List<Integer> devices  = getDevices(username);
-        for (Integer device : devices) {
-            removeDevice(username, device);
-        }
-        final User user = userStorage.get(username);
-        user.removeRoom(roomId);
-        userStorage.update(user);
-        roomStorage.delete(roomId);
+
+
+        final Optional<User> user = userStorage.findByUsername(username);
+        user.ifPresent(
+                u -> {
+                    u.removeRoom(roomId);
+                    userStorage.save(u);
+                }
+        );
         return true;
     }
 
 
     /**
      * Getter for device(s).
+     *
      * @param username username of the given User
      * @return Id of the Device(s) belonging to a given User
      */
-    public List<Integer> getDevices(final String username) {
-        var devices = new ArrayList<Integer>();
-        final User user = userStorage.get(username);
-
-        if (user != null) {
-            var roomIds = user.getRooms();
-            for (var roomId : roomIds) {
-                var r = roomService.get(roomId);
-                devices.addAll(r.getDevices());
-            }
-        }
-        return devices;
+    public Optional<List<Integer>> getDevices(final String username) {
+        return getPopulatedDevices(username).map(devices ->
+                devices.stream().map(Device::getId).collect(Collectors.toList())
+        );
     }
 
 
     /**
      * Assert ownership of a Device
+     *
      * @param username the username of the desired User
      * @param deviceId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(String username, Integer deviceId) {
-        return getDevices(username).contains(deviceId);
+        return getDevices(username)
+                .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
+                ).orElse(false);
     }
 
 
@@ -193,24 +182,22 @@ public final class UserService {
      * @param username User of these/this room/s
      * @return a list of rooms
      */
+    @Transactional
     public List<Room> getPopulatedRooms(String username) {
-        User user = get(username);
-        if (user != null) {
-            return user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
     }
 
     /**
      * Assert ownership of a room
+     *
      * @param username the username of the desired User
      * @param roomId   the id of the room
      * @return true if the User with the given Username owns the room with the given Id
      */
     public boolean ownsRoom(String username, Integer roomId) {
-        User user = userStorage.get(username);
-        if (user == null) return false;
-        return user.getRooms().contains(roomId);
+        return userStorage.findByUsername(username)
+                .map(user -> user.getRooms().stream().anyMatch(r -> r.getId().equals(roomId)))
+                .orElse(false);
     }
 
 
@@ -220,14 +207,10 @@ public final class UserService {
      * @param username username of required User
      * @return Devices owned by User
      */
-    public List<Device> getPopulatedDevices(String username) {
-        User user = userStorage.get(username);
-        if (user != null) {
-            return user.getRooms().stream().
-                    flatMap(roomId -> roomService.getPopulatedDevices(roomId).stream()).
-                    collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+    public Optional<List<Device>> getPopulatedDevices(String username) {
+        return userStorage.findByUsername(username)
+                .map(u -> u.getRooms().stream().flatMap(
+                        r -> r.getDevices().stream()).collect(Collectors.toList()));
     }
 
 
@@ -238,10 +221,9 @@ public final class UserService {
      * @param sessionToken the session token
      * @return true if they match, false if the User does not exist or they don't match
      */
-    public boolean validSession(@NotNull String username, String sessionToken) {
-        User user = userStorage.get(username);
-        if (user == null) return false;
-        return user.getSessionToken().equals(sessionToken);
+    public boolean validSession(@NonNull String username, @NonNull String sessionToken) {
+        return userStorage.findByUsername(username)
+                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
     }
 
 
@@ -252,27 +234,27 @@ public final class UserService {
      * @param deviceId the id of the device to be removed
      */
     public void removeDevice(String username, Integer deviceId) {
-        User user = userStorage.get(username);
-        if (user == null) return;
-
-        List<Room> rooms = user.getRooms().stream().map(roomStorage::get).collect(Collectors.toList());
-
-        for (Room room : rooms) {
-            if (room.getDevices().contains(deviceId)) {
-                roomService.removeDevice(room.getId(), deviceId);
-            }
+        if (ownsDevice(username, deviceId)) {
+            deviceStorage.deleteById(deviceId);
         }
+    }
+
+
+    public Optional<User> getById(Integer id){
+        return userStorage.findById(id);
     }
 
 
     /**
      * Assert if Device has been moved
+     *
      * @param username    the owner of the device and rooms
      * @param deviceId    the id of the device to Migrate
      * @param startRoomId the room the device sits in
      * @param endRoomId   the room the device should end in
      * @return true if success else false
      */
+    @Transactional
     public boolean migrateDevice(final String username, final Integer deviceId, final Integer startRoomId,
                                  final Integer endRoomId) {
 
@@ -280,30 +262,35 @@ public final class UserService {
             return false;
         }
 
-        Device device = deviceService.get(deviceId);
-        Room startRoom = roomService.get(startRoomId);
-        Room endRoom = roomService.get(endRoomId);
+        Room startRoom = roomStorage.findById(startRoomId)
+                .orElseThrow(()->new ImproperImplementationException("the method ownsRoom doesnt work properly"));
 
-        startRoom.getDevices().remove(deviceId);
-        endRoom.getDevices().add(deviceId);
+        if(!startRoom.getDevicesIds().contains(deviceId)){
+            return false;
+        }
 
-        //user service would block the update  of the list of devices so we need to go directly to the db
-        roomStorage.update(startRoom);
-        roomStorage.update(endRoom);
-        return true;
+        return roomStorage.findById(endRoomId).map(room -> {
+            return deviceStorage.findById(deviceId).map(device -> {
+                device.setRoom(room);
+                deviceStorage.save(device);
+                return true;
+            }).orElse(false);
+
+        }).orElse(false);
     }
 
     /**
-     *  Assert ownership of a room
+     * Assert ownership of a room
      * returns the id of the room that owns the device given a the owning user and the room id
+     *
      * @param username username of the room owner
      * @param deviceId id of the owned device
      * @return the id of the room containing the device
      */
-    public Integer owningRoom(final String username, final Integer deviceId){
+    public Integer owningRoom(final String username, final Integer deviceId) {
         var rooms = getPopulatedRooms(username);
-        for(Room r: rooms){
-            if(r.getDevices().contains(deviceId)){
+        for (Room r : rooms) {
+            if (r.getDevicesIds().contains(deviceId)) {
                 return r.getId();
             }
         }
@@ -312,19 +299,26 @@ public final class UserService {
 
     /**
      * Changes the name of a User identified by {@param oldUsername}
-     * @param oldUsername  the old name of the user
+     *
+     * @param oldUsername the old name of the user
      * @param newUsername the new name of the user
      * @return true if successful else false
      */
-    public boolean changeUsername(@NotNull final  String oldUsername, final String newUsername) {
+    public boolean changeUsername(@NonNull final String oldUsername, @NonNull final String newUsername) {
         if(newUsername == null) return false;
-
-        User oldUser = userStorage.get(oldUsername);
-        if(oldUser == null) return false;
-        oldUser.setUsername(newUsername);
-
-        return true;
+        try {
+            return userStorage.findByUsername(oldUsername).map(user -> {
+                user.setUsername(newUsername);
+                userStorage.save(user);
+                return true;
+            }).orElse(false);
+        } catch (ConstraintViolationException e) {
+            return false;
+        }
     }
+
+
+
 
 
 }

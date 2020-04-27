@@ -1,37 +1,25 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 
 /**
  * A smart-plug is a plug that can be added by user. It consumes some energy while in use.
  */
+@Entity
 public class SmartPlug extends Device {
     private double powerUsed;
 
     /**
      * Creates a new smart-plug with 0 consumed energy.
      */
-    public SmartPlug(RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    public SmartPlug() {
         this.powerUsed = 0.0;
     }
 
-    /** Constructor.
-     * @param s a SmartPlug
-     **/
-    protected SmartPlug(SmartPlug s) {
-        super(s);
-        powerUsed = s.getPowerUsed();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SmartPlug makeCopy() {
-        return new SmartPlug(this);
-    }
 
     /**
      * Returns the consumed energy by this smart-plug.
@@ -55,5 +43,11 @@ public class SmartPlug extends Device {
     @Override
     public String getLabel() {
         return this.getPowerUsed() + " kWh";
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SMART_PLUG;
     }
 }

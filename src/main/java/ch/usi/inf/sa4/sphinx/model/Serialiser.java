@@ -1,9 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -12,6 +9,13 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class Serialiser {
@@ -46,16 +50,20 @@ public class Serialiser {
     public  SerialisableDevice serialiseDevice(Device device, User user){
         SerialisableDevice sd = serialiseDevice(device);
 
-        var rooms = userService.getPopulatedRooms(user.getUsername());
-        for(var room:rooms){
-            if(room.getDevices().contains(device.getId())){
-                sd.roomId = room.getId();
-                sd.roomName = room.getName();
-                sd.userName = user.getUsername();
-            }
-        }
+        Room owningRoom = device.getRoom();
+        User owningUser = owningRoom.getUser();
+        sd.roomId = owningRoom.getId();
+        sd.roomName = owningRoom.getName();
+        sd.userName = owningUser.getUsername();
         return sd;
     }
+
+    public List<SerialisableDevice> serialiseDevices(Collection<Device> devices, User user){
+        return devices.stream().map(device -> serialiseDevice(device, user)).collect(Collectors.toList());
+    }
+
+
+
 
     /**
      * Serialises a User. For the description of the serialised fields consult SerialisableUser.
@@ -75,6 +83,11 @@ public class Serialiser {
      */
     public SerialisableRoom serialiseRoom(Room room){
         return room.serialise();
+    }
+
+
+    public List<SerialisableRoom> serialiseRooms(Collection<Room> rooms){
+        return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 
 }

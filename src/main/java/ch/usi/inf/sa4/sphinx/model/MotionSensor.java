@@ -1,37 +1,25 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
+@Entity
 public class MotionSensor extends Device {
     private boolean detected;
 
     /**
      * Creates a MotionSensor with initial state set to false.
      */
-    public MotionSensor(RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    public MotionSensor() {
         this.detected = false;
     }
 
-    /** Constructor.
-     * @param s a MotionSensor
-     **/
-    protected MotionSensor(MotionSensor s) {
-        super(s);
-        this.detected = s.isDetected();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MotionSensor makeCopy() {
-        return new MotionSensor(this);
-    }
 
     /**
      * Changes state to true.
@@ -61,5 +49,11 @@ public class MotionSensor extends Device {
     @Override
     public String getLabel() {
         return "" + this.isDetected();
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.MOTION_SENSOR;
     }
 }

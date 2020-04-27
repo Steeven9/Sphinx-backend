@@ -1,69 +1,99 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import com.google.gson.annotations.Expose;
+import lombok.NonNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
-//TODO fix atm couplings of different parameters can be created
-public class Coupling extends Storable<Integer, Coupling>{
-
+@Entity
+public class Coupling extends StorableE {
     @Autowired
+    @Transient
     DeviceService deviceService;
-    private final Integer eventId;
-    private final List<Integer> effectIds;
+
+    @Expose
+    @OneToOne(cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private final Event event;
+
+    @Expose
+    @OneToMany(cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private final List<Effect> effects;
 
 
-    public Coupling(Integer eventId, Integer effectId) {
-        this.eventId = eventId;
-        this.effectIds =new ArrayList<>();
-        effectIds.add(effectId);
+    private Integer deviceId;
+
+
+
+    public <T> Coupling(@NonNull Event<T> event,@NonNull Collection<Effect<T>> effects) {
+        this.event = event;
+        this.effects = new ArrayList<>(effects);
     }
 
-    public Coupling(Integer eventId, Collection<Integer> effectIds){
-        this.eventId = eventId;
-        this.effectIds = new ArrayList<>();
-        this.effectIds.addAll(effectIds);
+    public <T> Coupling(Event<T> event){
+        this(event, new ArrayList<>());
+    }
+
+    public <T> Coupling(Event<T> event, Effect<T> effect){
+        this(event, new ArrayList<>());
+        addEffect(effect);
     }
 
 
-    /**
-     * sets the id of this object to the given id
-     * @param key the id to set
-     * @return true if the id is set false otherwise if it has already been set
-     */
-    public boolean setId(int key){
-        return setKey(key);
+
+
+
+    public Event getEvent() {
+        return event;
     }
 
-    /**
-     * gettter for  id
-     * @return the id of the coupling
-     */
-    public Integer getId() {
-        return getKey();
+
+    public List<Effect> getEffects() {
+        return effects;
     }
+
 
 
     public Integer getEventId() {
-        return eventId;
+        return event.getId();
     }
+
+    public void run() {
+        for (Effect effect : effects) {
+            effect.execute(event.get());
+        }
+    }
+
 
     public List<Integer> getEffectIds() {
-        return effectIds;
+        throw new NotImplementedException();
     }
 
-    public void addEffect(Integer effect){
-        effectIds.add(effect);
+
+    public void addEffect(@NonNull Effect effect) {
+        effects.add(effect);
     }
 
-    public Coupling makeCopy(){
-        Coupling cp = new Coupling(eventId, effectIds);
-        cp.setKey(getKey());
-        return cp;
+    @Override
+    public boolean equals(@NonNull Object other) {
+        if(!(other instanceof Coupling)) return false;
+        if(other == this) return true;
+        Coupling otherCoupling = (Coupling) other;
+        if(id == null || otherCoupling.getId() == null) return false;
+        return  id.equals(((Coupling) other).getId());
     }
+
+
 
 }

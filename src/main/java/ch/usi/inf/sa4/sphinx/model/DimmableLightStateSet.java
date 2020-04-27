@@ -20,27 +20,16 @@ public class DimmableLightStateSet extends Effect<Double> {
 
 
 
-    private DimmableLightStateSet(DimmableLightStateSet other){
-        super(other);
-    }
-
     /**
      * Sets state to the effect value.
      *
      * @param effect: new value of the state
      **/
     public void execute(Double effect) {
-        DimmableLight dl = ((DimmableLight) deviceService.get(deviceId));
+        DimmableLight dl = ((DimmableLight) deviceService.get(deviceId).get());
         dl.setState(effect);
         deviceService.update(dl);
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DimmableLightStateSet makeCopy() {
-        return new DimmableLightStateSet(this);
-    }
 }

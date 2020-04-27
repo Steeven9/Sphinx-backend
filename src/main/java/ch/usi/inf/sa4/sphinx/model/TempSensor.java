@@ -1,11 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 
 /**
  * A Temperature sensor measures a temperature (in C) in a given room.
  */
+@Entity
 public class TempSensor extends Sensor {
 
     //future development: support different measurements of temperature.
@@ -13,23 +16,8 @@ public class TempSensor extends Sensor {
     /**
      * Creates a temperature sensor set to 20.0 degrees celsius.
      */
-    public TempSensor(RoomService roomService, CouplingService couplingService) {
-        super(20.0, roomService, couplingService);
-    }
-
-    /** Constructor.
-     * @param s a TempSensor
-     **/
-    public TempSensor(TempSensor s) {
-        super(s);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TempSensor makeCopy() {
-        return new TempSensor(this);
+    public TempSensor() {
+        super(20.0);
     }
 
     /**
@@ -39,4 +27,13 @@ public class TempSensor extends Sensor {
     protected String getPhQuantity() {
         return "°C";
     }
+
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.TEMP_SENSOR;
+    }
+
+
 }

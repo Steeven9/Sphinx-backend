@@ -13,14 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class DimmableLightTest {
 
-    @Autowired
-    RoomService roomService;
-    @Autowired
-    CouplingService couplingService;
-
     @Test
     void shouldReturnIntensityCorrectly() {
-        DimmableLight light = new DimmableLight(roomService, couplingService);
+        DimmableLight light = new DimmableLight();
         assertNotNull(light);
         assertEquals(1.0, light.getIntensity());
     }

@@ -160,30 +160,30 @@ public enum DeviceType {
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
-    public static Device makeDevice(DeviceType d, RoomService roomService, CouplingService couplingService) {
+    public static Device makeDevice(DeviceType d) {
         switch (d) {
             case LIGHT:
-                return new Light(roomService, couplingService);
+                return new Light();
             case DIMMABLE_LIGHT:
-                return new DimmableLight(roomService, couplingService);
+                return new DimmableLight();
             case SWITCH:
-                return new Switch(roomService, couplingService);
+                return new Switch();
             case DIMMABLE_SWITCH:
-                return new DimmableSwitch(roomService, couplingService);
+                return new DimmableSwitch();
             case STATELESS_DIMMABLE_SWITCH:
-                return new StatelessDimmableSwitch(roomService, couplingService);
+                return new StatelessDimmableSwitch();
             case SMART_PLUG:
-                return new SmartPlug(roomService, couplingService);
+                return new SmartPlug();
             case HUMIDITY_SENSOR:
-                return new HumiditySensor(roomService, couplingService);
+                return new HumiditySensor();
             case LIGHT_SENSOR:
-                return new LightSensor(roomService, couplingService);
+                return new LightSensor();
             case TEMP_SENSOR:
-                return new TempSensor(roomService, couplingService);
+                return new TempSensor();
             case MOTION_SENSOR:
-                return new MotionSensor(roomService, couplingService);
+                return new MotionSensor();
             case SMART_CURTAIN:
-                return new SmartCurtain(roomService, couplingService);
+                return new SmartCurtain();
             default:
                 return null;
         }

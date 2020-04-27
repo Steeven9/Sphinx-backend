@@ -2,14 +2,10 @@ package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.HumiditySensor;
-import ch.usi.inf.sa4.sphinx.model.Light;
-import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,85 +13,113 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoomServiceTest {
 
     @Autowired
     RoomService roomService;
     @Autowired
-    VolatileRoomStorage roomStorage;
+    UserService userService;
+    @Autowired
+    RoomStorage roomStorage;
     @Autowired
     DummyDataAdder dummyDataAdder;
 
+    private static final String username = "testUser";
+    User user;
+
+
+    @BeforeAll
+    void beforeAll(){
+        userService.delete(username);
+        userService.delete("User2");
+    }
+
+    @BeforeEach
+    void setUp() {
+        User newUser = new User("test@mail.com", "1234", username, "mario rossi");
+        userService.insert(newUser);
+        user = userService.get(username).get();
+    }
+
+    @AfterEach
+    void clean() {
+        userService.delete(username);
+        userService.delete("User2");
+    }
 
     @Test
     @DisplayName("Tests both get and update methods")
     void testGetAndUpdate() {
-        assertNull(roomService.get(9999));
+        assertTrue(roomService.get(9999).isEmpty());
+        Room newRoom = new Room();
+        newRoom.setName("testName");
+        Integer roomId = userService.addRoom(username, newRoom).get();
+        Room storageRoom = roomService.get(roomId).get();
 
-        Room room = new Room();
-        room.setName("testName");
-        Integer id = roomStorage.insert(room);
-        Room returnedRoom = roomService.get(id);
-        assertNotEquals(room, returnedRoom); //does not point to the same object
-        assertEquals("testName", returnedRoom.getName());
 
+        assertNotSame(storageRoom, newRoom); //does not point to the same object
+        assertEquals("testName", storageRoom.getName());
+//
         String name = "secondTestName";//test update method
-        room.setName(name);
-
-        assertTrue(roomService.update(room));
-        returnedRoom = roomService.get(id);
-        assertEquals(name, returnedRoom.getName());
+        storageRoom.setName(name);
+//
+        assertTrue(roomService.update(storageRoom));
+        storageRoom = roomService.get(storageRoom.getId()).get();
+        assertEquals(name, storageRoom.getName());
 
         assertFalse(roomService.update(new Room()));
     }
 
+    @Disabled(value ="the test should not rely on the order of the ids assigned")
     @Test
     void testGetPopulatedDevices() {
-        assertEquals(new ArrayList<>(), roomService.getPopulatedDevices(9999));//not existing id
-        dummyDataAdder.user2();
-        List<Device> result = roomService.getPopulatedDevices(2);
-        assertAll(
-                () -> assertEquals(2, result.size()),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(HumiditySensor.class), DeviceType.deviceToDeviceType(result.get(0))),
+        assertTrue(roomService.getPopulatedDevices(9999).isEmpty());//not existing id
+        List<Device> result = roomService.getPopulatedDevices(2).get();
+       assertAll(
+               () -> assertEquals(2, result.size()),
+               () -> assertEquals(DeviceType.deviceClassToDeviceType(HumiditySensor.class), DeviceType.deviceToDeviceType(result.get(0))),
                 () -> assertEquals(DeviceType.deviceClassToDeviceType(Light.class), DeviceType.deviceToDeviceType(result.get(1)))
-        );
-        List<Device> res = roomService.getPopulatedDevices(4);
-        assertEquals(0, res.size());
+       );
+        List<Device> res = roomService.getPopulatedDevices(4).get();
+       assertEquals(0, res.size());
     }
-
+//
     @Test
+    @Disabled("the test should not rely on the order of the ids assigned")
     void testAddDevice() {
         assertAll("test for invalid values",
-                () -> assertNull(roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT)),
+                () -> assertThrows(NullPointerException.class, ()->roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT)),
                 () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(null, null)),
                 () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(2, null)),
-                () -> assertNull(roomService.addDevice(1, DeviceType.INVALID_DEVICE)),
-                () -> assertNull(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT))
+                () -> assertTrue(roomService.addDevice(1, DeviceType.INVALID_DEVICE).isEmpty()),
+                () -> assertTrue(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT).isEmpty())
         );
-        dummyDataAdder.user2();
-        assertEquals(1, roomService.getPopulatedDevices(5).size());
+        assertEquals(1, roomService.getPopulatedDevices(5).get().size());
         roomService.addDevice(5, DeviceType.MOTION_SENSOR);
         assertAll("should add a new device",
-                () -> assertEquals(2, roomService.getPopulatedDevices(5).size()),
-                () -> assertEquals(DeviceType.MOTION_SENSOR, DeviceType.deviceToDeviceType(roomService.getPopulatedDevices(5).get(1)))
+                () -> assertEquals(2, roomService.getPopulatedDevices(5).get().size()),
+                () -> assertEquals(DeviceType.MOTION_SENSOR, DeviceType.deviceToDeviceType(roomService.getPopulatedDevices(5).get().get(1)))
         );
     }
-
+//
     @Test
-    @Disabled(value = "fix the error in RoomService.removeDevice line 92. java.lang.UnsupportedOperationException")
+//    @Disabled(value = "fix the error in RoomService.removeDevice line 92. java.lang.UnsupportedOperationException")
     void testRemoveDevice() {
         assertAll("test for invalid values",
-                () -> assertFalse(roomService.removeDevice(null, null)),
-                () -> assertFalse(roomService.removeDevice(10, null)),
-                () -> assertFalse(roomService.removeDevice(null, 1000)),
-                () -> assertFalse(roomService.removeDevice(10, 1000)),
-                () -> assertFalse(roomService.removeDevice(1, 1000)), //java.lang.UnsupportedOperationException for deviceId
-                () -> assertFalse(roomService.removeDevice(10, 5))
+                () -> assertThrows(NullPointerException.class, () ->roomService.removeDevice(null, null)),
+                () -> assertThrows(NullPointerException.class, () ->roomService.removeDevice(10, null)),
+                () -> assertThrows(NullPointerException.class, () ->roomService.removeDevice(null, 1000)),
+                () -> assertFalse(roomService.removeDevice(10, 999999)),
+                () -> assertFalse(roomService.removeDevice(1, 999999))
         );
-
+//
         //removing a device
-        Integer key = roomStorage.insert(new Room());
-        Integer devId = roomService.addDevice(key, DeviceType.MOTION_SENSOR);
-        assertTrue(roomService.removeDevice(key, devId));   //java.lang.UnsupportedOperationException for deviceId
+
+        Room newRoom = new Room();
+        userService.addRoom(user.getUsername(), newRoom );
+        Integer roomId = userService.addRoom(user.getUsername(), newRoom ).get();
+        Integer devId = roomService.addDevice(roomId, DeviceType.MOTION_SENSOR).get();
+        assertTrue(roomService.removeDevice(roomId, devId));   //java.lang.UnsupportedOperationException for deviceId
     }
 }

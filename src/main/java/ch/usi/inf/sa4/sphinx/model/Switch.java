@@ -1,33 +1,24 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 
 /**
  * A switch is a switch that can turn on and off a device.
  */
+@Entity
 public class Switch extends Device {
 
     /**
      * Creates a switch, which is on.
      */
-    public Switch(RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    public Switch() {
+
     }
 
-    /** Constructor.
-     * @param s a Switch**/
-    public Switch(Switch s) {
-        super(s);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Device makeCopy() {
-        return new Switch(this);
-    }
 
     /**
      * Returns true if and only if the switch is powered.
@@ -56,5 +47,8 @@ public class Switch extends Device {
     }
 
 
-
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SWITCH;
+    }
 }

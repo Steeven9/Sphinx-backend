@@ -3,10 +3,12 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -15,14 +17,15 @@ public final class DeviceService {
     @Autowired
     CouplingService couplingService;
     @Autowired
-    Storage<Integer, Device> deviceStorage;
+    DeviceStorage deviceStorage;
 
     /**
      * @param deviceId the Id of the device
      * @return the Device with corresponding deviceId
      */
-    public Device get(Integer deviceId) {
-        return deviceStorage.get(deviceId);
+
+    public Optional<Device> get(Integer deviceId){
+        return deviceStorage.findById(deviceId);
     }
 
 
@@ -30,8 +33,13 @@ public final class DeviceService {
      * @param device the device to update
      * @return true if the update succeds else false
      */
-    public boolean update(Device device) {
-        return deviceStorage.update(device);
+    public boolean update(Device device){
+        try {
+            deviceStorage.save(device);
+        }catch (DataIntegrityViolationException e){
+            return false;
+        }
+        return true;
     }
 
 
@@ -44,11 +52,11 @@ public final class DeviceService {
      */
     private <T> Event<T> eventHelper(DeviceType type, Integer key) {
         if (DeviceType.SWITCH.equals(type)) {
-            return (Event<T>) new SwitchChangedEvent(key, this);
+            return (Event<T>) new SwitchChangedEvent(key);
         } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1, this);
+            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
         } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
-            return (Event<T>) new DimmSwitchChangedEvent(key, this);
+            return (Event<T>) new DimmSwitchChangedEvent(key);
         } else {
             return null;
         }
@@ -102,10 +110,14 @@ public final class DeviceService {
         }
 
         if (ordered) {
-            couplingService.addCoupling(eventHelper(type1, device1.getKey()), effectHelper(type1, type2, device2.getKey()));
+            couplingService.addCoupling(eventHelper(type1, device1.getId()), effectHelper(type1, type2, device2.getId()));
         } else {
-            couplingService.addCoupling(eventHelper(type2, device2.getKey()), effectHelper(type2, type1, device1.getKey()));
+            couplingService.addCoupling(eventHelper(type2, device2.getId()), effectHelper(type2, type1, device1.getId()));
         }
         return true;
+    }
+
+    public void remove(Integer deviceId){
+        deviceStorage.deleteById(deviceId);
     }
 }

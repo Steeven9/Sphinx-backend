@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 
@@ -12,7 +13,12 @@ public class SmartCurtain extends Dimmable {
      * Constructor.
      * Creates a smart curtain that can be shadowed.
      */
-    public SmartCurtain(RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    public SmartCurtain() {
+        super();
+    }
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SMART_CURTAIN;
     }
 }

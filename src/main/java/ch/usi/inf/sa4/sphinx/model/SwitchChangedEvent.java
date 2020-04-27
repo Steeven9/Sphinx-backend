@@ -12,8 +12,8 @@ public class SwitchChangedEvent extends Event<Boolean> {
      *
      * @param deviceId the id of a device
      */
-    public SwitchChangedEvent(@NotNull int deviceId, DeviceService deviceService) {
-        super(deviceId, deviceService);
+    public SwitchChangedEvent(@NotNull int deviceId) {
+        super(deviceId);
     }
 
     private SwitchChangedEvent(SwitchChangedEvent other) {
@@ -27,14 +27,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ((Switch) this.deviceService.get(deviceId)).isOn();
+        return ((Switch) this.deviceService.get(deviceId).get()).isOn();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull Event<Boolean> makeCopy() {
-        return new SwitchChangedEvent(this);
-    }
 }

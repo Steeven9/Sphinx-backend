@@ -3,11 +3,17 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
+
+import javax.persistence.Entity;
 
 /**
  * A dimmable is a dimmable device, that has an internal state (the intensity level).
  */
-public class Dimmable extends Device {
+@Entity
+public abstract class Dimmable extends Device {
+
+    @Expose
     private double intensity;
 
     /**
@@ -24,36 +30,17 @@ public class Dimmable extends Device {
      * Constructor.
      * Initialize a dimmable device, with intensity set to maximum.
      */
-    protected Dimmable(RoomService roomService, CouplingService couplingService) {
-        super(roomService, couplingService);
+    protected Dimmable() {
         this.intensity = 1.0;
     }
 
-    /**
-     * Constructor.
-     *
-     * @param d a Dimmable device
-     */
-    protected Dimmable(Dimmable d) {
-        super(d);
-        this.intensity = d.getState();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Dimmable makeCopy() {
-        return new Dimmable(this);
-    }
 
     /**
      * Returns the intensity level of this DimmableSwitch.
      *
      * @return the intensity level of this DimmableSwitch
      */
-    public double getState() {
+    public double getIntensity() {
         return intensity;
     }
 
@@ -76,6 +63,9 @@ public class Dimmable extends Device {
      */
     @Override
     public String getLabel() {
-        return this.getState() * 100 + "%";
+        return this.getIntensity() * 100 + "%";
     }
+
+
+
 }

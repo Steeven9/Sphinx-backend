@@ -25,7 +25,7 @@ A public Docker image is available on the Docker repository under
 [steeven9/sa4-sphinx-backend](https://hub.docker.com/repository/docker/steeven9/sa4-sphinx-backend).
 
 The easiest way to use it is to run `docker-compose up`.\
-This will pull and spin up [frontend](https://lab.si.usi.ch/sa4-2020/sphinx/frontend) (on port 3000) backend
+This will pull and spin up [frontend](https://lab.si.usi.ch/sa4-2020/sphinx/frontend) (on port 3000), backend
 (on port 8080), and a postgres instance. You will **need** the envfile that you can get from the team leaders.
 
 If you want to run only the backend, use\

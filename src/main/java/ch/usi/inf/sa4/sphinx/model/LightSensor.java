@@ -1,36 +1,24 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
 
 /**
  * A light sensor measures the quantity of light (in lumen) in a given room.
  */
+@Entity
 public class LightSensor extends Sensor {
 
     /**
      * Create a light sensor set to 500.0 lumen.
      */
-    public LightSensor(RoomService roomService, CouplingService couplingService) {
-        super(500.0, roomService, couplingService);
+    public LightSensor() {
+        super(500.0);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param s a LightSensor
-     **/
-    public LightSensor(LightSensor s) {
-        super(s);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public LightSensor makeCopy() {
-        return new LightSensor(this);
-    }
 
     /**
      * {@inheritDoc}
@@ -39,5 +27,10 @@ public class LightSensor extends Sensor {
     protected String getPhQuantity() {
         return "lm";
     }
-}
 
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.LIGHT_SENSOR;
+    }
+}
