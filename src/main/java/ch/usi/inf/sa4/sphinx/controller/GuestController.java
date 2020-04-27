@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-
-
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -112,8 +110,6 @@ public class GuestController {
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String session_token,
                                                                      @RequestHeader("username") String username) {
 
-
-
         Optional<User> user = userStorage.findByUsername(username);
 
         if (user.isPresent()) {
@@ -189,7 +185,6 @@ public class GuestController {
             if (!userService.validSession(username, session_token)) {
                 throw new UnauthorizedException("");
             }
-
 
 
             Optional<User> addedTo = userService.addGuest(username, guest_username);
