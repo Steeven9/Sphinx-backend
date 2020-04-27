@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+<<<<<<< HEAD
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
@@ -257,3 +258,4 @@ public class GuestController {
 
     }
 }
+
