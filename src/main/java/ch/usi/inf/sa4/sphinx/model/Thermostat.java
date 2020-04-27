@@ -3,11 +3,14 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
+import javax.persistence.Entity;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * A Thermostat is a device, which can control the temperature in a given room. It is embedded to a Temperature sensor.
  */
+@Entity
 public class Thermostat extends TempSensor {
 
     private double targetTemp;
@@ -22,7 +25,7 @@ public class Thermostat extends TempSensor {
         super();
         this.targetTemp = this.getValue();
         this.state = States.IDLE;
-        this.averageTemp = this.targetTemp;
+        this.getAverageTemp();
     }
 
     /**
@@ -39,20 +42,32 @@ public class Thermostat extends TempSensor {
         this.targetTemp = target;
     }
 
-    /*public Thermostat(Thermostat d) {
-        super(d);
-        this.targetTemp = d.targetTemp;
-        this.state = d.state;
-        this.averageTemp = d.averageTemp;
-    }*/
+
+    public States getState() {
+        return state;
+    }
 
     public double getAverageTemp() {
+        List<Device> devices = this.getRoom().getDevices();
+        double averageTemp = 0.0, sensors = 0.0;
+
+        if (!(devices.size() == 0)) {
+            for (Device device : devices) {
+                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                    averageTemp += ((TempSensor) device).getValue();
+                    sensors++;
+                }
+            }
+        }
+
+        ++sensors;
+        averageTemp += this.getValue();
+        averageTemp = averageTemp / sensors;
+
+        this.averageTemp = averageTemp;
         return averageTemp;
     }
 
-    public void setAverageTemp(double averageTemp) {
-        this.averageTemp = averageTemp;
-    }
 
     /**
      * Turns off the thermostat.
@@ -85,18 +100,19 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * The four possible states of thermostat.
-     */
-    private enum States {
-        OFF, IDLE, HEATING, COOLING;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public String getLabel() {
-        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + " Avg: " + this.getAverageTemp();
+        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + "State: " + this.getState() + " Avg: " + this.getAverageTemp();
+    }
+
+    /**
+     * The four possible states of thermostat.
+     */
+    private enum States {
+        OFF, IDLE, HEATING, COOLING;
+
     }
 
     /**

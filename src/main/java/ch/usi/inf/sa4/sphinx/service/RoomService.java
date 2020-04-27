@@ -112,26 +112,34 @@ public class RoomService {
      * @return the average temperature
      */
     /*public double getAverageTemp(final Integer roomId, final Integer thermostatId) {
-        List<Device> list = this.getPopulatedDevices(roomId);
+        Optional<List<Device>> opt = this.getPopulatedDevices(roomId);
         double averageTemp = 0.0, sensors = 0.0;
 
-        for (Device device : list) {
-            if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
-                averageTemp += ((TempSensor) device).getValue();
-                sensors++;
+        if (opt.isEmpty()) {
+            return -99999;//internal error error
+        }
+
+        Optional<Device> deviceOp = deviceService.get(thermostatId);
+        if (deviceOp.isEmpty()) {
+            return -99999; //internal error error
+        }
+
+        List<Device> list = opt.get();
+        if (!(list.size() == 0)) {
+            for (Device device : list) {
+                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                    averageTemp += ((TempSensor) device).getValue();
+                    sensors++;
+                }
             }
         }
-        Thermostat thermostat = (Thermostat) deviceService.get(thermostatId);
+
+        Thermostat thermostat = (Thermostat) deviceOp.get();
+        ++sensors;
         averageTemp += thermostat.getValue();
+        averageTemp = averageTemp / sensors;
 
-        if (sensors > 0) { // some sensors are detected
-            ++sensors; // +1 thermostat
-            averageTemp = averageTemp / sensors;
-        }
-
-        thermostat.setAverageTemp(averageTemp);
-        deviceService.update(thermostat);
         return averageTemp;
-    }*/
-
+    }
+*/
 }
