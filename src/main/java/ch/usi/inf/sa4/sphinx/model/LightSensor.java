@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A light sensor measures the quantity of light (in lumen) in a given room.
  */
@@ -8,14 +11,16 @@ public class LightSensor extends Sensor {
     /**
      * Create a light sensor set to 500.0 lumen.
      */
-    public LightSensor() {
-        super(500.0);
+    public LightSensor(RoomService roomService, CouplingService couplingService) {
+        super(500.0, roomService, couplingService);
     }
 
-    /** Constructor.
+    /**
+     * Constructor.
+     *
      * @param s a LightSensor
      **/
-    public LightSensor(LightSensor s){
+    public LightSensor(LightSensor s) {
         super(s);
     }
 

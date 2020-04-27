@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -11,10 +14,11 @@ public abstract class Sensor extends Device {
 
     /**
      * Creates a Sensor with given physical quantity for measurement.
+     *
      * @param quantity a physical quantity
      */
-    protected Sensor(double quantity) {
-        super();
+    protected Sensor(double quantity, RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
         this.quantity = quantity;
     }
 

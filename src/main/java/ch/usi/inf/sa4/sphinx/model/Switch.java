@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A switch is a switch that can turn on and off a device.
  */
@@ -8,8 +11,8 @@ public class Switch extends Device {
     /**
      * Creates a switch, which is on.
      */
-    public Switch() {
-        super();
+    public Switch(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
     }
 
     /** Constructor.

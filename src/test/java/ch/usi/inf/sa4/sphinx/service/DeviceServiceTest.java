@@ -16,13 +16,17 @@ class DeviceServiceTest {
     DeviceService deviceService;
     @Autowired
     VolatileDeviceStorage deviceStorage;
+    @Autowired
+    RoomService roomService;
+    @Autowired
+    CouplingService couplingService;
 
     @Test
     @DisplayName("Tests both get and update methods")
     void testDeviceService() {
         assertNull(deviceService.get(9999));
 
-        Light device = new Light();
+        Light device = new Light(roomService, couplingService);
         device.setName("testName");
         Integer id = deviceStorage.insert(device);
         Device returnedDevice = deviceService.get(id);
@@ -36,7 +40,7 @@ class DeviceServiceTest {
         returnedDevice = deviceService.get(id);
         assertEquals(name, returnedDevice.getName());
 
-        assertFalse(deviceService.update(new Light()));
+        assertFalse(deviceService.update(new Light(roomService, couplingService)));
     }
 
 }

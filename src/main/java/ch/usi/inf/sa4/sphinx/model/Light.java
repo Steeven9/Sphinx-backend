@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+
 /**
  * A Light is a normal light that can be either on either off.
  */
@@ -9,8 +12,8 @@ public class Light extends Device {
      * Constructor.
      * Creates a light.
      */
-    public Light() {
-        super();
+    public Light(RoomService roomService, CouplingService couplingService) {
+        super(roomService, couplingService);
     }
 
     /**

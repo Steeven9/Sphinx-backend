@@ -12,11 +12,15 @@ class VolatileDeviceStorageTest {
 
     @Autowired
     VolatileDeviceStorage deviceStorage;
+    @Autowired
+    RoomService roomService;
+    @Autowired
+    CouplingService couplingService;
 
 
     @Test
     void testStorageFunctionality_InsertingAndDeleting() {
-        SmartPlug smartPlug = new SmartPlug();
+        SmartPlug smartPlug = new SmartPlug(roomService, couplingService);
 
         smartPlug.setName("testName3");
         smartPlug.setIcon("testIcon");
@@ -34,7 +38,7 @@ class VolatileDeviceStorageTest {
         deviceStorage.delete(id);
         assertNull(deviceStorage.get(id));
 
-        Device deviceWithLockedKey = new Light();
+        Device deviceWithLockedKey = new Light(roomService, couplingService);
         deviceWithLockedKey.lockKey();
         assertNull(deviceStorage.insert(deviceWithLockedKey));
     }
@@ -42,13 +46,13 @@ class VolatileDeviceStorageTest {
     @Test
     @DisplayName("Test correct functionality of update method")
     void testUpdate() {
-        TempSensor tempSensorNoKey = new TempSensor();
-        HumiditySensor deviceWithNotExistingKey = new HumiditySensor();
+        TempSensor tempSensorNoKey = new TempSensor(roomService, couplingService);
+        HumiditySensor deviceWithNotExistingKey = new HumiditySensor(roomService, couplingService);
         deviceWithNotExistingKey.setKey(222);
         assertFalse(deviceStorage.update(tempSensorNoKey));
         assertFalse(deviceStorage.update(deviceWithNotExistingKey));
 
-        MotionSensor motionSensor = new MotionSensor();
+        MotionSensor motionSensor = new MotionSensor(roomService, couplingService);
 
 
         Integer id = deviceStorage.insert(motionSensor);
