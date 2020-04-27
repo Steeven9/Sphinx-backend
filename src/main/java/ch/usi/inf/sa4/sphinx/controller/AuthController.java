@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -67,7 +68,11 @@ public class AuthController {
         User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("")));
+                .orElse(userService.getByMail(username).orElse(null));
+
+        if(user == null){
+            throw new UnauthorizedException("");
+        }
 
         if (!user.isVerified()) {
             throw new ForbiddenException("");

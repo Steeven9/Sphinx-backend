@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -26,10 +27,10 @@ public class User extends StorableE{
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(max=32, min=4)
+    @Size(max=255) //TODO add later
     private String username;
     @Expose
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank
     private String email;
     @Expose(serialize = false)
@@ -48,19 +49,22 @@ public class User extends StorableE{
     private  List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-    @GeneratedValue(generator = "uuidGenerator")
-    @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
-
+   // @GeneratedValue(generator = "uuidGenerator")
+  //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
     private  String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
 
-    private final class uuidGenerator implements IdentifierGenerator {
-        public Serializable generate(SharedSessionContractImplementor s, Object o) {
-            return UUID.randomUUID().toString();
-        }
-    }
+
+//TODO find way to auto generate verificationToken
+
+//    @Component
+//    private final static class UuidGenerator implements IdentifierGenerator {
+//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
+//            return UUID.randomUUID().toString();
+//        }
+//    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -75,6 +79,7 @@ public class User extends StorableE{
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
+        this.verificationToken = UUID.randomUUID().toString();
     }
 
 
