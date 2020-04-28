@@ -77,7 +77,9 @@ public class GuestController {
         users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
 
 
+
         return ResponseEntity.ok(users);
+
 
 
 
