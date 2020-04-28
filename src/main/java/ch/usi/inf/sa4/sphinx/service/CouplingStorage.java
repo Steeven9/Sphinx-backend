@@ -1,17 +1,13 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.model.Coupling;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
-public interface CouplingStorage {
-    Coupling get(int id);
-
-    Integer insert(Coupling c);
-
-    void delete(int id);
+import java.util.List;
 
 
-    boolean update(Coupling updatedDevice);
-
+@Repository
+public interface CouplingStorage extends JpaRepository<Coupling, Integer> {
+    List<Coupling> getCouplingByDeviceId(Integer deviceId);
 }

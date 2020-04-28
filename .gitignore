@@ -36,3 +36,10 @@ desktop.ini
 
 ### Custom env file ###
 sh_envfile
+
+### DB data directory ###
+db_data/
+
+
+### libraries ###
+lib

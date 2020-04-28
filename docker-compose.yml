@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  frontend:
+    container_name: sphinx-frontend
+    image: steeven9/sa4-sphinx-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+  backend:
+    container_name: sphinx-backend
+    image: steeven9/sa4-sphinx-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    env_file: sh_envfile
+  database:
+    container_name: sphinx-database
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file: sh_envfile
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+networks:
+  default:
+    name: sphinx

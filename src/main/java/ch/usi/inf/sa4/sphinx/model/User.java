@@ -1,23 +1,67 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import com.google.gson.annotations.Expose;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
-public class User {
-    private String email;
-    private String password;
+/**
+ *
+ */
+@Entity
+@Table(name="sh_user")
+public class User extends StorableE{
+    @Expose
+    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Size(max=255) //TODO add later
     private String username;
+    @Expose
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    private String email;
+    @Expose(serialize = false)
+    @NotBlank
+    private String password;
+    @Expose
+    @NotBlank
     private String fullname;
+    @Column(name = "reset_code")
     private String resetCode;
-    private final List<Integer> rooms;
+    @Expose(deserialize = false)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "user",
+            orphanRemoval = true)
+    private  List<Room> rooms;
+    @Column(name = "session_token")
     private String sessionToken;
-    private final String verificationToken;
+   // @GeneratedValue(generator = "uuidGenerator")
+  //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
+    @Column(name = "verification_token")
+    private  String verificationToken;
+    @Expose(deserialize = false)
     private boolean verified;
 
+
+
+
+
+//TODO find way to auto generate verificationToken
+
+//    @Component
+//    private final static class UuidGenerator implements IdentifierGenerator {
+//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
+//            return UUID.randomUUID().toString();
+//        }
+//    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -26,34 +70,18 @@ public class User {
      * @param fullname full name
      */
     public User(final String email, final String password, final String username, final String fullname) {
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.username = username;
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
         this.verificationToken = UUID.randomUUID().toString();
     }
 
-    private User(User user) {
-        this.email = user.email;
-        this.verificationToken = user.verificationToken;
-        this.password = user.password;
-        this.username = user.username;
-        this.fullname = user.fullname;
-        this.resetCode = user.resetCode;
-        this.rooms = new ArrayList<>(user.rooms);
-        this.sessionToken = user.sessionToken;
-        this.verified = user.verified;
-    }
 
+    public User(){};
 
-    /**
-     * @return a deep copy of this Object
-     */
-    public User makeCopy() {
-        return new User(this);
-    }
 
     /**
      * getter for email
@@ -104,13 +132,17 @@ public class User {
     }
 
 
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
     /**
      * getter for rooms
      *
      * @return returns a list of the Ids of the rooms owned by the user
      */
-    public List<Integer> getRooms() {
-        return rooms;
+    public List<Integer> getRoomsIds() {
+        return rooms.stream().map(Room::getId).collect(Collectors.toList());
     }
 
 
@@ -123,6 +155,10 @@ public class User {
         return sessionToken;
     }
 
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
 
     /**
      * getter for the verification status of the user
@@ -167,8 +203,9 @@ public class User {
      *
      * @param username username
      */
-    public void setUsername(final String username) {
-        this.username = username;
+    public boolean setUsername(final String username) {
+        this.username =username;
+        return true;
     }
 
     /**
@@ -194,17 +231,21 @@ public class User {
      */
     public void verify() {
         setVerified(true);
-
     }
 
     /**
-     * adds a the given roomId to the User
+     * adds a the given room to the User notice that this won't update the storage version
      *
-     * @param roomId id of the room to be added
+     * @param room  the room to be added
      */
-    public void addRoom(final Integer roomId) {
-        rooms.add(roomId);
+    public void addRoom(final Room room){
+        if(room == null){
+            throw new IllegalArgumentException("Room can't be null");
+        }
+        room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
+        rooms.add(room);
     }
+
 
     /**
      * removes the room with the selected id
@@ -212,7 +253,11 @@ public class User {
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
-        rooms.remove(roomId);//Needed otherwise it will just remove the index
+        for(Room r: rooms){
+            if(r.getId().equals(roomId)){
+                rooms.remove(r);
+            }
+        }
     }
 
 
@@ -239,10 +284,11 @@ public class User {
 
     public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
+        sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
         sd.password = this.password;
-        sd.rooms = this.rooms.toArray(new Integer[0]);
+        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
     }
 }

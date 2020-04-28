@@ -1,25 +1,24 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
+
 /**
  * A switch is a switch that can turn on and off a device.
  */
+@Entity
 public class Switch extends Device {
 
     /**
      * Creates a switch, which is on.
      */
     public Switch() {
-        super();
+
     }
 
-    public Switch(Switch s) {
-        super(s);
-    }
 
-    @Override
-    public Device makeCopy() {
-        return new Switch(this);
-    }
 
     /**
      * Returns true if and only if the switch is powered.
@@ -48,5 +47,8 @@ public class Switch extends Device {
     }
 
 
-
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SWITCH;
+    }
 }

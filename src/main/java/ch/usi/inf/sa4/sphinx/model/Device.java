@@ -1,63 +1,91 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.gson.annotations.Expose;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
 
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class Device {
 
-    @Autowired
-    static CouplingService couplingService;
+@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
+public abstract class Device extends StorableE {
 
-    private Integer id;
+    @Expose
     private String icon;
+    @Expose
     private String name;
-    protected boolean on;
-    protected List<Integer> couplings;
+    @Expose
+    @Column(name = "active")
+    protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
+
+    @OneToMany(orphanRemoval = false,
+            cascade = CascadeType.PERSIST,
+            fetch = FetchType.LAZY
+    )
+    protected final List<Coupling> couplings;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "room_id",
+            nullable = false,
+            referencedColumnName = "id"
+    )
+    private Room room;
+    @Expose
+    @Transient
+    private final DeviceType deviceType;
+
+
+
 
     public Device() {
-        icon = "/images/generic_device";
+        icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
-
+        this.couplings = new ArrayList<>();
+        this.deviceType = getDeviceType();
     }
 
-    protected Device(Device d) {
-        this.icon = d.getIcon();
-        this.name = d.getName();
-        this.on = d.isOn();
-        this.couplings = new ArrayList<>(d.couplings);
-        this.id = d.id;
-    }
+
 
 
     /**
      * @return a copy of this Device
      */
-    public abstract Device makeCopy();
 
-    public SerialisableDevice serialise() {
+    protected SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.id = this.id;
         serialisableDevice.on = this.on;
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
+        serialisableDevice.id = this.id;
         serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.label = getLabel();
         return serialisableDevice;
     }
 
-    public boolean setId(Integer id) {
-        if (id == null) {
-            this.id = id;
-            return true;
-        }
-        return false;
+
+
+
+
+
+    public Room getRoom() {
+        return room;
     }
+
+    protected abstract DeviceType getDeviceType();
+
+
 
     public void setIcon(String icon) {
         this.icon = icon;
@@ -67,9 +95,6 @@ public abstract class Device {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
     public String getIcon() {
         return icon;
@@ -99,21 +124,28 @@ public abstract class Device {
      *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(Integer observer) {
+    public void addObserver(Coupling observer) {
         couplings.add(observer);
+    }
+
+
+    public void removeObserver(Coupling observer) {
+        couplings.remove(observer);
     }
 
 
     //TODO fix unchecked
     protected void triggerEffects() {
-        for(Integer coupling: couplings){
-            Effect effect = couplingService.getEffect(coupling);
-            Event event = couplingService.getEvent(coupling);
-            effect.execute(event.get());
+        for (Coupling coupling : couplings) {
+            coupling.run();
         }
+    }
 
+    public List<Coupling> getCouplings() {
+        return couplings;
+    }
 
-
-
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }

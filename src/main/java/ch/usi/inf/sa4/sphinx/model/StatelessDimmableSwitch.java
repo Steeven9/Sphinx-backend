@@ -1,9 +1,15 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+import javax.persistence.Entity;
+
+
 /**
  * A StatelessDimmableSwitch is a dimmable switch that can change the intensity level of
  * a dimmable light, without storing the intensity level.
  */
+@Entity
 public class StatelessDimmableSwitch extends Device {
     private boolean button;
 
@@ -14,15 +20,6 @@ public class StatelessDimmableSwitch extends Device {
         this.button = false;
     }
 
-    public StatelessDimmableSwitch(StatelessDimmableSwitch s) {
-        super(s);
-        button = s.button;
-    }
-
-    @Override
-    public StatelessDimmableSwitch makeCopy() {
-        return new StatelessDimmableSwitch(this);
-    }
 
     /**
      * Returns true if the intensity was incremented or false if it was decremented.
@@ -48,5 +45,11 @@ public class StatelessDimmableSwitch extends Device {
 
     public String getLabel() {
         return this.button ? "+" : "-";
+    }
+
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.STATELESS_DIMMABLE_SWITCH;
     }
 }

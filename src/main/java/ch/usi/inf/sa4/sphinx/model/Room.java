@@ -1,55 +1,82 @@
 package ch.usi.inf.sa4.sphinx.model;
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
+import javax.persistence.Lob;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-
-public class Room {
+@Entity
+public class Room extends StorableE{
+	@Expose
 	private String name;
+	@Expose
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")//TODO check later what this thing actually does
 	private String background;
+	@Expose
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	private String icon;
-	private List<Integer> devices;
-    private Integer id;
+	@Expose
+	@OneToMany(orphanRemoval = true, //A device can migrate Room
+			cascade = CascadeType.ALL,
+			mappedBy = "room",
+			fetch = FetchType.LAZY)
+	private List<Device> devices;
+	//not all since otherwise it will try to persist the User
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-
-	/**
-	 * @return a copy of this object
-	 */
-	public Room makeCopy(){
-		Room newRoom = new Room();
-		newRoom.name = this.name;
-		newRoom.icon = this.icon;
-		newRoom.background = this.background;
-		newRoom.id = this.id;
-		newRoom.devices = new ArrayList<>(devices);
-		return newRoom;
-	}
 
 	public Room(){
 		name = "Room";
-		background = "/images/default_room";
-		icon = "/images/default_icon";
+		background = "./img/backgrounds/rooms/background-generic-room.svg";
+		icon = "./img/icons/rooms/icon-generic-room.svg";
 		devices = new ArrayList<>();
 	}
 
+
+
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Room(SerialisableRoom room) {
-		this.name = room.name;
-		this.icon = room.icon;
-		this.background = room.background;
-		this.devices = Arrays.asList(room.devices);
+		this();
+		if(room.name != null) this.name = room.name;
+		if(room.icon != null) this.icon = room.icon;
+		if(room.background != null) this.background = room.background;
 	}
 
 
-	public boolean setId(Integer id) {
-		if (this.id == null) {
-			this.id = id;
-			return true;
+	public void addDevice(Device device){
+		if (device == null){
+			throw new IllegalArgumentException("device can not be null");
 		}
-		return false;
+		device.setRoom(this);
+		devices.add(device);
 	}
 
-	public Integer getId(){ return id;}
+
+
+	public List<Device> getDevices() {
+		return devices;
+	}
+
+
+
+	public User getUser() {
+		return user;
+	}
 
 	//-------- getter and setter for name ----------------------
 	public String getName(){
@@ -79,26 +106,23 @@ public class Room {
 	}
 
 	//---------- getter for devices ----------------
-	public List<Integer> getDevices(){
-		return Collections.unmodifiableList(devices);
+	public List<Integer> getDevicesIds(){
+		return devices.stream().map(Device::getId).collect(Collectors.toList());
 	}
 
-	public void addDevice(Integer device){
-		devices.add(device);
-	}
-	
-	public void removeDevice(Integer device){
-		devices.remove(device);
-
+	//Notice that calling this method alone WON'T alter the corresponding Room saved in storage,
+	// to remove a device call roomService.removeDevice(...)
+	public void removeDevice(Integer deviceId){
+		devices.remove(deviceId);
 	}
 
 	public SerialisableRoom serialise(){
 		SerialisableRoom sd = new SerialisableRoom();
-		sd.devices = devices.toArray(new Integer[0]);
+		sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
 		sd.background = background;
 		sd.icon = icon;
-		sd.id = id;
 		sd.name = name;
+		sd.id = getId();
 		return sd;
 
 	}

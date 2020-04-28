@@ -10,7 +10,7 @@ This is the backend supporting our smart home application. It listens on port `8
 ### Email service
 
 To correctly run our application, you need to set up an email service. Our service is set up by default, but you will need
-to ask the password file (`sh_envfile`) to a team leader to pass it to the container.
+to ask the environment file (`sh_envfile`) to a team leader to pass it to the container.
 
 The mailer configuration can be overwritten via the following environment variables:
 
@@ -21,13 +21,16 @@ The mailer configuration can be overwritten via the following environment variab
 
 
 ## Using our premade Docker image
-A public Docker image is available on the Docker repository under `steeven9/sa4-sphinx-backend`.
+A public Docker image is available on the Docker repository under 
+[steeven9/sa4-sphinx-backend](https://hub.docker.com/repository/docker/steeven9/sa4-sphinx-backend).
 
-To use it, first pull the image with\
-`docker pull steeven9/sa4-sphinx-backend`
+The easiest way to use it is to run `docker-compose up`.\
+This will pull and spin up [frontend](https://lab.si.usi.ch/sa4-2020/sphinx/frontend) (on port 3000), backend
+(on port 8080), and a postgres instance. You will **need** the envfile that you can get from the team leaders.
 
-then run it with\
-`docker run -it -p 8080:8080 --env-file sh_envfile steeven9/sa4-sphinx-backend`
+If you want to run only the backend, use\
+`docker run -it -p 8080:8080 --env-file sh_envfile --name sphinx-backend steeven9/sa4-sphinx-backend`
+
 
 ## Building the project
 If you want to build the backend from scratch, compile it first with\
@@ -40,4 +43,4 @@ and finally put everything in a Docker container\
 `docker build ./ -t sa4-sphinx-backend:latest`
 
 that you can run with\
-`docker run -it -p 8080:8080 --env-file sh_envfile sa4-sphinx-backend`
+`docker run -it -p 8080:8080 --env-file sh_envfile --name sphinx-backend sa4-sphinx-backend`

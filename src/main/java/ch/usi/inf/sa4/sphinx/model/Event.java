@@ -1,28 +1,41 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-public abstract class Event<T> {
-    public final int device;
-    private Integer id;
 
-    public int getDevice() {
-        return device;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Event<T> extends StorableE {
+    protected final int deviceId;
+
+    @Transient
+    protected DeviceService deviceService;
+
+
+    public Event(Integer deviceId) {
+        this.deviceId = deviceId;
+        this.deviceService = ServiceProvider.getStaticDeviceService();
+        assert(deviceService != null);
     }
 
-    public boolean setId(Integer id) {
-        if (this.id != null) {
-            this.id = id;
-            return true;
-        }
-        return false;
+
+    public Event(Event<T> event){
+        this.deviceId = event.deviceId;
     }
 
-    public Event(int deviceId) {
-        device = deviceId;
+
+    public int getDeviceId() {
+        return deviceId;
     }
 
     public abstract T get();
 
-    public Integer getId() {
-        return id;
-    }
+
 }

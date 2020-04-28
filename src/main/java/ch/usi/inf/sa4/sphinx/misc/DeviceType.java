@@ -10,13 +10,15 @@ package ch.usi.inf.sa4.sphinx.misc;
 8 (=LightSensor)
 9 (=TempSensor)
 10 (=MotionSensor)
+11 (=Thermostat)
+12 (=SmartCurtain)
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
 
-/**
- *
- */
+
 public enum DeviceType {
     INVALID_DEVICE,
     LIGHT,
@@ -28,10 +30,15 @@ public enum DeviceType {
     HUMIDITY_SENSOR,
     LIGHT_SENSOR,
     TEMP_SENSOR,
-    MOTION_SENSOR;
+    MOTION_SENSOR,
+    SMART_CURTAIN,
+    SECURITY_CAMERA,
+    THERMOSTAT;
 
 
     /**
+     * Given an integer, returns the device type assigned to that value.
+     *
      * @param d the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
@@ -57,13 +64,19 @@ public enum DeviceType {
                 return TEMP_SENSOR;
             case 10:
                 return MOTION_SENSOR;
+            case 11:
+                return THERMOSTAT;
+            case 12:
+                return SMART_CURTAIN;
+            case 13:
+                return SECURITY_CAMERA;
             default:
                 return INVALID_DEVICE;
         }
     }
 
 
-    /**
+    /** Given a device, returns the DeviceType corresponding to the device's class.
      * @param d a given Device
      * @return the DeviceType of the given Device
      */
@@ -72,7 +85,7 @@ public enum DeviceType {
     }
 
 
-    /**
+    /** Given a device Class, returns the DeviceType of that class
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
@@ -107,11 +120,21 @@ public enum DeviceType {
         if (MotionSensor.class.equals(c)) {
             return MOTION_SENSOR;
         }
+        if (SmartCurtain.class.equals(c)) {
+            return SMART_CURTAIN;
+        }
+        if (SecurityCamera.class.equals(c)) {
+            return SECURITY_CAMERA;
+        }
+        if (Thermostat.class.equals(c)) {
+            return THERMOSTAT;
+        }
         return INVALID_DEVICE;
     }
 
 
-    /**
+
+    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
      * @param d the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
@@ -137,6 +160,12 @@ public enum DeviceType {
                 return 9;
             case MOTION_SENSOR:
                 return 10;
+            case THERMOSTAT:
+                return 11;
+            case SMART_CURTAIN:
+                return 12;
+            case SECURITY_CAMERA:
+                return 13;
             default:
                 return 0;
         }
@@ -144,6 +173,8 @@ public enum DeviceType {
 
 
     /**
+     * Given a DeviceType, returns a new object of that type.
+     *
      * @param d the device type
      * @return a new Device according to the DeviceType
      */
@@ -169,6 +200,12 @@ public enum DeviceType {
                 return new TempSensor();
             case MOTION_SENSOR:
                 return new MotionSensor();
+            case SMART_CURTAIN:
+                return new SmartCurtain();
+            case SECURITY_CAMERA:
+                return new SecurityCamera();
+            case THERMOSTAT:
+                return new Thermostat();
             default:
                 return null;
         }
