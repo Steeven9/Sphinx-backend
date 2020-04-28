@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -18,6 +19,8 @@ public final class DeviceService {
     CouplingService couplingService;
     @Autowired
     DeviceStorage deviceStorage;
+    @Autowired
+    CouplingStorage couplingStorage;
 
     /**
      * @param deviceId the Id of the device
@@ -41,6 +44,36 @@ public final class DeviceService {
         }
         return true;
     }
+
+
+    public List<Integer> getSwitchedBy(int deviceId){
+        return couplingStorage.findAll().stream().filter(c->{
+                return c.getEffects().stream()
+                        .anyMatch(effect -> effect.getDeviceId() == deviceId);
+        }).map(coupling -> coupling.getEvent().getDeviceId()).collect(Collectors.toList());
+    }
+
+
+    public List<Integer> getSwitches(int deeviceId){
+        return couplingStorage.findAll().stream()
+                .filter(coupling -> coupling.getEvent().getDeviceId() == deeviceId)
+                .flatMap(coupling -> coupling.getEffects().stream().map(Effect::getDeviceId))
+                .collect(Collectors.toList());
+    }
+
+//
+//    public List<Integer> getSwitches(int deviceId){
+//        return couplingStorage.findAll().stream().filter(c->{
+//            if(c.getEvent().getDeviceId() == deviceId){
+//                return c.getEffects().stream()
+//                        .anyMatch(effect -> effect.getDeviceId() == deviceId);
+//            }
+//            return false;
+//        }).map(Coupling::getId).collect(Collectors.toList());
+//    }
+
+
+
 
 
     /**
