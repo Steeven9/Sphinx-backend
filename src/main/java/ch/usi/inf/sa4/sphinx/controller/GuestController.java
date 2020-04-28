@@ -50,7 +50,9 @@ public class GuestController {
      */
     @GetMapping(value = {"", "/"})
 
+
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
 
 
         Optional<User> user = userService.get(username);
@@ -65,13 +67,11 @@ public class GuestController {
 
         return ResponseEntity.ok(users);
 
-
     }
 
 
     /**
      * Get the list of houses the  user is allowed to access as guest.
-     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
