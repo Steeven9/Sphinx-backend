@@ -10,6 +10,7 @@ package ch.usi.inf.sa4.sphinx.misc;
 8 (=LightSensor)
 9 (=TempSensor)
 10 (=MotionSensor)
+11 (=Thermostat)
 12 (=SmartCurtain)
  */
 
@@ -31,7 +32,8 @@ public enum DeviceType {
     TEMP_SENSOR,
     MOTION_SENSOR,
     SMART_CURTAIN,
-    SECURITY_CAMERA;
+    SECURITY_CAMERA,
+    THERMOSTAT;
 
 
     /**
@@ -62,6 +64,8 @@ public enum DeviceType {
                 return TEMP_SENSOR;
             case 10:
                 return MOTION_SENSOR;
+            case 11:
+                return THERMOSTAT;
             case 12:
                 return SMART_CURTAIN;
             case 13:
@@ -122,8 +126,12 @@ public enum DeviceType {
         if (SecurityCamera.class.equals(c)) {
             return SECURITY_CAMERA;
         }
+        if (Thermostat.class.equals(c)) {
+            return THERMOSTAT;
+        }
         return INVALID_DEVICE;
     }
+
 
 
     /** Given a DeviceType returns the integer value used to transmit the enum over the network.
@@ -152,6 +160,8 @@ public enum DeviceType {
                 return 9;
             case MOTION_SENSOR:
                 return 10;
+            case THERMOSTAT:
+                return 11;
             case SMART_CURTAIN:
                 return 12;
             case SECURITY_CAMERA:
@@ -194,6 +204,8 @@ public enum DeviceType {
                 return new SmartCurtain();
             case SECURITY_CAMERA:
                 return new SecurityCamera();
+            case THERMOSTAT:
+                return new Thermostat();
             default:
                 return null;
         }
