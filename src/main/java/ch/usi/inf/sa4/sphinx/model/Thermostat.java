@@ -2,8 +2,10 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -13,9 +15,14 @@ import java.util.List;
 @Entity
 public class Thermostat extends TempSensor {
 
+    @Expose
     private double targetTemp;
+    @Transient
     private double averageTemp;
+    @Transient
     private States state;
+    @Transient
+    private Sources source;
 
     /**
      * Constructor.
@@ -26,6 +33,7 @@ public class Thermostat extends TempSensor {
         this.targetTemp = this.getValue();
         this.state = States.IDLE;
         this.averageTemp = this.targetTemp;
+        this.source = Sources.SELF;
     }
 
     /**
@@ -34,9 +42,15 @@ public class Thermostat extends TempSensor {
      * @param target the target temperature
      */
     public void setTargetTemp(double target) {
-        if (target > this.getValue()) {
+        double temp;
+        if (Sources.SELF.equals(this.source)) {
+            temp = this.getValue();
+        } else {
+            temp = getAverageTemp();
+        }
+        if (target > temp) {
             this.state = States.HEATING;
-        } else if (target < this.getValue()) {
+        } else if (target < temp) {
             this.state = States.COOLING;
         }
         this.targetTemp = target;
@@ -45,6 +59,10 @@ public class Thermostat extends TempSensor {
 
     public States getState() {
         return state;
+    }
+
+    public Sources getSource() {
+        return source;
     }
 
     public double getAverageTemp() {
@@ -111,8 +129,14 @@ public class Thermostat extends TempSensor {
      * The four possible states of thermostat.
      */
     private enum States {
-        OFF, IDLE, HEATING, COOLING;
+        OFF, IDLE, HEATING, COOLING
+    }
 
+    /**
+     * The two possible sources of thermostat.
+     */
+    private enum Sources {
+        SELF, AVERAGE
     }
 
     /**

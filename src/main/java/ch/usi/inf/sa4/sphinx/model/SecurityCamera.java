@@ -3,8 +3,13 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
 
+import javax.persistence.Entity;
+
+@Entity
 public class SecurityCamera extends Device {
+    @Expose
     public String url;
 
     /**
