@@ -70,11 +70,18 @@ public class UserController {
     @PostMapping("/{username}")
     public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
         User newUser = new User(user.email, user.password, username, user.fullname);
+        User findUser = userService.get(username)
+                .orElse(userService.getByMail(user.email).orElse(null));
+
+        if (findUser != null) {
+            throw new BadRequestException("This user already exists!");
+        }
+
 
         try {
             userService.insert(newUser);
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Check that you're providing username, fullname, password and email");
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
 
@@ -83,8 +90,8 @@ public class UserController {
                     "Confirm your email account for SmartHut",
                     "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
-        } catch (MailException e){
-            throw new ServerErrorException("failed to send confirmation mail");
+        } catch (MailException e) {
+            throw new BadRequestException("Please insert a valid mail!");
 
         }
 

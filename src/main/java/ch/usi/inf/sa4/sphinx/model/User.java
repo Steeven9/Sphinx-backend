@@ -1,17 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.IdentifierGenerator;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +49,9 @@ public class User extends StorableE{
     private  String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
+
+
+
 
 
 //TODO find way to auto generate verificationToken
@@ -248,6 +245,7 @@ public class User extends StorableE{
         room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
         rooms.add(room);
     }
+
 
     /**
      * removes the room with the selected id

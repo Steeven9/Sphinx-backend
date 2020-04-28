@@ -36,11 +36,16 @@ public class AuthController {
                                            @RequestHeader("session-token") String sessionToken) {
 
 
-        User user = userService.get(username)
-                .orElse(userService.getByMail(username)
-                .orElseThrow(() -> new NotFoundException("Could not find any user with matching mail/name")));
+        User user;
 
-        if (!userService.validSession(username, sessionToken)) {
+        user = userService.get(username)
+                .orElse(userService.getByMail(username).orElse(null));
+
+        if(user == null){
+            throw new UnauthorizedException("");
+        }
+
+        if (!userService.validSession(user.getUsername(), sessionToken)) {
             throw new UnauthorizedException("");
         }
 

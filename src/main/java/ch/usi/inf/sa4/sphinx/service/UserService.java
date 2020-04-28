@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,7 +239,7 @@ public class UserService {
     }
 
 
-    public Optional<User> getById(Integer id){
+    public Optional<User> getById(Integer id) {
         return userStorage.findById(id);
     }
 
@@ -263,9 +262,9 @@ public class UserService {
         }
 
         Room startRoom = roomStorage.findById(startRoomId)
-                .orElseThrow(()->new ImproperImplementationException("the method ownsRoom doesnt work properly"));
+                .orElseThrow(() -> new ImproperImplementationException("the method ownsRoom doesnt work properly"));
 
-        if(!startRoom.getDevicesIds().contains(deviceId)){
+        if (!startRoom.getDevicesIds().contains(deviceId)) {
             return false;
         }
 
@@ -305,7 +304,7 @@ public class UserService {
      * @return true if successful else false
      */
     public boolean changeUsername(@NonNull final String oldUsername, @NonNull final String newUsername) {
-        if(newUsername == null) return false;
+        if (newUsername == null) return false;
         try {
             return userStorage.findByUsername(oldUsername).map(user -> {
                 user.setUsername(newUsername);
@@ -316,8 +315,6 @@ public class UserService {
             return false;
         }
     }
-
-
 
 
 

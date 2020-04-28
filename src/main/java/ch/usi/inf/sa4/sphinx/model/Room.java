@@ -3,8 +3,10 @@ import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.persistence.Lob;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,8 +16,12 @@ public class Room extends StorableE{
 	@Expose
 	private String name;
 	@Expose
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")//TODO check later what this thing actually does
 	private String background;
 	@Expose
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	private String icon;
 	@Expose
 	@OneToMany(orphanRemoval = true, //A device can migrate Room
