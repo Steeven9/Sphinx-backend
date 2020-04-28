@@ -74,7 +74,9 @@ public class GuestController {
         users = guest.toArray(SerialisableUser[]::new);
 
 
+
         return ResponseEntity.ok(users);
+
 
 
 
