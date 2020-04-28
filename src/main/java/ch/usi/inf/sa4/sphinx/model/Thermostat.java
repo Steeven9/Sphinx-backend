@@ -21,6 +21,8 @@ public class Thermostat extends TempSensor {
     private double averageTemp;
     @Transient
     private States state;
+    @Transient
+    private Sources source;
 
     /**
      * Constructor.
@@ -31,6 +33,7 @@ public class Thermostat extends TempSensor {
         this.targetTemp = this.getValue();
         this.state = States.IDLE;
         this.averageTemp = this.targetTemp;
+        this.source = Sources.SELF;
     }
 
     /**
@@ -39,9 +42,15 @@ public class Thermostat extends TempSensor {
      * @param target the target temperature
      */
     public void setTargetTemp(double target) {
-        if (target > this.getValue()) {
+        double temp;
+        if (Sources.SELF.equals(this.source)) {
+            temp = this.getValue();
+        } else {
+            temp = getAverageTemp();
+        }
+        if (target > temp) {
             this.state = States.HEATING;
-        } else if (target < this.getValue()) {
+        } else if (target < temp) {
             this.state = States.COOLING;
         }
         this.targetTemp = target;
@@ -50,6 +59,10 @@ public class Thermostat extends TempSensor {
 
     public States getState() {
         return state;
+    }
+
+    public Sources getSource() {
+        return source;
     }
 
     public double getAverageTemp() {
@@ -117,6 +130,13 @@ public class Thermostat extends TempSensor {
      */
     private enum States {
         OFF, IDLE, HEATING, COOLING
+    }
+
+    /**
+     * The two possible sources of thermostat.
+     */
+    private enum Sources {
+        SELF, AVERAGE
     }
 
     /**
