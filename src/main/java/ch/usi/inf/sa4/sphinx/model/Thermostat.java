@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import com.google.gson.annotations.Expose;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -36,11 +37,10 @@ public class Thermostat extends TempSensor {
         this.source = Sources.SELF;
     }
 
-    /**
-     * Sets a target temperature to this thermostat and changes the internal state.
-     *
-     * @param target the target temperature
-     */
+    public States getState() {
+        return state;
+    }
+
     public void setTargetTemp(double target) {
         double temp;
         if (Sources.SELF.equals(this.source)) {
@@ -56,15 +56,35 @@ public class Thermostat extends TempSensor {
         this.targetTemp = target;
     }
 
-
-    public States getState() {
-        return state;
+    /**
+     * @param s a State of thermostat
+     * @return int mapping to it
+     */
+    private int fromStateToInt(States s) {
+        switch (s) {
+            case IDLE:
+                return 1;
+            case OFF:
+                return 0;
+            case COOLING:
+                return 2;
+            case HEATING:
+                return 3;
+            default:
+                return -1;
+        }
     }
 
     public Sources getSource() {
         return source;
     }
 
+    /**
+     * Returns the average temperature in this room. It is computed as the media of all temperature sensors and
+     * temperature of this Thermostat.
+     *
+     * @return the average temperature
+     */
     public double getAverageTemp() {
         List<Device> devices = this.getRoom().getDevices();
         double averageTemp = 0.0, sensors = 0.0;
@@ -86,6 +106,32 @@ public class Thermostat extends TempSensor {
         return averageTemp;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected SerialisableDevice serialise() {
+        SerialisableDevice sd = super.serialise();
+        sd.targetTemp = this.targetTemp;
+        sd.averageTemp = this.getAverageTemp();
+        sd.stateTemp = this.fromStateToInt(this.getState());
+        sd.source = this.source == Sources.SELF ? 0 : 1;
+        return sd;
+    }
+
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    public void setSource(int source) {
+        if (source == 0) {
+            this.source = Sources.SELF;
+        } else {
+            this.source = Sources.AVERAGE;
+        }
+
+    }
 
     /**
      * Turns off the thermostat.
@@ -118,14 +164,6 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getLabel() {
-        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + "State: " + this.getState() + " Avg: " + this.getAverageTemp();
-    }
-
-    /**
      * The four possible states of thermostat.
      */
     private enum States {
@@ -138,6 +176,15 @@ public class Thermostat extends TempSensor {
     private enum Sources {
         SELF, AVERAGE
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getLabel() {
+        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + "State: " + this.getState() + " Avg: " + this.getAverageTemp();
+    }
+
 
     /**
      * {@inheritDoc}
