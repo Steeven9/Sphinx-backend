@@ -46,7 +46,7 @@ public class GuestController {
      */
     @GetMapping("/")
 
-    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session_token") String session_token, @RequestHeader("username") String username) {
+    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String session_token, @RequestHeader("username") String username) {
 
 
         Optional<User> user = userStorage.findByUsername(username);
@@ -65,12 +65,12 @@ public class GuestController {
             return ResponseEntity.ok(users);
         }
 
-        return ResponseEntity.ok(users);
+        throw new ServerErrorException("");
     }
 
 
     /**
-     * Get the list of houses the user is allowed to access as guest.
+     * Get the list of houses the is allowed to access as guest.
      *
      * @param username      the username of the user.
      * @param session_token the session token used for validation
