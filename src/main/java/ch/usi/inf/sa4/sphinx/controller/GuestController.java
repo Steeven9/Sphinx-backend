@@ -50,8 +50,6 @@ public class GuestController {
      * 401 the user or the session-token aren't valid
      */
     @GetMapping(value = {"", "/"})
-
-
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
@@ -65,6 +63,7 @@ public class GuestController {
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
         users = guest.toArray(SerialisableUser[]::new);
+
 
         return ResponseEntity.ok(users);
 
