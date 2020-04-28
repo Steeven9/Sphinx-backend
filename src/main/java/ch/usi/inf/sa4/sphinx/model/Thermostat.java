@@ -41,11 +41,6 @@ public class Thermostat extends TempSensor {
         return state;
     }
 
-    /**
-     * Sets a target temperature to this thermostat and changes the internal state.
-     *
-     * @param target the target temperature
-     */
     public void setTargetTemp(double target) {
         double temp;
         if (Sources.SELF.equals(this.source)) {
@@ -125,6 +120,13 @@ public class Thermostat extends TempSensor {
         return sd;
     }
 
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    public void setSource(Sources source) {
+        this.source = source;
+    }
 
     /**
      * Turns off the thermostat.
@@ -177,6 +179,7 @@ public class Thermostat extends TempSensor {
     public String getLabel() {
         return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + "State: " + this.getState() + " Avg: " + this.getAverageTemp();
     }
+
 
     /**
      * {@inheritDoc}
