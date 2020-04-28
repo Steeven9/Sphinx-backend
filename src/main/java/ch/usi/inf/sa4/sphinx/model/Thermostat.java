@@ -116,7 +116,7 @@ public class Thermostat extends TempSensor {
         sd.targetTemp = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();
         sd.stateTemp = this.fromStateToInt(this.getState());
-        sd.source = this.source == Sources.SELF ?  0:  1;
+        sd.source = this.source == Sources.SELF ? 0 : 1;
         return sd;
     }
 
@@ -124,8 +124,13 @@ public class Thermostat extends TempSensor {
         this.state = state;
     }
 
-    public void setSource(Sources source) {
-        this.source = source;
+    public void setSource(int source) {
+        if (source == 0) {
+            this.source = Sources.SELF;
+        } else {
+            this.source = Sources.AVERAGE;
+        }
+
     }
 
     /**
