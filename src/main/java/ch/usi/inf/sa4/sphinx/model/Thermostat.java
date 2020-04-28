@@ -2,8 +2,10 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -13,8 +15,11 @@ import java.util.List;
 @Entity
 public class Thermostat extends TempSensor {
 
+    @Expose
     private double targetTemp;
+    @Transient
     private double averageTemp;
+    @Transient
     private States state;
 
     /**
@@ -111,8 +116,7 @@ public class Thermostat extends TempSensor {
      * The four possible states of thermostat.
      */
     private enum States {
-        OFF, IDLE, HEATING, COOLING;
-
+        OFF, IDLE, HEATING, COOLING
     }
 
     /**
