@@ -55,6 +55,7 @@ public class GuestController {
 
 
 
+
         Optional<User> user = userService.get(username);
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -64,6 +65,7 @@ public class GuestController {
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
         users = guest.toArray(SerialisableUser[]::new);
+
 
         return ResponseEntity.ok(users);
 
