@@ -58,7 +58,9 @@ public class GuestController {
      */
     @GetMapping(value = {"", "/"})
 
+
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
 
 
 
@@ -76,6 +78,7 @@ public class GuestController {
 
 
         return ResponseEntity.ok(users);
+
 
 
     }
