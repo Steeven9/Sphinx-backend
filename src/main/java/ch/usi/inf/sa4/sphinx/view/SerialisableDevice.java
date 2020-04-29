@@ -43,7 +43,7 @@ public class SerialisableDevice {
      * @param switches     list of switches (by id) that the device has
      * @param type         the serialisable device's type
      * @param url          the url of a video
-     * @param state
+     * @param state       the serialisable device's state of Thermostat
      * @param averageTemp the serialisable device's room average temperature
      **/
     public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double averageTemp, int state, int source) {

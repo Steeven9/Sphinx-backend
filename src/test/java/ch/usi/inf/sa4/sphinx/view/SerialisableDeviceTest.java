@@ -35,9 +35,9 @@ public class SerialisableDeviceTest {
 
     static Stream<Arguments> argumentsProvider() {
         return Stream.of(
-                arguments(101, "testIcon", "testName", "testLabel", new int[10], new int[]{3, 6}, 1.0, 666, 1, true, "url", 20, 23, 43, 1, 0),
-                arguments(0, "__testIcon", "testName", "testLabel", new int[1], new int[]{1, 2, 4, 6}, 1.0, 666, 1, true, "URL!!", 0, -10, 4444, 1, 0),
-                arguments(984354, "#testIcon", "testName", "testLabel", new int[10000], new int[]{0}, 0.0, 666, 1, true, "Noturl", -20, 2222, -111, 1, 0)
+                arguments(101, "testIcon", "testName", "testLabel", new int[10], new int[]{3, 6}, 1.0, 666, 1, true, "url", 43, 1, 0),
+                arguments(0, "__testIcon", "testName", "testLabel", new int[1], new int[]{1, 2, 4, 6}, 1.0, 666, 1, true, "URL!!", 4444, 1, 0),
+                arguments(984354, "#testIcon", "testName", "testLabel", new int[10000], new int[]{0}, 0.0, 666, 1, true, "Noturl", -111, 1, 0)
         );
     }
 
@@ -51,8 +51,8 @@ public class SerialisableDeviceTest {
     @ParameterizedTest
     @MethodSource("argumentsProvider")
     @DisplayName("Testing constructor with multiple arguments")
-    void testLongConstructor(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double quantity, double averageTemp, double targetTemp, int stateTemp, int source) {
-        serialisableDevice = new SerialisableDevice(id, icon, name, label, switched, switches, intensity, roomId, type, on, url, quantity, averageTemp, targetTemp, stateTemp, source);
+    void testLongConstructor(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double averageTemp, int state, int source) {
+        serialisableDevice = new SerialisableDevice(id, icon, name, label, switched, switches, intensity, roomId, type, on, url, averageTemp, state, source);
         assertAll("Should return new SerialisableDevice",
                 () -> assertEquals(id, serialisableDevice.id),
                 () -> assertEquals(name, serialisableDevice.name),
@@ -66,10 +66,8 @@ public class SerialisableDeviceTest {
                 () -> assertEquals(on, serialisableDevice.on),
                 () -> assertEquals(url, serialisableDevice.url),
                 () -> assertEquals(source, serialisableDevice.source),
-                () -> assertEquals(stateTemp, serialisableDevice.stateTemp),
-                () -> assertEquals(quantity, serialisableDevice.quantity),
+                () -> assertEquals(state, serialisableDevice.state),
                 () -> assertEquals(averageTemp, serialisableDevice.averageTemp),
-                () -> assertEquals(targetTemp, serialisableDevice.targetTemp),
                 () -> assertEquals(name, serialisableDevice.name)
         );
     }
