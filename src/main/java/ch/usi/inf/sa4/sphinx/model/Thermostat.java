@@ -7,7 +7,6 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -64,14 +63,12 @@ public class Thermostat extends TempSensor {
         switch (s) {
             case IDLE:
                 return 1;
-            case OFF:
-                return 0;
             case COOLING:
                 return 2;
             case HEATING:
                 return 3;
             default:
-                return -1;
+                return 0; // off
         }
     }
 
@@ -87,7 +84,7 @@ public class Thermostat extends TempSensor {
      */
     public double getAverageTemp() {
         List<Device> devices = this.getRoom().getDevices();
-        double averageTemp = 0.0, sensors = 0.0;
+        double averageTemp = 0.0, sensors = 1.0;
 
         if (!(devices.size() == 0)) {
             for (Device device : devices) {
@@ -98,7 +95,6 @@ public class Thermostat extends TempSensor {
             }
         }
 
-        ++sensors;
         averageTemp += this.getValue();
         averageTemp = averageTemp / sensors;
 
@@ -113,9 +109,9 @@ public class Thermostat extends TempSensor {
     @Override
     protected SerialisableDevice serialise() {
         SerialisableDevice sd = super.serialise();
-        sd.targetTemp = this.targetTemp;
+        sd.slider = this.targetTemp / 100;
         sd.averageTemp = this.getAverageTemp();
-        sd.stateTemp = this.fromStateToInt(this.getState());
+        sd.state = this.fromStateToInt(this.getState());
         sd.source = this.source == Sources.SELF ? 0 : 1;
         return sd;
     }
@@ -175,14 +171,6 @@ public class Thermostat extends TempSensor {
      */
     private enum Sources {
         SELF, AVERAGE
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getLabel() {
-        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity() + "State: " + this.getState() + " Avg: " + this.getAverageTemp();
     }
 
 
