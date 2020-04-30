@@ -34,7 +34,7 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * Returns the current state of this thermostat.
+     * Returns the current state of this Thermostat.
      *
      * @return the state of this thermostat
      */
@@ -43,22 +43,46 @@ public class Thermostat extends TempSensor {
     }
 
     /**
+     * Returns the Source of this Thermostat: Self or Average.
+     *
+     * @return the source of thermostat
+     */
+    public Sources getSource() {
+        return source;
+    }
+
+    /**
+     * Returns a State basing on given target temperature and considering the Source.
+     *
+     * @param target the target temperature
+     * @return the State of Thermostat
+     */
+    private States determineState(double target) {
+        double temp;
+        if (Sources.SELF.equals(this.getSource())) {
+            temp = this.getValue();
+        } else {
+            temp = this.getAverageTemp();
+        }
+
+        if (temp < target + 0.5 && temp > target - 0.5) {
+            return States.IDLE;
+        } else {
+            if (target > temp) {
+                return States.HEATING;
+            } else {
+                return States.COOLING;
+            }
+        }
+    }
+
+    /**
      * Sets target temperature of a given Thermostat.
      *
      * @param target target temperature to be set
      */
     public void setTargetTemp(double target) {
-        double temp;
-        if (Sources.SELF.equals(this.source)) {
-            temp = this.getValue();
-        } else {
-            temp = getAverageTemp();
-        }
-        if (target > temp) {
-            this.state = States.HEATING;
-        } else if (target < temp) {
-            this.state = States.COOLING;
-        }
+        this.state = this.determineState(target);
         this.targetTemp = target;
     }
 
@@ -156,19 +180,7 @@ public class Thermostat extends TempSensor {
      */
     public void turnOn() {
         this.on = true;
-        double temp;
-        if (this.source == Sources.SELF) {
-            temp = this.getValue();
-        } else {
-            temp = this.getAverageTemp();
-        }
-        if (temp > this.targetTemp) {
-            this.state = States.COOLING;
-        } else if (temp < this.targetTemp) {
-            this.state = States.HEATING;
-        } else {
-            this.state = States.IDLE;
-        }
+        this.state = this.determineState(this.targetTemp);
     }
 
     /**

@@ -1,9 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
-import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -69,7 +66,6 @@ public class RoomController {
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
-
         check(sessionToken, username, null, roomId);
         //if check didn't throw the room is here
         return ResponseEntity.ok(serialiser.serialiseRoom(roomService.get(roomId).get()));
@@ -203,18 +199,16 @@ public class RoomController {
      * @param username     the username of the user
      * @param errors       in case error occur
      * @param roomId       the id of the room
-     * @return null if correct, otherwise a ResponseEntity
      */
     private void check(String sessionToken, String username, Errors errors, Integer roomId) {
         if (errors != null && errors.hasErrors()) {
             throw new BadRequestException("");
         }
-        if (!userService.validSession(username, sessionToken)) {
+        if (!userService.validSession(username, sessionToken) || !userService.ownsRoom(username, roomId)) {
             throw new UnauthorizedException("");
         }
 
         roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));
-
     }
 }
 
