@@ -18,8 +18,6 @@ public class Thermostat extends TempSensor {
     @Expose
     private double targetTemp;
     @Transient
-    private double averageTemp;
-    @Transient
     private States state;
     @Transient
     private Sources source;
@@ -32,14 +30,23 @@ public class Thermostat extends TempSensor {
         super();
         this.targetTemp = this.getValue();
         this.state = States.IDLE;
-        this.averageTemp = this.targetTemp;
         this.source = Sources.SELF;
     }
 
+    /**
+     * Returns the current state of this thermostat.
+     *
+     * @return the state of this thermostat
+     */
     public States getState() {
         return state;
     }
 
+    /**
+     * Sets target temperature of a given Thermostat.
+     *
+     * @param target target temperature to be set
+     */
     public void setTargetTemp(double target) {
         double temp;
         if (Sources.SELF.equals(this.source)) {
@@ -56,8 +63,9 @@ public class Thermostat extends TempSensor {
     }
 
     /**
+     * Maps a state of thermostat to an int.
      * @param s a State of thermostat
-     * @return int mapping to it
+     * @return int mapping to thermostat
      */
     private int fromStateToInt(States s) {
         switch (s) {
@@ -72,9 +80,6 @@ public class Thermostat extends TempSensor {
         }
     }
 
-    public Sources getSource() {
-        return source;
-    }
 
     /**
      * Returns the average temperature in this room. It is computed as the media of all temperature sensors and
@@ -98,7 +103,6 @@ public class Thermostat extends TempSensor {
         averageTemp += this.getValue();
         averageTemp = averageTemp / sensors;
 
-        this.averageTemp = averageTemp;
         return averageTemp;
     }
 
@@ -116,10 +120,12 @@ public class Thermostat extends TempSensor {
         return sd;
     }
 
-    public void setState(States state) {
-        this.state = state;
-    }
 
+    /**
+     * Sets a thermostat to a given source. The source should be in int: 0 Self and 1 for Average.
+     *
+     * @param source the source in int to set
+     */
     public void setSource(int source) {
         if (source == 0) {
             this.source = Sources.SELF;
@@ -146,13 +152,19 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * Turns on the thermostat computing the correct state
+     * Turns on the thermostat computing the correct state basing on Source.
      */
     public void turnOn() {
         this.on = true;
-        if (this.averageTemp > this.targetTemp) {
+        double temp;
+        if (this.source == Sources.SELF) {
+            temp = this.getValue();
+        } else {
+            temp = this.getAverageTemp();
+        }
+        if (temp > this.targetTemp) {
             this.state = States.COOLING;
-        } else if (this.averageTemp < this.targetTemp) {
+        } else if (temp < this.targetTemp) {
             this.state = States.HEATING;
         } else {
             this.state = States.IDLE;
