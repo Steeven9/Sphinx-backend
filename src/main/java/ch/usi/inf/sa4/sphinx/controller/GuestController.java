@@ -64,6 +64,7 @@ public class GuestController {
             throw new UnauthorizedException("Invalid credentials");
 
 
+
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
@@ -90,6 +91,7 @@ public class GuestController {
                                                         @RequestHeader("user") String username) {
 
         Optional<User> user = userService.get(username);
+
 
 
 
@@ -137,6 +139,7 @@ public class GuestController {
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
+
 
 
         boolean camsVisible = owner.get().areCamsVisible();
@@ -194,6 +197,7 @@ public class GuestController {
 //            if (guest.isPresent()) {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
+
 
 
 
