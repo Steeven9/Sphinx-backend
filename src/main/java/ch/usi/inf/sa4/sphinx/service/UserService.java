@@ -413,6 +413,7 @@ public class UserService {
      */
     public boolean isGuestOf(String host, String guest){
         Optional<User> user = userStorage.findByUsername(host);
+
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
 
@@ -427,7 +428,9 @@ public class UserService {
      * @return all the guests of a given user
      */
 
+
     public List<User> getGuestsOf(@NonNull final String username) {
+
 
         return userStorage.findAll().stream().filter(user -> {
             return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
