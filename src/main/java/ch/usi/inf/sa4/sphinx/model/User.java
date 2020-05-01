@@ -54,6 +54,7 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+
     private  List<User> hosts;
 
     private boolean areCamsVisible = false;
@@ -300,6 +301,7 @@ public class User extends StorableE {
 
 
 
+
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -309,6 +311,7 @@ public class User extends StorableE {
         if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
+
 
 
 
@@ -322,7 +325,9 @@ public class User extends StorableE {
      **/
     public void addGuestOf(final User user){
 
+
         hosts.add(user);
+
 
     }
 
@@ -330,6 +335,7 @@ public class User extends StorableE {
      * @param user the user to remove
      **/
     public void removeGuestOf(final User user){
+
 
         hosts.remove(user);
 
@@ -341,6 +347,7 @@ public class User extends StorableE {
      **/
     public boolean areVisible(){
         return areCamsVisible;
+
     }
 
     /**

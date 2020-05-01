@@ -350,6 +350,7 @@ public class UserService {
             return false;
         }
 
+
         final Optional<User> user = userStorage.findByUsername(host);
         final Optional<User> guestUser = userStorage.findByUsername(guest);
 
@@ -372,6 +373,7 @@ public class UserService {
      **/
     public Optional<User> addGuest(final String guest, final String host){
         final Optional<User> user = userStorage.findByUsername(guest);
+
         final Optional<User> hostUsername = userStorage.findByUsername(host);
 
         if(user.isPresent() && hostUsername.isPresent()) {
@@ -404,11 +406,13 @@ public class UserService {
      */
     public boolean isGuestOf(String host, String guest){
         Optional<User> user = userStorage.findByUsername(host);
+
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
 
         }
         return user.get().getHosts().contains(guestUsername.get());
+
     }
 
     /**
@@ -417,7 +421,9 @@ public class UserService {
      * @return all the guests of a given user
      */
 
+
     public List<User> getGuestsOf(@NonNull final String username) {
+
 
         return userStorage.findAll().stream().filter(user -> {
             return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
