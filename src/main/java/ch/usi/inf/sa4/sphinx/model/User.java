@@ -362,12 +362,14 @@ public class User extends StorableE {
         hosts.remove(user);
 
 
+
     }
 
     /**
      * Check if cameras are accessible by guests.
      *
      * @return true if the cameras are visible to the guests
+
      **/
 
 
@@ -386,10 +388,6 @@ public class User extends StorableE {
 
 
     }
-
-
-
-
 
 }
 
