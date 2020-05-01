@@ -59,7 +59,9 @@ public class GuestController {
      * 401 the user or the session-token aren't valid
      */
     @GetMapping(value = {"", "/"})
+
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
 
 
 
@@ -68,6 +70,7 @@ public class GuestController {
         if ( !userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("Invalid credentials");
+
 
 
         }
@@ -110,6 +113,7 @@ public class GuestController {
 
 
 
+
         List<User> guestOf = userService.otherHousesAccess(username).get();
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
 
@@ -140,6 +144,7 @@ public class GuestController {
 
 
 
+
     @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
 
 
@@ -162,19 +167,15 @@ public class GuestController {
         }
 
 
-
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
 
         SerialisableDevice[] devicesArray = devices.stream()
                 .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                 .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
-
-
         return ResponseEntity.ok(devicesArray);
 
     }
-
 
 //    /**
 //     * Get the list of scenes the guests can access.
@@ -198,6 +199,7 @@ public class GuestController {
 //            if (guest.isPresent()) {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
+
 
 
 //                SerialisableScene[] scenes ;
@@ -225,9 +227,8 @@ public class GuestController {
 
 
 
-    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,
 
-                                                          @RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,   @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guestUsername = userService.get(guest);
 
@@ -248,6 +249,7 @@ public class GuestController {
 
         userService.addGuest(username, guest_username);
         return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+
 
     }
 
@@ -295,6 +297,8 @@ public class GuestController {
 
             return ResponseEntity.noContent().build();
         }
+
+
 
 
 

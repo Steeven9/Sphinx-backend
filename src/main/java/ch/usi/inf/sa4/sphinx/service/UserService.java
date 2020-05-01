@@ -446,7 +446,6 @@ public class UserService {
         if (!user.isPresent() || !guestUsername.isPresent()) {
             return false;
 
-
         }
         return user.get().getHosts().contains(guestUsername.get());
 
