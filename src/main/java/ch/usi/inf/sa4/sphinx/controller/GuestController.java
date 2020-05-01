@@ -37,6 +37,7 @@ public class GuestController {
     @Autowired
     private UserService userService;
 
+
     @Autowired
     private UserStorage userStorage;
 
@@ -70,6 +71,7 @@ public class GuestController {
 
 
 
+
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
@@ -89,7 +91,6 @@ public class GuestController {
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
      */
-
 
     @GetMapping(value = {"/houses/", "/houses"})
     public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
@@ -124,6 +125,7 @@ public class GuestController {
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
+
 
 
 
@@ -171,7 +173,6 @@ public class GuestController {
 //     * 401 if unauthorized
 //     */
 
-
 //    @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"} )
 //    public ResponseEntity<SerialisableScene[]> getAuthorizedScenes(@NotNull @PathVariable String guest_username,
 //                                                                @RequestHeader("session-token") String sessionToken,
@@ -212,12 +213,14 @@ public class GuestController {
      */
     @PostMapping(value = {"", "/"})
 
+
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,
 
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guestUsername = userService.get(guest);
         Optional<User> user = userService.get(username);
+
 
 
         if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -251,6 +254,7 @@ public class GuestController {
     @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String
                                                                   guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
 
         Optional<User> user = userService.get(username);
 
