@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -287,4 +286,5 @@ public class GuestControllerTest {
 
 
 }
+
 
