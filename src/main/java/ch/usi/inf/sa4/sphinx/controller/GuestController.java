@@ -60,8 +60,6 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
-
-
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
 
@@ -126,12 +124,12 @@ public class GuestController {
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
 
+
     @GetMapping(value = {"/{owner_username}/devices/","/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices( @RequestHeader("session-token") String sessionToken,
 
 
                                                                     @PathVariable("owner_username") String host, @RequestHeader("user") String username) {
-
 
 
 
@@ -222,11 +220,13 @@ public class GuestController {
      */
     @PostMapping(value = {"", "/"})
 
+
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guest= userService.get(guestUsername);
         Optional<User> user = userService.get(username);
+
 
 
 
