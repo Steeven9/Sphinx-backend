@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -25,10 +28,6 @@ import org.junit.jupiter.api.Disabled;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-
-
-
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
