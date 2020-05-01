@@ -336,13 +336,16 @@ public class UserService {
 
     /**
      * Removes the user1  from the guest list of user2  (aka, user1 is the host, user2 is the guest).
+
      *
      * @param host  the user1 username
      * @param guest the user2 username
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
+
         if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+
             return false;
         }
 
@@ -355,12 +358,10 @@ public class UserService {
         if (guestUser.isPresent() && user.isPresent()) {
 
 
-
             guestUser.get().removeHost(user.get());
 
             userStorage.save(user.get());
             return true;
-
 
 
         }
@@ -374,9 +375,11 @@ public class UserService {
      * Add the user2 (username2) in the guest list of user1 (username1).
      *
      * @param guest the user1
+
      * @param hostUsername the user2
      **/
     public void addGuest(final String guest, final String hostUsername) {
+
         final Optional<User> user = userStorage.findByUsername(guest);
 
 
@@ -384,10 +387,18 @@ public class UserService {
 
 
 
-        if(guest.equals(hostUsername)){
+
+        if(guest.equals(hostUsername)) {
             throw new UnauthorizedException("You can't add yourself as guest");
+        }
+
+        if (user.isPresent() && hostUsername.isPresent()) {
+
+            user.get().addHost(hostUsername.get());
+
 
         }
+
 
 
 
@@ -415,10 +426,12 @@ public class UserService {
 
 
 
+
     public Optional<List<User>> otherHousesAccess(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
 
         if (!user.isPresent()) {
+
 
             return Optional.empty();
         }
@@ -441,12 +454,16 @@ public class UserService {
     public boolean isGuestOf(String host, String guest) {
         Optional<User> user = userStorage.findByUsername(host);
 
+
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if (!user.isPresent() || !guestUsername.isPresent()) {
+
             return false;
+
 
         }
         return user.get().getHosts().contains(guestUsername.get());
+
 
     }
 
@@ -476,6 +493,7 @@ public class UserService {
      * @return a list of the guests
      **/
 
+
     public List<User> getGuests(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
         if(user.isPresent()) {
@@ -484,7 +502,6 @@ public class UserService {
         throw new NotFoundException("This user does not exist");
 
     }
-
 
     /**
      * Returns the list of users who have access to your house as guests.
@@ -500,8 +517,6 @@ public class UserService {
             });
         }).collect(Collectors.toList());
     }
-
-
 
 
 
