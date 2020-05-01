@@ -360,6 +360,7 @@ public class User extends StorableE {
 
         hosts.remove(user);
 
+
     }
 
 
@@ -367,6 +368,7 @@ public class User extends StorableE {
 
     /** Check if cameras are accessible by guests.
      * @return  true if the cameras are visible to the guests
+
 
      **/
 
@@ -408,6 +410,7 @@ public class User extends StorableE {
 
 
     }
+
 
     /**
      * Remove user from the list of user hub's he is guest.
