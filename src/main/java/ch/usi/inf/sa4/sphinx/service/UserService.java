@@ -345,6 +345,7 @@ public class UserService {
 
 
         final Optional<User> user = userStorage.findByUsername(host);
+
         final Optional<User> guestUser = userStorage.findByUsername(guest);
 
         if(guestUser.isPresent() && user.isPresent()) {
@@ -368,6 +369,7 @@ public class UserService {
     public Optional<User> addGuest(final String guest, final String host){
         final Optional<User> user = userStorage.findByUsername(guest);
 
+
         final Optional<User> hostUsername = userStorage.findByUsername(host);
 
         if(user.isPresent() && hostUsername.isPresent()) {
@@ -376,6 +378,7 @@ public class UserService {
         }
 
         return hostUsername;
+
 
 
 
@@ -409,8 +412,10 @@ public class UserService {
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
 
+
         }
         return user.get().getHosts().contains(guestUsername.get());
+
 
     }
 

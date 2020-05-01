@@ -1,10 +1,12 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,12 +29,14 @@ import org.junit.jupiter.api.Disabled;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 public class GuestControllerTest {
 
     @Autowired
     private MockMvc mockmvc;
+
 
     @Autowired
     private DummyDataAdder dummyDataAdder;
@@ -237,6 +242,7 @@ public class GuestControllerTest {
 //                .andExpect(status().is(200))
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
 //    }
+
 
 
 
