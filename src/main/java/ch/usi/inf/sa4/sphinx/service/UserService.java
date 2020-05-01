@@ -313,6 +313,7 @@ public class UserService {
                 userStorage.save(user);
                 return true;
             }).orElse(false);
+
         } catch (final ConstraintViolationException e) {
             return false;
         }
@@ -323,6 +324,7 @@ public class UserService {
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
+
     }
 
 

@@ -52,7 +52,7 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private  List<User> guestOf;
+    private  List<User> housesAccess;
 
 
 //TODO find way to auto generate verificationToken
@@ -297,6 +297,7 @@ public class User extends StorableE {
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * asserts if there's a match between the User's hashed password and the one in plaintext
      * @param password the plaintext password to check
      * @return true if matching else false
@@ -309,6 +310,7 @@ public class User extends StorableE {
     private String hashPassword( String password) {
         if(password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
+
     }
 
 }
