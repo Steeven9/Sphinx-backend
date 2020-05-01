@@ -50,7 +50,7 @@ public class User extends StorableE{
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private  List<User> housesAccess;
+    private  List<User> hosts;
 
 
 
@@ -301,21 +301,21 @@ public class User extends StorableE{
      * @return returns a list of the houses the user has access to as guest
      */
     public List<User> getGuestsOf() {
-        return housesAccess;
+        return hosts;
     }
 
     /** Add user to the list of user hub's our user has access to as guest.
      * @param user the user to add
      **/
     public void addGuestOf(final User user){
-        housesAccess.add(user);
+        hosts.add(user);
     }
 
     /** Removes a house access from deleting a user's name from our list.
      * @param user the user to remove
      **/
     public void removeGuestOf(final User user){
-        housesAccess.remove(user);
+        hosts.remove(user);
     }
 
 }
