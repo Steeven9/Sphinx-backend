@@ -323,8 +323,6 @@ public class UserService {
     }
 
 
-
-
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
@@ -333,13 +331,15 @@ public class UserService {
     }
 
 
-    /** Removes the user1  from the guest list of user2 .
-     * @param host the user1 username
+    /**
+     * Removes the user1  from the guest list of user2 .
+     *
+     * @param host  the user1 username
      * @param guest the user2 username
      * @return true if guest is successfully removed
      **/
-    public boolean removeGuest(final String host, final String guest){
-        if(!isGuestOf(host,guest)){
+    public boolean removeGuest(final String host, final String guest) {
+        if (!isGuestOf(host, guest)) {
             return false;
         }
 
@@ -348,12 +348,11 @@ public class UserService {
 
         final Optional<User> guestUser = userStorage.findByUsername(guest);
 
-        if(guestUser.isPresent() && user.isPresent()) {
+        if (guestUser.isPresent() && user.isPresent()) {
 
 
             user.get().removeHost(guestUser.get());
             userStorage.save(user.get());
-
 
 
         }
@@ -363,39 +362,42 @@ public class UserService {
     }
 
 
-    /** Add the user2 (username2) in the guest list of user1 (username1).
+    /**
+     * Add the user2 (username2) in the guest list of user1 (username1).
+     *
      * @param guest the user1
-     * @param host the user2
+     * @param host  the user2
      * @return the added guest
      **/
-    public Optional<User> addGuest(final String guest, final String host){
+    public Optional<User> addGuest(final String guest, final String host) {
         final Optional<User> user = userStorage.findByUsername(guest);
 
 
         final Optional<User> hostUsername = userStorage.findByUsername(host);
 
-        if(user.isPresent() && hostUsername.isPresent()) {
+        if (user.isPresent() && hostUsername.isPresent()) {
 
             user.get().addHost(hostUsername.get());
+
         }
 
         return hostUsername;
 
 
-
-
     }
 
 
-    /** Returns a list of the users whose house you can access as guest.
+    /**
+     * Returns a list of the users whose house you can access as guest.
+     *
      * @param username the user's username
      * @return a list of the guests
      **/
 
-    public Optional<List<User>> otherHousesAccess(final String username){
-        Optional<User> user =  userStorage.findByUsername(username);
+    public Optional<List<User>> otherHousesAccess(final String username) {
+        Optional<User> user = userStorage.findByUsername(username);
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             return Optional.empty();
         }
 
@@ -407,23 +409,27 @@ public class UserService {
 
     /**
      * Determines if user is a guest of second user.
-     * @param host the user's' username
-     * @param guest  the second user's username
+     *
+     * @param host  the user's' username
+     * @param guest the second user's username
      * @return true if the user is considered the second user's guest
      */
-    public boolean isGuestOf(String host, String guest){
+    public boolean isGuestOf(String host, String guest) {
         Optional<User> user = userStorage.findByUsername(host);
 
+
         Optional<User> guestUsername = userStorage.findByUsername(guest);
-        if(!user.isPresent()|| !guestUsername.isPresent()){
+        if (!user.isPresent() || !guestUsername.isPresent()) {
 
         }
         return user.get().getHosts().contains(guestUsername.get());
+
 
     }
 
     /**
      * Returns the list of users who have access to your house as guests.
+     *
      * @param username the name of the user
      * @return all the guests of a given user
      */
@@ -440,22 +446,21 @@ public class UserService {
     }
 
 
-
-
-
-    /** Returns a list of the guests.
+    /**
+     * Returns a list of the guests.
+     *
      * @param username the user's username
      * @return a list of the guests
      **/
-    public List<User> getGuests(final String username){
-        Optional<User> user =  userStorage.findByUsername(username);
+    public List<User> getGuests(final String username) {
+        Optional<User> user = userStorage.findByUsername(username);
         return user.orElse(null).getHosts();
     }
 
 
-
     /**
      * Returns the list of users who have access to your house as guests.
+     *
      * @param username the name of the user
      * @return all the guests of a given user
      */
@@ -467,7 +472,6 @@ public class UserService {
             });
         }).collect(Collectors.toList());
     }
-
 
 
 }
