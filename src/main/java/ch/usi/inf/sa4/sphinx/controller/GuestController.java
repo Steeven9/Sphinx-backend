@@ -55,16 +55,11 @@ public class GuestController {
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
-
-
         Optional<User> user = userService.get(username);
-
-
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
-
 
 
         }
@@ -73,13 +68,9 @@ public class GuestController {
         users = guest.toArray(SerialisableUser[]::new);
 
 
-
         return ResponseEntity.ok(users);
 
-
-
     }
-
 
     /**
      * Get the list of houses the  user is allowed to access as guest.
@@ -104,8 +95,8 @@ public class GuestController {
 
 
 
-            throw new UnauthorizedException("Invalid credentials");
 
+            throw new UnauthorizedException("Invalid credentials");
 
 
         }
@@ -113,7 +104,9 @@ public class GuestController {
 
 
 
+
         List<User> guestOf = userService.otherHousesAccess(username).get();
+
 
 
 
@@ -139,6 +132,8 @@ public class GuestController {
 
 
                                                                     @PathVariable("owner_username") String host, @RequestHeader("user") String username) {
+
+
 
 
 
@@ -190,6 +185,7 @@ public class GuestController {
 
     }
 
+
 //
 //    /**
 //     * Get the list of scenes the guests can access.
@@ -214,6 +210,7 @@ public class GuestController {
 //            if (guest.isPresent()) {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
+
 
 
 
@@ -244,7 +241,7 @@ public class GuestController {
 
 
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
-                                                          @RequestHeader("session-token") String sessionToken,
+              @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guest= userService.get(guestUsername);
 
@@ -277,6 +274,7 @@ public class GuestController {
 
 
 
+
     }
 
 
@@ -294,13 +292,16 @@ public class GuestController {
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String guest_username,
 
 
+
            @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
         Optional<User> user = userService.get(username);
+
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
+
 
         }
 

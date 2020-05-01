@@ -460,36 +460,44 @@ public class UserService {
     }
 
 
-    public boolean removeGuest(final String username1, final String username2){
-        if(!isGuestOf(username1,username2)){
+    /** Removes the user1  from the guest list of user2 .
+     * @param removed the user1 username
+     * @param remover the user2 username
+     * @return true if guest is successfully removed
+     **/
+    public boolean removeGuest(final String removed, final String remover){
+        if(!isGuestOf(removed,remover)){
             return false;
         }
-        final Optional<User> user = userStorage.findByUsername(username1);
-        final Optional<User> guest = userStorage.findByUsername(username2);
-
-        user.get().removeGuestOf(guest.get());
-
-
-        user.ifPresent(
-                u -> {
-                    u.removeGuestOf(guest.get());
-                    userStorage.save(u);
-                }
-        );
-
-        //userStorage.update(user);
-        return true;
-    }
-
-    public Optional<User> addGuest(final String username1, final String username2){
-        final Optional<User> user = userStorage.findByUsername(username1);
-        final Optional<User> guest = userStorage.findByUsername(username2);
-
-        if(user == null || guest ==null){
-            return null;
+        final Optional<User> user = userStorage.findByUsername(removed);
+        final Optional<User> guest = userStorage.findByUsername(remover);
+        if(!guest.isPresent()) {
+            user.ifPresent(
+                    u -> {
+                        u.removeGuestOf(guest.get());
+                        userStorage.save(u);
+                    }
+            );
         }
 
-       user.get().addGuestOf( guest.get());
+            return true;
+
+    }
+
+
+    /** Add the user2 (username2) in the guest list of user1 (username1).
+     * @param adder the user1
+     * @param added the user2
+     * @return the added guest
+     **/
+    public Optional<User> addGuest(final String adder, final String added){
+        final Optional<User> user = userStorage.findByUsername(adder);
+        final Optional<User> guest = userStorage.findByUsername(added);
+
+        if(!user.isPresent()|| !guest.isPresent()) {
+
+            user.get().addGuestOf(guest.get());
+        }
 
         return guest;
 
@@ -497,35 +505,36 @@ public class UserService {
     }
 
 
-    /** Returns a list of the guests.
+    /** Returns a list of the users whose house you can access as guest.
      * @param username the user's username
      * @return a list of the guests
      **/
-    public List<User> getGuests(final String username){
+    public List<User> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
         return user.orElse(null).getGuestsOf();
     }
 
     /**
      * Determines if user is a guest of second user.
-     * @param username1 the user's' username
-     * @param username2  the second user's username
-     * @return true if the user is considered the second's guest
+     * @param searchingUser the user's' username
+     * @param searchedUser  the second user's username
+     * @return true if the user is considered the second user's guest
      */
-    public boolean isGuestOf(String username1, String username2){
-        Optional<User> user = userStorage.findByUsername(username1);
-        Optional<User> guest = userStorage.findByUsername(username2);
-        if(user == null || guest == null){
+    public boolean isGuestOf(String searchingUser, String searchedUser){
+        Optional<User> user = userStorage.findByUsername(searchedUser);
+        Optional<User> guest = userStorage.findByUsername(searchedUser);
+        if(!user.isPresent()|| !guest.isPresent()){
             return false;
         }
         return user.get().getGuestsOf().contains(guest.get());
     }
 
     /**
+     * Returns the list of users who have access to your house as guests.
      * @param username the name of the user
      * @return all the guests of a given user
      */
-    public List<User> returnGuests(@NonNull final String username) {
+    public List<User> returnOwnGuests(@NonNull final String username) {
         return userStorage.findAll().stream().filter(user -> {
             return user.getGuestsOf().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
