@@ -56,6 +56,7 @@ public class User extends StorableE {
 
 
 
+
     private  List<User> hosts;
 
     private boolean camsVisible = false;
@@ -419,6 +420,7 @@ public class User extends StorableE {
      **/
     public void removeGuestOf(final User user) {
         hosts.remove(user);
+
     }
 
 
