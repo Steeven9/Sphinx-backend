@@ -376,7 +376,9 @@ public class UserService {
     public void addGuest(final String guest, final String hostUsername) {
         final Optional<User> user = userStorage.findByUsername(guest);
 
+
         final Optional<User> host = userStorage.findByUsername(hostUsername);
+
 
 
         if(guest.equals(hostUsername)){
@@ -387,12 +389,14 @@ public class UserService {
 
 
 
+
         if (!user.isPresent() || !host.isPresent()) {
 
             throw new NotFoundException("This user does not exist");
 
         }
         user.get().addHost(host.get());
+
 
 
     }
@@ -437,8 +441,10 @@ public class UserService {
         if (!user.isPresent() || !guestUsername.isPresent()) {
             return false;
 
+
         }
         return user.get().getHosts().contains(guestUsername.get());
+
 
     }
 
