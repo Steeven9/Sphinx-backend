@@ -54,6 +54,7 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+
     private  List<User> hosts;
 
 
@@ -339,7 +340,9 @@ public class User extends StorableE {
      */
     public List<User> getGuestsOf() {
 
+
         return hosts;
+
 
     }
 
@@ -348,7 +351,9 @@ public class User extends StorableE {
      **/
     public void addGuestOf(final User user){
 
+
         hosts.add(user);
+
 
     }
 
@@ -357,7 +362,9 @@ public class User extends StorableE {
      **/
     public void removeGuestOf(final User user){
 
+
         hosts.remove(user);
+
 
     }
 
