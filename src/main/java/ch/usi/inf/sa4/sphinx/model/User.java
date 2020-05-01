@@ -57,6 +57,7 @@ public class User extends StorableE {
 
 
 
+
     private  List<User> hosts;
 
     private boolean camsVisible = false;
@@ -409,7 +410,9 @@ public class User extends StorableE {
      *
      * @param user the user to add
      **/
+
     public void addGuestOf(final User user) {
+
         hosts.add(user);
     }
 
@@ -418,8 +421,10 @@ public class User extends StorableE {
      *
      * @param user the user to remove
      **/
+
     public void removeGuestOf(final User user) {
         hosts.remove(user);
+
 
     }
 

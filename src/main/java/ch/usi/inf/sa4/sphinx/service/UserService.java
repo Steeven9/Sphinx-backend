@@ -346,6 +346,7 @@ public class UserService {
             return false;
         }
 
+
         final Optional<User> user = userStorage.findByUsername(host);
 
 
@@ -357,6 +358,7 @@ public class UserService {
             guestUser.get().removeHost(user.get());
             userStorage.save(user.get());
             return true;
+
 
         }
 
@@ -373,12 +375,15 @@ public class UserService {
      **/
     public void addGuest(final String guest, final String hostUsername) {
         final Optional<User> user = userStorage.findByUsername(guest);
+
         final Optional<User> host = userStorage.findByUsername(hostUsername);
+
 
         if(guest.equals(hostUsername)){
             throw new UnauthorizedException("You can't add yourself as guest");
 
         }
+
 
 
 
@@ -388,6 +393,7 @@ public class UserService {
 
         }
         user.get().addHost(host.get());
+
 
     }
 
@@ -416,9 +422,11 @@ public class UserService {
 
     /**
      * Determines if user is a guest of second user.
+
      *
      * @param host  the user's' username
      * @param guest the second user's username
+
      * @return true if the user is considered the second user's guest
      */
     public boolean isGuestOf(String host, String guest) {
