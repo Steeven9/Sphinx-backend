@@ -18,10 +18,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,6 +42,7 @@ public class GuestControllerTest {
 
     @Autowired
     private MockMvc mockmvc;
+
 
 
     @Autowired
@@ -105,7 +108,6 @@ public class GuestControllerTest {
 
 
 
-
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
 
 
@@ -113,6 +115,7 @@ public class GuestControllerTest {
                 .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
         this.mockmvc.perform(delete(("/guests/guest1"))
@@ -123,23 +126,20 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
-
-
-
         this.mockmvc.perform(get("/guests/user2/devices/guest3")
         .header("session-token", "banana")
         .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
+
 }
+
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromWrongUser() throws Exception {
 
         this.mockmvc.perform(get("/guests/")
-
-
 
 
                 .header("user", "fakeUser")
@@ -217,6 +217,7 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
     }
 
+
     @Disabled("401")
     @Test
     public void shouldSuccessfullyReturnGuests() throws Exception {
@@ -284,8 +285,8 @@ public class GuestControllerTest {
 //                .andExpect(status().is(200))
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
 
-//    }
 
+//    }
 
 
 
