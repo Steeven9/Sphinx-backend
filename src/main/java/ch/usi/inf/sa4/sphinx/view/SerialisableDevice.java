@@ -30,42 +30,4 @@ public class SerialisableDevice {
     public SerialisableDevice() {
     }
 
-
-    /**
-     * Constructor.
-     *
-     * @param id           the serialisable device's id
-     * @param icon         the serialisable device's icon
-     * @param intensity    the serialisable device's intensity
-     * @param label        the serialisable device's label
-     * @param name         the serialisable device's name
-     * @param on           tells whether the device is on
-     * @param roomId       the serialisable device's room id
-     * @param switched     list  (of ids) gitof switched  devices
-     * @param switches     list of switches (by id) that the device has
-     * @param type         the serialisable device's type
-     * @param url          the url of a video
-     * @param quantity     the serialisable device's value of a sensor
-     * @param averageTemp the serialisable device's room average temperature
-     * @param targetTemp   the serialisable device's thermostat target temperature
-     **/
-    public SerialisableDevice(Integer id, String icon, String name, String label, int[] switched, int[] switches, double intensity, Integer roomId, int type, boolean on, String url, double quantity, double averageTemp, double targetTemp, int stateTemp, int source) {
-        this.id = id;
-        this.icon = icon;
-        this.name = name;
-        this.label = label;
-        this.switched = switched;
-        this.switches = switches;
-        this.slider = intensity;
-        this.roomId = roomId;
-        this.type = type;
-        this.on = on;
-        this.url = url;
-        this.quantity = quantity;
-        this.averageTemp = averageTemp;
-        this.targetTemp = targetTemp;
-        this.stateTemp = stateTemp;
-        this.source = source;
-    }
-
 }
