@@ -52,7 +52,7 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private  List<User> housesAccess;
+    private  List<User> hosts;
 
 //TODO find way to auto generate verificationToken
 
@@ -292,6 +292,7 @@ public class User extends StorableE {
      * @param password the plaintext password to check
      * @return true if matching else false
      */
+
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -300,6 +301,7 @@ public class User extends StorableE {
     private String hashPassword( String password) {
         if(password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
+
 
     }
 
