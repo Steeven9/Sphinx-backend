@@ -66,7 +66,6 @@ public class GuestController {
             throw new UnauthorizedException("");
 
 
-
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
@@ -91,9 +90,8 @@ public class GuestController {
 
         Optional<User> user = userService.get(username);
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-
             throw new UnauthorizedException("");
 
         }
@@ -122,6 +120,7 @@ public class GuestController {
 
 
         Optional<User> user = userService.get(username);
+
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -176,9 +175,9 @@ public class GuestController {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
 
+
 //                SerialisableScene[] scenes ;
 //                scenes = scenesIds.orElse(null).toArray(Serialisablescene:: new);
-
 //            }
 //        }
 //        throw new UnauthorizedException("");
