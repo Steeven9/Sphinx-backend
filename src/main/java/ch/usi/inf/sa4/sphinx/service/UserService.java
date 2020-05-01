@@ -342,14 +342,12 @@ public class UserService {
             return false;
         }
         final Optional<User> user = userStorage.findByUsername(host);
-        final Optional<User> remover = userStorage.findByUsername(guest);
-        if(remover.isPresent()) {
-            user.ifPresent(
-                    u -> {
-                        u.removeGuestOf(remover.get());
-                        userStorage.save(u);
-                    }
-            );
+        final Optional<User> guestUsername = userStorage.findByUsername(guest);
+        if(guestUsername.isPresent() && user.isPresent()) {
+
+                        user.get().removeGuestOf(guestUsername.get());
+                        userStorage.save(user.get());
+
         }
 
             return true;
@@ -364,14 +362,14 @@ public class UserService {
      **/
     public Optional<User> addGuest(final String guest, final String host){
         final Optional<User> user = userStorage.findByUsername(guest);
-        final Optional<User> added = userStorage.findByUsername(host);
+        final Optional<User> hostUsername = userStorage.findByUsername(host);
 
-        if(user.isPresent() && added.isPresent()) {
+        if(user.isPresent() && hostUsername.isPresent()) {
 
-            user.get().addGuestOf(added.get());
+            user.get().addGuestOf(hostUsername.get());
         }
 
-        return added;
+        return hostUsername;
 
 
     }
@@ -394,11 +392,11 @@ public class UserService {
      */
     public boolean isGuestOf(String host, String guest){
         Optional<User> user = userStorage.findByUsername(host);
-        Optional<User> searched = userStorage.findByUsername(guest);
-        if(!user.isPresent()|| !searched.isPresent()){
+        Optional<User> guestUsername = userStorage.findByUsername(guest);
+        if(!user.isPresent()|| !guestUsername.isPresent()){
             return false;
         }
-        return user.get().getGuestsOf().contains(searched.get());
+        return user.get().getGuestsOf().contains(guestUsername.get());
     }
 
     /**
