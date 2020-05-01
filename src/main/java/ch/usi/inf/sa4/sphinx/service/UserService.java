@@ -416,7 +416,6 @@ public class UserService {
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
 
-
         }
         return user.get().getHosts().contains(guestUsername.get());
 
@@ -427,6 +426,7 @@ public class UserService {
      * @param username the name of the user
      * @return all the guests of a given user
      */
+
     public List<User> getGuestsOf(@NonNull final String username) {
 
         return userStorage.findAll().stream().filter(user -> {
@@ -457,6 +457,7 @@ public class UserService {
      * @return all the guests of a given user
      */
     public List<User> returnOwnGuests(@NonNull final String username) {
+
         return userStorage.findAll().stream().filter(user -> {
             return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
