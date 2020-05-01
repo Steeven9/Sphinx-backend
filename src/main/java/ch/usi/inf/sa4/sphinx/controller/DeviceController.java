@@ -3,10 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -324,6 +321,7 @@ public class DeviceController {
                                                   @RequestHeader("user") String username,
                                                   @PathVariable String device1_id,
                                                   @PathVariable String device2_id){
+
         if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
             return ResponseEntity.badRequest().build();
         }
@@ -338,8 +336,15 @@ public class DeviceController {
         deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
         deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
 
-        couplingService.delete(id1);
-        couplingService.delete(id2);
+        List<Coupling> c = couplingService.getCouplingsInStorage();
+
+        for (Coupling coupling : c) {
+            if (coupling.getDeviceId().equals(id1) || coupling.getDeviceId().equals(id2)) {
+                coupling.getEffectIds().clear();
+            }
+        }
+
+        //needs to update couplingStorage
 
         return ResponseEntity.ok().build();
     }

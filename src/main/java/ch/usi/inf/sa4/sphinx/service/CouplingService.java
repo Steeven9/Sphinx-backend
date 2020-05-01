@@ -40,9 +40,13 @@ public class CouplingService {
         return couplingStorage.findById(id).map(Coupling::getEffects).orElse(new ArrayList<>());
     }
 
+    public List<Coupling> getCouplingsInStorage(){
+        return couplingStorage.findAll();
+    }
 
-
-
+    public CouplingStorage getCouplingStorage() {
+        return couplingStorage;
+    }
 
     /**
      * Add coupling to storage.
