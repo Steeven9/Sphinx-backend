@@ -7,9 +7,13 @@ services:
       - "3000:80"
     depends_on:
       - backend
+    env_file: sh_envfile
   backend:
     container_name: sphinx-backend
     image: steeven9/sa4-sphinx-backend
+    restart: always
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://sphinx-database:5432/${POSTGRES_DB}
     ports:
       - "8080:8080"
     depends_on:
@@ -19,11 +23,14 @@ services:
     container_name: sphinx-database
     image: postgres
     restart: always
+    healthcheck:
+      test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      interval: 5s
+      timeout: 10s
+      retries: 10
     ports:
       - "5432:5432"
     env_file: sh_envfile
-    volumes:
-      - ./db_data:/var/lib/postgresql/data
 networks:
   default:
     name: sphinx
