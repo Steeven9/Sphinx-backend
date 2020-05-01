@@ -48,6 +48,10 @@ public class GuestController {
     @Autowired
 
 
+
+
+    @Autowired
+
     private Serialiser serialiser;
 
 
@@ -185,7 +189,6 @@ public class GuestController {
 //     * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
 //     * 401 if unauthorized
 //     */
-
 //    @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"} )
 //    public ResponseEntity<SerialisableScene[]> getAuthorizedScenes(@NotNull @PathVariable String guest_username,
 //                                                                @RequestHeader("session-token") String sessionToken,

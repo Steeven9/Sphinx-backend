@@ -441,7 +441,6 @@ public class UserService {
     public boolean isGuestOf(String host, String guest) {
         Optional<User> user = userStorage.findByUsername(host);
 
-
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if (!user.isPresent() || !guestUsername.isPresent()) {
             return false;

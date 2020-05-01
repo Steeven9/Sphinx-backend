@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
+<<<<<<< HEAD
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -284,3 +285,7 @@ public class GuestControllerTest {
 
 }
 
+=======
+public class GuestControllerTest {
+}
+>>>>>>> #124: Gitlab suggestions applied (#2)

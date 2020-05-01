@@ -58,6 +58,7 @@ public class User extends StorableE {
 
 
 
+
     private  List<User> hosts;
 
     private boolean camsVisible = false;
@@ -323,6 +324,7 @@ public class User extends StorableE {
 
 
 
+
     public List<User> getHosts() {
         return hosts;
 
@@ -341,7 +343,9 @@ public class User extends StorableE {
 
 
 
+
         hosts.add(user);
+
 
     }
 
@@ -351,6 +355,7 @@ public class User extends StorableE {
      * @param user the user to remove
      **/
         public void removeHost(final User user){
+
 
 
         hosts.remove(user);
@@ -365,8 +370,10 @@ public class User extends StorableE {
 
      **/
 
+
     public boolean areCamsVisible() {
         return camsVisible;
+
 
 
     }
@@ -383,6 +390,7 @@ public class User extends StorableE {
 
 
         return hosts;
+
 
 
     }
