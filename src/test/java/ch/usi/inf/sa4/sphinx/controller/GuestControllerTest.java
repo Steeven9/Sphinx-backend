@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
+
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
