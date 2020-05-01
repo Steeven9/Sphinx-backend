@@ -8,29 +8,33 @@ services:
     depends_on:
       - backend
     env_file: sh_envfile
+    networks:
+      - sphinx
   backend:
     container_name: sphinx-backend
     image: steeven9/sa4-sphinx-backend
     restart: always
-    environment:
-      - POSTGRES_URL=jdbc:postgresql://sphinx-database:5432/${POSTGRES_DB}
     ports:
       - "8080:8080"
     depends_on:
       - database
     env_file: sh_envfile
+    networks:
+      - sphinx
   database:
     container_name: sphinx-database
     image: postgres
     restart: always
     healthcheck:
-      test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      test: pg_isready -d sphinx_smartHut -U sphinx
       interval: 5s
       timeout: 10s
       retries: 10
     ports:
       - "5432:5432"
     env_file: sh_envfile
+    networks:
+      - sphinx
 networks:
-  default:
+  sphinx:
     name: sphinx
