@@ -324,6 +324,7 @@ public class UserService {
 
 
 
+
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
@@ -381,6 +382,7 @@ public class UserService {
      * @param username the user's username
      * @return a list of the guests
      **/
+
     public Optional<List<User>> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
         if(!user.isPresent()) {
@@ -394,6 +396,7 @@ public class UserService {
 
     /**
      * Determines if user is a guest of second user.
+<<<<<<< HEAD
      * @param host the user's' username
      * @param guest  the second user's username
      * @return true if the user is considered the second user's guest
@@ -402,7 +405,7 @@ public class UserService {
         Optional<User> user = userStorage.findByUsername(host);
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
-            return false;
+
         }
         return user.get().getHosts().contains(guestUsername.get());
     }
@@ -436,10 +439,11 @@ public class UserService {
 
 
     /**
+     * Returns the list of users who have access to your house as guests.
      * @param username the name of the user
      * @return all the guests of a given user
      */
-    public List<User> returnGuests(@NonNull final String username) {
+    public List<User> returnOwnGuests(@NonNull final String username) {
         return userStorage.findAll().stream().filter(user -> {
             return user.getGuestsOf().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
