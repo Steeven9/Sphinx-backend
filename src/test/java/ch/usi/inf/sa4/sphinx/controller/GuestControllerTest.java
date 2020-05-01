@@ -16,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,6 +39,7 @@ public class GuestControllerTest {
 
     @Autowired
     private MockMvc mockmvc;
+
 
 
     @Autowired
@@ -79,6 +81,7 @@ public class GuestControllerTest {
     }
 
 
+
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromInvalidToken() throws Exception {
@@ -97,6 +100,7 @@ public class GuestControllerTest {
 
 
 
+
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
 
 
@@ -107,11 +111,14 @@ public class GuestControllerTest {
 
 
 
+
         this.mockmvc.perform(delete(("/guests/guest1"))
+
                 .header("session-token", "banana")
                 .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
         this.mockmvc.perform(get("/guests/user2/devices/guest3")
@@ -129,13 +136,16 @@ public class GuestControllerTest {
         this.mockmvc.perform(get("/guests/")
 
 
+
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
+
 
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
+
 
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
@@ -194,10 +204,10 @@ public class GuestControllerTest {
 //        .header("user", "fakeUser")
 //        .header("session-token", "user2SessionToken"))
 
+
 //                .andDo(print())
 //                .andExpect(status().is(401));
     }
-
 
     @Disabled("401")
     @Test
@@ -261,10 +271,12 @@ public class GuestControllerTest {
 //    @Test
 //    public void shouldSuccessfullyGetGuestScenes() throws Exception {
 
+
 //        this.mockmvc.perform(get("/guests/user2/scenes/{guest_username}").header("user", "user2").header("session-token", "banana"))
 //                .andDo(print())
 //                .andExpect(status().is(200))
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
+
 
 //    }
 
