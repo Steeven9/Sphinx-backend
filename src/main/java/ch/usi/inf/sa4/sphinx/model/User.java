@@ -393,6 +393,22 @@ public class User extends StorableE {
 
     }
 
+    /** Check if cameras are accessible by guests.
+     * @return  true if the cameras are visible to the guests
+     **/
+    public boolean visibilityStatus(){
+        return visibleCams;
+    }
+
+    /**
+     * Switches the cam visibility from on to off and vice versa.
+     **/
+    public void oppositeSwitch(){
+        visibleCams = !visibleCams;
+    }
+
+
+
 }
 
 
