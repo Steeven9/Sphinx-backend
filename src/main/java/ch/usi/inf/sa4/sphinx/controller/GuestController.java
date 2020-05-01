@@ -59,6 +59,7 @@ public class GuestController {
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
 
+
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
@@ -92,7 +93,9 @@ public class GuestController {
 
 
             List<User> guestOf = userService.otherHousesAccess(username);
+
             SerialisableUser[] users;
+
             users = guestOf.toArray(SerialisableUser[]::new);
             return ResponseEntity.ok(users);
 
@@ -127,6 +130,7 @@ public class GuestController {
             if (!guest.isPresent() || !devicesIds.isPresent()) {
 
                 throw new UnauthorizedException("");
+
 
             }
 
@@ -169,8 +173,10 @@ public class GuestController {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
 
+
 //                SerialisableScene[] scenes ;
 //                scenes = scenesIds.orElse(null).toArray(Serialisablescene:: new);
+
 
 //                return ResponseEntity.ok(scenes);
 //            }
