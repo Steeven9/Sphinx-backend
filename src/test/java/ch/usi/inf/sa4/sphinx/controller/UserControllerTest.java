@@ -66,11 +66,10 @@ public class UserControllerTest {
                 .andExpect(status().is(400));
     }
 
-	//@Disabled("Not implemented")
     @Test
     public void shouldSuccessfullyCreateUserOnValidPost() throws Exception {
         this.mockmvc.perform(post("/user/test").content(
-                "{\"email\": \"test@usi.ch\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
+                "{\"email\": \"test@smarthut.xyz\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test\"}"
         )
                 .contentType("application/json"))
                 .andDo(print())
