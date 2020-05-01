@@ -53,8 +53,8 @@ public class GuestController {
 
 
             List<User> guest = userService.getGuestsOf(username);
-            SerialisableUser[] users = new SerialisableUser[guest.size()];
-            users = guest.toArray(users);
+            SerialisableUser[] users;
+            users = guest.toArray(SerialisableUser[]::new);
 
             return ResponseEntity.ok(users);
         }
@@ -81,8 +81,8 @@ public class GuestController {
                 throw new UnauthorizedException("");
             }
             List<User> guestOf = userService.otherHousesAccess(username);
-            SerialisableUser[] users = new SerialisableUser[guestOf.size()];
-            users = guestOf.toArray(users);
+            SerialisableUser[] users ;
+            users = guestOf.toArray(SerialisableUser[]::new);
             return ResponseEntity.ok(users);
 
 
@@ -115,8 +115,8 @@ public class GuestController {
             if (guest.isPresent()) {
 
                 Optional<List<Integer>> devicesIds = userService.getDevices(username);
-                SerialisableDevice[] devices = new SerialisableDevice[devicesIds.get().size()];
-                devices = devicesIds.orElse(null).toArray(devices);
+                SerialisableDevice[] devices ;
+                devices = devicesIds.orElse(null).toArray(SerialisableDevice[]::new);
                 return ResponseEntity.ok(devices);
             }
         }
@@ -150,8 +150,8 @@ public class GuestController {
 //            if (guest.isPresent()) {
 //
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
-//                SerialisableScene[] scenes = new SerialisableScene[scenesIds.get().size()];
-//                scenes = scenesIds.orElse(null).toArray(scenes);
+//                SerialisableScene[] scenes ;
+//                scenes = scenesIds.orElse(null).toArray(Serialisablescene:: new);
 //                return ResponseEntity.ok(scenes);
 //            }
 //        }
