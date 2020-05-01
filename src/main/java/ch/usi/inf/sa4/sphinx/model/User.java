@@ -51,6 +51,7 @@ public class User extends StorableE{
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
+
     private  List<User> hosts;
 
     private boolean areCamsVisible = false;
@@ -299,21 +300,26 @@ public class User extends StorableE{
      *
      * @return returns a list of the houses the user has access to as guest
      */
+
     public List<User> getHosts() {
         return hosts;
+
     }
 
     /** Add user to the list of user hub's our user has access to as guest.
      * @param user the user to add
      **/
     public void addGuestOf(final User user){
+
         hosts.add(user);
+
     }
 
     /** Removes a house access from deleting a user's name from our list.
      * @param user the user to remove
      **/
     public void removeGuestOf(final User user){
+
         hosts.remove(user);
     }
 
@@ -330,6 +336,7 @@ public class User extends StorableE{
      **/
     public void camerasAccessibilitySwitch(){
         areCamsVisible = !areCamsVisible;
+
     }
 
 

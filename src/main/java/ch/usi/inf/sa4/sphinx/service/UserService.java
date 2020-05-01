@@ -359,6 +359,7 @@ public class UserService {
         return hostUsername;
 
 
+
     }
 
 
@@ -373,6 +374,7 @@ public class UserService {
 
     /**
      * Determines if user is a guest of second user.
+<<<<<<< HEAD
      * @param host the user's' username
      * @param guest  the second user's username
      * @return true if the user is considered the second user's guest
@@ -381,7 +383,7 @@ public class UserService {
         Optional<User> user = userStorage.findByUsername(host);
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if(!user.isPresent()|| !guestUsername.isPresent()){
-            return false;
+
         }
         return user.get().getHosts().contains(guestUsername.get());
     }
@@ -391,7 +393,9 @@ public class UserService {
      * @param username the name of the user
      * @return all the guests of a given user
      */
+
     public List<User> getGuestsOf(@NonNull final String username) {
+
         return userStorage.findAll().stream().filter(user -> {
             return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
