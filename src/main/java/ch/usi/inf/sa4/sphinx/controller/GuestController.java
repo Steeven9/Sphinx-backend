@@ -39,176 +39,166 @@ public class GuestController {
     /**
      * Get all the guests of a certain user.
      *
-     * @param username      the username of the user.
-     * @param session_token the session token used for validation
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of guests  or
      * 401 the user or the session-token aren't valid
      */
-    @GetMapping("/")
+    @GetMapping(value = {"", "/"})
 
-    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String session_token, @RequestHeader("username") String username) {
+    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("username") String username) {
 
 
-        Optional<User> user = userStorage.findByUsername(username);
+        Optional<User> user = userService.get(username);
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, "session_token")) {
+            if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
 
 
-            List<User> guest = userService.returnGuests(username);
+            List<User> guest = userService.returnOwnGuests(username);
             SerialisableUser[] users = new SerialisableUser[guest.size()];
-            for (int i = 0; i < users.length; i++) {
-                users[i] = serialiser.serialiseUser(guest.get(i));
-            }
+            users = guest.toArray(users);
+
             return ResponseEntity.ok(users);
         }
 
-        throw new ServerErrorException("");
+        throw new UnauthorizedException("");
     }
 
 
     /**
-     * Get the list of houses the is allowed to access as guest.
+     * Get the list of houses the  user is allowed to access as guest.
      *
-     * @param username      the username of the user.
-     * @param session_token the session token used for validation
-     * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
+     * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
      */
     @GetMapping("/houses/")
-    public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String session_token,
+    public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("username") String username) {
 
-        Optional<User> user = userStorage.findByUsername(username);
+        Optional<User> user = userService.get(username);
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, "session_token")) {
+            if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
-            List<User> guestOf = userService.getGuests(username);
+            List<User> guestOf = userService.otherHousesAccess(username);
             SerialisableUser[] users = new SerialisableUser[guestOf.size()];
-            for (int i = 0; i < users.length; i++) {
-                users[i] = serialiser.serialiseUser(guestOf.get(i));
-            }
+            users = guestOf.toArray(users);
             return ResponseEntity.ok(users);
 
 
         }
-        throw new ServerErrorException("");
+        throw new UnauthorizedException("");
     }
 
 
     /**
-     * Get the list of houses the is allowed to access as guest.
-     *
-     * @param username      the username of the user.
-     * @param session_token the session token used for validation
+     * Get the list of devices the guests can access.
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
-    @GetMapping("/guests/{username}/devices/{guest_username}")
-    public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String session_token,
-                                                                     @RequestHeader("username") String username) {
+    @GetMapping("/{username}/devices/{guest_username}")
+    public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String sessionToken,
+                                                                    @PathVariable @RequestHeader("username") String username) {
 
 
-        Optional<User> user = userStorage.findByUsername(username);
+        Optional<User> user = userService.get(username);
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, session_token)) {
+            if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
             Optional<User> guest = userService.get(guest_username);
-            if (guest == null) {
-                return ResponseEntity.notFound().build();
-            }
+            if (guest.isPresent()) {
 
-
-            Optional<List<Integer>> devicesIds = userService.getDevices(username);
-            SerialisableDevice[] devices = new SerialisableDevice[devicesIds.get().size()];
-            for (int i = 0; i < devices.length; i++) {
-                //devices[i] = serialiser.serialiseDevice(devicesIds.get(i));
+                Optional<List<Integer>> devicesIds = userService.getDevices(username);
+                SerialisableDevice[] devices = new SerialisableDevice[devicesIds.get().size()];
+                devices = devicesIds.orElse(null).toArray(devices);
+                return ResponseEntity.ok(devices);
             }
-            return ResponseEntity.ok(devices);
         }
-        return null;
+        throw new UnauthorizedException("");
     }
 
 
-// TODO: Implement scenes route
 
 
+//
 //    /**
-//     *  Get all scenes a guest is authorized to access.
-//     * @param username the username of the user.
-//     * @param  session_token the session token used for validation
+//     * Get the list of scenes the guests can access.
+//     * @param username       the username of the user.
+//     * @param sessionToken   the session token used for validation
 //     * @param guest_username a String representing the username of the guest
 //     * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
-//     *        400 if some data was missing
+//     * 401 if unauthorized
 //     */
 //    @GetMapping("/{username}/scenes/{guest_username}")
-//    public ResponseEntity<SerialisableUser> getAuthorizedScenes( @NotNull @RequestBody String guest_username,
-//                                                                  @RequestHeader("session-token") String session_token,
-//                                                                  @RequestHeader("username") String username) {
+//    public ResponseEntity<SerialisableScene[]> getAuthorizedScenes(@NotNull @PathVariable String guest_username,
+//                                                                @RequestHeader("session-token") String sessionToken,
+//                                                               @PathVariable @RequestHeader("username") String username) {
 //
-//        User user = userService.get(username);
+//        Optional<User> user = userService.get(username);
 //
-//        if (user == null) {
-//            return ResponseEntity.notFound().build();
+//        if (user.isPresent()) {
+//            if (!userService.validSession(username, sessionToken)) {
+//                throw new UnauthorizedException("");
+//            }
+//            Optional<User> guest = userService.get(guest_username);
+//            if (guest.isPresent()) {
+//
+//                Optional<List<Integer>> scenesIds = userService.getScenes(username);
+//                SerialisableScene[] scenes = new SerialisableScene[scenesIds.get().size()];
+//                scenes = scenesIds.orElse(null).toArray(scenes);
+//                return ResponseEntity.ok(scenes);
+//            }
 //        }
-//        if (session_token == null || !session_token.equals(user.getSessionToken())) {
-//            return ResponseEntity.status(401).build();
-//        }
-//        return null;
+//        throw new UnauthorizedException("");
 //    }
 
 
-    //TODO: should add scenes
+
+
+
 
     /**
-     * Creates a new user.
-     *
+     * Adds the name of the user who wants the guest, to the list of the guest.
      * @param username       the username of the user.
-     * @param session_token  the session token used for validation
-     * @param guest_username a String representing the username of the guest
+     * @param sessionToken  the session token used for validation
+     * @param guest a String representing the username who wants to add the former as guest guest
      * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
-     * 400 if some data was missing
+     * 401 if unauthorized
      */
-    @PostMapping("/")
-    public ResponseEntity<SerialisableUser> createGuestOf(@NotBlank @RequestBody String guest_username,
-                                                          @RequestHeader("session-token") String session_token,
+    @PostMapping(value = {"", "/"})
+    public ResponseEntity<SerialisableUser> createGuestOf(@NotBlank @RequestBody User guest,
+                                                          @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("username") String username) {
 
         Optional<User> user = userService.get(username);
-        Optional<User> guestOf = userService.get(guest_username);
+        String guest_username = guest.getUsername();
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, session_token)) {
+            if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
 
-
-            Optional<User> addedTo = userService.addGuest(username, guest_username);
-
-
-            if (addedTo == null) {
-                return ResponseEntity.status(500).build();
-            } else {
-
-                return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+            userService.addGuest(username, guest_username);
+            return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
 
             }
-
-        }
-        throw new ServerErrorException("");
+        throw new UnauthorizedException("");
     }
 
 
     /**
      * Deletes a guest.
-     *
      * @param username       the user who want to delete a guest
      * @param guest_username the guest to delete
-     * @param session_token  the session token used to authenticate
+     * @param sessionToken  the session token used to authenticate
      * @return a ResponseEntity containing one of the following status codes:
      * 404 if no user with the given username exists
      * 401 if the session token does not match
@@ -216,12 +206,12 @@ public class GuestController {
      */
     @DeleteMapping("/{guest_username}")
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String guest_username,
-                                                          @RequestHeader("session-token") String session_token, @RequestHeader("username") String username) {
+                                                          @RequestHeader("session-token") String sessionToken, @RequestHeader("username") String username) {
         Optional<User> user = userService.get(username);
-        Optional<User> guestOf = userService.get(guest_username);
+
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, session_token)) {
+            if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
 
@@ -230,13 +220,13 @@ public class GuestController {
 
                 return ResponseEntity.status(204).build();
             } else {
-                return ResponseEntity.status(500).build();
+                throw new ServerErrorException("");
             }
 
 
         }
 
-        return null;
+        throw new UnauthorizedException("");
     }
 
 }
