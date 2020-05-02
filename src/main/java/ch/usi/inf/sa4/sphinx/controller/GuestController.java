@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -42,16 +43,12 @@ public class GuestController {
      */
     @GetMapping(value = {"", "/"})
 
-    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("username") String username) {
+    public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-            }
-
+        if (user.isPresent() && userService.validSession(username, sessionToken)) {
 
             List<User> guest = userService.getGuestsOf(username);
             SerialisableUser[] users;
@@ -73,14 +70,12 @@ public class GuestController {
      */
     @GetMapping(value = {"/houses/", "/houses"})
     public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("username") String username) {
+                                                        @RequestHeader("user") String username) {
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-            }
+        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+
             List<User> guestOf = userService.otherHousesAccess(username);
             SerialisableUser[] users ;
             users = guestOf.toArray(SerialisableUser[]::new);
@@ -100,28 +95,32 @@ public class GuestController {
      */
     @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String sessionToken,
-                                                                    @PathVariable @RequestHeader("username") String username) {
+                                                                    @PathVariable @RequestHeader("user") String username) {
 
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-            }
-            Optional<User> guest = userService.get(guest_username);
-            if (guest.isPresent()) {
+        if (user.isPresent() && userService.validSession(username, sessionToken)) {
 
-                Optional<List<Integer>> devicesIds = userService.getDevices(username);
-                SerialisableDevice[] devices ;
-                devices = devicesIds.orElse(null).toArray(SerialisableDevice[]::new);
-                return ResponseEntity.ok(devices);
+            Optional<User> guest = userService.get(guest_username);
+            Optional<List<Integer>> devicesIds = userService.getDevices(username);
+            if (guest.isPresent() && devicesIds.isPresent()) {
+
+                SerialisableDevice[] devicesArray;
+                 //still have to filter for access authorized devices
+                List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+                List<SerialisableDevice> serializedDevices = devices.stream()
+                        .map(device -> serialiser.serialiseDevice(device, user.get()))
+                        .collect(Collectors.toList());
+
+                devicesArray  = devices.toArray(SerialisableDevice[]::new);
+                return ResponseEntity.ok(devicesArray);
+
             }
+
         }
         throw new UnauthorizedException("");
     }
-
-
 
 
 //
@@ -136,14 +135,12 @@ public class GuestController {
 //    @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"} )
 //    public ResponseEntity<SerialisableScene[]> getAuthorizedScenes(@NotNull @PathVariable String guest_username,
 //                                                                @RequestHeader("session-token") String sessionToken,
-//                                                               @PathVariable @RequestHeader("username") String username) {
+//                                                               @PathVariable @RequestHeader("user") String username) {
 //
 //        Optional<User> user = userService.get(username);
 //
-//        if (user.isPresent()) {
-//            if (!userService.validSession(username, sessionToken)) {
-//                throw new UnauthorizedException("");
-//            }
+//        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+//
 //            Optional<User> guest = userService.get(guest_username);
 //            if (guest.isPresent()) {
 //
@@ -170,17 +167,15 @@ public class GuestController {
      * 401 if unauthorized
      */
     @PostMapping(value = {"", "/"})
-    public ResponseEntity<SerialisableUser> createGuestOf(@NotBlank @RequestBody SerialisableUser guest,
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody SerialisableUser guest,
                                                           @RequestHeader("session-token") String sessionToken,
-                                                          @RequestHeader("username") String username) {
-
+                                                          @RequestHeader("user") String username) {
+        Optional<User> guestUsername = userService.get(guest.username);
         Optional<User> user = userService.get(username);
         String guest_username = guest.username;
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-            }
+        if (user.isPresent() && guestUsername.isPresent() &&  userService.validSession(username, sessionToken)) {
+
 
             userService.addGuest(username, guest_username);
             return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
@@ -202,14 +197,12 @@ public class GuestController {
      */
     @DeleteMapping(value = {"/{guest_username}","/{guest_username}/"})
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String guest_username,
-                                                          @RequestHeader("session-token") String sessionToken, @RequestHeader("username") String username) {
+                                                          @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
         Optional<User> user = userService.get(username);
 
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-            }
+        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+
 
 
             if (userService.removeGuest(username, guest_username)) {
