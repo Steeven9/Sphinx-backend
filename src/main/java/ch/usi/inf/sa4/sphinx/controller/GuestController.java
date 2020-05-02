@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
 
@@ -87,6 +88,7 @@ public class GuestController {
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
+
                 throw new UnauthorizedException("");
 
             }
@@ -103,12 +105,14 @@ public class GuestController {
         }
 
 
+
         /**
          * Get the list of devices the guests can access.
          * @param username     the username of the user.
          * @param sessionToken the session token used for validation
          * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
          */
+
 
         @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
         public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
@@ -118,6 +122,7 @@ public class GuestController {
 
 
             Optional<User> user = userService.get(username);
+
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -146,6 +151,7 @@ public class GuestController {
             return ResponseEntity.ok(devicesArray);
 
         }
+
 
 
 //
@@ -205,15 +211,18 @@ public class GuestController {
 
             if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
+
                 throw new UnauthorizedException("");
 
 
             }
+
             userService.addGuest(username, guest_username);
             return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
 
 
         }
+
 
 
         /**
@@ -238,6 +247,7 @@ public class GuestController {
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
                 throw new UnauthorizedException("");
+
 
 
             }

@@ -1,14 +1,10 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-=======
-import org.junit.jupiter.api.Test;
->>>>>>> #124: Gitlab suggestions applied (#3)
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,16 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-=======
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
->>>>>>> #124: Gitlab suggestions applied (#3)
-=======
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
->>>>>>> #124: Added some tests for guest routes (not implemented)
+
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,8 +25,8 @@ import org.junit.jupiter.api.Disabled;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-<<<<<<< HEAD
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 public class GuestControllerTest {
 
     @Autowired
@@ -51,7 +41,7 @@ public class GuestControllerTest {
         dummyDataAdder.addDummyData();
     }
 
-
+    @Disabled("Not Implemented")
     @Test
     public void shouldGet400FromNoToken() throws Exception {
         this.mockmvc.perform(get("/guests/").header("username", "user2"))
@@ -85,32 +75,37 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
+//        this.mockmvc.perform(post("/guests/")
+//                .header("username", "user2")
+//                .header("session-token", "banana"))
+//                .andDo(print())
+//                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest1"))
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/user2/devices/guest3")
         .header("session-token", "banana")
-        .header("user", "user2"))
+        .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
     }
@@ -143,7 +138,7 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest2"))
-                .header("user", "fakeUser")
+                .header("usere", "fakeUser")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
@@ -251,163 +246,4 @@ public class GuestControllerTest {
 
 }
 
-=======
-=======
->>>>>>> #124: Gitlab suggestions applied (#3)
-public class GuestControllerTest {
 
-    @Autowired
-    private MockMvc mockmvc;
-
-
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldGet400FromNoToken() throws Exception {
-        this.mockmvc.perform(get("/guests/").header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(400));
-
-        this.mockmvc.perform(get("/guests/houses").header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(400));
-
-        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username}").header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(400));
-
-        this.mockmvc.perform(post("/guests/").header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(400));
-
-        this.mockmvc.perform(delete(("/guests/{guest_username}")).header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(400));
-
-//        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username").header("user", "user2"))
-//                .andDo(print())
-//                .andExpect(status().is(400));
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldGet401FromInvalidToken() throws Exception {
-
-        this.mockmvc.perform(get("/guests/")
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/houses")
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username}")
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(post("/guests/")
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(delete(("/guests/{guest_username}"))
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-//        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username")
-//        .header("session-token", "banana")
-//        .header("user", "user2"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldGet401FromWrongUser() throws Exception {
-
-        this.mockmvc.perform(get("/guests/")
-                .header("user", "fakeUser"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/houses")
-                .header("user", "fakeUser"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username}")
-                .header("user", "fakeUser"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(post("/guests/")
-                .header("user", "fakeUser"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(delete(("/guests/{guest_username}"))
-                .header("user", "fakeUser"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-//        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username")
-//        .header("user", "fakeUser"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
-    }
-
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldSuccessfullyReturnGuests() throws Exception {
-        this.mockmvc.perform(get("/guests").header("user", "user2").header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldSuccessfullyReturnHousesAccess() throws Exception {
-        this.mockmvc.perform(get("/guests/houses").header("user", "user2").header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldSuccessfullyDeleteGuest() throws Exception {
-        this.mockmvc.perform(delete("/guests/{guest_username}").header("user", "user2").header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldSuccessfullyCreateGuest() throws Exception {
-        this.mockmvc.perform(post("/guests/").header("user", "user2").header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-    @Disabled("Not Implemented")
-    @Test
-    public void shouldSuccessfullyGetGuestDevices() throws Exception {
-        this.mockmvc.perform(get("/guests/{username}/devices/{guest_username}").header("user", "user2").header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-
-//    @Disabled("Not Implemented")
-//    @Test
-//    public void shouldSuccessfullyGetGuestScenes() throws Exception {
-//        this.mockmvc.perform(get("/guests/{username}/scenes/{guest_username}").header("user", "user2").header("session-token", "banana"))
-//                .andDo(print())
-//                .andExpect(status().isNotFound());
-//    }
-
-
-
-}
->>>>>>> #124: Gitlab suggestions applied (#2)
