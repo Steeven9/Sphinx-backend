@@ -3,12 +3,12 @@ package ch.usi.inf.sa4.sphinx.view;
 import org.springframework.http.HttpStatus;
 
 public class SerialisableException {
-    private HttpStatus error;
+    private HttpStatus status;
     private String message;
     private int code;
 
     public SerialisableException(HttpStatus error, String message) {
-        this.error = error;
+        this.status = error;
         this.message = message;
         if(error != null) this.code = error.value();
     }
@@ -16,8 +16,8 @@ public class SerialisableException {
 
 
     //Getters must be left otherwise
-    public HttpStatus getError() {
-        return error;
+    public HttpStatus getStatus() {
+        return status;
     }
 
     public String getMessage() {
