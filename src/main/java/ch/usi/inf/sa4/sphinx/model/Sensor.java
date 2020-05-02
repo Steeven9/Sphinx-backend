@@ -44,15 +44,6 @@ public abstract class Sensor extends Device {
         return this.quantity + var - 0.5;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected SerialisableDevice serialise() {
-        SerialisableDevice sd = super.serialise();
-        sd.quantity = this.getQuantity();
-        return sd;
-    }
 
     /**
      * {@inheritDoc}

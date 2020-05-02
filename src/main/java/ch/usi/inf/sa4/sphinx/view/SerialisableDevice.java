@@ -18,10 +18,8 @@ public class SerialisableDevice {
     public String userName;
     public Boolean on;
     public String url;
-    public double quantity;
     public double averageTemp;
-    public double targetTemp;
-    public int stateTemp;
+    public int state;
     public int source;
 
     /**
