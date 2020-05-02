@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
 
@@ -60,6 +61,7 @@ public class GuestController {
 
 
         Optional<User> user = userService.get(username);
+
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -129,12 +131,14 @@ public class GuestController {
                 @PathVariable @RequestHeader("user") String username){
 
 
+
             Optional<User> user = userService.get(username);
             Optional<User> owner = userService.get(host);
             Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+
 
 
                 throw new UnauthorizedException("");
@@ -169,7 +173,6 @@ public class GuestController {
 //
 //        if (user.isPresent() && userService.validSession(username, sessionToken)) {
 //
-
 //            Optional<User> guest = userService.get(guest_username);
 //            if (guest.isPresent()) {
 //
@@ -208,10 +211,14 @@ public class GuestController {
             Optional<User> user = userService.get(username);
 
 
+
             if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
                 throw new UnauthorizedException("");
+
+
+
             }
 
 
@@ -220,6 +227,7 @@ public class GuestController {
 
 
         }
+
 
 
         /**
@@ -234,11 +242,14 @@ public class GuestController {
          */
 
 
+
         @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
         public ResponseEntity<SerialisableUser> deleteGuestOf (@PathVariable("guest_username") String
         guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username){
 
+
             Optional<User> user = userService.get(username);
+
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {

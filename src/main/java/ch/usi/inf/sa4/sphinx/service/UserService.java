@@ -346,6 +346,7 @@ public class UserService {
 
         final Optional<User> user = userStorage.findByUsername(host);
 
+
         final Optional<User> guestUser = userStorage.findByUsername(guest);
 
         if (guestUser.isPresent() && user.isPresent()) {
@@ -353,6 +354,7 @@ public class UserService {
 
             user.get().removeHost(guestUser.get());
             userStorage.save(user.get());
+
 
 
         }
