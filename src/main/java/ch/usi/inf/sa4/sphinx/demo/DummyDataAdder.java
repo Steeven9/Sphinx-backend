@@ -130,8 +130,8 @@ public class DummyDataAdder {
 
 
 
-        } catch (final RuntimeException e) {
 
+        } catch (final RuntimeException e) {
 
             logger.warn("Something is wrong in user2");
         }
