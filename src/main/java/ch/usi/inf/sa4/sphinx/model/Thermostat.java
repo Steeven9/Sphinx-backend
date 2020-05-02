@@ -137,7 +137,7 @@ public class Thermostat extends TempSensor {
     @Override
     protected SerialisableDevice serialise() {
         SerialisableDevice sd = super.serialise();
-        sd.slider = this.targetTemp / 100;
+        sd.slider = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();
         sd.state = this.fromStateToInt(this.getState());
         sd.source = this.source == Sources.SELF ? 0 : 1;
@@ -186,7 +186,7 @@ public class Thermostat extends TempSensor {
     /**
      * The four possible states of thermostat.
      */
-    private enum States {
+    public enum States {
         OFF, IDLE, HEATING, COOLING
     }
 
