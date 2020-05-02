@@ -336,15 +336,8 @@ public class DeviceController {
         deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
         deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
 
-        List<Coupling> c = couplingService.getCouplingsInStorage();
 
-        for (Coupling coupling : c) {
-            if (coupling.getDeviceId().equals(id1) || coupling.getDeviceId().equals(id2)) {
-                coupling.getEffectIds().clear();
-            }
-        }
-
-        //needs to update couplingStorage
+        couplingService.removeByDevicesIds(id1, id2);
 
         return ResponseEntity.ok().build();
     }
