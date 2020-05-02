@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import javax.persistence.Entity;
+import java.util.Random;
 
 
 /**
@@ -40,7 +41,8 @@ public class MotionSensor extends Device {
      * @return true if the person is detected, false otherwise
      */
     public boolean isDetected() {
-        return this.detected;
+        Random rnd = new Random();
+        return rnd.nextBoolean();
     }
 
     /**
