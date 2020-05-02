@@ -1,13 +1,10 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-
-
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.TestInstance;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +25,7 @@ import org.junit.jupiter.api.Disabled;
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 public class GuestControllerTest {
@@ -35,10 +33,10 @@ public class GuestControllerTest {
     @Autowired
     private MockMvc mockmvc;
 
-
-
     @Autowired
     private DummyDataAdder dummyDataAdder;
+
+
 
 
     @BeforeAll
@@ -81,13 +79,13 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -95,18 +93,21 @@ public class GuestControllerTest {
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
 
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
 
         this.mockmvc.perform(delete(("/guests/guest1"))
 
+
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
         this.mockmvc.perform(get("/guests/user2/devices/guest3")
@@ -122,10 +123,11 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
 
+
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
 
-                .andDo(print())
+
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
@@ -148,6 +150,7 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest2"))
+
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -167,26 +170,29 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/user2/devices/guest10")
                 .header("user", "user2")
+
+
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
 
         this.mockmvc.perform(delete(("/guests/guest23"))
                 .header("user", "user2r")
+
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
+
 //        this.mockmvc.perform(get("/guests/user2/devices/guest59")
 //        .header("user", "fakeUser")
 //        .header("session-token", "user2SessionToken"))
-
 //                .andDo(print())
 //                .andExpect(status().is(401));
     }
-
 
     @Disabled("401")
     @Test
@@ -259,6 +265,4 @@ public class GuestControllerTest {
 
 
 }
-
-
 
