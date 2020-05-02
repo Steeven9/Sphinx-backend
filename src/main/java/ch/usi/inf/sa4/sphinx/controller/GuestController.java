@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -49,15 +50,13 @@ public class GuestController {
      */
     @GetMapping(value = {"", "/"})
 
-
-
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
 
 
-
         Optional<User> user = userService.get(username);
+
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -95,11 +94,13 @@ public class GuestController {
 
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
 
             throw new UnauthorizedException("Invalid credentials");
+
 
 
         }
@@ -127,12 +128,12 @@ public class GuestController {
      */
 
 
+
     @GetMapping(value = {"/{owner_username}/devices/","/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices( @RequestHeader("session-token") String sessionToken,
 
 
                                                                     @PathVariable("owner_username") String host, @RequestHeader("user") String username) {
-
 
 
 
@@ -146,6 +147,7 @@ public class GuestController {
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+
 
 
             throw new UnauthorizedException("Invalid credentials");
@@ -166,7 +168,9 @@ public class GuestController {
              devicesArray = devices.stream()
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+
         }
+
 
 
         return ResponseEntity.ok(devicesArray);
@@ -225,10 +229,12 @@ public class GuestController {
     @PostMapping(value = {"", "/"})
 
 
+
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guest= userService.get(guestUsername);
+
         Optional<User> user = userService.get(username);
 
 
@@ -267,8 +273,10 @@ public class GuestController {
     @DeleteMapping(value = {"/{guest_username}","/{guest_username}/"})
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String guest_username,
 
+
            @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
         Optional<User> user = userService.get(username);
+
 
 
 

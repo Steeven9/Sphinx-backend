@@ -1,12 +1,10 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,7 +30,9 @@ import org.junit.jupiter.api.Disabled;
 
 
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 
 
 public class GuestControllerTest {
@@ -40,10 +40,11 @@ public class GuestControllerTest {
     @Autowired
     private MockMvc mockmvc;
 
-
-
     @Autowired
     private DummyDataAdder dummyDataAdder;
+
+
+
 
 
     @BeforeAll
@@ -81,22 +82,22 @@ public class GuestControllerTest {
     }
 
 
-
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromInvalidToken() throws Exception {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
 
@@ -105,19 +106,22 @@ public class GuestControllerTest {
 
 
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
 
 
         this.mockmvc.perform(delete(("/guests/guest1"))
 
+
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
+
 
 
 
@@ -127,8 +131,7 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
-
-    }
+}
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromWrongUser() throws Exception {
@@ -137,15 +140,14 @@ public class GuestControllerTest {
 
 
 
+
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
-
 
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
-
 
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
@@ -168,6 +170,7 @@ public class GuestControllerTest {
 
 
 
+
                 .header("user", "fakeUser")
 
                 .header("session-token", "user2SessionToken"))
@@ -181,12 +184,16 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
     }
 
+
     @Disabled()
+
     @Test
     public void shouldGet401FromNoGuest() throws Exception {
 
 
+
         this.mockmvc.perform(get("/guests/user2/devices")
+
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -203,7 +210,6 @@ public class GuestControllerTest {
 //        this.mockmvc.perform(get("/guests/user2/devices/guest59")
 //        .header("user", "fakeUser")
 //        .header("session-token", "user2SessionToken"))
-
 
 //                .andDo(print())
 //                .andExpect(status().is(401));
@@ -271,12 +277,10 @@ public class GuestControllerTest {
 //    @Test
 //    public void shouldSuccessfullyGetGuestScenes() throws Exception {
 
-
 //        this.mockmvc.perform(get("/guests/user2/scenes/{guest_username}").header("user", "user2").header("session-token", "banana"))
 //                .andDo(print())
 //                .andExpect(status().is(200))
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
-
 
 //    }
 
