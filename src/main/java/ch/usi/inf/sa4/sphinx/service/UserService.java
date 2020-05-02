@@ -144,7 +144,7 @@ public class UserService {
                     userStorage.save(u);
                 }
         );
-        return true;
+        return user.isPresent();
     }
 
 
@@ -191,9 +191,9 @@ public class UserService {
      *
      * @param username the username of the desired User
      * @param roomId   the id of the room
-     * @return true if the User with the given Username owns the room with the given Id
+     * @return true if the User with the given Username owns the room with the given Id, else false
      */
-    public boolean ownsRoom(String username, Integer roomId) {
+    public boolean ownsRoom(@NonNull String username, Integer roomId) {
         return userStorage.findByUsername(username)
                 .map(user -> user.getRooms().stream().anyMatch(r -> r.getId().equals(roomId)))
                 .orElse(false);
@@ -315,7 +315,6 @@ public class UserService {
             return false;
         }
     }
-
 
 
 }

@@ -9,4 +9,8 @@ public abstract class HttpException extends RuntimeException {
     }
 
     public abstract HttpStatus getStatus();
+
+    public int getCode(){
+        return getStatus().value();
+    }
 }
