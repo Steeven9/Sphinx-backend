@@ -405,10 +405,10 @@ public class UserService {
             return false;
         }
         final Optional<User> user = userStorage.findByUsername(host);
-        final Optional<User> guestUsername = userStorage.findByUsername(guest);
-        if(guestUsername.isPresent() && user.isPresent()) {
+        final Optional<User> guestUser = userStorage.findByUsername(guest);
+        if(guestUser.isPresent() && user.isPresent()) {
 
-                        user.get().removeGuestOf(guestUsername.get());
+                        user.get().removeGuestOf(guestUser.get());
                         userStorage.save(user.get());
 
         }

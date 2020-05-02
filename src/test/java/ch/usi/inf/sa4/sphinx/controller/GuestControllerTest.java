@@ -30,9 +30,9 @@ public class GuestControllerTest {
     @Autowired
     private MockMvc mockmvc;
 
-
     @Autowired
     private DummyDataAdder dummyDataAdder;
+
 
 
     @BeforeAll
@@ -75,21 +75,23 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
 
+
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
 
+
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -97,7 +99,7 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(delete(("/guests/guest1"))
                 .header("session-token", "banana")
-                .header("user", "user2"))
+                .header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -108,6 +110,7 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
+
     }
     @Disabled("Not Implemented")
     @Test
@@ -115,8 +118,10 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
 
+
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
+
 
                 .andDo(print())
                 .andExpect(status().is(401));
@@ -141,7 +146,9 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest2"))
+
                 .header("user", "fakeUser")
+
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
