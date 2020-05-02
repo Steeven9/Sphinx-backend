@@ -1,42 +1,14 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.User;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SerialisableUserTest {
-    SerialisableUser serialisableUser;
-    User user;
 
-    static Stream<Arguments> argumentsProvider() {
-        return Stream.of(
-                arguments("testUsername", "testEmail", "testFullanme", "testPassword", new Integer[]{3, 6}),
-                arguments("__demonsRise", "007@mail.com", "Pachovski", "@keyPASS", new Integer[]{3, -6, 0}),
-                arguments("", "fake@mail.com", " ", "1234", new Integer[]{333333, 0, 6 + 8})
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("argumentsProvider")
-    @DisplayName("Testing constructor with multiple arguments")
-    void testLongConstructor(String username, String email, String fullname, String password, Integer[] rooms) {
-        serialisableUser = new SerialisableUser(username, email, fullname, password, rooms);
-        assertAll("Should return new Serialized user",
-                () -> assertEquals(username, serialisableUser.username),
-                () -> assertEquals(email, serialisableUser.email),
-                () -> assertEquals(fullname, serialisableUser.fullname),
-                () -> assertEquals(password, serialisableUser.password),
-                () -> assertEquals(rooms, serialisableUser.rooms));
-    }
-
+    /* This test is kind of pointless: it is impossible for a constructor to return null.
+    But it will add coverage to the empty constructor, which is enough, since there is nothing else to test. */
     @Test
     @DisplayName("Testing creation of constructor without parameters")
     void existSerializedUser() {
