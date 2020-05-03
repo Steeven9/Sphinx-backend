@@ -76,7 +76,6 @@ public class UserController {
     @PostMapping("/{username}")
     @ApiOperation(value = "Creates a new User")
     public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
-        User newUser = new User(user.email, user.password, username, user.fullname);
         User findUser = userService.get(username)
                 .orElse(userService.getByMail(user.email).orElse(null));
 
@@ -84,6 +83,7 @@ public class UserController {
             throw new BadRequestException("This user already exists!");
         }
 
+        User newUser = new User(user.email, user.password, username, user.fullname);
 
         try {
             userService.insert(newUser);
