@@ -46,6 +46,7 @@ public class UserService {
      * Do not use directly this constructor
      */
     //Needed public otherwise context creation will fail...
+    @Deprecated
     public UserService() {
     }
 
@@ -274,14 +275,11 @@ public class UserService {
             return false;
         }
 
-        return roomStorage.findById(endRoomId).map(room -> {
-            return deviceStorage.findById(deviceId).map(device -> {
-                device.setRoom(room);
-                deviceStorage.save(device);
-                return true;
-            }).orElse(false);
-
-        }).orElse(false);
+        return roomStorage.findById(endRoomId).map(room -> deviceStorage.findById(deviceId).map(device -> {
+            device.setRoom(room);
+            deviceStorage.save(device);
+            return true;
+        }).orElse(false)).orElse(false);
     }
 
     /**

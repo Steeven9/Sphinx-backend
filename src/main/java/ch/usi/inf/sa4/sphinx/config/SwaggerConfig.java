@@ -34,7 +34,7 @@ public class SwaggerConfig {
 
 
     private ApiInfo metaInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Sphinx API",
                 "Description for Sphinx API", //TODO
                 "1.0",
@@ -44,7 +44,6 @@ public class SwaggerConfig {
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html"
         );
-        return apiInfo;
     }
 }
 

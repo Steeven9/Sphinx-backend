@@ -4,7 +4,6 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public final class DeviceService {
      * @see Device
      */
     public List<Integer> getSwitchedBy(int deviceId){
-        return couplingStorage.findAll().stream().filter(c->{
+        return couplingStorage.findAll().stream().filter(c -> {
                 return c.getEffects().stream()
                         .anyMatch(effect -> effect.getDeviceId() == deviceId);
         }).map(coupling -> coupling.getEvent().getDeviceId()).collect(Collectors.toList());

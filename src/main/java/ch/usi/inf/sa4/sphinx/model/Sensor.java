@@ -1,11 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-
 import java.text.DecimalFormat;
-import javax.persistence.Entity;
 import java.util.Random;
 import javax.persistence.Entity;
 

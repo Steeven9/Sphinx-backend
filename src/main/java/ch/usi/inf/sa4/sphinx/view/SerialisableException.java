@@ -2,9 +2,9 @@ package ch.usi.inf.sa4.sphinx.view;
 
 import org.springframework.http.HttpStatus;
 
-public class SerialisableException {
-    private HttpStatus status;
-    private String message;
+public class SerialisableException extends RuntimeException {
+    private final HttpStatus status;
+    private final String message;
     private int code;
 
     public SerialisableException(HttpStatus error, String message) {

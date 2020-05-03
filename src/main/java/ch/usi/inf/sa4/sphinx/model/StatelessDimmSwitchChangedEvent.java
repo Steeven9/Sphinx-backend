@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-
 import javax.validation.constraints.NotNull;
 
 

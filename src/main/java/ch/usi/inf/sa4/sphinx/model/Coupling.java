@@ -1,14 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import com.google.gson.annotations.Expose;
 import lombok.NonNull;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -95,12 +94,16 @@ public class Coupling extends StorableE {
 
     /**
      * @deprecated
-     * @return The id of the Event associated twith this Coupling
+     * @return The id of the Event associated with this Coupling
      */
+    @Deprecated
     public Integer getEventId() {
         return event.getId();
     }
 
+    /**
+     * Executes all effects of this coupling
+     */
     public void run() {
         for (Effect effect : effects) {
             effect.execute(event.get());
@@ -112,6 +115,7 @@ public class Coupling extends StorableE {
      * @deprecated
      * @return A list of the ids of all the Effects linked to this Coupling
      */
+    @Deprecated(forRemoval = true)
     public List<Integer> getEffectIds() {
         throw new NotImplementedException();
     }

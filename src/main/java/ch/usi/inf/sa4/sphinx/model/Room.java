@@ -1,12 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.persistence.Lob;
 import java.util.*;
 import java.util.stream.Collectors;
 
