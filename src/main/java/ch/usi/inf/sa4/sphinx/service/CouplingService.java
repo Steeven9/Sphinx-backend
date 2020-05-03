@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.Event;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,9 +57,9 @@ public class CouplingService {
                 boolean boolId1 = false;
                 boolean boolId2 = false;
 
-                if(effect.getDeviceId().equals(id1) && !boolId1){
+                if(effect.getDeviceId().equals(id1)){
                     boolId1 = true;
-                }else if(effect.getDeviceId().equals(id2) && !boolId2){
+                } else if(effect.getDeviceId().equals(id2)){
                     boolId2 = true;
                 }
                 if(boolId1 && coupling.getEvent().getDeviceId() == id2){ //if effect.deviceId is id1 then event.deviceId should be id2

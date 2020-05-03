@@ -80,7 +80,7 @@ public class User extends StorableE{
     }
 
 
-    public User(){};
+    public User() {}
 
 
     /**
@@ -202,11 +202,9 @@ public class User extends StorableE{
      * sets the username
      *
      * @param username username
-     * @return true if successful (always?)
      */
-    public boolean setUsername(final String username) {
+    public void setUsername(final String username) {
         this.username = username;
-        return true;
     }
 
     /**

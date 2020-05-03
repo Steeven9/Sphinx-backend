@@ -7,7 +7,6 @@ import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class DummyDataAdder {
     private DeviceService deviceService;
     @Autowired
     private RoomService roomService;
-    private static Logger logger = LoggerFactory.getLogger(DummyDataAdder.class);
+    private static final Logger logger = LoggerFactory.getLogger(DummyDataAdder.class);
 
 
     //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
