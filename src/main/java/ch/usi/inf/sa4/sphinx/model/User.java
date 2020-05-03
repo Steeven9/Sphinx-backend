@@ -205,7 +205,7 @@ public class User extends StorableE{
      * @return true if successful (always?)
      */
     public boolean setUsername(final String username) {
-        this.username =username;
+        this.username = username;
         return true;
     }
 
@@ -255,11 +255,7 @@ public class User extends StorableE{
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
-        for(Room r: rooms){
-            if(r.getId().equals(roomId)){
-                rooms.remove(r);
-            }
-        }
+        rooms.removeIf(r -> r.getId().equals(roomId));
     }
 
 
