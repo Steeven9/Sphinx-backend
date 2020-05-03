@@ -12,16 +12,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 
+/**
+ * Configuration class for Swagger for autodocs
+ */
 @EnableSwagger2
 @Configuration
 public class SwaggerConfig {
 
+    /**
+     * @return The Docket needed by Springfox to build the docs for the API
+     */
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ch.usi.inf.sa4.sphinx.controller"))
-                .paths(regex("/((?!docs).*)|(/docs/.+)"))
+                .paths(regex("/((?!docs).*)|(/docs/.+)"))//all paths beside the ones starting with 'docs'
                 .build()
                 .apiInfo(metaInfo());
     }

@@ -20,7 +20,7 @@ import java.util.UUID;
 
 
 /**
- *
+ * Directly inserts users into the database
  */
 @Component
 @Transactional()

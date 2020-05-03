@@ -10,7 +10,11 @@ import javax.persistence.Lob;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * Represents a Room of a house.
+ * The Room can contain Device(s)
+ * @see Device
+ */
 @Entity
 public class Room extends StorableE{
 	@Expose
@@ -35,6 +39,9 @@ public class Room extends StorableE{
 	private User user;
 
 
+	/**
+	 * Creates a room with default name,background,icon and no devices.
+	 */
 	public Room(){
 		name = "Room";
 		background = "./img/backgrounds/rooms/background-generic-room.svg";
@@ -43,13 +50,18 @@ public class Room extends StorableE{
 	}
 
 
-
-
-
+	/**
+	 * Used to set the onwer of the Room.
+	 * @param user the owner of this Room
+	 */
 	public void setUser(User user) {
 		this.user = user;
 	}
 
+	/**
+	 * Creates a Room given the parameters in a serialised version of it
+	 * @param room a serialised version of a Room
+	 */
 	public Room(SerialisableRoom room) {
 		this();
 		if(room.name != null) this.name = room.name;
@@ -58,6 +70,10 @@ public class Room extends StorableE{
 	}
 
 
+	/**
+	 * Adds a Device to this Room.
+	 * @param device the Device to add
+	 */
 	public void addDevice(Device device){
 		if (device == null){
 			throw new IllegalArgumentException("device can not be null");
@@ -67,55 +83,89 @@ public class Room extends StorableE{
 	}
 
 
-
+	/**
+	 * @return a list of the Device(s) in this Room
+	 * @see Device
+	 */
 	public List<Device> getDevices() {
 		return devices;
 	}
 
 
-
+	/**
+	 * @return the User that owns this Room
+	 * @see User
+	 */
 	public User getUser() {
 		return user;
 	}
 
-	//-------- getter and setter for name ----------------------
+	/**
+	 * @return the name of this Room
+	 */
 	public String getName(){
 		return this.name;
 	}
 
+	/**
+	 * sets a new name.
+	 * @param newName the name to give this Room
+	 */
 	public void setName(String newName){
 		this.name = newName;
 	}
 
-	//-------- getter and setter for background -----------------
+	/**
+	 * @return the background for this Room
+	 */
 	public String getBackground(){
 		return this.background;
 	}
 
+	/**
+	 * Sets a new background.
+	 * @param newBg the ne background for this Room
+	 */
 	public void setBackground(String newBg){
 		this.background = newBg;
 	}
 
-	//--------- getter and setter for icon ----------------------
+	/**
+	 * @return the icon of this Room
+	 */
 	public String getIcon(){
 		return this.icon;
 	}
 
+	/**
+	 * Sets a new icon
+	 * @param newIcon  the new icnon to set
+	 */
 	public void setIcon(String newIcon){
 		this.icon = newIcon;
 	}
 
-	//---------- getter for devices ----------------
+	/**
+	 * @return A list of the ids of the Devices in this Room
+	 */
 	public List<Integer> getDevicesIds(){
 		return devices.stream().map(Device::getId).collect(Collectors.toList());
 	}
 
-	//Notice that calling this method alone WON'T alter the corresponding Room saved in storage,
-	// to remove a device call roomService.removeDevice(...)
+	/**
+	 * Removes a Device from this Room.
+	 * Notice that calling this method alone WON'T alter the corresponding Room saved in storage,
+	 * to remove a device call roomService.removeDevice(...)
+	 * @param deviceId the id of the Device to remove from this Room
+	 * @see Device
+	 */
 	public void removeDevice(Integer deviceId){
 		devices.remove(deviceId);
 	}
 
+	/**
+	 * @return a serialised version of this Room
+	 */
 	public SerialisableRoom serialise(){
 		SerialisableRoom sd = new SerialisableRoom();
 		sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
@@ -130,3 +180,4 @@ public class Room extends StorableE{
 
 
 }
+

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
+/**
+ * Room repository.
+ */
 @Repository
 public interface RoomStorage extends JpaRepository<Room, Integer> {
 

@@ -60,9 +60,9 @@ public abstract class Device extends StorableE {
 
 
     /**
-     * @return a copy of this Device
+     * @return a serialised copy of this Device
+     * @see SerialisableDevice
      */
-
     protected SerialisableDevice serialise() {
         SerialisableDevice serialisableDevice = new SerialisableDevice();
         serialisableDevice.on = this.on;
@@ -75,39 +75,60 @@ public abstract class Device extends StorableE {
     }
 
 
-
-
-
-
+    /**
+     * @return The Room that owns this device
+     * @see Room
+     */
     public Room getRoom() {
         return room;
     }
 
+    /**
+     * @return the DeviceType of this device
+     * @see DeviceType
+     */
     protected abstract DeviceType getDeviceType();
 
 
-
+    /**
+     * @param icon the icon to set
+     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
+    /**
+     * @param name the name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
 
+    /**
+     * @return current icon
+     */
     public String getIcon() {
         return icon;
     }
 
+    /**
+     * @return current name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return true if the Device is on else False
+     */
     public boolean isOn() {
         return on;
     }
 
+    /**
+     * @param on true to turn on the Device false to turn it off
+     */
     public void setOn(boolean on) {
         this.on = on;
     }
@@ -129,11 +150,19 @@ public abstract class Device extends StorableE {
     }
 
 
+    /**
+     * Unlinks a Coupling from this Device.
+     * @param observer the Coupling to remove
+     */
     public void removeObserver(Coupling observer) {
         couplings.remove(observer);
     }
 
 
+    /**
+     * Triggers all Couplings linked to this Device
+     * @see Coupling
+     */
     //TODO fix unchecked
     protected void triggerEffects() {
         for (Coupling coupling : couplings) {
@@ -141,10 +170,17 @@ public abstract class Device extends StorableE {
         }
     }
 
+    /**
+     * @return All Coupling linked to this Device
+     */
     public List<Coupling> getCouplings() {
         return couplings;
     }
 
+    /**
+     * set the Room that owns this Device.
+     * @param room the Room
+     */
     public void setRoom(Room room) {
         this.room = room;
     }

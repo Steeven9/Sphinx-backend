@@ -28,9 +28,10 @@ public class AuthController {
      *
      * @param username     the username of the user to authenticate
      * @param sessionToken the session token to validate
-     * @return A ResponseEntity containing status code 200 if the username and session token match or
-     * status 404 if no user with the given username exists
-     * status 401 id the username and session token do not match
+     * @return A ResponseEntity containing status code 200 on success if the username and session token match or
+     * status 401  if no user with the given username exists
+     * status 200 id the username and session token do not match
+     * @see User
      */
     @PostMapping("/validate")
     @ApiOperation(value = "Validates a given session token")
@@ -60,11 +61,13 @@ public class AuthController {
      *
      * @param username the username or email of the user to log in
      * @param password the password of the user to log in
+     * @param errors   validation errors
      * @return A ResponseEntity containing status code 200 and the new session token as a body if successful or
      * status 400 if no username or email is provided
-     * status 404 if provided username or email do not correspond to any user
      * status 403 if the user is not verified yet
+     * status 401 if provided username or email do not match  any user
      * status 401 if the password was incorrect
+     * @see User
      */
     @PostMapping("/login/{username}")
     public ResponseEntity<String> login(@NotBlank @PathVariable String username, @NotBlank @RequestBody String password, Errors errors) {
@@ -106,7 +109,8 @@ public class AuthController {
      * 404 if no user with the given username exists
      * 400 if the user with the given username is already verified
      * 401 if the given verificationToken does not match the one of the user with the given username
-     * 200 if otherwise
+     * 200 if otherwise hence success
+     * @see User
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
@@ -133,6 +137,7 @@ public class AuthController {
      * @param email the email address of the User whose password needs to be reset
      * @return A ResponseEntity containing status code 204 if operation completed successfully or
      * 404 id the provided email address does not exist.
+     * @see User
      */
     @PostMapping("/reset/{email}")
     public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
@@ -156,9 +161,11 @@ public class AuthController {
      * @param email       the email of the User whose password should be changed
      * @param resetCode   the resetCode of the given user
      * @param newPassword the new password to change to
+     * @param errors      validation errors
      * @return A responseEntity containing status code 204 if the operation completed successfully or
      * 404 if the provided email address does not exist
      * 403 if the provided reset code does not match the true code.
+     * @see User
      */
     @PostMapping("/reset/{email}/{resetCode}")
     public ResponseEntity<Boolean> changePassword(@NotBlank @PathVariable String email, @NotBlank @PathVariable String resetCode,
@@ -189,7 +196,8 @@ public class AuthController {
      *
      * @param email the email address of the User
      * @return A ResponseEntity containing status code 204 if operation completed successfully or
-     * 404 id the provided email address does not exist.
+     * 404 id the provided email address does not exist
+     * @see User
      */
     @PostMapping("/resend/{email}")
     public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {

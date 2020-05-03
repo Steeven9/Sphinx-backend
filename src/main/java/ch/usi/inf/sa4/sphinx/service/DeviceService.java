@@ -46,6 +46,13 @@ public final class DeviceService {
     }
 
 
+    /**
+     * Finds a list of devices that switch the Device with the given id.
+     * By switching it is meant that they can have any generic effect on it.
+     * @param deviceId the id of the device
+     * @return the list of ids of Device(s) that switch it
+     * @see Device
+     */
     public List<Integer> getSwitchedBy(int deviceId){
         return couplingStorage.findAll().stream().filter(c->{
                 return c.getEffects().stream()
@@ -54,9 +61,16 @@ public final class DeviceService {
     }
 
 
-    public List<Integer> getSwitches(int deeviceId){
+    /**
+     * Finds a list of Device(s) that the Device with the given Id switches.
+     * By switching it is meant that they can have any generic effect on it.
+     * @param deviceId the id of the device
+     * @return the list of ids of Device(s) that it switches
+     * @see Device
+     */
+    public List<Integer> getSwitches(int deviceId){
         return couplingStorage.findAll().stream()
-                .filter(coupling -> coupling.getEvent().getDeviceId() == deeviceId)
+                .filter(coupling -> coupling.getEvent().getDeviceId() == deviceId)
                 .flatMap(coupling -> coupling.getEffects().stream().map(Effect::getDeviceId))
                 .collect(Collectors.toList());
     }
@@ -150,6 +164,11 @@ public final class DeviceService {
         return true;
     }
 
+    /**
+     * Removes the Device with the given Id
+     * @param deviceId the id of the Device to remove
+     * @see Device
+     */
     public void remove(Integer deviceId){
         deviceStorage.deleteById(deviceId);
     }

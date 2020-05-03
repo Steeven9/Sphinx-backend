@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
+ * Room service.
+ * It has methods to interact with Room entities.
  */
 @Service
 public class RoomService {
