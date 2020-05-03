@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 
 /**
- *
- */
-/*
- * Service layer of the application, the various Storage follows the CRUD principle
+ * User service.
+ * It has methods to interact with User entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see User
  */
 @Service
 public class UserService {

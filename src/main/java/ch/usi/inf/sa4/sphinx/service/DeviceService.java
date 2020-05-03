@@ -12,6 +12,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+/**
+ * Device service.
+ * It has methods to interact with Device entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see Device
+ */
 @Service
 public final class DeviceService {
 

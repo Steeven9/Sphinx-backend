@@ -16,7 +16,7 @@ public interface CouplingStorage extends JpaRepository<Coupling, Integer> {
      * Lists all Couplings belonging to a Device with the given ID
      * @param deviceId the deviceId
      * @return the matching Couplings
-     * @see Device
+     * @see ch.usi.inf.sa4.sphinx.model.Device
      */
     List<Coupling> getCouplingByDeviceId(Integer deviceId);
 }

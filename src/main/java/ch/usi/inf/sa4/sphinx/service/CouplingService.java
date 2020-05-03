@@ -13,7 +13,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
+ * Coupling service..
+ * It has methods to interact with Coupling entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see Coupling
  */
 @Service
 public class CouplingService {
