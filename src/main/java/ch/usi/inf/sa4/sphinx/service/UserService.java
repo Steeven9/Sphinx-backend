@@ -86,6 +86,7 @@ public class UserService {
      */
     public boolean insert(final User user) {
         if (user.getId() != null) return false;
+        user.createResetCode();
 
         userStorage.save(user);
         return true;
