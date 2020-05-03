@@ -3,9 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,6 +26,8 @@ import java.util.stream.Collectors;
 public class DeviceController {
 
 
+    @Autowired
+    CouplingService couplingService;
     @Autowired
     UserService userService;
     @Autowired
@@ -303,5 +303,42 @@ public class DeviceController {
         } else {
             return ResponseEntity.status(500).build();
         }
+    }
+    /**
+     * Deletes a coupling between two devices.
+     *
+     * @param sessionToken the session token of the user to authenticate as
+     * @param username     the username of the user to authenticate as
+     * @param device1_id   id of the first device's couple to delete
+     * @param device2_id   id of the second device's couple to delete
+     * @return a ResponseEntity with 200 if deletion is successful or
+     * - 404 if not found or
+     * - 401 if not authorized or
+     * - 500 in case of a server error
+     */
+    @DeleteMapping("/couple/{device1_id}/{device2_id}")
+    public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") String sessionToken,
+                                                  @RequestHeader("user") String username,
+                                                  @PathVariable String device1_id,
+                                                  @PathVariable String device2_id){
+
+        if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Integer id1 = Integer.parseInt(device1_id);
+        Integer id2 = Integer.parseInt(device2_id);
+
+        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
+        deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
+
+
+        couplingService.removeByDevicesIds(id1, id2);
+
+        return ResponseEntity.ok().build();
     }
 }

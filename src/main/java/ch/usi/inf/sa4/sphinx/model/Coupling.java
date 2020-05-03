@@ -51,9 +51,6 @@ public class Coupling extends StorableE {
     }
 
 
-
-
-
     public Event getEvent() {
         return event;
     }
