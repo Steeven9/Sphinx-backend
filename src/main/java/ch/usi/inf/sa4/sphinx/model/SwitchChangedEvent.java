@@ -30,7 +30,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ((Switch) this.deviceService.get(deviceId).get()).isOn();
+        return ((Switch) this.deviceService.get(getDeviceId()).get()).isOn();
     }
 
 }

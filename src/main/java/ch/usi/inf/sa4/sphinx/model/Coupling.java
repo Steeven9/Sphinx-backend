@@ -22,13 +22,13 @@ public class Coupling extends StorableE {
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private final Event event;
+    private Event event;
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private final List<Effect> effects;
+    private List<Effect> effects;
 
 
     private Integer deviceId;

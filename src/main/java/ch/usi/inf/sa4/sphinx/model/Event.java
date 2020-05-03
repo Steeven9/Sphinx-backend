@@ -14,7 +14,7 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Event<T> extends StorableE {
-    protected final int deviceId;
+    private int deviceId;
 
     @Transient
     protected DeviceService deviceService;

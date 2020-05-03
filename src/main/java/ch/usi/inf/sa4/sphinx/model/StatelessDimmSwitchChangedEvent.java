@@ -31,7 +31,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(deviceId).get()).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) deviceService.get(getDeviceId()).get()).isIncrementing() ? increment : -increment;
     }
 
 }

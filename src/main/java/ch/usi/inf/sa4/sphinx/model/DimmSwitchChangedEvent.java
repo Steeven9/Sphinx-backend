@@ -26,7 +26,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(deviceId).get()).getIntensity();
+        return ((DimmableSwitch) deviceService.get(getDeviceId()).get()).getIntensity();
     }
 
 }
