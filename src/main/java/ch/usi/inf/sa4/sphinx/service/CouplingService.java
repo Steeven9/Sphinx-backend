@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ *
+ */
 @Service
 public class CouplingService {
 
@@ -41,22 +44,28 @@ public class CouplingService {
     }
 
 
-
-
-
     /**
      * Add coupling to storage.
      *
      * @param event  the event in the coupling to be added
      * @param effects the effect in the coupling to be added
      * @return the id of the new coupling
-     **/
+     *
+     * @param <T> parametrized type of the Event and Effect*/
     public <T> Integer addCoupling(Event<T> event, List<Effect<T>> effects) {
             Coupling newCoupling = new Coupling(event, effects);
             return couplingStorage.save(newCoupling).getId();
     }
 
 
+    /**
+     * Works like {@link CouplingService#addCoupling(Event, List)} but with a single effect.
+     * @param event  the event in the coupling to be added
+     * @param effect the effect in the coupling to be added
+     * @return the id of the new coupling
+     *
+     * @param <T> parametrized type of the Event and Effect
+     * */
     public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
         return addCoupling(event, List.of(effect));
     }

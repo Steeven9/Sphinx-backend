@@ -36,13 +36,15 @@ public class UserController {
     Serialiser serialiser;
 
     /**
-     * Gets a user.
+     * Gets a User.
      *
      * @param username      the username of the requested user
      * @param session_token the session token used for authentication
      * @return a ResponseEntity with the data of the requested user if successful or
      * status code 404 if no user with the requested username exists
      * status code 401 if the provided session token does not match (or does not exist)
+     * @see SerialisableUser
+     * @see User
      */
     @GetMapping("/{username}")
     @ApiOperation(value = "Gets a User")
@@ -68,6 +70,8 @@ public class UserController {
      * @param user     a SerialisableUser with the data of the user to create
      * @return a ResponseEntity with status code 203 and a body with the newly-created user's data if the process was successful or
      * 400 if some data was missing or the usernames do not match
+     * @see SerialisableUser
+     * @see User
      */
     @PostMapping("/{username}")
     @ApiOperation(value = "Creates a new User")
@@ -108,9 +112,12 @@ public class UserController {
      * @param username      the username of the user to change
      * @param user          a SerialisableUser containing the new data of the user
      * @param session_token the session token used for authentication
+     * @param errors        validation errors
      * @return a ResponseEntity with status 200 and body containing the data of the changed user or
      * 404 if no user with the requested username exists
      * 401 if the provided session token does not match the requested user (or none was provided)
+     * @see SerialisableUser
+     * @see User
      */
     @Transactional
     @PutMapping("/{username}")
@@ -149,6 +156,7 @@ public class UserController {
      * 404 if no user with the given username exists
      * 401 if the session token does not match
      * 204 if the operation was successful
+     * @see User
      */
     @DeleteMapping("/{username}")
     @ApiOperation(value = "Deletes a User")

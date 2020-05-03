@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
+/**
+ * This class catches the Exceptions specified in the methods tagged as 'ExceptionHandler' and turns them
+ * into the appropriate ResponseEntity.
+ */
 @ControllerAdvice
 public class ControllerAdvisor {
     @ExceptionHandler(HttpException.class)

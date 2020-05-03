@@ -23,6 +23,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+/**
+ * Controller for the /devices route
+ */
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/devices")
@@ -41,10 +44,15 @@ public class DeviceController {
 
 
     /**
-     * @param sessionToken session token of the user
+     * Gets the devices owned by a User.
+     * @param sessionToken the session token of the User
+     * @param username     the username of the User
      * @return a ResponseEntity with the ids of the devices owned by the user or
      * - 404 if not found or
      * - 401 if not authorized
+     * @see User
+     * @see SerialisableDevice
+     * @see Device
      */
     @GetMapping(value = {"", "/"})
     @ApiOperation(value = "Gets the devices owned by the User")
@@ -72,10 +80,16 @@ public class DeviceController {
 
 
     /**
+     * Gets a device with a given Id.
      * @param deviceId id of the device
+     * @param sessionToken a session token that should match the User's
+     * @param username the username of the User
      * @return a ResponseEntity with the data of the requested device (200) or
      * - 404 if not found or
      * - 401 if not authorized
+     * @see User
+     * @see Device
+     * @see SerialisableDevice
      */
     @GetMapping("/{deviceId}")
     @ApiOperation(value = "Gets the device with the given id")
@@ -153,15 +167,18 @@ public class DeviceController {
      * modifies the device with the given deviceId to conform to the fields in the given SerialisableDevice,
      * iff the user is authenticating with the correct user/session-token pair
      *
-     * @param deviceId     id  of the device to be modified
-     * @param device       device to modify
-     * @param username     the username of the user to authenticate as
+     * @param deviceId     the id of the device to be modified
+     * @param device       an object representing the device to modify
      * @param sessionToken the session token of the user to authenticate as
+     * @param username     the username of the user to authenticate as
+     * @param errors       validation errors
      * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
      * - 400 if bad request or
      * - 404 if no such device exist or
      * - 401 if authentication fails or
      * - 500 in case of a server error
+     * @see SerialisableDevice
+     * @see Device
      */
     @PutMapping("/{deviceId}")
     @ApiOperation(value = "Modifies a Device")
@@ -223,6 +240,8 @@ public class DeviceController {
      * - 404 if no device with the given DeviceId exists or
      * - 400 if the indicated device is not a SmartPlug or
      * - 500 in case of an internal server error
+     * @see SmartPlug
+     * @see User
      */
     @PutMapping("/reset/{deviceId}")
     @ApiOperation(value = "Resets a smartplug")
@@ -251,9 +270,12 @@ public class DeviceController {
 
     /**
      * @param deviceId id  of the device to be deleted
+     * @param sessionToken a session token that should match the User's
+     * @param username the username of the User
      * @return a ResponseEntity with 204 if deletion is successful or
      * - 404 if not found or
      * - 401 if not authorized
+     * @see User
      */
     @DeleteMapping("/{deviceId}")
     @ApiOperation(value = "Deletes the device with the given id")
@@ -284,6 +306,9 @@ public class DeviceController {
      * - 404 if not found or
      * - 401 if not authorized or
      * - 500 in case of a server error
+     * @see Coupling
+     * @see Device
+     * @see User
      */
     @PostMapping("/couple/{device1_id}/{device2_id}")
     @ApiOperation(value = "Creates a coupling between two devices")

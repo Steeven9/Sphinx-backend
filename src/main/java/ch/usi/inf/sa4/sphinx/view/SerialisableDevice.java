@@ -4,6 +4,10 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Represents the serialised version of a Device entity
+ * @see ch.usi.inf.sa4.sphinx.model.Device
+ */
 public class SerialisableDevice {
     public Integer id;
     public String icon;

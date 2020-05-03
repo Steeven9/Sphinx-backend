@@ -48,6 +48,8 @@ public class RoomController {
      * @param sessionToken session token of the user
      * @param username     the username of the user
      * @return a ResponseEntity with the array of rooms owned by the user
+     * @see Room
+     * @see SerialisableRoom
      */
     @GetMapping(value = {"", "/"})
     @ApiOperation(value = "Returns all the rooms owned by the User")
@@ -71,12 +73,14 @@ public class RoomController {
 
 
     /**
-     * Returns a room with all details about it.
+     * Returns all the info regarding a given Room.
      *
      * @param roomId       the id of the room
      * @param sessionToken session token of the user
      * @param username     the username of the user
-     * @return the room with all details about it
+     * @return a SerialisableRoom containing info of the requested Room
+     * @see SerialisableRoom
+     * @see Room
      */
     @GetMapping("/{roomId}")
     @ApiOperation(value = "Returns a Room given its id")
@@ -91,11 +95,14 @@ public class RoomController {
     }
 
     /**
-     * Given the room, returns all the devices in this room.
+     * Given the id of a Room, returns all the info of the Devices in it.
      *
+     * @param roomId       the id of the Room
      * @param sessionToken session token of the user
      * @param username     the username of the user
      * @return an array of devices in given room
+     * @see Room
+     * @see SerialisableDevice
      */
     @GetMapping("/{roomId}/devices")
     @ApiOperation(value = "Returns all devices in the given Room")
@@ -115,9 +122,9 @@ public class RoomController {
     /**
      * Creates a new room.
      *
-     * @param serialisableRoom a new room
      * @param sessionToken     session token of the user
      * @param username         the username of the user
+     * @param serialisableRoom a new room
      * @param errors           in case error occur
      * @return a new room
      */
@@ -150,9 +157,9 @@ public class RoomController {
      * Changes the fields of given room.
      *
      * @param roomId           the id of the room
-     * @param serialisableRoom a room with new fields
      * @param sessionToken     session token of the user
      * @param username         the username of the user
+     * @param serialisableRoom a room with new fields
      * @param errors           in case error occur
      * @return A modified room
      */
@@ -221,7 +228,6 @@ public class RoomController {
      * @param username     the username of the user
      * @param errors       in case error occur
      * @param roomId       the id of the room
-     * @return null if correct, otherwise a ResponseEntity
      */
     private void check(String sessionToken, String username, Errors errors, Integer roomId) {
         if (errors != null && errors.hasErrors()) {

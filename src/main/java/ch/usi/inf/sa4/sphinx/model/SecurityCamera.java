@@ -7,6 +7,9 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.Entity;
 
+/**
+ * Represents a security camera.
+ */
 @Entity
 public class SecurityCamera extends Device {
     @Expose
