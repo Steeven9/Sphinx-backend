@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Coupling service..
+ * It has methods to interact with Coupling entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see Coupling
+ */
 @Service
 public class CouplingService {
 
@@ -80,13 +86,22 @@ public class CouplingService {
      * @param event  the event in the coupling to be added
      * @param effects the effect in the coupling to be added
      * @return the id of the new coupling
-     **/
+     *
+     * @param <T> parametrized type of the Event and Effect*/
     public <T> Integer addCoupling(Event<T> event, List<Effect<T>> effects) {
             Coupling newCoupling = new Coupling(event, effects);
             return couplingStorage.save(newCoupling).getId();
     }
 
 
+    /**
+     * Works like {@link CouplingService#addCoupling(Event, List)} but with a single effect.
+     * @param event  the event in the coupling to be added
+     * @param effect the effect in the coupling to be added
+     * @return the id of the new coupling
+     *
+     * @param <T> parametrized type of the Event and Effect
+     * */
     public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
         return addCoupling(event, List.of(effect));
     }

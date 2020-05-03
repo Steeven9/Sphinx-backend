@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
@@ -22,7 +23,9 @@ public abstract class Event<T> extends StorableE {
     public Event(Integer deviceId) {
         this.deviceId = deviceId;
         this.deviceService = ServiceProvider.getStaticDeviceService();
-        assert(deviceService != null);
+        if(deviceService == null) {
+            throw new  ImproperImplementationException("ServiceProvider not providing access to requested Services");
+        }
     }
 
 

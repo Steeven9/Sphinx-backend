@@ -18,8 +18,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-/*
- * Service layer of the application, the various Storage follows the CRUD principle
+/**
+ * User service.
+ * It has methods to interact with User entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see User
  */
 @Service
 public class UserService {
@@ -39,9 +42,10 @@ public class UserService {
 
 
     /**
-     *
+     * @deprecated
+     * Do not use directly this constructor
      */
-    //Used with spring injection can't be instantiated directly
+    //Needed public otherwise context creation will fail...
     public UserService() {
     }
 
@@ -58,7 +62,7 @@ public class UserService {
 
 
     /**
-     * gets a User by mail {@param email} from storage
+     * gets a User by mail {@code email} from storage
      *
      * @param email email of the user
      * @return the user with the given email or null if not found
@@ -131,6 +135,7 @@ public class UserService {
      *
      * @param username the name of the User whose room is to be removed
      * @param roomId   the id of the room to remove
+     * @return true if the operation succeeds else false
      */
     public boolean removeRoom(final String username, final Integer roomId) {
         if (!ownsRoom(username, roomId)) {
@@ -298,7 +303,7 @@ public class UserService {
     }
 
     /**
-     * Changes the name of a User identified by {@param oldUsername}
+     * Changes the name of a User identified by {@code oldUsername}
      *
      * @param oldUsername the old name of the user
      * @param newUsername the new name of the user

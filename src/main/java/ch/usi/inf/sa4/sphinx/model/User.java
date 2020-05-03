@@ -202,6 +202,7 @@ public class User extends StorableE{
      * sets the username
      *
      * @param username username
+     * @return true if successful (always?)
      */
     public boolean setUsername(final String username) {
         this.username =username;
@@ -220,6 +221,7 @@ public class User extends StorableE{
 
     /**
      * sets the verified status of the user to true
+     * @param status the new status to set
      */
     public void setVerified(final boolean status) {
         this.verified = status;
@@ -282,6 +284,10 @@ public class User extends StorableE{
     }
 
 
+    /**
+     * @return a serialised version of the USer
+     * @see SerialisableUser
+     */
     public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;

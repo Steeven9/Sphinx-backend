@@ -15,10 +15,25 @@ package ch.usi.inf.sa4.sphinx.misc;
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 
+/**
+ * Represent thee different types of Device.
+ * INVALID_DEVICE = 0
+ * LIGHT = 1
+ * DIMMABLE_LIGHT =2
+ * SWITCH= 3
+ * DIMMABLE_SWITCH=4
+ * STATELESS_DIMMABLE_SWITCH = 5
+ * SMART_PLUG = 6
+ * HUMIDITY_SENSOR =7
+ * LIGHT_SENSOR =8
+ * TEMP_SENSOR =9
+ * MOTION_SENSOR= 10
+ * THERMOSTAT=11
+ * SMART_CURTAIN =12
+ * SECURITY_CAMERA=13
+ */
 public enum DeviceType {
     INVALID_DEVICE,
     LIGHT,
@@ -76,7 +91,9 @@ public enum DeviceType {
     }
 
 
-    /** Given a device, returns the DeviceType corresponding to the device's class.
+    /**
+     * Given a device, returns the DeviceType corresponding to the device's class.
+     *
      * @param d a given Device
      * @return the DeviceType of the given Device
      */
@@ -85,7 +102,9 @@ public enum DeviceType {
     }
 
 
-    /** Given a device Class, returns the DeviceType of that class
+    /**
+     * Given a device Class, returns the DeviceType of that class
+     *
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
@@ -133,8 +152,9 @@ public enum DeviceType {
     }
 
 
-
-    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
+    /**
+     * Given a DeviceType returns the integer value used to transmit the enum over the network.
+     *
      * @param d the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
