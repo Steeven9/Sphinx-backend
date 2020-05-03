@@ -13,7 +13,14 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Effect<T> extends StorableE {
-    protected final int deviceId;
+    private int deviceId;
+
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for use by the JPA.
+     */
+    @Deprecated
+    public Effect() {}
 
     /**
      * Constructor

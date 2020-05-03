@@ -14,11 +14,17 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Event<T> extends StorableE {
-    protected final int deviceId;
+    private int deviceId;
 
     @Transient
     protected DeviceService deviceService;
 
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for useby the JPA.
+     */
+    @Deprecated
+    public Event() {}
 
     public Event(Integer deviceId) {
         this.deviceId = deviceId;

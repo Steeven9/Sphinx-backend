@@ -22,17 +22,23 @@ public class Coupling extends StorableE {
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private final Event event;
+    private Event event;
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private final List<Effect> effects;
+    private List<Effect> effects;
 
 
     private Integer deviceId;
 
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for use by the JPA.
+     */
+    @Deprecated
+    public Coupling() {}
 
     /**
      * Constructor for Coupling linking an event to multiple effects.
@@ -42,7 +48,7 @@ public class Coupling extends StorableE {
      * @see Effect
      * @param <T> parametrized type of Event and Effect
      */
-    public <T> Coupling(@NonNull Event<T> event,@NonNull Collection<Effect<T>> effects) {
+    public <T> Coupling(@NonNull Event<T> event, @NonNull Collection<Effect<T>> effects) {
         this.event = event;
         this.effects = new ArrayList<>(effects);
     }
