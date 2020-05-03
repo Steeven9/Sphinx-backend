@@ -49,15 +49,27 @@ public class CouplingService {
         for (Coupling coupling : c) {
             List<Effect> e = coupling.getEffects();
 
-            //if effect has either device id1 or id2 in it, we delete that effect
-            e.removeIf(effect -> effect.getDeviceId().equals(id1) || effect.getDeviceId().equals(id2));
+            for (Effect effect : e) {
+                boolean boolId1 = false;
+                boolean boolId2 = false;
 
-            //deleting the coupling, if didn't need to delete it will be added later
-            couplingStorage.delete(coupling);
+                if(effect.getDeviceId().equals(id1) && !boolId1){
+                    boolId1 = true;
+                }else if(effect.getDeviceId().equals(id2) && !boolId2){
+                    boolId2 = true;
+                }
+                if(boolId1 && coupling.getEvent().getDeviceId() == id2){ //if effect.deviceId is id1 then event.deviceId should be id2
+                    e.remove(effect);
+                }else if(boolId2 && coupling.getEvent().getDeviceId() == id1){//if effect.deviceId is id2 then event.deviceId should be id1
+                    e.remove(effect);
+                }
+            }
 
-            //if the coupling had not been necessary to remove, we create a new coupling with the new resulting event and effects (that had been reduced before)
             if(e.size() > 1){
-                addCoupling(coupling.getEvent(), new ArrayList<>(coupling.getEffects()));
+                couplingStorage.save(coupling);
+            }else{
+                //deleting the coupling
+                couplingStorage.delete(coupling);
             }
         }
     }

@@ -50,9 +50,6 @@ public class Coupling extends StorableE {
         addEffect(effect);
     }
 
-    public Integer getDeviceId() {
-        return deviceId;
-    }
 
     public Event getEvent() {
         return event;
