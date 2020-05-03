@@ -17,7 +17,7 @@ public abstract class Event<T> extends StorableE {
     private int deviceId;
 
     @Transient
-    protected DeviceService deviceService;
+    protected transient DeviceService deviceService;
 
     /**
      * @deprecated
@@ -30,7 +30,7 @@ public abstract class Event<T> extends StorableE {
         this.deviceId = deviceId;
         this.deviceService = ServiceProvider.getStaticDeviceService();
         if(deviceService == null) {
-            throw new  ImproperImplementationException("ServiceProvider not providing access to requested Services");
+            throw new ImproperImplementationException("ServiceProvider not providing access to requested Services");
         }
     }
 

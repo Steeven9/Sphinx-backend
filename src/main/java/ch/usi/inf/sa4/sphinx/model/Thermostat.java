@@ -125,7 +125,7 @@ public class Thermostat extends TempSensor {
         }
 
         averageTemp += this.getValue();
-        averageTemp = averageTemp / sensors;
+        averageTemp /= sensors;
 
         return averageTemp;
     }

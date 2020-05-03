@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -30,7 +28,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ((Switch) this.deviceService.get(getDeviceId()).get()).isOn();
+        return this.deviceService.get(getDeviceId()).get().isOn();
     }
 
 }
