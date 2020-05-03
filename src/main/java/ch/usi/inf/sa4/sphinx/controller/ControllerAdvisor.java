@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerAdvisor {
     @ExceptionHandler(HttpException.class)
-    public ResponseEntity handleException(HttpException e) {
+    private ResponseEntity handleException(HttpException e) {
         // log exception
         return ResponseEntity
                 .status(e.getStatus())

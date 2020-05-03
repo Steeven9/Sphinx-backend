@@ -9,6 +9,7 @@ import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ public class UserController {
      * status code 401 if the provided session token does not match (or does not exist)
      */
     @GetMapping("/{username}")
+    @ApiOperation(value = "Gets a User")
     public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
 
         Optional<User> user = userService.get(username);
@@ -68,6 +70,7 @@ public class UserController {
      * 400 if some data was missing or the usernames do not match
      */
     @PostMapping("/{username}")
+    @ApiOperation(value = "Creates a new User")
     public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
         User newUser = new User(user.email, user.password, username, user.fullname);
         User findUser = userService.get(username)
@@ -111,6 +114,7 @@ public class UserController {
      */
     @Transactional
     @PutMapping("/{username}")
+    @ApiOperation(value = "Modifies a User")
     public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable String username, @NotNull @RequestBody SerialisableUser user,
                                                        @RequestHeader("session-token") String session_token, Errors errors) {
 
@@ -147,6 +151,7 @@ public class UserController {
      * 204 if the operation was successful
      */
     @DeleteMapping("/{username}")
+    @ApiOperation(value = "Deletes a User")
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
                                                        @RequestHeader("session-token") String session_token) {
 
