@@ -16,6 +16,13 @@ public abstract class Effect<T> extends StorableE {
     protected final int deviceId;
 
     /**
+     * @deprecated
+     * This constructor should not be used. It exists only for use by the JPA.
+     */
+    @Deprecated
+    public Effect() {}
+
+    /**
      * Constructor
      * @param deviceId the id of the device this Effect affects
      */

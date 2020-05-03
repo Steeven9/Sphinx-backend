@@ -19,6 +19,12 @@ public abstract class Event<T> extends StorableE {
     @Transient
     protected DeviceService deviceService;
 
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for useby the JPA.
+     */
+    @Deprecated
+    public Event() {}
 
     public Event(Integer deviceId) {
         this.deviceId = deviceId;
