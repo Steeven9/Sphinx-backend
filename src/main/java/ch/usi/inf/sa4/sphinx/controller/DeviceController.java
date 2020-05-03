@@ -9,6 +9,7 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -46,6 +47,7 @@ public class DeviceController {
      * - 401 if not authorized
      */
     @GetMapping(value = {"", "/"})
+    @ApiOperation(value = "Gets the devices owned by the User")
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
                                                                    @RequestHeader("user") String username) {
 
@@ -76,6 +78,7 @@ public class DeviceController {
      * - 401 if not authorized
      */
     @GetMapping("/{deviceId}")
+    @ApiOperation(value = "Gets the device with the given id")
     public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
                                                         @RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username) {
@@ -108,6 +111,7 @@ public class DeviceController {
      * - 500 if an internal server error occurred
      */
     @PostMapping(value = {"", "/"})
+    @ApiOperation(value = "Creates a device")
     public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
                                                            @RequestHeader("session-token") String sessionToken,
                                                            @RequestHeader("user") String username,
@@ -160,6 +164,7 @@ public class DeviceController {
      * - 500 in case of a server error
      */
     @PutMapping("/{deviceId}")
+    @ApiOperation(value = "Modifies a Device")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
                                                            @NotBlank @RequestBody SerialisableDevice device,
                                                            @RequestHeader("session-token") String sessionToken,
@@ -220,6 +225,7 @@ public class DeviceController {
      * - 500 in case of an internal server error
      */
     @PutMapping("/reset/{deviceId}")
+    @ApiOperation(value = "Resets a smartplug")
     public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
                                                   @RequestHeader("session-token") String sessionToken,
                                                   @RequestHeader("user") String username) {
@@ -250,6 +256,7 @@ public class DeviceController {
      * - 401 if not authorized
      */
     @DeleteMapping("/{deviceId}")
+    @ApiOperation(value = "Deletes the device with the given id")
     public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable Integer deviceId,
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
@@ -279,6 +286,7 @@ public class DeviceController {
      * - 500 in case of a server error
      */
     @PostMapping("/couple/{device1_id}/{device2_id}")
+    @ApiOperation(value = "Creates a coupling between two devices")
     public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username,
                                                           @PathVariable String device1_id,

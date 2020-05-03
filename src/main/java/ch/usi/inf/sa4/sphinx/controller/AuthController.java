@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -32,6 +33,7 @@ public class AuthController {
      * status 401 id the username and session token do not match
      */
     @PostMapping("/validate")
+    @ApiOperation(value = "Validates a given session token")
     public ResponseEntity<String> validate(@RequestHeader("user") String username,
                                            @RequestHeader("session-token") String sessionToken) {
 

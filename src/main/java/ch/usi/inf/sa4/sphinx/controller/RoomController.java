@@ -9,6 +9,7 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -24,6 +25,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 @Validated
+//@Api(value = "Room endpoint", tags = {"Swagger.TAG1"})
+//@SwaggerDefinition(tags = {
+//        @Tag(name = "Swagger.TAG1", description = "Room Controller")
+//})
+@Api(value = "Room endpoint", description = "Room Controller")
 public class RoomController {
 
     @Autowired
@@ -43,6 +49,13 @@ public class RoomController {
      * @return a ResponseEntity with the array of rooms owned by the user
      */
     @GetMapping(value = {"", "/"})
+    @ApiOperation(value = "Returns all the rooms owned by the User")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 404, message = "if the User is not found"),
+                   // @ApiResponse(code = 401, message = "if the Auth is not valid")
+            }
+    )
     public ResponseEntity<List<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                               @NotNull @RequestHeader("user") String username) {
 
@@ -61,6 +74,7 @@ public class RoomController {
      * @return the room with all details about it
      */
     @GetMapping("/{roomId}")
+    @ApiOperation(value = "Returns a Room given its id")
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
@@ -78,6 +92,7 @@ public class RoomController {
      * @return an array of devices in given room
      */
     @GetMapping("/{roomId}/devices")
+    @ApiOperation(value = "Returns all devices in the given Room")
     public ResponseEntity<Collection<SerialisableDevice>> getDevice(@PathVariable Integer roomId,
                                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                                     @NotNull @RequestHeader("user") String username) {
@@ -101,6 +116,7 @@ public class RoomController {
      * @return a new room
      */
     @PostMapping(value = {"", "/"})
+    @ApiOperation(value = "Creates a Room")
     public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        @NotNull @RequestBody SerialisableRoom serialisableRoom,
@@ -131,6 +147,7 @@ public class RoomController {
      * @return A modified room
      */
     @PutMapping("/{roomId}")
+    @ApiOperation(value = "Modifies a Room")
     public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
@@ -174,6 +191,7 @@ public class RoomController {
      * status 403 if the delete went wrong
      */
     @DeleteMapping("/{roomId}")
+    @ApiOperation(value = "Deletes a Room")
     public ResponseEntity<SerialisableRoom> deleteRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username) {
