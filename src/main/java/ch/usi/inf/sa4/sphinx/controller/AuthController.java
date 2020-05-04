@@ -88,8 +88,9 @@ public class AuthController {
             throw new ForbiddenException("User is already verified");
         }
 
-        if (!userService.passwordMatchesHash(user.getUsername(), password)) {
-            throw new UnauthorizedException("Invalid credentials");
+
+        if (!user.matchesPassword(password)) {
+            throw new UnauthorizedException("");
         }
 
         user.createSessionToken();
@@ -183,9 +184,9 @@ public class AuthController {
         }
 
 
-
-        if (!userService.changePassword(changedUser.getUsername(), newPassword)) {
-            throw new ServerErrorException("Couldn't save data");
+        changedUser.setPassword(newPassword);
+        if (!userService.update(changedUser)) {
+            throw new ServerErrorException("");
         }
 
 

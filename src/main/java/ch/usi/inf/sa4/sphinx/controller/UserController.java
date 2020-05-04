@@ -99,7 +99,6 @@ public class UserController {
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
         } catch (MailException e) {
             throw new BadRequestException("Please insert a valid email");
-
         }
 
         return ResponseEntity.status(201).body(serialiser.serialiseUser(newUser));
