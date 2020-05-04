@@ -33,7 +33,9 @@ class SerialiserTest {
      void createDeviceAndUser() {
 
 
+
         dummyDataAdder.addDummyData();
+
 
 
         user = userService.get("user1").get();
