@@ -74,11 +74,15 @@ public abstract class Device extends StorableE {
         return room;
     }
 
+<<<<<<< HEAD
     /**
      * @return the DeviceType of this device
      * @see DeviceType
      */
     protected abstract DeviceType getDeviceType();
+=======
+   public abstract DeviceType getDeviceType();
+>>>>>>> #124: Gitlab suggestions applied (#6)
 
     /**
      * Sets properties of this device to conform with the given SerialisableDevice

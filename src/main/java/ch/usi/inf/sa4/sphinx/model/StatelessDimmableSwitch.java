@@ -56,7 +56,7 @@ public class StatelessDimmableSwitch extends Device {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.STATELESS_DIMMABLE_SWITCH;
     }
 }

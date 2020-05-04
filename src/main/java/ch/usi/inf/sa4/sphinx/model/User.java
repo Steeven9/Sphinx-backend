@@ -293,6 +293,7 @@ public class User extends StorableE {
      * @return true if matching else false
      */
 
+
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -304,6 +305,24 @@ public class User extends StorableE {
 
 
     }
+
+
+    /** Check if cameras are accessible by guests.
+     * @return  true if the cameras are visible to the guests
+     **/
+    public boolean areVisible(){
+        return areCamsVisible;
+    }
+
+    /**
+     * Switches the cam visibility from on to off and vice versa.
+     **/
+    public void camerasAccessibilitySwitch(){
+        areCamsVisible = !areCamsVisible;
+    }
+
+
+
 
 }
 

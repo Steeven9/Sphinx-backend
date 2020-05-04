@@ -404,16 +404,18 @@ public class UserService {
         if(!isGuestOf(host,guest)){
             return false;
         }
+
         final Optional<User> user = userStorage.findByUsername(host);
         final Optional<User> guestUser = userStorage.findByUsername(guest);
+
         if(guestUser.isPresent() && user.isPresent()) {
 
-                        user.get().removeGuestOf(guestUser.get());
-                        userStorage.save(user.get());
+            user.get().removeGuestOf(guestUser.get());
+            userStorage.save(user.get());
 
         }
 
-            return true;
+        return true;
 
     }
 
@@ -444,7 +446,7 @@ public class UserService {
      **/
     public List<User> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
-        return user.orElse(null).getGuestsOf();
+        return user.get().getHosts();
     }
 
     /**
@@ -459,7 +461,7 @@ public class UserService {
         if(!user.isPresent()|| !guestUsername.isPresent()){
             return false;
         }
-        return user.get().getGuestsOf().contains(guestUsername.get());
+        return user.get().getHosts().contains(guestUsername.get());
     }
 
     /**
@@ -469,7 +471,7 @@ public class UserService {
      */
     public List<User> getGuestsOf(@NonNull final String username) {
         return userStorage.findAll().stream().filter(user -> {
-            return user.getGuestsOf().stream().map(User::getUsername).anyMatch(s -> {
+            return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
             });
         }).collect(Collectors.toList());
