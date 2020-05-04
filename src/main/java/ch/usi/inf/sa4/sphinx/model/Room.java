@@ -29,9 +29,9 @@ public class Room extends StorableE{
             cascade = CascadeType.ALL,
             mappedBy = "room",
             fetch = FetchType.LAZY)
-    private final List<Device> devices;
+    private List<Device> devices;
     //not all since otherwise it will try to persist the User
-    @ManyToOne(fetch = FetchType.EAGER, optional = false) //TODO check why merge cascade type
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -153,11 +153,11 @@ public class Room extends StorableE{
      * Removes a Device from this Room.
      * Notice that calling this method alone WON'T alter the corresponding Room saved in storage,
      * to remove a device call roomService.removeDevice(...)
-     * @param deviceId the id of the Device to remove from this Room
+     * @param device the Device to remove from this Room
      * @see Device
      */
-    public void removeDevice(final Integer deviceId) {
-        devices.removeIf(device -> device.getId().equals(deviceId));
+    public void removeDevice(final Device device){
+        devices.remove(device);
     }
 
     /**

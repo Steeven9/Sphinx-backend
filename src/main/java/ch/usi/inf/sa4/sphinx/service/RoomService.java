@@ -96,8 +96,10 @@ public class RoomService {
      * @return true if success else false
      */
     public final boolean removeDevice(@NonNull final Integer roomId,@NonNull final Integer deviceId) {
+        final Optional<Device> device = deviceService.get(deviceId);
+        if (device.isEmpty()) return false;
         return roomStorage.findById(roomId).map(room -> {
-            room.removeDevice(deviceId);
+            room.removeDevice(device.get());
             update(room);
             return true;
         }).orElse(false);

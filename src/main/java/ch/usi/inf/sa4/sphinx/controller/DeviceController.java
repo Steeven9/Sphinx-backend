@@ -292,8 +292,7 @@ public class DeviceController {
                                                @RequestHeader("session-token") final String sessionToken,
                                                @RequestHeader("user") final String username) {
 
-
-        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
 
         if (!userService.validSession(username, sessionToken)) {
