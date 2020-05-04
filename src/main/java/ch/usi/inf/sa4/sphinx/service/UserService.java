@@ -7,6 +7,7 @@ import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * User service.
  * It has methods to interact with User entities.
  * In general it implements a layer of abstraction over the storage.
+ *
  * @see User
  */
 @Service
@@ -42,11 +44,40 @@ public class UserService {
 
 
     /**
-     * @deprecated
-     * Do not use directly this constructor
+     * @deprecated Do not use directly this constructor
      */
     //Needed public otherwise context creation will fail...
     public UserService() {
+    }
+
+
+    /**
+     * Changes the password of the User with the given username to an hashed version
+     * of newPassword
+     * @param username the username of the USer
+     * @param newPassword the new password to set
+     * @return true if success else false
+     */
+    public boolean changePassword(String username, String newPassword){
+        return userStorage.findByUsername(username).map(user -> {
+            user.setPassword(newPassword);
+            hashPsw(user);
+            userStorage.save(user);
+            return true;
+        }).orElse(false);
+    }
+
+    /**
+     * Checks if the password in clear of a given User matches the hashed one in storage
+     *
+     * @param username the username
+     * @param password the password of the user
+     * @return true if they match else false
+     */
+    public boolean passwordMatchesHash(@NonNull String username, @NonNull String password) {
+        return userStorage.findByUsername(username).map(user ->
+                BCrypt.checkpw(password, user.getPassword()))
+                .orElse(false);
     }
 
 
@@ -89,12 +120,14 @@ public class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        if (user.getId() != null) return false;
+        if (user.getId() != null || user.getPassword() == null) return false;
         user.createResetCode();
-
+        hashPsw(user);
         userStorage.save(user);
         return true;
     }
+
+
 
 
     /**
@@ -104,12 +137,18 @@ public class UserService {
      * @return true if successful update else false
      */
     public boolean update(@NonNull final User user) {
-        if (userStorage.existsById(user.getId())) {
-            userStorage.save(user); //Now the newly added rooms will be inserted in storage by jpa
+        return userStorage.findById(user.getId()).map(storageUser -> {
+            if(!storageUser.getPassword().equals(user.getPassword())){
+                hashPsw(user);
+            }
+            userStorage.save(user);
             return true;
-        }
-        return false;
+
+
+        }).orElse(false);
     }
+
+
 
 
     /**
@@ -322,5 +361,17 @@ public class UserService {
         }
     }
 
+
+    //returns the hashed password of a user
+    private Optional<String> getUserHash(@NonNull String username) {
+        return get(username).map(User::getPassword);
+    }
+
+
+
+    private void hashPsw(@NonNull User user) {
+        String hashedpPsw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
+        user.setPassword(hashedpPsw);
+    }
 
 }
