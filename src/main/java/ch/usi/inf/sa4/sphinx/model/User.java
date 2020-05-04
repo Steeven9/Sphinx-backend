@@ -322,8 +322,11 @@ public class User extends StorableE {
     }
 
 
-
-
+    /**
+     * getter for guest
+     *
+     * @return returns a list of the houses the user has access to as guest
+     */
 
     public List<User> getHosts() {
         return hosts;
@@ -378,6 +381,7 @@ public class User extends StorableE {
 
 
 
+
     }
 
 
@@ -392,7 +396,6 @@ public class User extends StorableE {
 
 
         return hosts;
-
 
 
     }

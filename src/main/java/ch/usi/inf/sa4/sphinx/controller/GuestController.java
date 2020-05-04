@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
@@ -64,13 +65,17 @@ public class GuestController {
 
         if ( !userService.validSession(username, sessionToken)) {
 
+
             throw new UnauthorizedException("Invalid credentials");
+
+
 
 
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
         users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
+
 
 
         return ResponseEntity.ok(users);
@@ -135,6 +140,7 @@ public class GuestController {
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
      @RequestHeader("user") String username) {
+
 
 
 
@@ -229,7 +235,9 @@ public class GuestController {
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
 
+
             throw new UnauthorizedException("Invalid credentials");
+
 
         }
 
@@ -266,12 +274,12 @@ public class GuestController {
 
 
 
-
-
         if (  !userService.validSession(username, sessionToken)) {
 
 
+
             throw new UnauthorizedException("Invalid credentials");
+
 
 
         }

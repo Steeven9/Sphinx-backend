@@ -349,7 +349,6 @@ public class UserService {
             return false;
         }
 
-
         final Optional<User> user = userStorage.findByUsername(host);
 
 
@@ -362,7 +361,6 @@ public class UserService {
 
             userStorage.save(user.get());
             return true;
-
 
 
         }
@@ -464,7 +462,6 @@ public class UserService {
 
         }
         return user.get().getHosts().contains(guestUsername.get());
-
 
     }
 
