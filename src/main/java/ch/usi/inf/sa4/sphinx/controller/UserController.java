@@ -92,6 +92,7 @@ public class UserController {
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
 
 
+
         try {
             mailer.send(newUser.getEmail(),
                     "Confirm your email account for SmartHut",
