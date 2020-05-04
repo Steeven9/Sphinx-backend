@@ -150,6 +150,7 @@ public class GuestControllerTest {
         this.mockmvc.perform(delete(("/guests/guest2"))
 
 
+
                 .header("user", "fakeUser")
 
                 .header("session-token", "user2SessionToken"))

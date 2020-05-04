@@ -54,7 +54,6 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
-
     private  List<User> hosts;
 
     private boolean areCamsVisible = false;
@@ -302,6 +301,7 @@ public class User extends StorableE {
 
 
 
+
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -348,7 +348,6 @@ public class User extends StorableE {
      **/
     public boolean areVisible(){
         return areCamsVisible;
-
     }
 
     /**
