@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -48,16 +49,17 @@ public class GuestController {
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("");
 
-            List<User> guest = userService.getGuestsOf(username);
-            SerialisableUser[] users;
-            users = guest.toArray(SerialisableUser[]::new);
-
-            return ResponseEntity.ok(users);
         }
+        List<User> guest = userService.getGuestsOf(username);
+        SerialisableUser[] users;
+        users = guest.toArray(SerialisableUser[]::new);
 
-        throw new UnauthorizedException("");
+        return ResponseEntity.ok(users);
+
+
     }
 
 
@@ -74,16 +76,18 @@ public class GuestController {
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
-            List<User> guestOf = userService.otherHousesAccess(username);
-            SerialisableUser[] users ;
-            users = guestOf.toArray(SerialisableUser[]::new);
-            return ResponseEntity.ok(users);
 
+            throw new UnauthorizedException("");
 
         }
-        throw new UnauthorizedException("");
+
+        List<User> guestOf = userService.otherHousesAccess(username);
+        SerialisableUser[] users ;
+        users = guestOf.toArray(SerialisableUser[]::new);
+        return ResponseEntity.ok(users);
+
     }
 
 
@@ -100,26 +104,30 @@ public class GuestController {
 
         Optional<User> user = userService.get(username);
 
-        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
-            Optional<User> guest = userService.get(guest_username);
-            Optional<List<Integer>> devicesIds = userService.getDevices(username);
-            if (guest.isPresent() && devicesIds.isPresent()) {
-
-                SerialisableDevice[] devicesArray;
-                 //still have to filter for access authorized devices
-                List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
-                List<SerialisableDevice> serializedDevices = devices.stream()
-                        .map(device -> serialiser.serialiseDevice(device, user.get()))
-                        .collect(Collectors.toList());
-
-                devicesArray  = devices.toArray(SerialisableDevice[]::new);
-                return ResponseEntity.ok(devicesArray);
+            throw new UnauthorizedException("");
 
             }
+        Optional<User> guest = userService.get(guest_username);
+        Optional<List<Integer>> devicesIds = userService.getDevices(username);
+        if (!guest.isPresent() || !devicesIds.isPresent()) {
+
+            throw new UnauthorizedException("");
 
         }
-        throw new UnauthorizedException("");
+
+
+        List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+        devices.stream()
+                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                .map(device -> serialiser.serialiseDevice(device, user.get()))
+                .collect(Collectors.toList()).toArray(SerialisableDevice[]::new);
+        SerialisableDevice[] devicesArray;
+
+        devicesArray  = devices.toArray(SerialisableDevice[]::new);
+        return ResponseEntity.ok(devicesArray);
+
     }
 
 
@@ -174,14 +182,15 @@ public class GuestController {
         Optional<User> user = userService.get(username);
         String guest_username = guest.username;
 
-        if (user.isPresent() && guestUsername.isPresent() &&  userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !guestUsername.isPresent() ||  !userService.validSession(username, sessionToken)) {
 
+            throw new UnauthorizedException("");
 
-            userService.addGuest(username, guest_username);
-            return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
 
             }
-        throw new UnauthorizedException("");
+        userService.addGuest(username, guest_username);
+        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+
     }
 
 
@@ -201,21 +210,21 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
-        if (user.isPresent() && userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
-
-
-            if (userService.removeGuest(username, guest_username)) {
-
-                return ResponseEntity.status(204).build();
-            } else {
-                throw new ServerErrorException("");
-            }
+            throw new UnauthorizedException("");
 
 
         }
+        if (!userService.removeGuest(username, guest_username)) {
 
-        throw new UnauthorizedException("");
+            throw new ServerErrorException("");
+        } else {
+
+            return ResponseEntity.status(204).build();
+        }
+
+
     }
 
 }

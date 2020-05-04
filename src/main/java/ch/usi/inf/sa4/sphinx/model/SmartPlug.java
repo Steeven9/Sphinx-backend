@@ -47,7 +47,7 @@ public class SmartPlug extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SMART_PLUG;
     }
 }

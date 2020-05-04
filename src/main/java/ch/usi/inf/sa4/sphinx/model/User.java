@@ -58,7 +58,7 @@ public class User extends StorableE{
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private  List<User> hosts;
 
-    private boolean visibleCams = false;
+    private boolean areCamsVisible = false;
 //TODO find way to auto generate verificationToken
 
 //    @Component
@@ -302,7 +302,7 @@ public class User extends StorableE{
      *
      * @return returns a list of the houses the user has access to as guest
      */
-    public List<User> getGuestsOf() {
+    public List<User> getHosts() {
         return hosts;
     }
 
@@ -323,15 +323,15 @@ public class User extends StorableE{
     /** Check if cameras are accessible by guests.
      * @return  true if the cameras are visible to the guests
      **/
-    public boolean visibilityStatus(){
-        return visibleCams;
+    public boolean areVisible(){
+        return areCamsVisible;
     }
 
     /**
      * Switches the cam visibility from on to off and vice versa.
      **/
-    public void oppositeSwitch(){
-        visibleCams = !visibleCams;
+    public void camerasAccessibilitySwitch(){
+        areCamsVisible = !areCamsVisible;
     }
 
 
