@@ -4,7 +4,9 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -59,6 +61,7 @@ public class GuestController {
 
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
 
@@ -72,7 +75,9 @@ public class GuestController {
 
 
 
+
         return ResponseEntity.ok(users);
+
 
     }
 
@@ -95,6 +100,7 @@ public class GuestController {
 
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
@@ -107,14 +113,14 @@ public class GuestController {
 
 
 
+
         List<User> guestOf = userService.otherHousesAccess(username).get();
+
 
 
         SerialisableUser[] users ;
         users = guestOf.toArray(SerialisableUser[]::new);
         return ResponseEntity.ok(users);
-
-
 
 
     }
@@ -143,6 +149,7 @@ public class GuestController {
 
 
 
+
         boolean camsVisible = owner.get().areCamsVisible();
 
 
@@ -152,8 +159,14 @@ public class GuestController {
 
             throw new UnauthorizedException("Invalid credentials");
 
-            }
 
+            }
+        Optional<User> guest = userService.get(guest_username);
+        Optional<List<Integer>> devicesIds = userService.getDevices(username);
+        if (!guest.isPresent() || !devicesIds.isPresent()) {
+
+            throw new UnauthorizedException("");
+        }
 
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
         SerialisableDevice[] devicesArray;
@@ -170,6 +183,7 @@ public class GuestController {
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
         }
+
 
 
 
@@ -238,6 +252,11 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
+        if (!user.isPresent() || !guestUsername.isPresent() ||  !userService.validSession(username, sessionToken)) {
+
+
+            throw new UnauthorizedException("");
+        }
 
 
 
@@ -249,10 +268,11 @@ public class GuestController {
 
 
 
-            }
+        }
 
         userService.addGuest(username, guestUsername);
         return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guestUsername).get()));
+
 
 
 
@@ -277,20 +297,13 @@ public class GuestController {
            @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
         Optional<User> user = userService.get(username);
 
-
-
-
-
-
-
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
 
-
-
         }
+
         if (!userService.removeGuest(username, guest_username)) {
 
 
@@ -300,6 +313,7 @@ public class GuestController {
 
             return ResponseEntity.noContent().build();
         }
+
 
     }
 

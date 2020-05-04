@@ -52,7 +52,9 @@ public class GuestControllerTest {
         dummyDataAdder.addDummyData();
     }
 
+
     @Disabled("post doesnt work")
+
     @Test
     public void shouldGet400FromNoToken() throws Exception {
         this.mockmvc.perform(get("/guests/").header("username", "user2"))
@@ -88,13 +90,13 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -106,19 +108,16 @@ public class GuestControllerTest {
 
 
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
-
-
 
 
         this.mockmvc.perform(delete(("/guests/guest1"))
 
 
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -167,6 +166,7 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest2"))
+
 
 
 

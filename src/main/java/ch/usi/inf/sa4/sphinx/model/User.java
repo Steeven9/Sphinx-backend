@@ -300,6 +300,7 @@ public class User extends StorableE {
      * @return true if matching else false
      */
 
+
     public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
@@ -336,6 +337,7 @@ public class User extends StorableE {
      * @param user the user to remove
      **/
 
+
     public void removeHost(final User user){
 
         hosts.remove(user);
@@ -347,8 +349,10 @@ public class User extends StorableE {
     /** Check if cameras are accessible by guests.
      * @return  true if the cameras are visible to the guests
      **/
+
     public boolean areCamsVisible() {
         return camsVisible;
+
     }
 
 
