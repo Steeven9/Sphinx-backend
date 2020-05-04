@@ -88,7 +88,7 @@ public class AuthController {
             throw new ForbiddenException("");
         }
 
-        if (!userService.passwordMatchesHash(user.getUsername(), password)) {
+        if (!user.matchesPassword(password)) {
             throw new UnauthorizedException("");
         }
 
@@ -183,7 +183,9 @@ public class AuthController {
         }
 
 
-        if (!userService.changePassword(changedUser.getUsername(), newPassword)) {
+
+        changedUser.setPassword(newPassword);
+        if (!userService.update(changedUser)) {
             throw new ServerErrorException("");
         }
 

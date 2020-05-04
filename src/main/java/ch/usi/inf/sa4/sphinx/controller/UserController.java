@@ -102,6 +102,7 @@ public class UserController {
                     "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
         } catch (MailException e) {
+            e.printStackTrace();
             throw new BadRequestException("Please insert a valid mail!");
 
         }

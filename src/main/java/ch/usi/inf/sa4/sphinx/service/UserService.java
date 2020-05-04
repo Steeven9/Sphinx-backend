@@ -7,7 +7,6 @@ import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,35 +47,6 @@ public class UserService {
      */
     //Needed public otherwise context creation will fail...
     public UserService() {
-    }
-
-
-    /**
-     * Changes the password of the User with the given username to an hashed version
-     * of newPassword
-     * @param username the username of the USer
-     * @param newPassword the new password to set
-     * @return true if success else false
-     */
-    public boolean changePassword(String username, String newPassword){
-        return userStorage.findByUsername(username).map(user -> {
-            user.setPassword(newPassword);
-            userStorage.save(user);
-            return true;
-        }).orElse(false);
-    }
-
-    /**
-     * Checks if the password in clear of a given User matches the hashed one in storage
-     *
-     * @param username the username
-     * @param password the password of the user
-     * @return true if they match else false
-     */
-    public boolean passwordMatchesHash(@NonNull String username, @NonNull String password) {
-        return userStorage.findByUsername(username).map(user ->
-                BCrypt.checkpw(password, user.getPassword()))
-                .orElse(false);
     }
 
 
@@ -126,8 +96,6 @@ public class UserService {
     }
 
 
-
-
     /**
      * Updates the given user, the username is used to find the User and the given User to update its fields
      *
@@ -135,18 +103,11 @@ public class UserService {
      * @return true if successful update else false
      */
     public boolean update(@NonNull final User user) {
-        return userStorage.findById(user.getId()).map(storageUser -> {
-            if(!storageUser.getPassword().equals(user.getPassword())){
-                return false; //can't change the password here
-            }
-            userStorage.save(user);
-            return true;
+        if (!userStorage.existsById(user.getId())) return false;
 
-
-        }).orElse(false);
+        userStorage.save(user);
+        return true;
     }
-
-
 
 
     /**

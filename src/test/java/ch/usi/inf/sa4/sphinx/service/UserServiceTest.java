@@ -71,8 +71,8 @@ class UserServiceTest {
                 () -> assertEquals(username, returnedUserByEmail.getUsername()),
                 () -> assertEquals(email, returnedUserByUsername.getEmail()),
                 () -> assertEquals(email, returnedUserByEmail.getEmail()),
-                () -> assertTrue(userService.passwordMatchesHash(returnedUserByUsername.getUsername(), "1234")),
-                () -> assertTrue(userService.passwordMatchesHash(returnedUserByEmail.getUsername(), "1234")),
+                () -> assertTrue(returnedUserByUsername.matchesPassword("1234")),
+                () -> assertTrue(returnedUserByEmail.matchesPassword("1234")),
                 () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
                 () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
                 () -> assertNull(returnedUserByUsername.getSessionToken()),
@@ -252,14 +252,12 @@ class UserServiceTest {
     void acceptsOnlyCorrectPassword() {
         User newUser = new User("test@com", "1234", "testUsername", "fullname");
         userService.insert(newUser);
-        assertTrue(userService.passwordMatchesHash("testUsername", "1234"));
+        User storageUser = userService.get("testUsername").get();
+        assertTrue(storageUser.matchesPassword("1234"));
         assertAll("wrong passwords are rejected",
-                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash(null, "1234")),
-                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash("testUsername", null)),
-                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash(null, null)),
-                () -> assertFalse(userService.passwordMatchesHash("testUsername", "")),
-                () -> assertFalse(userService.passwordMatchesHash("testUsername", "wrong")),
-                () -> assertFalse(userService.passwordMatchesHash("testusernameddddddddd", "wrong")));
+                () -> assertThrows(NullPointerException.class, () -> storageUser.matchesPassword(null)),
+                () -> assertFalse(storageUser.matchesPassword("")),
+                () -> assertFalse(storageUser.matchesPassword("wrong")));
         userService.delete("testUsername");
     }
 }
