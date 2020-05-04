@@ -55,7 +55,7 @@ public class UserController {
             return ResponseEntity.ok(serialiser.serialiseUser(user.get()));
         }
 
-        throw new NotFoundException("");
+        throw new UnauthorizedException("Invalid credentials");
     }
 
     /**
@@ -128,7 +128,7 @@ public class UserController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
+        User changedUser = userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
         if (user.email != null) changedUser.setEmail(user.email);
