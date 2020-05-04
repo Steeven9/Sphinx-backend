@@ -175,7 +175,7 @@ public class UserService {
      * @param deviceId the id of the device
      * @return true if the User with the given Username owns the divice with the given Id
      */
-    public boolean ownsDevice(String username, Integer deviceId) {
+    public boolean ownsDevice(final String username, final Integer deviceId) {
         return getDevices(username)
                 .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
                 ).orElse(false);
@@ -189,7 +189,7 @@ public class UserService {
      * @return a list of rooms
      */
     @Transactional
-    public List<Room> getPopulatedRooms(String username) {
+    public List<Room> getPopulatedRooms(final String username) {
         return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
     }
 
@@ -200,7 +200,7 @@ public class UserService {
      * @param roomId   the id of the room
      * @return true if the User with the given Username owns the room with the given Id, else false
      */
-    public boolean ownsRoom(@NonNull String username, Integer roomId) {
+    public boolean ownsRoom(@NonNull final String username, final Integer roomId) {
         return userStorage.findByUsername(username)
                 .map(user -> user.getRooms().stream().anyMatch(r -> r.getId().equals(roomId)))
                 .orElse(false);
@@ -213,7 +213,7 @@ public class UserService {
      * @param username username of required User
      * @return Devices owned by User
      */
-    public Optional<List<Device>> getPopulatedDevices(String username) {
+    public Optional<List<Device>> getPopulatedDevices(final String username) {
         return userStorage.findByUsername(username)
                 .map(u -> u.getRooms().stream().flatMap(
                         r -> r.getDevices().stream()).collect(Collectors.toList()));
@@ -227,7 +227,7 @@ public class UserService {
      * @param sessionToken the session token
      * @return true if they match, false if the User does not exist or they don't match
      */
-    public boolean validSession(@NonNull String username, @NonNull String sessionToken) {
+    public boolean validSession(@NonNull final String username, @NonNull final String sessionToken) {
         return userStorage.findByUsername(username)
                 .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
     }
@@ -239,14 +239,14 @@ public class UserService {
      * @param username the username whose device is to be removed
      * @param deviceId the id of the device to be removed
      */
-    public void removeDevice(String username, Integer deviceId) {
+    public void removeDevice(final String username, final Integer deviceId) {
         if (ownsDevice(username, deviceId)) {
             deviceStorage.deleteById(deviceId);
         }
     }
 
 
-    public Optional<User> getById(Integer id) {
+    public Optional<User> getById(final Integer id) {
         return userStorage.findById(id);
     }
 
@@ -268,7 +268,7 @@ public class UserService {
             return false;
         }
 
-        Room startRoom = roomStorage.findById(startRoomId)
+        final Room startRoom = roomStorage.findById(startRoomId)
                 .orElseThrow(() -> new ImproperImplementationException("the method ownsRoom doesnt work properly"));
 
         if (!startRoom.getDevicesIds().contains(deviceId)) {
@@ -291,8 +291,8 @@ public class UserService {
      * @return the id of the room containing the device
      */
     public Integer owningRoom(final String username, final Integer deviceId) {
-        var rooms = getPopulatedRooms(username);
-        for (Room r : rooms) {
+        final var rooms = getPopulatedRooms(username);
+        for (final Room r : rooms) {
             if (r.getDevicesIds().contains(deviceId)) {
                 return r.getId();
             }
@@ -315,7 +315,7 @@ public class UserService {
                 userStorage.save(user);
                 return true;
             }).orElse(false);
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             return false;
         }
     }

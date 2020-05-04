@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerAdvisor {
     @ExceptionHandler(HttpException.class)
-    public ResponseEntity<SerialisableException> handleException(HttpException e) {
+    public ResponseEntity<SerialisableException> handleException(final HttpException e) {
         // log exception
         return ResponseEntity
                 .status(e.getStatus())

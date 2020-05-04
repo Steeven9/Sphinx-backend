@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * Exception thrown to indicate a 401 UNAUTHORIZED
  */
 public class UnauthorizedException extends HttpException {
-    public UnauthorizedException(String message) {
+    public UnauthorizedException(final String message) {
         super(message);
     }
 
