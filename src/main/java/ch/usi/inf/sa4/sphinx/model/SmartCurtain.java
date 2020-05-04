@@ -21,7 +21,7 @@ public class SmartCurtain extends Dimmable {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SMART_CURTAIN;
     }
 }

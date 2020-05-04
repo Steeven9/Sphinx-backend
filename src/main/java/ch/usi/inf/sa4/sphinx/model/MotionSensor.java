@@ -53,7 +53,7 @@ public class MotionSensor extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.MOTION_SENSOR;
     }
 }
