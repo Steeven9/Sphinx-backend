@@ -68,90 +68,88 @@ public class GuestController {
 
 
         return ResponseEntity.ok(users);
+
     }
 
 
-        /**
-         * Get the list of houses the  user is allowed to access as guest.
-         *
-         * @param username     the username of the user.
-         * @param sessionToken the session token used for validation
-         * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
-         */
+    /**
+     * Get the list of houses the  user is allowed to access as guest.
+     *
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
+     * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
+     */
 
-        @GetMapping(value = {"/houses/", "/houses"})
-        public ResponseEntity<SerialisableUser[]> getHouses (@RequestHeader("session-token") String sessionToken,
-                @RequestHeader("user") String username){
+    @GetMapping(value = {"/houses/", "/houses"})
+    public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
+                                                        @RequestHeader("user") String username) {
 
-            Optional<User> user = userService.get(username);
+        Optional<User> user = userService.get(username);
 
-            if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-
-
-                throw new UnauthorizedException("");
-
-            }
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
-            List<User> guestOf = userService.otherHousesAccess(username);
+            throw new UnauthorizedException("");
 
-            SerialisableUser[] users;
+        }
 
-            users = guestOf.toArray(SerialisableUser[]::new);
-            return ResponseEntity.ok(users);
+
+        List<User> guestOf = userService.otherHousesAccess(username);
+
+        SerialisableUser[] users;
+
+        users = guestOf.toArray(SerialisableUser[]::new);
+        return ResponseEntity.ok(users);
+
+
+    }
+
+
+    /**
+     * Get the list of devices the guests can access.
+     *
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
+     * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
+     */
+
+
+    @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
+    public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
+    (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
+            sessionToken,
+     @PathVariable @RequestHeader("user") String username) {
+
+
+        Optional<User> user = userService.get(username);
+
+
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
+            throw new UnauthorizedException("");
+
+        }
+        Optional<User> guest = userService.get(guest_username);
+        Optional<List<Integer>> devicesIds = userService.getDevices(username);
+        if (!guest.isPresent() || !devicesIds.isPresent()) {
+
+            throw new UnauthorizedException("");
 
 
         }
 
 
+        List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+        devices.stream()
+                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                .map(device -> serialiser.serialiseDevice(device, user.get()))
+                .collect(Collectors.toList()).toArray(SerialisableDevice[]::new);
+        SerialisableDevice[] devicesArray;
 
-        /**
-         * Get the list of devices the guests can access.
-         * @param username     the username of the user.
-         * @param sessionToken the session token used for validation
-         * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
-         */
+        devicesArray = devices.toArray(SerialisableDevice[]::new);
+        return ResponseEntity.ok(devicesArray);
 
-
-        @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
-        public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
-        (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
-        sessionToken,
-                @PathVariable @RequestHeader("user") String username){
-
-
-            Optional<User> user = userService.get(username);
-
-
-
-            if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-                throw new UnauthorizedException("");
-
-            }
-            Optional<User> guest = userService.get(guest_username);
-            Optional<List<Integer>> devicesIds = userService.getDevices(username);
-            if (!guest.isPresent() || !devicesIds.isPresent()) {
-
-                throw new UnauthorizedException("");
-
-
-            }
-
-
-            List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
-            devices.stream()
-                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
-                    .map(device -> serialiser.serialiseDevice(device, user.get()))
-                    .collect(Collectors.toList()).toArray(SerialisableDevice[]::new);
-            SerialisableDevice[] devicesArray;
-
-            devicesArray = devices.toArray(SerialisableDevice[]::new);
-            return ResponseEntity.ok(devicesArray);
-
-        }
-
+    }
 
 
 //
@@ -191,76 +189,71 @@ public class GuestController {
 //    }
 
 
-        /**
-         * Adds the name of the user who wants the guest, to the list of the guest.
-         * @param username       the username of the user.
-         * @param sessionToken  the session token used for validation
-         * @param guest a String representing the username who wants to add the former as guest guest
-         * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
-         * 401 if unauthorized
-         */
-        @PostMapping(value = {"", "/"})
+    /**
+     * Adds the name of the user who wants the guest, to the list of the guest.
+     *
+     * @param username     the username of the user.
+     * @param sessionToken the session token used for validation
+     * @param guest        a String representing the username who wants to add the former as guest guest
+     * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
+     * 401 if unauthorized
+     */
+    @PostMapping(value = {"", "/"})
 
 
-        public ResponseEntity<SerialisableUser> createGuestOf (@RequestBody SerialisableUser guest,
-                @RequestHeader("session-token") String sessionToken,
-                @RequestHeader("user") String username){
-            Optional<User> guestUsername = userService.get(guest.username);
-            Optional<User> user = userService.get(username);
-            String guest_username = guest.username;
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody SerialisableUser guest,
+                                                          @RequestHeader("session-token") String sessionToken,
+                                                          @RequestHeader("user") String username) {
+        Optional<User> guestUsername = userService.get(guest.username);
+        Optional<User> user = userService.get(username);
+        String guest_username = guest.username;
 
-            if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
-
-
-                throw new UnauthorizedException("");
+        if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
-            }
+            throw new UnauthorizedException("");
+        }
 
-            userService.addGuest(username, guest_username);
-            return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+        userService.addGuest(username, guest_username);
+        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+
+
+    }
+
+
+    /**
+     * Deletes a guest.
+     *
+     * @param username       the user who want to delete a guest
+     * @param guest_username the guest to delete
+     * @param sessionToken   the session token used to authenticate
+     * @return a ResponseEntity containing one of the following status codes:
+     * 404 if no user with the given username exists
+     * 401 if the session token does not match
+     * 204 if the operation was successful
+     */
+
+    @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
+    public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String
+                                                                  guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
+        Optional<User> user = userService.get(username);
+
+
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
+            throw new UnauthorizedException("");
 
 
         }
+        if (!userService.removeGuest(username, guest_username)) {
 
+            throw new ServerErrorException("");
+        } else {
 
-
-        /**
-         * Deletes a guest.
-         * @param username       the user who want to delete a guest
-         * @param guest_username the guest to delete
-         * @param sessionToken  the session token used to authenticate
-         * @return a ResponseEntity containing one of the following status codes:
-         * 404 if no user with the given username exists
-         * 401 if the session token does not match
-         * 204 if the operation was successful
-         */
-
-        @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
-        public ResponseEntity<SerialisableUser> deleteGuestOf (@PathVariable("guest_username") String
-        guest_username,
-
-                @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username){
-            Optional<User> user = userService.get(username);
-
-
-            if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-                throw new UnauthorizedException("");
-
-
-
-            }
-            if (!userService.removeGuest(username, guest_username)) {
-
-                throw new ServerErrorException("");
-            } else {
-
-                return ResponseEntity.status(204).build();
-            }
-
-
+            return ResponseEntity.status(204).build();
         }
 
 
     }
+}
