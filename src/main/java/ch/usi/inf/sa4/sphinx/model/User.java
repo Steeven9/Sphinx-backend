@@ -55,11 +55,9 @@ public class User extends StorableE {
 
 
 
+
     private List<User> hosts;
     private boolean camsVisible = false;
-
-
-    private boolean visibleCams = false;
 
 //TODO find way to auto generate verificationToken
 
@@ -322,22 +320,6 @@ public class User extends StorableE {
 
     }
 
-    /**
-     * Check if cameras are accessible by guests.
-     *
-     * @return true if the cameras are visible to the guests
-     **/
-    public boolean visibilityStatus() {
-        return visibleCams;
-    }
-
-    /**
-     * Switches the cam visibility from on to off and vice versa.
-     **/
-    public void oppositeSwitch() {
-        visibleCams = !visibleCams;
-    }
-
 
     /**
      * getter for guest
@@ -396,38 +378,7 @@ public class User extends StorableE {
     }
 
 
-    /**
-     * getter for guest
-     *
-     * @return returns a list of the houses the user has access to as guest
-     */
-    public List<User> getGuestsOf() {
 
-        return hosts;
-    }
-
-    /**
-     * Add user to the list of user hub's he is guest.
-     *
-     * @param user the user to add
-     **/
-
-    public void addGuestOf(final User user) {
-
-        hosts.add(user);
-    }
-
-    /**
-     * Remove user from the list of user hub's he is guest.
-     *
-     * @param user the user to remove
-     **/
-
-    public void removeGuestOf(final User user) {
-        hosts.remove(user);
-
-
-    }
 
 
 }

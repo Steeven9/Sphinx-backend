@@ -3,7 +3,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
-
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -70,7 +69,6 @@ public class GuestController {
         SerialisableUser[] users;
         users = guest.toArray(SerialisableUser[]::new);
 
-
         return ResponseEntity.ok(users);
 
 
@@ -98,6 +96,7 @@ public class GuestController {
             throw new UnauthorizedException("");
 
         }
+
 
 
         List<User> guestOf = userService.otherHousesAccess(username).get();
@@ -138,6 +137,7 @@ public class GuestController {
             throw new UnauthorizedException("");
 
         }
+
 
 
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
@@ -209,6 +209,7 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
+
         if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
@@ -244,7 +245,6 @@ public class GuestController {
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
 
             throw new UnauthorizedException("");
 

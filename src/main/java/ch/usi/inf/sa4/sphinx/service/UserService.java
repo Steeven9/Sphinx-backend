@@ -350,8 +350,10 @@ public class UserService {
 
         if(guestUser.isPresent() && user.isPresent()) {
 
+
             user.get().removeHost(guestUser.get());
             userStorage.save(user.get());
+
 
 
         }
@@ -392,12 +394,14 @@ public class UserService {
 
     public Optional<List<User>> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
+
         if(!user.isPresent()) {
             return Optional.empty();
         }
 
 
         return Optional.ofNullable(user.get().getHosts());
+
 
     }
 
@@ -415,7 +419,6 @@ public class UserService {
 
         }
         return user.get().getHosts().contains(guestUsername.get());
-
 
     }
 
@@ -443,7 +446,7 @@ public class UserService {
      **/
     public List<User> getGuests(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
-        return user.orElse(null).getGuestsOf();
+        return user.orElse(null).getHosts();
     }
 
 
@@ -455,7 +458,7 @@ public class UserService {
      */
     public List<User> returnOwnGuests(@NonNull final String username) {
         return userStorage.findAll().stream().filter(user -> {
-            return user.getGuestsOf().stream().map(User::getUsername).anyMatch(s -> {
+            return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
                 return s.equals(username);
             });
         }).collect(Collectors.toList());
