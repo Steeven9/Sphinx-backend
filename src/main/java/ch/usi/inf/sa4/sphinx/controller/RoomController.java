@@ -25,10 +25,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 @Validated
-//@Api(value = "Room endpoint", tags = {"Swagger.TAG1"})
-//@SwaggerDefinition(tags = {
-//        @Tag(name = "Swagger.TAG1", description = "Room Controller")
-//})
 @Api(value = "Room endpoint", description = "Room Controller")
 public class RoomController {
 

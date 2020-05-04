@@ -162,7 +162,7 @@ public class UserController {
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        userService.get(username).orElseThrow(() -> new NotFoundException("Could not find user"));
+        userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
         userService.delete(username);

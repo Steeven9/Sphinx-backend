@@ -114,7 +114,7 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (verifiedUser.isVerified()) {
             throw new BadRequestException("User is already verified");
@@ -202,7 +202,7 @@ public class AuthController {
     @PostMapping("/resend/{email}")
     public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
         if (email == null) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Some fields are missing");
         }
         User user = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));

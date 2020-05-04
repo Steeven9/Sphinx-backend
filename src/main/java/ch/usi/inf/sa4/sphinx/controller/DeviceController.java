@@ -145,7 +145,7 @@ public class DeviceController {
         }
 
         if (!userService.ownsRoom(username, device.roomId)) {
-            throw new ForbiddenException("You don't own this room");
+            throw new UnauthorizedException("You don't own this room");
         }
 
         User user = userService.get(username).get(); //If the session is valid the User exists
@@ -202,7 +202,7 @@ public class DeviceController {
         }
 
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new ForbiddenException("You don't own this device");
+            throw new UnauthorizedException("You don't own this device");
         }
 
         Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
