@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 "Description for Sphinx API", //TODO
                 "1.0",
                 "Terms", //TODO
-                new Contact("Sphinx", "https://localhost:8080",
+                new Contact("Sphinx", "http://localhost:8080",
                         "info@smarthut.xyz"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html"
