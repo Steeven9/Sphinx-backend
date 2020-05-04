@@ -57,9 +57,9 @@ public class Thermostat extends TempSensor {
      * @param target the target temperature
      * @return the State of Thermostat
      */
-    private States determineState(double target) {
-        double temp;
-        if (Sources.SELF.equals(this.getSource())) {
+    private States determineState(final double target) {
+        final double temp;
+        if (this.source == Sources.SELF) {
             temp = this.getValue();
         } else {
             temp = this.getAverageTemp();
@@ -81,18 +81,18 @@ public class Thermostat extends TempSensor {
      *
      * @param target target temperature to be set
      */
-    public void setTargetTemp(double target) {
+    public void setTargetTemp(final double target) {
         this.state = this.determineState(target);
         this.targetTemp = target;
     }
 
     /**
      * Maps a state of thermostat to an int.
-     * @param s a State of thermostat
+     * @param state a State of thermostat
      * @return int mapping to thermostat
      */
-    private int fromStateToInt(States s) {
-        switch (s) {
+    private static int fromStateToInt(final States state) {
+        switch (state) {
             case IDLE:
                 return 1;
             case COOLING:
@@ -112,11 +112,11 @@ public class Thermostat extends TempSensor {
      * @return the average temperature
      */
     public double getAverageTemp() {
-        List<Device> devices = this.getRoom().getDevices();
+        final List<Device> devices = this.getRoom().getDevices();
         double averageTemp = 0.0, sensors = 1.0;
 
-        if (!(devices.size() == 0)) {
-            for (Device device : devices) {
+        if (!(devices.isEmpty())) {
+            for (final Device device : devices) {
                 if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
                     averageTemp += ((TempSensor) device).getValue();
                     sensors++;
@@ -136,10 +136,10 @@ public class Thermostat extends TempSensor {
      */
     @Override
     protected SerialisableDevice serialise() {
-        SerialisableDevice sd = super.serialise();
+        final SerialisableDevice sd = super.serialise();
         sd.slider = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();
-        sd.state = this.fromStateToInt(this.getState());
+        sd.state = Thermostat.fromStateToInt(this.state);
         sd.source = this.source == Sources.SELF ? 0 : 1;
         return sd;
     }
@@ -150,7 +150,7 @@ public class Thermostat extends TempSensor {
      *
      * @param source the source in int to set
      */
-    public void setSource(int source) {
+    public void setSource(final int source) {
         if (source == 0) {
             this.source = Sources.SELF;
         } else {

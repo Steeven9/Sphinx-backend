@@ -33,7 +33,7 @@ public class StatelessDimmableSwitch extends Device {
      * Set to true if the last action of this switch was incrementing, false otherwise.
      * @param value true if was incrementing, false otherwise
      */
-    public void setIncrement(boolean value) {
+    public void setIncrement(final boolean value) {
         this.button = value;
         triggerEffects();
     }

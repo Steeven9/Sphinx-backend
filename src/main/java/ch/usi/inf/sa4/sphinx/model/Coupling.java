@@ -47,7 +47,7 @@ public class Coupling extends StorableE {
      * @see Effect
      * @param <T> parametrized type of Event and Effect
      */
-    public <T> Coupling(@NonNull Event<T> event, @NonNull Collection<Effect<T>> effects) {
+    public <T> Coupling(@NonNull final Event<T> event, @NonNull final Collection<? extends Effect<T>> effects) {
         this.event = event;
         this.effects = new ArrayList<>(effects);
     }
@@ -58,7 +58,7 @@ public class Coupling extends StorableE {
      * @param event the Event
      * @param <T> parametrized type of Event and Effect
      */
-    public <T> Coupling(@NonNull Event<T> event){
+    public <T> Coupling(@NonNull final Event<T> event){
         this(event, new ArrayList<>());
     }
 
@@ -68,7 +68,7 @@ public class Coupling extends StorableE {
      * @param effect a single Effect linked to the Event
      * @param <T> parametrized type of Event and Effect
      */
-    public <T> Coupling(@NonNull Event<T> event,@NonNull Effect<T> effect){
+    public <T> Coupling(@NonNull final Event<T> event, @NonNull final Effect<T> effect){
         this(event, new ArrayList<>());
         addEffect(effect);
     }
@@ -105,7 +105,7 @@ public class Coupling extends StorableE {
      * Executes all effects of this coupling
      */
     public void run() {
-        for (Effect effect : effects) {
+        for (final Effect effect : effects) {
             effect.execute(event.get());
         }
     }
@@ -126,15 +126,15 @@ public class Coupling extends StorableE {
      * @param effect the Effect to add to this Coupling
      * @see Effect
      */
-    public void addEffect(@NonNull Effect effect) {
+    public void addEffect(@NonNull final Effect effect) {
         effects.add(effect);
     }
 
     @Override
-    public boolean equals(@NonNull Object other) {
+    public boolean equals(@NonNull final Object other) {
         if(!(other instanceof Coupling)) return false;
         if(other == this) return true;
-        Coupling otherCoupling = (Coupling) other;
+        final Coupling otherCoupling = (Coupling) other;
         if(id == null || otherCoupling.getId() == null) return false;
         return  id.equals(((Coupling) other).getId());
     }

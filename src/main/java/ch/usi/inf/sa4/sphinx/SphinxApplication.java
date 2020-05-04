@@ -23,7 +23,7 @@ public class SphinxApplication {
     private boolean dummyDataEnabled;
 
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(SphinxApplication.class, args);
     }
 

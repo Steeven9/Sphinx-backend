@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * Class that helps with the serialisation of models into views.
  */
 @Component
-public class Serialiser {
+public final class Serialiser {
     @Autowired
     private UserService userService;
     @Autowired
@@ -33,11 +33,11 @@ public class Serialiser {
      * Serializes a Device for the description of the serialized fields consult SerialisableDevice
      * the field that can't be retrieved from the device alone will be null
      *
-     * @param d the device to serialize
+     * @param device the device to serialize
      * @return the serialized device
      */
-    public SerialisableDevice serialiseDevice(Device d) {
-        return d.serialise();
+    public static SerialisableDevice serialiseDevice(final Device device) {
+        return device.serialise();
     }
 
     /**
@@ -50,11 +50,11 @@ public class Serialiser {
      * @param user   the User that owns the device
      * @return the serialized device
      */
-    public SerialisableDevice serialiseDevice(Device device, User user) {
-        SerialisableDevice sd = serialiseDevice(device);
+    public SerialisableDevice serialiseDevice(final Device device, final User user) {
+        final SerialisableDevice sd = serialiseDevice(device);
 
-        Room owningRoom = device.getRoom();
-        User owningUser = owningRoom.getUser();
+        final Room owningRoom = device.getRoom();
+        final User owningUser = owningRoom.getUser();
         sd.roomId = owningRoom.getId();
         sd.roomName = owningRoom.getName();
         sd.userName = owningUser.getUsername();
@@ -71,7 +71,7 @@ public class Serialiser {
      * @return a list of serilised devices with info about their owner
      * @see Serialiser#serialiseDevice(Device, User)
      */
-    public List<SerialisableDevice> serialiseDevices(Collection<Device> devices, User user) {
+    public List<SerialisableDevice> serialiseDevices(final Collection<? extends Device> devices, final User user) {
         return devices.stream().map(device -> serialiseDevice(device, user)).collect(Collectors.toList());
     }
 
@@ -83,7 +83,7 @@ public class Serialiser {
      * @param user the user to serialize
      * @return the serialized user
      */
-    public SerialisableUser serialiseUser(User user) {
+    public static SerialisableUser serialiseUser(final User user) {
         return user.serialise();
     }
 
@@ -94,7 +94,7 @@ public class Serialiser {
      * @param room the room to serialize
      * @return the serialized room
      */
-    public SerialisableRoom serialiseRoom(Room room) {
+    public static SerialisableRoom serialiseRoom(final Room room) {
         return room.serialise();
     }
 
@@ -104,7 +104,7 @@ public class Serialiser {
      * @return the serialized rooms
      * @see Serialiser#serialiseRoom(Room)
      */
-    public List<SerialisableRoom> serialiseRooms(Collection<Room> rooms) {
+    public static List<SerialisableRoom> serialiseRooms(final Collection<Room> rooms) {
         return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 

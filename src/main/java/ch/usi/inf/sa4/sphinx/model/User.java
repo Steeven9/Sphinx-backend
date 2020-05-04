@@ -156,7 +156,7 @@ public class User extends StorableE{
     }
 
 
-    public void setSessionToken(String sessionToken) {
+    public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
 
@@ -230,7 +230,7 @@ public class User extends StorableE{
      * Sets the status of the user to verified
      */
     public void verify() {
-        setVerified(true);
+        verified = true;
     }
 
     /**
@@ -283,7 +283,7 @@ public class User extends StorableE{
      * @see SerialisableUser
      */
     public SerialisableUser serialise() {
-        SerialisableUser sd = new SerialisableUser();
+        final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;

@@ -12,7 +12,7 @@ public class ImproperImplementationException extends RuntimeException {
     public ImproperImplementationException() {
     }
 
-    public ImproperImplementationException(String message) {
+    public ImproperImplementationException(final String message) {
         super(message);
     }
 }
