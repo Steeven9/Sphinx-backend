@@ -114,7 +114,9 @@ public class DummyDataAdder {
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
 
+
         } catch (final RuntimeException e) {
+
 
             logger.warn("Something is wrong in user2");
         }
