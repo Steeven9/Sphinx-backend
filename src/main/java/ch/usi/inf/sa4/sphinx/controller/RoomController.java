@@ -106,8 +106,8 @@ public class RoomController {
 
         check(sessionToken, username, null, roomId);
 
-        User user = userService.get(username).orElseThrow(()->new ServerErrorException(""));//It exists from previous check
-        Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException(""));//It exists from previous check
+        User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
+        Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
 
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
     }
@@ -133,9 +133,9 @@ public class RoomController {
         check(sessionToken, username, errors);
 
         Room room = new Room(serialisableRoom);
-        Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(""));
+        Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
         SerialisableRoom res = serialiser.serialiseRoom(roomService.get(id).orElseThrow(
-                () -> new ServerErrorException("failed to save the room")
+                () -> new ServerErrorException("Couldn't serialise room")
         ));
 
         return ResponseEntity.status(201).body(res);
@@ -162,7 +162,7 @@ public class RoomController {
                                                        Errors errors) {
         check(sessionToken, username, errors, roomId);
 
-        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException(""));
+        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));
 
 
         String newName = serialisableRoom.name;
@@ -181,11 +181,11 @@ public class RoomController {
         }
 
         if (!roomService.update(storageRoom)) {
-            throw new ServerErrorException("");
+            throw new ServerErrorException("Couldn't save data");
         }
 
         SerialisableRoom res = serialiser.serialiseRoom(storageRoom);
-        return ResponseEntity.status(200).body(res);
+        return ResponseEntity.ok().body(res);
     }
 
     /**
@@ -205,10 +205,10 @@ public class RoomController {
         check(sessionToken, username, null, roomId);
 
         if (!userService.removeRoom(username, roomId)) {
-           throw new ServerErrorException("");
+           throw new ServerErrorException("Couldn't save data");
         }
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -229,7 +229,7 @@ public class RoomController {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
         if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Your credentials are not valid");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
 
@@ -250,7 +250,7 @@ public class RoomController {
     private void check(String sessionToken, String username, Errors errors, Integer roomId) {
         check(sessionToken, username, errors);
 
-        if(!userService.ownsRoom(username, roomId)) throw new UnauthorizedException("You can't access to this room");
+        if(!userService.ownsRoom(username, roomId)) throw new UnauthorizedException("You don't own this room");
 
     }
 
