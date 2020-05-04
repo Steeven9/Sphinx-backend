@@ -328,11 +328,6 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
-//        this.mockmvc.perform(post("/guests/")
-//                .header("user", "user2")
-//                .header("session-token", "banana"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
 
         this.mockmvc.perform(delete(("/guests/guest1"))
                 .header("session-token", "banana")
