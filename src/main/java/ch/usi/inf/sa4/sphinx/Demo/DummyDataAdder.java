@@ -42,7 +42,7 @@ public class DummyDataAdder {
      * sessionToken="user1SessionToken"
      */
     @Transactional
-    public void user1() {
+    protected void user1() {
         try {
 
             final User newUser = new User("mario@smarthut.xyz", "1234", "user1", "mario rossi");
@@ -74,7 +74,7 @@ public class DummyDataAdder {
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
     @Transactional
-    public void user2() {
+    protected void user2() {
         try {
             final User newUser = new User("luigi@smarthut.xyz", "1234", "user2", "luigi rossi");
             newUser.setVerified(true);
@@ -113,11 +113,13 @@ public class DummyDataAdder {
             //ROOM4 is empty
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
+
         } catch (final RuntimeException e) {
 
             logger.warn("Something is wrong in user2");
         }
     }
+
 
 
     /**
@@ -126,7 +128,7 @@ public class DummyDataAdder {
      */
     //user with 20 rooms and random devices in them
     @Transactional
-    public void randUser() {
+    protected  void randUser() {
         try {
             final User newUser = new User("rand@smarthut.xyz", "1234", "randUser", "randomUser");
             newUser.setVerified(true);
@@ -155,7 +157,7 @@ public class DummyDataAdder {
      * sessionToken="emptyUserSessionToken"
      */
     @Transactional
-    public void emptyUser() {
+    protected void emptyUser() {
         try {
             final User newUser = new User("empty@smarthut.xyz", "1234", "emptyUser", "Empty User");
             newUser.setVerified(true);
@@ -170,13 +172,21 @@ public class DummyDataAdder {
      * adds an unverified user called unverifiedUser in storage
      */
     @Transactional
-    public void unverifiedUser() {
+    protected void unverifiedUser() {
         try {
             final User newUser = new User("unv@smarthut.xyz", "1234", "unverifiedUser", "edeefefefef");
             if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
         } catch (final RuntimeException e) {
             logger.warn("Something is wrong in unverifiedUser");
         }
+    }
+    @Transactional
+    public void addDummyData(){
+        emptyUser();
+        randUser();
+        user1();
+        user2();
+        unverifiedUser();
     }
 
 }
