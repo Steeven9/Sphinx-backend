@@ -83,7 +83,7 @@ public abstract class Device extends StorableE {
         return room;
     }
 
-    protected abstract DeviceType getDeviceType();
+   public abstract DeviceType getDeviceType();
 
 
 

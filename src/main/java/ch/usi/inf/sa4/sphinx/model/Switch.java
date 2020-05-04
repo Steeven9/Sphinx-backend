@@ -48,7 +48,7 @@ public class Switch extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SWITCH;
     }
 }
