@@ -43,7 +43,7 @@ public class DummyDataAdder {
      * sessionToken="user1SessionToken"
      */
     @Transactional
-    public void user1() {
+    protected void user1() {
         try {
 
             User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
@@ -75,7 +75,7 @@ public class DummyDataAdder {
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
     @Transactional
-    public void user2() {
+    protected void user2() {
         try {
             User newUser = new User("mario2@usi.ch", "1234", "user2", "mariorossi");
             newUser.setVerified(true);
@@ -114,23 +114,7 @@ public class DummyDataAdder {
             //ROOM4 is empty
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
-            User guest1 = new User();
-            User guest2 = new User();
-            User guest3 = new User();
-            User guest4 = new User();
-            User guest5 = new User();
 
-            guest1.setUsername("guest1");
-            guest2.setUsername("guest2");
-            guest3.setUsername("guest3");
-            guest4.setUsername("guest4");
-            guest5.setUsername("guest5");
-
-            guest2 = userService.addGuest("user2","guest1").get();
-            guest2 = userService.addGuest("user2","guest2").get();
-            guest3 = userService.addGuest("user2","guest3").get();
-            guest4 = userService.addGuest("user2","guest4").get();
-            guest5 = userService.addGuest("user2","guest5").get();
 
 
 
@@ -140,13 +124,14 @@ public class DummyDataAdder {
     }
 
 
+
     /**
      * adds a user called randUser to storage that has randomly filled rooms, this user has no session token and must be
      * logged in
      */
     //user with 20 rooms and random devices in them
     @Transactional
-    public void randUser() {
+    protected  void randUser() {
         try {
             User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
             newUser.setVerified(true);
@@ -175,7 +160,7 @@ public class DummyDataAdder {
      * sessionToken="emptyUserSessionToken"
      */
     @Transactional
-    public void emptyUser() {
+    protected void emptyUser() {
         try {
             User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
             newUser.setVerified(true);
@@ -190,13 +175,21 @@ public class DummyDataAdder {
      * adds an unverified user called unverifiedUser in storage
      */
     @Transactional
-    public void unverifiedUser() {
+    protected void unverifiedUser() {
         try {
             User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
             if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
         } catch (Exception e) {
             logger.warn("Something is wrong in unverifiedUser");
         }
+    }
+    @Transactional
+    public void addDummyData(){
+        emptyUser();
+        randUser();
+        user1();
+        user2();
+        unverifiedUser();
     }
 
 }
