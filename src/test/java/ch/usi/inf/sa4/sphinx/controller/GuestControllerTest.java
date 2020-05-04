@@ -124,7 +124,6 @@ public class GuestControllerTest {
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
 
-
                 .andDo(print())
                 .andExpect(status().is(401));
 
