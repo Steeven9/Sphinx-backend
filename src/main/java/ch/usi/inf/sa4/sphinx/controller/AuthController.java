@@ -142,7 +142,7 @@ public class AuthController {
     @PostMapping("/reset/{email}")
     public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
         User resetUser = userService.getByMail(email)
-                .orElseThrow(() -> new NotFoundException("user not found"));
+                .orElseThrow(() -> new UnauthorizedException("user not found"));
 
 
         String resetCode = resetUser.createResetCode();
@@ -176,7 +176,7 @@ public class AuthController {
         }
 
         User changedUser = userService.getByMail(email)
-                .orElseThrow(() -> new NotFoundException("user not found"));
+                .orElseThrow(() -> new UnauthorizedException("user not found"));
 
         if (!resetCode.equals(changedUser.getResetCode())) {
             throw new UnauthorizedException("Invalid reset code");
@@ -205,7 +205,7 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
         User user = userService.getByMail(email)
-                .orElseThrow(() -> new NotFoundException("no user with this mail"));
+                .orElseThrow(() -> new UnauthorizedException("no user with this mail"));
 
         if (user.isVerified()) {
             throw new BadRequestException("User is already verified");
