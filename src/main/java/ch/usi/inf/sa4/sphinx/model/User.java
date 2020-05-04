@@ -57,11 +57,9 @@ public class User extends StorableE {
 
 
 
-
     private  List<User> hosts;
 
     private boolean camsVisible = false;
-
 
 
 
@@ -318,7 +316,9 @@ public class User extends StorableE {
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
 
 
+
     }
+
 
 
 
@@ -372,6 +372,7 @@ public class User extends StorableE {
 
 
     }
+
 
 
 

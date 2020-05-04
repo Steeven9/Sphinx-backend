@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
+
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -74,7 +75,6 @@ public class GuestController {
         SerialisableUser[] users;
         users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
 
-
         return ResponseEntity.ok(users);
 
 
@@ -108,6 +108,7 @@ public class GuestController {
 
 
         }
+
 
 
         List<User> guestOf = userService.otherHousesAccess(username).get();
@@ -160,6 +161,7 @@ public class GuestController {
             throw new UnauthorizedException("");
 
         }
+
 
 
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
@@ -278,10 +280,12 @@ public class GuestController {
 
 
 
+
         if (  !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
+
 
 
 

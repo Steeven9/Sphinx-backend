@@ -75,6 +75,11 @@ public abstract class Device extends StorableE {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> #124: Gitlab suggestions applied (#6)
     /**
      * @return the DeviceType of this device
      * @see DeviceType
@@ -82,6 +87,15 @@ public abstract class Device extends StorableE {
     protected abstract DeviceType getDeviceType();
 =======
    public abstract DeviceType getDeviceType();
+>>>>>>> #124: Gitlab suggestions applied (#6)
+<<<<<<< HEAD
+=======
+=======
+   public abstract DeviceType getDeviceType();
+>>>>>>> #124: Gitlab suggestions applied (#6)
+=======
+   public abstract DeviceType getDeviceType();
+>>>>>>> #124: Gitlab suggestions applied (#6)
 >>>>>>> #124: Gitlab suggestions applied (#6)
 
     /**

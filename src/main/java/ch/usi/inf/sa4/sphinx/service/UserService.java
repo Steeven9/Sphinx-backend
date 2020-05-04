@@ -355,9 +355,12 @@ public class UserService {
         if (guestUser.isPresent() && user.isPresent()) {
 
 
+
             guestUser.get().removeHost(user.get());
+
             userStorage.save(user.get());
             return true;
+
 
 
         }
@@ -411,6 +414,7 @@ public class UserService {
 
 
 
+
     public Optional<List<User>> otherHousesAccess(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
 
@@ -421,6 +425,7 @@ public class UserService {
 
 
         return Optional.ofNullable(user.get().getHosts());
+
 
     }
 
@@ -444,7 +449,6 @@ public class UserService {
 
         }
         return user.get().getHosts().contains(guestUsername.get());
-
 
     }
 
@@ -473,12 +477,14 @@ public class UserService {
      * @param username the user's username
      * @return a list of the guests
      **/
+
     public List<User> getGuests(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
         if(user.isPresent()) {
             return user.get().getHosts();
         }
         throw new NotFoundException("This user does not exist");
+
     }
 
 

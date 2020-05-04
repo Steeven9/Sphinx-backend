@@ -89,13 +89,13 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/")
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
         this.mockmvc.perform(get("/guests/houses")
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -106,18 +106,16 @@ public class GuestControllerTest {
 
 
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
-
 
 
         this.mockmvc.perform(delete(("/guests/guest1"))
 
 
                 .header("session-token", "banana")
-                .header("username", "user2"))
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
