@@ -45,7 +45,7 @@ public class DummyDataAdder {
     public void user1() {
         try {
 
-            final User newUser = new User("mario@usi.ch", "1234", "user1", "mario rossi");
+            final User newUser = new User("mario@smarthut.xyz", "1234", "user1", "mario rossi");
             newUser.setVerified(true);
             newUser.setSessionToken("user1SessionToken");
             final boolean inserted = userService.insert(newUser);
