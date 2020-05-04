@@ -4,13 +4,11 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,14 +38,13 @@ class UserServiceTest {
 //    }
 
 
-
     @Test
     @DisplayName("creates a user")
-    void testCreatesUser(){
+    void testCreatesUser() {
         User newUser = new User("name@it", "1234", "username", "fullname");
         userService.insert(newUser);
         boolean found = userService.get("username").isPresent();
-        assert(found);
+        assert (found);
     }
 
     @Test
@@ -65,9 +62,8 @@ class UserServiceTest {
         );
 
 
-
         boolean inserted = userService.insert(newUser);
-        assert(inserted);
+        assert (inserted);
         User returnedUserByUsername = userService.get(username).get();
         User returnedUserByEmail = userService.getByMail(email).get();
         assertAll("should return correct user",
@@ -75,12 +71,12 @@ class UserServiceTest {
                 () -> assertEquals(username, returnedUserByEmail.getUsername()),
                 () -> assertEquals(email, returnedUserByUsername.getEmail()),
                 () -> assertEquals(email, returnedUserByEmail.getEmail()),
-                () -> assertEquals("1234", returnedUserByEmail.getPassword()),
-                () -> assertEquals("1234", returnedUserByUsername.getPassword()),
+                () -> assertTrue(userService.passwordMatchesHash(returnedUserByUsername.getUsername(), "1234")),
+                () -> assertTrue(userService.passwordMatchesHash(returnedUserByEmail.getUsername(), "1234")),
                 () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
                 () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
                 () -> assertNull(returnedUserByUsername.getSessionToken()),
-                () -> assertFalse( userService.validSession(username, "test"))
+                () -> assertFalse(userService.validSession(username, "test"))
         );
         newUser.setSessionToken("token");
         userService.update(newUser);
@@ -114,9 +110,9 @@ class UserServiceTest {
         User newUser = new User(email, "1234", username, "mario rossi");
 
         assertAll("test with invalid values",
-                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(username, null)),
+                () -> assertThrows(NullPointerException.class, () -> userService.changeUsername(username, null)),
                 //() -> assertFalse(userService.changeUsername(username, "test")), Why?
-                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(null, "test"))
+                () -> assertThrows(NullPointerException.class, () -> userService.changeUsername(null, "test"))
         );
         userService.insert(newUser);
 
@@ -167,7 +163,7 @@ class UserServiceTest {
         room2.setName("testName2");
         room3.setName("testName3");
 
-        assertTrue( userService.getDevices("notExisting").isEmpty());
+        assertTrue(userService.getDevices("notExisting").isEmpty());
         userService.insert(newUser);
         assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no device
         assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username).get()); //no device
@@ -181,7 +177,7 @@ class UserServiceTest {
                 () -> assertEquals(room2.getName(), userService.getPopulatedRooms(username).get(1).getName()),
                 () -> assertEquals(room3.getName(), userService.getPopulatedRooms(username).get(2).getName()),
                 () -> assertEquals(3, userService.getPopulatedRooms(username).size()),
-                () -> assertTrue( userService.getPopulatedDevices(username).get().isEmpty()), //should not have any devices
+                () -> assertTrue(userService.getPopulatedDevices(username).get().isEmpty()), //should not have any devices
                 () -> assertTrue(userService.getDevices(username).get().isEmpty()) //should not have any devices
         );
 
@@ -201,7 +197,7 @@ class UserServiceTest {
 
         var deviceList = userService.getPopulatedDevices(username);
         assertEquals(4, deviceList.get().size());
-        List<Integer> listOfId = deviceList.map(ds->ds.stream().map(Device::getId).collect(Collectors.toList())).get();
+        List<Integer> listOfId = deviceList.map(ds -> ds.stream().map(Device::getId).collect(Collectors.toList())).get();
         for (Integer id : listOfId) {
             assertTrue(userService.ownsDevice(username, id));
         }
@@ -249,5 +245,21 @@ class UserServiceTest {
         userService.removeDevice(username, deviceId);
         List<Integer> devicesOwnedByUser = userService.getDevices(username).get();
         assertTrue(devicesOwnedByUser.isEmpty()); //no devices
+    }
+
+
+    @Test
+    void acceptsOnlyCorrectPassword() {
+        User newUser = new User("test@com", "1234", "testUsername", "fullname");
+        userService.insert(newUser);
+        assertTrue(userService.passwordMatchesHash("testUsername", "1234"));
+        assertAll("wrong passwords are rejected",
+                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash(null, "1234")),
+                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash("testUsername", null)),
+                () -> assertThrows(NullPointerException.class, () -> userService.passwordMatchesHash(null, null)),
+                () -> assertFalse(userService.passwordMatchesHash("testUsername", "")),
+                () -> assertFalse(userService.passwordMatchesHash("testUsername", "wrong")),
+                () -> assertFalse(userService.passwordMatchesHash("testusernameddddddddd", "wrong")));
+        userService.delete("testUsername");
     }
 }

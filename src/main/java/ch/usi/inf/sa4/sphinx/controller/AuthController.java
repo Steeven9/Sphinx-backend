@@ -88,7 +88,7 @@ public class AuthController {
             throw new ForbiddenException("");
         }
 
-        if (!user.getPassword().equals(password)) {
+        if (!userService.passwordMatchesHash(user.getUsername(), password)) {
             throw new UnauthorizedException("");
         }
 
@@ -182,11 +182,13 @@ public class AuthController {
             throw new UnauthorizedException("wrong reset code");
         }
 
-        changedUser.setPassword(newPassword);
 
-        if (!userService.update(changedUser)) {
+        if (!userService.changePassword(changedUser.getUsername(), newPassword)) {
             throw new ServerErrorException("");
         }
+
+
+
         return ResponseEntity.noContent().build();
 
     }
