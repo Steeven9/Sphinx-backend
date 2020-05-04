@@ -124,32 +124,6 @@ public class GuestControllerTest {
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
 
-
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/houses")
-
-                .header("user", "fakeUser")
-                .header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/user2/devices/guest1")
-                .header("user", "fakeUser")
-                .header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-//        this.mockmvc.perform(post("/guests/")
-//                .header("user", "fakeUser")
-//                .header("session-token", "user2SessionToken"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
-
-        this.mockmvc.perform(delete(("/guests/guest2"))
-
-                .header("user", "fakeUser")
-                .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -167,22 +141,17 @@ public class GuestControllerTest {
 
         this.mockmvc.perform(get("/guests/user2/devices/guest10")
                 .header("user", "user2")
-
-
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
 
 
 
         this.mockmvc.perform(delete(("/guests/guest23"))
                 .header("user", "user2r")
-
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
 
 //        this.mockmvc.perform(get("/guests/user2/devices/guest59")
 //        .header("user", "fakeUser")
@@ -245,7 +214,6 @@ public class GuestControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-
     }
 
 
@@ -256,7 +224,6 @@ public class GuestControllerTest {
 //                .andDo(print())
 //                .andExpect(status().is(200))
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
-
 //    }
 
 

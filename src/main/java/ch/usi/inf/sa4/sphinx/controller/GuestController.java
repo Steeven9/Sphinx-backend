@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -64,8 +65,10 @@ public class GuestController {
 
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
+
 
 
         }
@@ -74,7 +77,9 @@ public class GuestController {
         users = guest.toArray(SerialisableUser[]::new);
 
 
+
         return ResponseEntity.ok(users);
+
 
     }
 
@@ -93,7 +98,13 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+<<<<<<< HEAD
+=======
+
+            throw new UnauthorizedException("");
+>>>>>>> #124: Gitlab suggestions applied (#6)
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
@@ -138,6 +149,7 @@ public class GuestController {
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+
 
 
 
@@ -215,6 +227,7 @@ public class GuestController {
             if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
+
                 throw new UnauthorizedException("");
 
 
@@ -243,18 +256,21 @@ public class GuestController {
 
 
 
+
         @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
         public ResponseEntity<SerialisableUser> deleteGuestOf (@PathVariable("guest_username") String
         guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username){
+
 
 
             Optional<User> user = userService.get(username);
 
 
 
+
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
-                throw new UnauthorizedException("");
+     throw new UnauthorizedException("");
 
 
             }

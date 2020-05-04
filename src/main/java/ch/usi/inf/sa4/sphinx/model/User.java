@@ -59,6 +59,7 @@ public class User extends StorableE {
     private List<User> hosts;
     private boolean camsVisible = false;
 
+
 //TODO find way to auto generate verificationToken
 
 //    @Component
@@ -326,8 +327,6 @@ public class User extends StorableE {
      *
      * @return returns a list of the houses the user has access to as guest
      */
-
-
     public List<User> getHosts() {
 
         return hosts;
@@ -375,7 +374,6 @@ public class User extends StorableE {
 
     public boolean areCamsVisible() {
         return camsVisible;
-
 
     }
 
