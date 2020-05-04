@@ -24,10 +24,10 @@ public class UserControllerTest {
     private MockMvc mockmvc;
 
     @Test
-    public void shouldGet404FromWrongUsername() throws Exception {
+    public void shouldGet401FromWrongUsername() throws Exception {
         this.mockmvc.perform(get("/user/test").header("session-token", "banana"))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
