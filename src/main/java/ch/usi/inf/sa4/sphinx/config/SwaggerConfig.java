@@ -36,7 +36,7 @@ public class SwaggerConfig {
     private ApiInfo metaInfo() {
         return new ApiInfo(
                 "Sphinx API",
-                "Description for Sphinx API", //TODO
+                "API for SmartHut, Sphinx's SA4 project",
                 "1.0",
                 "Terms", //TODO
                 new Contact("Sphinx", "http://localhost:8080",
