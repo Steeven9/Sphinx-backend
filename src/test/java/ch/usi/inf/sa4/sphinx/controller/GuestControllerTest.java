@@ -36,8 +36,6 @@ public class GuestControllerTest {
     private DummyDataAdder dummyDataAdder;
 
 
-
-
     @BeforeAll
     void  init() {
         dummyDataAdder.addDummyData();
@@ -71,7 +69,6 @@ public class GuestControllerTest {
 //                .andExpect(status().is(400));
     }
 
-
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromInvalidToken() throws Exception {
@@ -88,22 +85,6 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
-
-        this.mockmvc.perform(get("/guests/user2/devices/guest2")
-
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-
-        this.mockmvc.perform(delete(("/guests/guest1"))
-
-
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
 
 
 
