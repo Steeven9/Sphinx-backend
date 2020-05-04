@@ -33,7 +33,7 @@ public class GuestControllerTest {
 
     @BeforeAll
     void  init() {
-        dummyDataAdder.user2();
+        dummyDataAdder.addDummyData();
     }
 
 
