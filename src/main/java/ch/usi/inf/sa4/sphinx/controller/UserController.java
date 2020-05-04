@@ -50,11 +50,11 @@ public class UserController {
     @ApiOperation(value = "Gets a User")
     public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
 
-        Optional<User> user = userService.get(username);
-        if (user.isPresent() && userService.validSession(user.get().getUsername(), session_token)) {
+        if (userService.validSession(username, session_token)) { // at the same time checks if username exists
+            Optional<User> user = userService.get(username);
             return ResponseEntity.ok(serialiser.serialiseUser(user.get()));
         }
-        throw new NotFoundException("");
+        throw new UnauthorizedException("");
 
 //THIS GIVES UNCHECKED WARNING USE THE PATTERN ABOVE
 //        return user.map(u -> userService.validSession(username, session_token) ?
@@ -129,11 +129,12 @@ public class UserController {
             throw new BadRequestException("");
         }
 
-        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
-
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("");
         }
+
+        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
+
 
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
@@ -163,11 +164,11 @@ public class UserController {
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
                                                        @RequestHeader("session-token") String session_token) {
 
-        userService.get(username).orElseThrow(() -> new NotFoundException("Could not find user"));
-
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("");
         }
+        userService.get(username).orElseThrow(() -> new NotFoundException("Could not find user"));
+
 
         userService.delete(username);
         return ResponseEntity.noContent().build();
