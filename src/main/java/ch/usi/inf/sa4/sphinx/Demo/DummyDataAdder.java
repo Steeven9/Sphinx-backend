@@ -45,7 +45,7 @@ public class DummyDataAdder {
     public void user1() {
         try {
 
-            final User newUser = new User("mario@usi.ch", "1234", "user1", "mariorossi");
+            final User newUser = new User("mario@usi.ch", "1234", "user1", "mario rossi");
             newUser.setVerified(true);
             newUser.setSessionToken("user1SessionToken");
             final boolean inserted = userService.insert(newUser);
@@ -76,7 +76,7 @@ public class DummyDataAdder {
     @Transactional
     public void user2() {
         try {
-            final User newUser = new User("mario2@usi.ch", "1234", "user2", "mariorossi");
+            final User newUser = new User("luigi@smarthut.xyz", "1234", "user2", "luigi rossi");
             newUser.setVerified(true);
             newUser.setSessionToken("user2SessionToken");
             final boolean inserted = userService.insert(newUser);
@@ -126,7 +126,7 @@ public class DummyDataAdder {
     @Transactional
     public void randUser() {
         try {
-            final User newUser = new User("rand@usi.ch", "1234", "randUser", "randomUser");
+            final User newUser = new User("rand@smarthut.xyz", "1234", "randUser", "randomUser");
             newUser.setVerified(true);
             userService.insert(newUser);
             for (int i = 0; i < 20; i++) {
@@ -155,7 +155,7 @@ public class DummyDataAdder {
     @Transactional
     public void emptyUser() {
         try {
-            final User newUser = new User("empty@usi.ch", "1234", "emptyUser", "Empty User");
+            final User newUser = new User("empty@smarthut.xyz", "1234", "emptyUser", "Empty User");
             newUser.setVerified(true);
             newUser.setSessionToken("emptyUserSessionToken");
             if (userService.insert(newUser)) logger.info("emptyUser added to storage");
@@ -170,7 +170,7 @@ public class DummyDataAdder {
     @Transactional
     public void unverifiedUser() {
         try {
-            final User newUser = new User("unv@usi.ch", "1234", "unverifiedUser", "edeefefefef");
+            final User newUser = new User("unv@smarthut.xyz", "1234", "unverifiedUser", "edeefefefef");
             if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
         } catch (final RuntimeException e) {
             logger.warn("Something is wrong in unverifiedUser");
