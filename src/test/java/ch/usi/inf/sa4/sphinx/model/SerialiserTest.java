@@ -38,7 +38,7 @@ class SerialiserTest {
 
     @BeforeAll
      void createDeviceAndUser() {
-        dummyDataAdder.user1();
+        dummyDataAdder.addDummyData();
         user = userService.get("user1").get();
     }
 
