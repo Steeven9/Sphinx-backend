@@ -85,12 +85,17 @@ public class UserController {
 
         User newUser = new User(user.email, user.password, username, user.fullname);
 
+        //TODO switch to throws only in service
+        boolean inserted;
         try {
-            userService.insert(newUser);
+           if(!userService.insert(newUser)){
+               throw new BadRequestException("Check that you're providing username, fullname, password and email");
+            }
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("Check that you're providing username, fullname, password and email");
         }
-        newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
+
+        newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("error saving user"));
 
         try {
             mailer.send(newUser.getEmail(),
