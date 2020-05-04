@@ -81,10 +81,9 @@ public class UserController {
         User newUser = new User(user.email, user.password, username, user.fullname);
 
         //TODO switch to throws only in service
-        boolean inserted;
         try {
-           if(!userService.insert(newUser)){
-               throw new BadRequestException("Check that you're providing username, fullname, password and email");
+            if (!userService.insert(newUser)) {
+                throw new BadRequestException("Check that you're providing username, fullname, password and email");
             }
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("Some fields are missing");
