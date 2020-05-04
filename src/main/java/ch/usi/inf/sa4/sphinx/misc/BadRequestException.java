@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * Exception thrown to indicate a 400 BAD_REQUEST
  */
 public class BadRequestException extends HttpException {
-    public BadRequestException(String message) {
+    public BadRequestException(final String message) {
         super("Bad request: " + message );
     }
 

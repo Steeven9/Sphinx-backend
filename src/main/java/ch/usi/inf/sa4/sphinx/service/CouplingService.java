@@ -31,7 +31,7 @@ public class CouplingService {
      * @param id the id of the coupling to get
      * @return an instance of Coupling
      **/
-    public Coupling get(Integer id) {
+    public Coupling get(final Integer id) {
         return couplingStorage.findById(id).orElse(null);
     }
 
@@ -40,7 +40,7 @@ public class CouplingService {
      * @param id id of the Coupling that owns the effects
      * @return the effects belonging to the specified coupling
      */
-    public List<Effect> getEffects(@NotNull Integer id) {
+    public List<Effect> getEffects(@NotNull final Integer id) {
         return couplingStorage.findById(id).map(Coupling::getEffects).orElse(new ArrayList<>());
     }
 
@@ -48,12 +48,12 @@ public class CouplingService {
      * @param id1 first id of the device couplings that needs to be deleted
      * @param id2 second id of the device couplings that needs to be deleted
      */
-    public void removeByDevicesIds(Integer id1, Integer id2){
-        List<Coupling> c = couplingStorage.findAll();
-        for (Coupling coupling : c) {
-            List<Effect> e = coupling.getEffects();
+    public void removeByDevicesIds(final Integer id1, final Integer id2){
+        final List<Coupling> couplings = couplingStorage.findAll();
+        for (final Coupling coupling : couplings) {
+            final List<Effect> effects = coupling.getEffects();
 
-            for (Effect effect : e) {
+            for (final Effect effect : effects) {
                 boolean boolId1 = false;
                 boolean boolId2 = false;
 
@@ -63,13 +63,13 @@ public class CouplingService {
                     boolId2 = true;
                 }
                 if(boolId1 && coupling.getEvent().getDeviceId() == id2){ //if effect.deviceId is id1 then event.deviceId should be id2
-                    e.remove(effect);
+                    effects.remove(effect);
                 }else if(boolId2 && coupling.getEvent().getDeviceId() == id1){//if effect.deviceId is id2 then event.deviceId should be id1
-                    e.remove(effect);
+                    effects.remove(effect);
                 }
             }
 
-            if(e.size() > 1){
+            if(effects.size() > 1){
                 couplingStorage.save(coupling);
             }else{
                 //deleting the coupling
@@ -86,8 +86,8 @@ public class CouplingService {
      * @return the id of the new coupling
      *
      * @param <T> parametrized type of the Event and Effect*/
-    public <T> Integer addCoupling(Event<T> event, List<Effect<T>> effects) {
-            Coupling newCoupling = new Coupling(event, effects);
+    public <T> Integer addCoupling(final Event<T> event, final List<? extends Effect<T>> effects) {
+            final Coupling newCoupling = new Coupling(event, effects);
             return couplingStorage.save(newCoupling).getId();
     }
 
@@ -100,7 +100,7 @@ public class CouplingService {
      *
      * @param <T> parametrized type of the Event and Effect
      * */
-    public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
+    public <T> Integer addCoupling(final Event<T> event, final Effect<T> effect) {
         return addCoupling(event, List.of(effect));
     }
 
@@ -110,7 +110,7 @@ public class CouplingService {
      *
      * @param id the id of the coupling to be deleted
      **/
-    public void delete(Integer id) {
+    public void delete(final Integer id) {
         couplingStorage.deleteById(id);
     }
 
@@ -121,7 +121,7 @@ public class CouplingService {
      * @param effect the id of the effect we want to add
      * @return true if successfully updated, false otherwise
      **/
-    public boolean addEffect(Integer id, @NotNull Effect effect) {
+    public boolean addEffect(final Integer id, @NotNull final Effect effect) {
         return couplingStorage.findById(id).map(coupling -> {
                     try {
                         coupling.addEffect(effect);

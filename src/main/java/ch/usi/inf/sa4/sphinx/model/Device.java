@@ -59,7 +59,7 @@ public abstract class Device extends StorableE {
      * @see SerialisableDevice
      */
     protected SerialisableDevice serialise() {
-        SerialisableDevice serialisableDevice = new SerialisableDevice();
+        final SerialisableDevice serialisableDevice = new SerialisableDevice();
         serialisableDevice.on = this.on;
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
@@ -88,14 +88,14 @@ public abstract class Device extends StorableE {
     /**
      * @param icon the icon to set
      */
-    public void setIcon(String icon) {
+    public void setIcon(final String icon) {
         this.icon = icon;
     }
 
     /**
      * @param name the name to set
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -124,7 +124,7 @@ public abstract class Device extends StorableE {
     /**
      * @param on true to turn on the Device false to turn it off
      */
-    public void setOn(boolean on) {
+    public void setOn(final boolean on) {
         this.on = on;
     }
 
@@ -140,7 +140,7 @@ public abstract class Device extends StorableE {
      *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(Coupling observer) {
+    public void addObserver(final Coupling observer) {
         couplings.add(observer);
     }
 
@@ -149,7 +149,7 @@ public abstract class Device extends StorableE {
      * Unlinks a Coupling from this Device.
      * @param observer the Coupling to remove
      */
-    public void removeObserver(Coupling observer) {
+    public void removeObserver(final Coupling observer) {
         couplings.remove(observer);
     }
 
@@ -160,7 +160,7 @@ public abstract class Device extends StorableE {
      */
     //TODO fix unchecked
     protected void triggerEffects() {
-        for (Coupling coupling : couplings) {
+        for (final Coupling coupling : couplings) {
             coupling.run();
         }
     }
@@ -176,7 +176,7 @@ public abstract class Device extends StorableE {
      * set the Room that owns this Device.
      * @param room the Room
      */
-    public void setRoom(Room room) {
+    public void setRoom(final Room room) {
         this.room = room;
     }
 }

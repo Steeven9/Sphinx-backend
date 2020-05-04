@@ -26,7 +26,7 @@ public class SecurityCamera extends Device {
         return this.url;
     }
 
-    public void setUrl(String url){
+    public void setUrl(final String url){
         this.url = url;
     }
 
@@ -35,9 +35,9 @@ public class SecurityCamera extends Device {
      */
     @Override
     public SerialisableDevice serialise() {
-        SerialisableDevice s = super.serialise();
-        s.url = getUrl();
-        return s;
+        final SerialisableDevice device = super.serialise();
+        device.url = url;
+        return device;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return isOn() + " URL:"+ getUrl();
+        return isOn() + " URL:" + url;
     }
 
 

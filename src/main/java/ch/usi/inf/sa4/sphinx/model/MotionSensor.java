@@ -24,7 +24,7 @@ public class MotionSensor extends Device {
      * @return true if the person is detected, false otherwise
      */
     public boolean isDetected() {
-        Random rnd = new Random();
+        final Random rnd = new Random();
         triggerEffects();
         return rnd.nextBoolean();
     }

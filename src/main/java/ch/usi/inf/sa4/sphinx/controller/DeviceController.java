@@ -40,7 +40,7 @@ public class DeviceController {
     RoomService roomService;
     @Autowired
     Serialiser serialiser;
-    private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
 
     /**
@@ -54,21 +54,21 @@ public class DeviceController {
      * @see SerialisableDevice
      * @see Device
      */
-    @GetMapping(value = {"", "/"})
-    @ApiOperation(value = "Gets the devices owned by the User")
-    public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") String sessionToken,
-                                                                   @RequestHeader("user") String username) {
+    @GetMapping({"", "/"})
+    @ApiOperation("Gets the devices owned by the User")
+    public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") final String sessionToken,
+                                                                   @RequestHeader("user") final String username) {
 
 
-        Optional<User> user = userService.get(username);
+        final Optional<User> user = userService.get(username);
 
         if (user.isPresent()) {
             if (!userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
             }
 
-            List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
-            List<SerialisableDevice> serializedDevices = devices.stream()
+            final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+            final List<SerialisableDevice> serializedDevices = devices.stream()
                     .map(device -> serialiser.serialiseDevice(device, user.get()))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(serializedDevices);
@@ -92,12 +92,12 @@ public class DeviceController {
      * @see SerialisableDevice
      */
     @GetMapping("/{deviceId}")
-    @ApiOperation(value = "Gets the device with the given id")
-    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable Integer deviceId,
-                                                        @RequestHeader("session-token") String sessionToken,
-                                                        @RequestHeader("user") String username) {
+    @ApiOperation("Gets the device with the given id")
+    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable final Integer deviceId,
+                                                        @RequestHeader("session-token") final String sessionToken,
+                                                        @RequestHeader("user") final String username) {
 
-        Optional<Device> device = deviceService.get(deviceId);
+        final Optional<Device> device = deviceService.get(deviceId);
 
         if (device.isEmpty()) {
             throw new NotFoundException("this device does not exist");
@@ -107,7 +107,7 @@ public class DeviceController {
             throw new UnauthorizedException("");
         }
 
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
+        return ResponseEntity.ok(Serialiser.serialiseDevice(device.get()));
     }
 
 
@@ -124,12 +124,12 @@ public class DeviceController {
      * - 401 if not authorized or
      * - 500 if an internal server error occurred
      */
-    @PostMapping(value = {"", "/"})
-    @ApiOperation(value = "Creates a device")
-    public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody SerialisableDevice device,
-                                                           @RequestHeader("session-token") String sessionToken,
-                                                           @RequestHeader("user") String username,
-                                                           Errors errors) {
+    @PostMapping({"", "/"})
+    @ApiOperation("Creates a device")
+    public ResponseEntity<SerialisableDevice> createDevice(@NotNull @RequestBody final SerialisableDevice device,
+                                                           @RequestHeader("session-token") final String sessionToken,
+                                                           @RequestHeader("user") final String username,
+                                                           final Errors errors) {
 
         if (errors.hasErrors() || Objects.isNull(device.roomId) || Objects.isNull(device.type)) {
             return ResponseEntity.badRequest().build();
@@ -143,13 +143,13 @@ public class DeviceController {
             throw new ForbiddenException("you don't own this room");
         }
 
-        User user = userService.get(username).get(); //If the session is valid the User exists
+        final User user = userService.get(username).get(); //If the session is valid the User exists
 
 
-        Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
+        final Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
                 .orElseThrow(() -> new ServerErrorException(""));
 
-        Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
+        final Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
 
 
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
@@ -181,12 +181,12 @@ public class DeviceController {
      * @see Device
      */
     @PutMapping("/{deviceId}")
-    @ApiOperation(value = "Modifies a Device")
-    public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable Integer deviceId,
-                                                           @NotBlank @RequestBody SerialisableDevice device,
-                                                           @RequestHeader("session-token") String sessionToken,
-                                                           @RequestHeader("user") String username,
-                                                           Errors errors) {
+    @ApiOperation("Modifies a Device")
+    public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable final Integer deviceId,
+                                                           @NotBlank @RequestBody final SerialisableDevice device,
+                                                           @RequestHeader("session-token") final String sessionToken,
+                                                           @RequestHeader("user") final String username,
+                                                           final Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException("check that all the required fields are not blank");
@@ -200,9 +200,9 @@ public class DeviceController {
             throw new ForbiddenException("you don't own this device!");
         }
 
-        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
-        User user = userService.get(username).get(); //exists if prev is valid
+        final User user = userService.get(username).get(); //exists if prev is valid
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
@@ -244,18 +244,18 @@ public class DeviceController {
      * @see User
      */
     @PutMapping("/reset/{deviceId}")
-    @ApiOperation(value = "Resets a smartplug")
-    public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
-                                                  @RequestHeader("session-token") String sessionToken,
-                                                  @RequestHeader("user") String username) {
-        Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+    @ApiOperation("Resets a smartplug")
+    public ResponseEntity<Boolean> resetSmartPlug(@PathVariable final Integer deviceId,
+                                                  @RequestHeader("session-token") final String sessionToken,
+                                                  @RequestHeader("user") final String username) {
+        final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
             return ResponseEntity.status(401).build();
         }
 
-        if (!DeviceType.SMART_PLUG.equals(DeviceType.deviceToDeviceType(plug))) {
+        if (DeviceType.deviceToDeviceType(plug) != DeviceType.SMART_PLUG) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -278,10 +278,10 @@ public class DeviceController {
      * @see User
      */
     @DeleteMapping("/{deviceId}")
-    @ApiOperation(value = "Deletes the device with the given id")
-    public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable Integer deviceId,
-                                               @RequestHeader("session-token") String sessionToken,
-                                               @RequestHeader("user") String username) {
+    @ApiOperation("Deletes the device with the given id")
+    public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable final Integer deviceId,
+                                               @RequestHeader("session-token") final String sessionToken,
+                                               @RequestHeader("user") final String username) {
 
         deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
@@ -311,24 +311,24 @@ public class DeviceController {
      * @see User
      */
     @PostMapping("/couple/{device1_id}/{device2_id}")
-    @ApiOperation(value = "Creates a coupling between two devices")
-    public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") String sessionToken,
-                                                          @RequestHeader("user") String username,
-                                                          @PathVariable String device1_id,
-                                                          @PathVariable String device2_id) {
+    @ApiOperation("Creates a coupling between two devices")
+    public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") final String sessionToken,
+                                                          @RequestHeader("user") final String username,
+                                                          @PathVariable final String device1_id,
+                                                          @PathVariable final String device2_id) {
 
         if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
             return ResponseEntity.badRequest().build();
         }
 
-        Integer id1 = Integer.parseInt(device1_id);
-        Integer id2 = Integer.parseInt(device2_id);
+        final Integer id1 = Integer.parseInt(device1_id);
+        final Integer id2 = Integer.parseInt(device2_id);
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             return ResponseEntity.status(401).build();
         }
 
-        Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
-        Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
+        final Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
+        final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
 
 
         if (deviceService.createCoupling(device1, device2)) {
@@ -350,17 +350,17 @@ public class DeviceController {
      * - 500 in case of a server error
      */
     @DeleteMapping("/couple/{device1_id}/{device2_id}")
-    public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") String sessionToken,
-                                                  @RequestHeader("user") String username,
-                                                  @PathVariable String device1_id,
-                                                  @PathVariable String device2_id){
+    public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") final String sessionToken,
+                                                  @RequestHeader("user") final String username,
+                                                  @PathVariable final String device1_id,
+                                                  @PathVariable final String device2_id){
 
         if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
             return ResponseEntity.badRequest().build();
         }
 
-        Integer id1 = Integer.parseInt(device1_id);
-        Integer id2 = Integer.parseInt(device2_id);
+        final Integer id1 = Integer.parseInt(device1_id);
+        final Integer id2 = Integer.parseInt(device2_id);
 
         if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             return ResponseEntity.status(401).build();

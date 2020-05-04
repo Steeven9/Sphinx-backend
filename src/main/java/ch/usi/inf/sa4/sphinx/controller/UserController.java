@@ -47,12 +47,12 @@ public class UserController {
      * @see User
      */
     @GetMapping("/{username}")
-    @ApiOperation(value = "Gets a User")
-    public ResponseEntity<SerialisableUser> getUser(@PathVariable String username, @RequestHeader("session-token") String session_token) {
+    @ApiOperation("Gets a User")
+    public ResponseEntity<SerialisableUser> getUser(@PathVariable final String username, @RequestHeader("session-token") final String session_token) {
 
         if (userService.validSession(username, session_token)) { // at the same time checks if username exists
-            Optional<User> user = userService.get(username);
-            return ResponseEntity.ok(serialiser.serialiseUser(user.get()));
+            final Optional<User> user = userService.get(username);
+            return ResponseEntity.ok(Serialiser.serialiseUser(user.get()));
         }
         throw new UnauthorizedException("");
 
@@ -74,9 +74,9 @@ public class UserController {
      * @see User
      */
     @PostMapping("/{username}")
-    @ApiOperation(value = "Creates a new User")
-    public ResponseEntity<SerialisableUser> createUser(@PathVariable String username, @RequestBody SerialisableUser user) {
-        User findUser = userService.get(username)
+    @ApiOperation("Creates a new User")
+    public ResponseEntity<SerialisableUser> createUser(@PathVariable final String username, @RequestBody final SerialisableUser user) {
+        final User findUser = userService.get(username)
                 .orElse(userService.getByMail(user.email).orElse(null));
 
         if (findUser != null) {
@@ -87,7 +87,7 @@ public class UserController {
 
         try {
             userService.insert(newUser);
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+        } catch (final ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("Check that you're providing username, fullname, password and email");
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
@@ -97,12 +97,12 @@ public class UserController {
                     "Confirm your email account for SmartHut",
                     "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
-        } catch (MailException e) {
+        } catch (final MailException e) {
             throw new BadRequestException("Please insert a valid mail!");
 
         }
 
-        return ResponseEntity.status(201).body(serialiser.serialiseUser(newUser));
+        return ResponseEntity.status(201).body(Serialiser.serialiseUser(newUser));
     }
 
 
@@ -121,9 +121,9 @@ public class UserController {
      */
     @Transactional
     @PutMapping("/{username}")
-    @ApiOperation(value = "Modifies a User")
-    public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable String username, @NotNull @RequestBody SerialisableUser user,
-                                                       @RequestHeader("session-token") String session_token, Errors errors) {
+    @ApiOperation("Modifies a User")
+    public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable final String username, @NotNull @RequestBody final SerialisableUser user,
+                                                       @RequestHeader("session-token") final String session_token, final Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException("");
@@ -133,7 +133,7 @@ public class UserController {
             throw new UnauthorizedException("");
         }
 
-        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
+        final User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
 
 
         if (user.email != null) changedUser.setEmail(user.email);
@@ -145,7 +145,7 @@ public class UserController {
             userService.changeUsername(username, user.username);
         }
 
-        return ResponseEntity.ok(serialiser.serialiseUser(userService.getById(changedUser.getId()).get()));
+        return ResponseEntity.ok(Serialiser.serialiseUser(userService.getById(changedUser.getId()).get()));
     }
 
     /**
@@ -160,9 +160,9 @@ public class UserController {
      * @see User
      */
     @DeleteMapping("/{username}")
-    @ApiOperation(value = "Deletes a User")
-    public ResponseEntity<SerialisableUser> deleteUser(@PathVariable String username,
-                                                       @RequestHeader("session-token") String session_token) {
+    @ApiOperation("Deletes a User")
+    public ResponseEntity<SerialisableUser> deleteUser(@PathVariable final String username,
+                                                       @RequestHeader("session-token") final String session_token) {
 
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("");

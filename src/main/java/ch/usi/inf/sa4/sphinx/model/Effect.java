@@ -26,7 +26,7 @@ public abstract class Effect<T> extends StorableE {
      * Constructor
      * @param deviceId the id of the device this Effect affects
      */
-    public Effect(Integer deviceId) {
+    public Effect(final Integer deviceId) {
         this.deviceId = deviceId;
     }
 
