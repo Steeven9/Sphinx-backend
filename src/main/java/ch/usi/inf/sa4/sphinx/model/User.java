@@ -2,6 +2,8 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
+import lombok.NonNull;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,12 +18,12 @@ import java.util.stream.Collectors;
  *
  */
 @Entity
-@Table(name="sh_user")
-public class User extends StorableE{
+@Table(name = "sh_user")
+public class User extends StorableE {
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(max=255) //TODO add later
+    @Size(max = 255) //TODO add later
     private String username;
     @Expose
     @Column(nullable = false, unique = true)
@@ -40,18 +42,15 @@ public class User extends StorableE{
             cascade = CascadeType.ALL,
             mappedBy = "user",
             orphanRemoval = true)
-    private  List<Room> rooms;
+    private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-   // @GeneratedValue(generator = "uuidGenerator")
-  //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
+    // @GeneratedValue(generator = "uuidGenerator")
+    //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
-    private  String verificationToken;
+    private String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
-
-
-
 
 
 //TODO find way to auto generate verificationToken
@@ -72,7 +71,7 @@ public class User extends StorableE{
     public User(final String email, final String password, final String username, final String fullname) {
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.password = hashPassword(password);
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
@@ -80,8 +79,8 @@ public class User extends StorableE{
     }
 
 
-    public User(){};
-
+    public User() {
+    }
 
     /**
      * getter for email
@@ -190,12 +189,12 @@ public class User extends StorableE{
     }
 
     /**
-     * setter for password
+     * setter for password, the password will be hashed
      *
      * @param password new password of the user
      */
     public void setPassword(final String password) {
-        this.password = password;
+        this.password = hashPassword(password);
     }
 
     /**
@@ -221,6 +220,7 @@ public class User extends StorableE{
 
     /**
      * sets the verified status of the user to true
+     *
      * @param status the new status to set
      */
     public void setVerified(final boolean status) {
@@ -238,10 +238,10 @@ public class User extends StorableE{
     /**
      * adds a the given room to the User notice that this won't update the storage version
      *
-     * @param room  the room to be added
+     * @param room the room to be added
      */
-    public void addRoom(final Room room){
-        if(room == null){
+    public void addRoom(final Room room) {
+        if (room == null) {
             throw new IllegalArgumentException("Room can't be null");
         }
         room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
@@ -292,6 +292,22 @@ public class User extends StorableE{
         sd.password = this.password;
         sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
+    }
+
+
+    /**
+     * asserts if there's a match between the User's hashed password and the one in plaintext
+     * @param password the plaintext password to check
+     * @return true if matching else false
+     */
+    public boolean matchesPassword(@NonNull String password){
+        return BCrypt.checkpw(password, this.password);
+    }
+
+
+    private String hashPassword( String password) {
+        if(password == null) return null;
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 }
 

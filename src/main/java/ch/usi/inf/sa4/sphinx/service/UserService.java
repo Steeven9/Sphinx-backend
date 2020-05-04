@@ -61,7 +61,6 @@ public class UserService {
     public boolean changePassword(String username, String newPassword){
         return userStorage.findByUsername(username).map(user -> {
             user.setPassword(newPassword);
-            hashPsw(user);
             userStorage.save(user);
             return true;
         }).orElse(false);
@@ -122,7 +121,6 @@ public class UserService {
     public boolean insert(final User user) {
         if (user.getId() != null || user.getPassword() == null) return false;
         user.createResetCode();
-        hashPsw(user);
         userStorage.save(user);
         return true;
     }
@@ -139,7 +137,7 @@ public class UserService {
     public boolean update(@NonNull final User user) {
         return userStorage.findById(user.getId()).map(storageUser -> {
             if(!storageUser.getPassword().equals(user.getPassword())){
-                hashPsw(user);
+                return false; //can't change the password here
             }
             userStorage.save(user);
             return true;
@@ -365,13 +363,6 @@ public class UserService {
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull String username) {
         return get(username).map(User::getPassword);
-    }
-
-
-
-    private void hashPsw(@NonNull User user) {
-        String hashedpPsw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
-        user.setPassword(hashedpPsw);
     }
 
 }
