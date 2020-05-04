@@ -3,6 +3,10 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import org.springframework.lang.NonNull;
 
+/**
+ * Event linked to the change of intensity of a DimmableSwitch
+ * @see DimmableSwitch
+ */
 public class DimmSwitchChangedEvent extends Event<Double> {
 
     /**
@@ -22,7 +26,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(deviceId).get()).getIntensity();
+        return ((DimmableSwitch) deviceService.get(getDeviceId()).get()).getIntensity();
     }
 
 }

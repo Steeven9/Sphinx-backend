@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
@@ -13,16 +14,24 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Event<T> extends StorableE {
-    protected final int deviceId;
+    private int deviceId;
 
     @Transient
     protected DeviceService deviceService;
 
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for useby the JPA.
+     */
+    @Deprecated
+    public Event() {}
 
     public Event(Integer deviceId) {
         this.deviceId = deviceId;
         this.deviceService = ServiceProvider.getStaticDeviceService();
-        assert(deviceService != null);
+        if(deviceService == null) {
+            throw new  ImproperImplementationException("ServiceProvider not providing access to requested Services");
+        }
     }
 
 

@@ -18,6 +18,13 @@ public abstract class Sensor extends Device {
     private double quantity;
 
     /**
+     * @deprecated
+     * This constructor should not be used. It exists only for use by the JPA.
+     */
+    @Deprecated
+    public Sensor() {}
+
+    /**
      * Creates a Sensor with given physical quantity for measurement.
      *
      * @param quantity a physical quantity
@@ -44,15 +51,6 @@ public abstract class Sensor extends Device {
         return this.quantity + var - 0.5;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected SerialisableDevice serialise() {
-        SerialisableDevice sd = super.serialise();
-        sd.quantity = this.getQuantity();
-        return sd;
-    }
 
     /**
      * {@inheritDoc}

@@ -1,9 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
-import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -12,9 +9,11 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -25,6 +24,12 @@ import java.util.List;
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
 @RequestMapping("/rooms")
+@Validated
+//@Api(value = "Room endpoint", tags = {"Swagger.TAG1"})
+//@SwaggerDefinition(tags = {
+//        @Tag(name = "Swagger.TAG1", description = "Room Controller")
+//})
+@Api(value = "Room endpoint", description = "Room Controller")
 public class RoomController {
 
     @Autowired
@@ -42,34 +47,41 @@ public class RoomController {
      * @param sessionToken session token of the user
      * @param username     the username of the user
      * @return a ResponseEntity with the array of rooms owned by the user
+     * @see Room
+     * @see SerialisableRoom
      */
     @GetMapping(value = {"", "/"})
+    @ApiOperation(value = "Returns all the rooms owned by the User")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 404, message = "if the User is not found"),
+                   // @ApiResponse(code = 401, message = "if the Auth is not valid")
+            }
+    )
     public ResponseEntity<List<SerialisableRoom>> getAllRooms(@NotNull @RequestHeader("session-token") String sessionToken,
                                                               @NotNull @RequestHeader("user") String username) {
 
-        userService.get(username).orElseThrow(() -> new NotFoundException(""));
-
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
-        }
+        check(sessionToken, username,null);
 
         return ResponseEntity.ok(serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
     }
 
 
     /**
-     * Returns a room with all details about it.
+     * Returns all the info regarding a given Room.
      *
      * @param roomId       the id of the room
      * @param sessionToken session token of the user
      * @param username     the username of the user
-     * @return the room with all details about it
+     * @return a SerialisableRoom containing info of the requested Room
+     * @see SerialisableRoom
+     * @see Room
      */
     @GetMapping("/{roomId}")
+    @ApiOperation(value = "Returns a Room given its id")
     public ResponseEntity<SerialisableRoom> getRoom(@PathVariable Integer roomId,
                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                     @NotNull @RequestHeader("user") String username) {
-
         check(sessionToken, username, null, roomId);
         //if check didn't throw the room is here
         return ResponseEntity.ok(serialiser.serialiseRoom(roomService.get(roomId).get()));
@@ -77,22 +89,26 @@ public class RoomController {
     }
 
     /**
-     * Given the room, returns all the devices in this room.
+     * Given the id of a Room, returns all the info of the Devices in it.
      *
+     * @param roomId       the id of the Room
      * @param sessionToken session token of the user
      * @param username     the username of the user
      * @return an array of devices in given room
+     * @see Room
+     * @see SerialisableDevice
      */
     @GetMapping("/{roomId}/devices")
+    @ApiOperation(value = "Returns all devices in the given Room")
     public ResponseEntity<Collection<SerialisableDevice>> getDevice(@PathVariable Integer roomId,
                                                                     @NotNull @RequestHeader("session-token") String sessionToken,
                                                                     @NotNull @RequestHeader("user") String username) {
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
-        }
-        User user = userService.get(username).get();//It exists from previous check
 
-        Room room = roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));
+        check(sessionToken, username, null, roomId);
+
+        User user = userService.get(username).orElseThrow(()->new ServerErrorException(""));//It exists from previous check
+        Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException(""));//It exists from previous check
+
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
     }
 
@@ -100,24 +116,21 @@ public class RoomController {
     /**
      * Creates a new room.
      *
-     * @param serialisableRoom a new room
      * @param sessionToken     session token of the user
      * @param username         the username of the user
+     * @param serialisableRoom a new room
      * @param errors           in case error occur
      * @return a new room
      */
     @PostMapping(value = {"", "/"})
+    @ApiOperation(value = "Creates a Room")
     public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        @NotNull @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
-        if (errors.hasErrors()) {
-            throw new BadRequestException("");
-        }
 
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
-        }
+
+        check(sessionToken, username, errors);
 
         Room room = new Room(serialisableRoom);
         Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(""));
@@ -134,20 +147,22 @@ public class RoomController {
      * Changes the fields of given room.
      *
      * @param roomId           the id of the room
-     * @param serialisableRoom a room with new fields
      * @param sessionToken     session token of the user
      * @param username         the username of the user
+     * @param serialisableRoom a room with new fields
      * @param errors           in case error occur
      * @return A modified room
      */
     @PutMapping("/{roomId}")
+    @ApiOperation(value = "Modifies a Room")
     public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username,
                                                        @NotBlank @RequestBody SerialisableRoom serialisableRoom,
                                                        Errors errors) {
         check(sessionToken, username, errors, roomId);
-        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new NotFoundException("Room does not exist"));
+
+        Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException(""));
 
 
         String newName = serialisableRoom.name;
@@ -183,6 +198,7 @@ public class RoomController {
      * status 403 if the delete went wrong
      */
     @DeleteMapping("/{roomId}")
+    @ApiOperation(value = "Deletes a Room")
     public ResponseEntity<SerialisableRoom> deleteRoom(@NotBlank @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username) {
@@ -196,26 +212,49 @@ public class RoomController {
     }
 
 
+
+
     /**
-     * Checks if the request parameters are correct.
+     * Checks if the request parameters are correct. Throws if they are not.
+     * It will check that:
+     * there are no validation errors
+     * the User exists and has a valid sessionToken
+     *
+     * @param sessionToken session token of the user
+     * @param username     the username of the user
+     * @param errors       in case error occur
+     */
+    private void check(String sessionToken, String username, Errors errors) {
+        if (errors != null && errors.hasErrors()) {
+            throw new BadRequestException(errors.getAllErrors().toString());
+        }
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Your credentials are not valid");
+        }
+
+
+    }
+
+    /**
+     * Checks if the request parameters are correct. Throws if they are not.
+     * It will check that:
+     * there are no validation errors
+     * the User exists and has a valid sessionToken
+     * the room with the given id belongs to the user
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
      * @param errors       in case error occur
      * @param roomId       the id of the room
-     * @return null if correct, otherwise a ResponseEntity
      */
     private void check(String sessionToken, String username, Errors errors, Integer roomId) {
-        if (errors != null && errors.hasErrors()) {
-            throw new BadRequestException("");
-        }
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
-        }
+        check(sessionToken, username, errors);
 
-        roomService.get(roomId).orElseThrow(() -> new NotFoundException(""));
+        if(!userService.ownsRoom(username, roomId)) throw new UnauthorizedException("You can't access to this room");
 
     }
+
+
 }
 
 

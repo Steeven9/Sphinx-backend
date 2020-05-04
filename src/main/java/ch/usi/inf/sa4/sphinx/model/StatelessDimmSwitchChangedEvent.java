@@ -5,6 +5,10 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import javax.validation.constraints.NotNull;
 
 
+/**
+ * An event linked to the action of a StatelessDimmableSwitch
+ * @see StatelessDimmableSwitch
+ */
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     private double increment;
 
@@ -27,7 +31,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(deviceId).get()).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) deviceService.get(getDeviceId()).get()).isIncrementing() ? increment : -increment;
     }
 
 }

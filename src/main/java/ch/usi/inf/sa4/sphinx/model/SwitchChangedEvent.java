@@ -4,6 +4,9 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Event associated with the change of the on status of a Switch.
+ */
 public class SwitchChangedEvent extends Event<Boolean> {
 
 
@@ -27,7 +30,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ((Switch) this.deviceService.get(deviceId).get()).isOn();
+        return ((Switch) this.deviceService.get(getDeviceId()).get()).isOn();
     }
 
 }

@@ -15,7 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
+ * Room service.
+ * It has methods to interact with Room entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see Room
  */
 @Service
 public class RoomService {

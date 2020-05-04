@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Coupling service..
+ * It has methods to interact with Coupling entities.
+ * In general it implements a layer of abstraction over the storage.
+ * @see Coupling
+ */
 @Service
 public class CouplingService {
 
@@ -40,9 +46,39 @@ public class CouplingService {
         return couplingStorage.findById(id).map(Coupling::getEffects).orElse(new ArrayList<>());
     }
 
+    /**
+     * @param id1 first id of the device couplings that needs to be deleted
+     * @param id2 second id of the device couplings that needs to be deleted
+     */
+    public void removeByDevicesIds(Integer id1, Integer id2){
+        List<Coupling> c = couplingStorage.findAll();
+        for (Coupling coupling : c) {
+            List<Effect> e = coupling.getEffects();
 
+            for (Effect effect : e) {
+                boolean boolId1 = false;
+                boolean boolId2 = false;
 
+                if(effect.getDeviceId().equals(id1) && !boolId1){
+                    boolId1 = true;
+                }else if(effect.getDeviceId().equals(id2) && !boolId2){
+                    boolId2 = true;
+                }
+                if(boolId1 && coupling.getEvent().getDeviceId() == id2){ //if effect.deviceId is id1 then event.deviceId should be id2
+                    e.remove(effect);
+                }else if(boolId2 && coupling.getEvent().getDeviceId() == id1){//if effect.deviceId is id2 then event.deviceId should be id1
+                    e.remove(effect);
+                }
+            }
 
+            if(e.size() > 1){
+                couplingStorage.save(coupling);
+            }else{
+                //deleting the coupling
+                couplingStorage.delete(coupling);
+            }
+        }
+    }
 
     /**
      * Add coupling to storage.
@@ -50,13 +86,22 @@ public class CouplingService {
      * @param event  the event in the coupling to be added
      * @param effects the effect in the coupling to be added
      * @return the id of the new coupling
-     **/
+     *
+     * @param <T> parametrized type of the Event and Effect*/
     public <T> Integer addCoupling(Event<T> event, List<Effect<T>> effects) {
             Coupling newCoupling = new Coupling(event, effects);
             return couplingStorage.save(newCoupling).getId();
     }
 
 
+    /**
+     * Works like {@link CouplingService#addCoupling(Event, List)} but with a single effect.
+     * @param event  the event in the coupling to be added
+     * @param effect the effect in the coupling to be added
+     * @return the id of the new coupling
+     *
+     * @param <T> parametrized type of the Event and Effect
+     * */
     public <T> Integer addCoupling(Event<T> event, Effect<T> effect) {
         return addCoupling(event, List.of(effect));
     }

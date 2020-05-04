@@ -202,9 +202,10 @@ public class User extends StorableE{
      * sets the username
      *
      * @param username username
+     * @return true if successful (always?)
      */
     public boolean setUsername(final String username) {
-        this.username =username;
+        this.username = username;
         return true;
     }
 
@@ -220,6 +221,7 @@ public class User extends StorableE{
 
     /**
      * sets the verified status of the user to true
+     * @param status the new status to set
      */
     public void setVerified(final boolean status) {
         this.verified = status;
@@ -253,11 +255,7 @@ public class User extends StorableE{
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
-        for(Room r: rooms){
-            if(r.getId().equals(roomId)){
-                rooms.remove(r);
-            }
-        }
+        rooms.removeIf(r -> r.getId().equals(roomId));
     }
 
 
@@ -282,6 +280,10 @@ public class User extends StorableE{
     }
 
 
+    /**
+     * @return a serialised version of the USer
+     * @see SerialisableUser
+     */
     public SerialisableUser serialise() {
         SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;

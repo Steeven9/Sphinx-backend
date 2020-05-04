@@ -4,6 +4,10 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Effect that sets a DimmableLight state
+ * @see DimmableLight
+ */
 public class DimmableLightStateSet extends Effect<Double> {
 
     @Autowired
@@ -26,7 +30,7 @@ public class DimmableLightStateSet extends Effect<Double> {
      * @param effect: new value of the state
      **/
     public void execute(Double effect) {
-        DimmableLight dl = ((DimmableLight) deviceService.get(deviceId).get());
+        DimmableLight dl = ((DimmableLight) deviceService.get(getDeviceId()).get());
         dl.setState(effect);
         deviceService.update(dl);
     }

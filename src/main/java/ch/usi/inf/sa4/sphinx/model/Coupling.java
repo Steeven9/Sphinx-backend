@@ -14,57 +14,89 @@ import java.util.Collection;
 import java.util.List;
 
 
+/**
+ * Couples an Effect with multiple Events.
+ */
 @Entity
 public class Coupling extends StorableE {
-    @Autowired
-    @Transient
-    DeviceService deviceService;
-
     @Expose
     @OneToOne(cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private final Event event;
+    private Event event;
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private final List<Effect> effects;
+    private List<Effect> effects;
 
 
     private Integer deviceId;
 
+    /**
+     * @deprecated
+     * This constructor should not be used. It exists only for use by the JPA.
+     */
+    @Deprecated
+    public Coupling() {}
 
-
-    public <T> Coupling(@NonNull Event<T> event,@NonNull Collection<Effect<T>> effects) {
+    /**
+     * Constructor for Coupling linking an event to multiple effects.
+     * @param event the Event
+     * @param effects the Effects linked to the {@code Event}
+     * @see Event
+     * @see Effect
+     * @param <T> parametrized type of Event and Effect
+     */
+    public <T> Coupling(@NonNull Event<T> event, @NonNull Collection<Effect<T>> effects) {
         this.event = event;
         this.effects = new ArrayList<>(effects);
     }
 
-    public <T> Coupling(Event<T> event){
+
+    /**
+     * Constructor for Coupling linking an Event to no Effects.
+     * @param event the Event
+     * @param <T> parametrized type of Event and Effect
+     */
+    public <T> Coupling(@NonNull Event<T> event){
         this(event, new ArrayList<>());
     }
 
-    public <T> Coupling(Event<T> event, Effect<T> effect){
+    /**
+     * Constructor for Coupling linking an Event to one Effect.
+     * @param event the Event
+     * @param effect a single Effect linked to the Event
+     * @param <T> parametrized type of Event and Effect
+     */
+    public <T> Coupling(@NonNull Event<T> event,@NonNull Effect<T> effect){
         this(event, new ArrayList<>());
         addEffect(effect);
     }
 
 
-
-
-
+    /**
+     * @return The event associated with this Coupling
+     * @see Event
+     */
     public Event getEvent() {
         return event;
     }
 
 
+    /**
+     * @return The Effects associated with this Coupling
+     * @see Effect
+     */
     public List<Effect> getEffects() {
         return effects;
     }
 
 
-
+    /**
+     * @deprecated
+     * @return The id of the Event associated twith this Coupling
+     */
     public Integer getEventId() {
         return event.getId();
     }
@@ -76,11 +108,20 @@ public class Coupling extends StorableE {
     }
 
 
+    /**
+     * @deprecated
+     * @return A list of the ids of all the Effects linked to this Coupling
+     */
     public List<Integer> getEffectIds() {
         throw new NotImplementedException();
     }
 
 
+    /**
+     * Associates a new Effect to this Coupling
+     * @param effect the Effect to add to this Coupling
+     * @see Effect
+     */
     public void addEffect(@NonNull Effect effect) {
         effects.add(effect);
     }

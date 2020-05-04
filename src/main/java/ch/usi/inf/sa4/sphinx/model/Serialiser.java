@@ -14,6 +14,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class that helps with the serialisation of models into views.
+ */
 @Component
 public class Serialiser {
     @Autowired
@@ -62,6 +65,12 @@ public class Serialiser {
         return sd;
     }
 
+    /**
+     * @param devices the Devices to serialise
+     * @param user the onwer of the Devices to serialise
+     * @return a list of serilised devices with info about their owner
+     * @see Serialiser#serialiseDevice(Device, User)
+     */
     public List<SerialisableDevice> serialiseDevices(Collection<Device> devices, User user) {
         return devices.stream().map(device -> serialiseDevice(device, user)).collect(Collectors.toList());
     }
@@ -90,6 +99,11 @@ public class Serialiser {
     }
 
 
+    /**
+     * @param rooms the rooms to serialize
+     * @return the serialized rooms
+     * @see Serialiser#serialiseRoom(Room)
+     */
     public List<SerialisableRoom> serialiseRooms(Collection<Room> rooms) {
         return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
