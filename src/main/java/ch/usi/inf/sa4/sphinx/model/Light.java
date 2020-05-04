@@ -28,7 +28,7 @@ public class Light extends Device {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.LIGHT;
     }
 

@@ -18,7 +18,7 @@ public class DimmableSwitch extends Dimmable {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.DIMMABLE_SWITCH;
     }
 }

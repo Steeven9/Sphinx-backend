@@ -30,7 +30,7 @@ public class LightSensor extends Sensor {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.LIGHT_SENSOR;
     }
 }
