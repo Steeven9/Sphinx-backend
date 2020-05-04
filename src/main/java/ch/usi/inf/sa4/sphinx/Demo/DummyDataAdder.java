@@ -113,27 +113,6 @@ public class DummyDataAdder {
             //ROOM4 is empty
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
-<<<<<<< HEAD
-
-=======
-            User guest1 = new User();
-            User guest2 = new User();
-            User guest3 = new User();
-            User guest4 = new User();
-            User guest5 = new User();
-
-            guest1.setUsername("guest1");
-            guest2.setUsername("guest2");
-            guest3.setUsername("guest3");
-            guest4.setUsername("guest4");
-            guest5.setUsername("guest5");
-
-            guest2 = userService.addGuest("user2","guest1").get();
-            guest2 = userService.addGuest("user2","guest2").get();
-            guest3 = userService.addGuest("user2","guest3").get();
-            guest4 = userService.addGuest("user2","guest4").get();
-            guest5 = userService.addGuest("user2","guest5").get();
->>>>>>> #124: Gitlab suggestions applied (#5)
 
         } catch (final RuntimeException e) {
 
