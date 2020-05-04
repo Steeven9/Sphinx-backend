@@ -97,8 +97,18 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
+        this.mockmvc.perform(get("/guests/user2/devices/guest2")
+                .header("session-token", "banana")
+                .header("user", "user2"))
+                .andDo(print())
+                .andExpect(status().is(401));
 
 
+        this.mockmvc.perform(delete(("/guests/guest1"))
+                .header("session-token", "banana")
+                .header("user", "user2"))
+                .andDo(print())
+                .andExpect(status().is(401));
 
 
         this.mockmvc.perform(get("/guests/user2/devices/guest2")
@@ -125,6 +135,7 @@ public class GuestControllerTest {
                 .andExpect(status().is(401));
 
 
+
 }
 
     @Disabled("Not Implemented")
@@ -132,14 +143,33 @@ public class GuestControllerTest {
     public void shouldGet401FromWrongUser() throws Exception {
 
         this.mockmvc.perform(get("/guests/")
-
-
                 .header("user", "fakeUser")
                 .header("session-token", "user2SessionToken"))
-
-
-
+                .andDo(print())
                 .andExpect(status().is(401));
+
+        this.mockmvc.perform(get("/guests/houses")
+                .header("user", "fakeUser")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401));
+
+        this.mockmvc.perform(get("/guests/user2/devices/guest1")
+                .header("user", "fakeUser")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401));
+
+//        this.mockmvc.perform(post("/guests/")
+//                .header("user", "fakeUser")
+//                .header("session-token", "user2SessionToken"))
+//                .andDo(print())
+//                .andExpect(status().is(401));
+
+
+
+
+
 
         this.mockmvc.perform(get("/guests/houses")
 
@@ -165,6 +195,7 @@ public class GuestControllerTest {
                 .header("user", "fakeUser")
 
                 .header("session-token", "user2SessionToken"))
+
 
                 .andDo(print())
                 .andExpect(status().is(401));
@@ -273,9 +304,6 @@ public class GuestControllerTest {
  //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
 
 //    }
-
-
-
 
 
 
