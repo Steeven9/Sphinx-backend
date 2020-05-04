@@ -53,6 +53,8 @@ public class DummyDataAdder {
      * sessionToken="user1SessionToken"
      */
 
+    @Transactional
+
     protected void user1() {
         try {
 
@@ -84,6 +86,8 @@ public class DummyDataAdder {
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
+
+    @Transactional
 
     protected void user2() {
         try {
@@ -124,6 +128,7 @@ public class DummyDataAdder {
             //ROOM4 is empty
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
+
         } catch (final RuntimeException e) {
 
             logger.warn("Something is wrong in user2");
@@ -137,6 +142,8 @@ public class DummyDataAdder {
      * logged in
      */
     //user with 20 rooms and random devices in them
+
+    @Transactional
 
     protected  void randUser() {
         try {
@@ -167,6 +174,8 @@ public class DummyDataAdder {
      * sessionToken="emptyUserSessionToken"
      */
 
+    @Transactional
+
     protected void emptyUser() {
         try {
             final User newUser = new User("empty@smarthut.xyz", "1234", "emptyUser", "Empty User");
@@ -181,6 +190,8 @@ public class DummyDataAdder {
     /**
      * adds an unverified user called unverifiedUser in storage
      */
+
+    @Transactional
 
     protected void unverifiedUser() {
         try {

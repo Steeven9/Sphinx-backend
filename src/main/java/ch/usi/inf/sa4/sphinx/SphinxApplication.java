@@ -36,10 +36,7 @@ public class SphinxApplication {
         if (dummyDataEnabled) {
             LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
             dummyDataAdder.addDummyData();
-<<<<<<< HEAD
-=======
 
->>>>>>> #124: Gitlab suggestions applied (#7)
         }
     }
 }
