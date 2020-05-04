@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.*;
@@ -31,7 +31,9 @@ class SerialiserTest {
 
     @BeforeAll
      void createDeviceAndUser() {
-        dummyDataAdder.addUser1();
+
+        dummyDataAdder.addDummyData();
+
         user = userService.get("user1").get();
     }
 
