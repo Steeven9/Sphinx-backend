@@ -62,6 +62,7 @@ public class GuestController {
 
 
 
+
         if ( !userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("Invalid credentials");
