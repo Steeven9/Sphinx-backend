@@ -370,14 +370,14 @@ public class UserService {
      * @param username the user's username
      * @return a list of the guests
      **/
-    public List<User> otherHousesAccess(final String username){
+    public Optional<List<User>> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
 
         if(!user.isPresent()) {
-            return null;
+            return Optional.empty();
         }
 
-        return user.get().getHosts();
+        return Optional.ofNullable(user.get().getHosts());
     }
 
     /**
