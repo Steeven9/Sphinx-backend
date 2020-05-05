@@ -131,11 +131,13 @@ public class GuestController {
      */
 
 
+
     @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
      @RequestHeader("user") String username) {
+
 
 
 
@@ -145,9 +147,11 @@ public class GuestController {
 
 
 
+
         if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
+
 
         boolean camsVisible = owner.get().areCamsVisible();
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
