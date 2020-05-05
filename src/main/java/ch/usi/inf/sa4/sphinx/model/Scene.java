@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+<<<<<<< HEAD
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import com.google.gson.annotations.Expose;
 
@@ -90,4 +91,34 @@ public class Scene implements Runnable{
     public void run() {
 
     }
+=======
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
+public class Scene extends Device{
+
+    public Scene(){
+        super();
+    }
+
+    @Override
+    protected DeviceType getDeviceType() {
+        return DeviceType.SCENE;
+    }
+
+    @Override
+    public String getLabel() {
+        return "Scene";
+    }
+
+    private Scene(Scene s){
+        super.setIcon(s.getIcon());
+        super.setName(s.getName());
+        super.setOn(s.isOn());
+    }
+
+    public Scene makeCopy(Scene s){
+        return new Scene(s);
+    }
+
+>>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
 }
