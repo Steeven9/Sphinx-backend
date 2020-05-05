@@ -62,7 +62,6 @@ public class GuestController {
 
 
 
-
         if ( !userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("Invalid credentials");
@@ -131,7 +130,6 @@ public class GuestController {
      */
 
 
-
     @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
@@ -139,14 +137,16 @@ public class GuestController {
      @RequestHeader("user") String username) {
 
 
+
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
 
 
-        if (!userService.validSession(username, sessionToken) || !owner.isPresent()) {
+
+
+        if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
-
 
         boolean camsVisible = owner.get().areCamsVisible();
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
@@ -154,22 +154,23 @@ public class GuestController {
         if (camsVisible) {
 
 
-                devicesArray = devices.stream()
 
-                        .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-            } else {
+            devicesArray = devices.stream()
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+        } else {
 
-                // filter all devices except cams
-                devicesArray = devices.stream()
-                        .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
-                        .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-
-            }
-
-
-            return ResponseEntity.ok(devicesArray);
+            // filter all devices except cams
+            devicesArray = devices.stream()
+                    .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
         }
+
+
+
+        return ResponseEntity.ok(devicesArray);
+
+    }
 
 
 
@@ -225,14 +226,10 @@ public class GuestController {
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
 
-
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
 
-
-
             throw new UnauthorizedException("Invalid credentials");
-
 
         }
 
