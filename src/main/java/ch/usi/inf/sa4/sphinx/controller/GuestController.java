@@ -139,16 +139,11 @@ public class GuestController {
      @RequestHeader("user") String username) {
 
 
-
-
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
 
 
-
-
-
-        if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
+        if (!userService.validSession(username, sessionToken) || !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
 
@@ -159,23 +154,22 @@ public class GuestController {
         if (camsVisible) {
 
 
+                devicesArray = devices.stream()
 
-            devicesArray = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-        } else {
+                        .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+            } else {
 
-            // filter all devices except cams
-            devicesArray = devices.stream()
-                    .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+                // filter all devices except cams
+                devicesArray = devices.stream()
+                        .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
+                        .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+
+            }
+
+
+            return ResponseEntity.ok(devicesArray);
 
         }
-
-
-
-        return ResponseEntity.ok(devicesArray);
-
-    }
 
 
 
