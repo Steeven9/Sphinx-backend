@@ -396,6 +396,7 @@ public class UserService {
             user.get().addHost(hostUsername.get());
 
 
+
         }
 
 
@@ -406,6 +407,7 @@ public class UserService {
         if (!user.isPresent() || !host.isPresent()) {
 
             throw new NotFoundException("This user does not exist");
+
 
         }
         user.get().addHost(host.get());
@@ -423,9 +425,6 @@ public class UserService {
      **/
 
 
-
-
-
     public Optional<List<User>> otherHousesAccess(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
 
@@ -437,6 +436,7 @@ public class UserService {
 
 
         return Optional.ofNullable(user.get().getHosts());
+
 
 
     }

@@ -100,7 +100,9 @@ public class GuestController {
 
 
 
+
         if ( !userService.validSession(username, sessionToken)) {
+
 
 
 

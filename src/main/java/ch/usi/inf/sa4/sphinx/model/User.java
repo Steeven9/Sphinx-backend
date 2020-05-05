@@ -54,15 +54,10 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+    private List<User> hosts;
 
-
-
-
-
-    private  List<User> hosts;
 
     private boolean camsVisible = false;
-
 
 
 //TODO find way to auto generate verificationToken
@@ -299,7 +294,6 @@ public class User extends StorableE {
 
 
     /**
-     *
      * asserts if there's a match between the User's hashed password and the one in plaintext
      *
      * @param password the plaintext password to check
@@ -311,12 +305,10 @@ public class User extends StorableE {
     }
 
 
-
-    private String hashPassword( String password) {
+    private String hashPassword(String password) {
 
         if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
-
 
 
     }
@@ -340,11 +332,7 @@ public class User extends StorableE {
      **/
 
 
-
-
-    public void addHost(final User user){
-
-
+    public void addHost(final User user) {
 
 
         hosts.add(user);
@@ -357,78 +345,68 @@ public class User extends StorableE {
      *
      * @param user the user to remove
      **/
-        public void removeHost(final User user){
+    public void removeHost(final User user) {
 
 
 
-        hosts.remove(user);
-
-
-    }
-
-
-
-
-    /** Check if cameras are accessible by guests.
-     * @return  true if the cameras are visible to the guests
-
-
-     **/
-
-
-    public boolean areCamsVisible() {
-        return camsVisible;
-
+            hosts.remove(user);
 
 
 
     }
 
 
+        /** Check if cameras are accessible by guests.
+         * @return true if the cameras are visible to the guests
+         **/
 
 
-    /**
-     * getter for guest
-     *
-     * @return returns a list of the houses the user has access to as guest
-     */
-    public List<User> getGuestsOf() {
+        public boolean areCamsVisible () {
+            return camsVisible;
 
 
-        return hosts;
+        }
+
+
+        /**
+         * getter for guest
+         *
+         * @return returns a list of the houses the user has access to as guest
+         */
+        public List<User> getGuestsOf () {
+
+
+            return hosts;
+
+
+        }
+
+
+        /**
+         * Switches the cam visibility from on to off and vice versa.
+         **/
+
+
+        public void switchCamerasAccessibility () {
+            camsVisible = !camsVisible;
+
+        }
+
+
+        /**
+         * Remove user from the list of user hub's he is guest.
+         *
+         * @param user the user to remove
+         **/
+
+        public void removeGuestOf ( final User user){
+            hosts.remove(user);
+
+
+        }
 
 
     }
-
-
-
-
-    /**
-     * Switches the cam visibility from on to off and vice versa.
-     **/
-
-    public void switchCamerasAccessibility() {
-        camsVisible = !camsVisible;
-
-
-
-    }
-
-
-    /**
-     * Remove user from the list of user hub's he is guest.
-     *
-     * @param user the user to remove
-     **/
-
-    public void removeGuestOf(final User user) {
-        hosts.remove(user);
-
-
-    }
-
-
-}
 
 
 
