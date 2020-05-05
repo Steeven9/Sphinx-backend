@@ -202,7 +202,7 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.THERMOSTAT;
     }
 }
