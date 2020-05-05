@@ -332,7 +332,7 @@ public class UserService {
 
         if(guestUser.isPresent() && user.isPresent()) {
 
-            user.get().removeGuestOf(guestUser.get());
+            user.get().removeHost(guestUser.get());
             userStorage.save(user.get());
 
         }
@@ -353,7 +353,7 @@ public class UserService {
 
         if(user.isPresent() && hostUsername.isPresent()) {
 
-            user.get().addGuestOf(hostUsername.get());
+            user.get().addHost(hostUsername.get());
         }
 
         return hostUsername;
@@ -368,6 +368,9 @@ public class UserService {
      **/
     public List<User> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
+        if(!user.isPresent()) {
+            return null;
+        }
         return user.get().getHosts();
     }
 
