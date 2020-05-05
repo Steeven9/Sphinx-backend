@@ -274,7 +274,7 @@ public class GuestController {
 
         } else {
 
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         }
 
 
