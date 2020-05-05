@@ -202,28 +202,28 @@ public class GuestController {
      * Adds the name of the user who wants the guest, to the list of the guest.
      * @param username       the username of the user.
      * @param sessionToken  the session token used for validation
-     * @param guest a String representing the username who wants to add the former as guest guest
+     * @param guestUsername a String representing the username who wants to add the former as guest guest
      * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
      * 401 if unauthorized
      */
     @PostMapping(value = {"", "/"})
-    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
-        Optional<User> guestUsername = userService.get(guest);
+        Optional<User> guest= userService.get(guestUsername);
         Optional<User> user = userService.get(username);
 
 
 
-        if (!user.isPresent() || !guestUsername.isPresent() ||  !userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !guest.isPresent() ||  !userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("");
 
 
 
             }
-        userService.addGuest(username, guest);
-        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest).get()));
+        userService.addGuest(username, guestUsername);
+        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guestUsername).get()));
 
 
     }
