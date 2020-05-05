@@ -121,6 +121,7 @@ public class GuestController {
 
 
 
+
         /**
          * Get the list of devices the guests can access.\
          *
@@ -129,6 +130,7 @@ public class GuestController {
          * @param sessionToken   the session token used for validation
          * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
          */
+
 
         @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
         public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
@@ -143,27 +145,30 @@ public class GuestController {
 
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
-
-
-
-
                 throw new UnauthorizedException("Invalid credential");
+            }
 
+                boolean camsVisible = owner.get().areCamsVisible();
+        List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
+        SerialisableDevice[] devicesArray;
+        if(camsVisible) {
+
+            devicesArray = devices.stream()
+                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+        } else {
+
+             devicesArray = devices.stream()
+                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
             }
 
-
-            List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
-
-            SerialisableDevice[] devicesArray = devices.stream()
-                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
 
             return ResponseEntity.ok(devicesArray);
 
         }
-
 
 
 
