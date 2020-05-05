@@ -80,12 +80,17 @@ public class UserController {
 
         User newUser = new User(user.email, user.password, username, user.fullname);
 
+        //TODO switch to throws only in service
         try {
-            userService.insert(newUser);
+            if (!userService.insert(newUser)) {
+                throw new BadRequestException("Check that you're providing username, fullname, password and email");
+            }
         } catch (final ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("Some fields are missing");
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
+
+
 
         try {
             mailer.send(newUser.getEmail(),
