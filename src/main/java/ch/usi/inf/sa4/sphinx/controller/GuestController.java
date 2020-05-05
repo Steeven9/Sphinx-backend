@@ -137,8 +137,6 @@ public class GuestController {
                 @PathVariable @RequestHeader("user") String username){
 
 
-
-
             Optional<User> user = userService.get(username);
             Optional<User> owner = userService.get(host);
             Optional<List<Integer>> devicesIds = userService.getDevices(username);
@@ -149,7 +147,7 @@ public class GuestController {
 
 
 
-                throw new UnauthorizedException("");
+                throw new UnauthorizedException("Invalid credential");
 
 
             }
