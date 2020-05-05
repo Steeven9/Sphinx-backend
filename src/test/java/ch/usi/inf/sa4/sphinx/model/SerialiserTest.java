@@ -46,7 +46,7 @@ class SerialiserTest {
     @Test
     @DisplayName("Transform this device in a serialiseDevice")
     void isSerializedDevice() {
-        SerialisableDevice serialisableDevice = Serialiser.serialiseDevice(device);
+        SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device, user);
         assertNotNull(serialisableDevice);
         assertEquals(SerialisableDevice.class, serialisableDevice.getClass());
     }

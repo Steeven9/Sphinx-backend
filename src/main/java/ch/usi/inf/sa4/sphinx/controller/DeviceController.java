@@ -112,7 +112,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
 
-        return ResponseEntity.ok(Serialiser.serialiseDevice(device.get()));
+        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
     }
 
 
