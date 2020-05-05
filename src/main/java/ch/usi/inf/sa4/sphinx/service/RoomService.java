@@ -99,12 +99,11 @@ public class RoomService {
      * @return true if success else false
      */
     public final boolean removeDevice(@NonNull final Integer roomId,@NonNull final Integer deviceId) {
-        try {
-            deviceStorage.deleteById(deviceId);
-        } catch (EmptyResultDataAccessException e){
-            return false;
-        }
-        return true;
+        return roomStorage.findById(roomId).map(room -> {
+            room.removeDevice(deviceId);
+            update(room);
+            return true;
+        }).orElse(false);
     }
 
     /**

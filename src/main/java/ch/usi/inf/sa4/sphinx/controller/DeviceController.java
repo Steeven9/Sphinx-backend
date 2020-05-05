@@ -283,14 +283,14 @@ public class DeviceController {
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
 
-        deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
 
 
         if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
         }
 
-        deviceService.remove(deviceId);
+        roomService.removeDevice(storageDevice.getRoom().getId(), storageDevice.getId());
 
         return ResponseEntity.status(204).build();
     }

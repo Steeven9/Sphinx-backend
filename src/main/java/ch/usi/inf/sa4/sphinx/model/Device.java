@@ -35,7 +35,7 @@ public abstract class Device extends StorableE {
     )
     protected final List<Coupling> couplings;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne //TODO check why this had a merge cascade type
     @JoinColumn(name = "room_id",
             nullable = false,
             referencedColumnName = "id"
