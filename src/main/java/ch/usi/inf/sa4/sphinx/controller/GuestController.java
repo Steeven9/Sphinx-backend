@@ -250,7 +250,7 @@ public class GuestController {
 
 
 
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
 
 
         }
