@@ -36,7 +36,7 @@ public final class Serialiser {
      * @param device the device to serialize
      * @return the serialized device
      */
-    public static SerialisableDevice serialiseDevice(final Device device) {
+    private static SerialisableDevice serialiseDevice(final Device device) {
         return device.serialise();
     }
 
