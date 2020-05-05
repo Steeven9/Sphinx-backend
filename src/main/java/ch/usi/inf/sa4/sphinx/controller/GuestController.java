@@ -149,7 +149,7 @@ public class GuestController {
 
 
         SerialisableDevice[] devicesArray =  devices.stream()
-                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT )|| device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
                 .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
 
