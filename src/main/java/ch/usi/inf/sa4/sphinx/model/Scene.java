@@ -22,7 +22,7 @@ public class Scene{
         return this.icon;
     }
 
-    public List<Effect> getEffects(){
+    public List<Effect> getEffects() {
         return this.effects;
     }
 
