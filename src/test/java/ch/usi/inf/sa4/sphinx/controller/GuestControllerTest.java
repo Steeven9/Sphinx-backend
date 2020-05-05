@@ -12,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,7 +24,9 @@ import org.junit.jupiter.api.Disabled;
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 public class GuestControllerTest {
 
     @Autowired
@@ -34,7 +34,6 @@ public class GuestControllerTest {
 
     @Autowired
     private DummyDataAdder dummyDataAdder;
-
 
 
     @BeforeAll
@@ -60,6 +59,7 @@ public class GuestControllerTest {
         this.mockmvc.perform(post("/guests/").header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(400));
+
 
         this.mockmvc.perform(delete(("/guests/guest3")).header("username", "user2"))
                 .andDo(print())
