@@ -329,13 +329,14 @@ public class UserService {
 
         final Optional<User> user = userStorage.findByUsername(host);
 
-
         final Optional<User> guestUser = userStorage.findByUsername(guest);
 
         if(guestUser.isPresent() && user.isPresent()) {
 
+
             user.get().removeHost(guestUser.get());
             userStorage.save(user.get());
+
 
 
         }
@@ -352,7 +353,6 @@ public class UserService {
      **/
     public Optional<User> addGuest(final String guest, final String host){
         final Optional<User> user = userStorage.findByUsername(guest);
-
 
         final Optional<User> hostUsername = userStorage.findByUsername(host);
 
@@ -375,9 +375,11 @@ public class UserService {
      **/
     public Optional<List<User>> otherHousesAccess(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
+
         if(!user.isPresent()) {
             return Optional.empty();
         }
+
 
 
         return Optional.ofNullable(user.get().getHosts());
@@ -390,12 +392,13 @@ public class UserService {
      * @param guest  the second user's username
      * @return true if the user is considered the second user's guest
      */
-    public boolean isGuestOf(String host, String guest){
+    public boolean isGuestOf(String host, String guest) {
         Optional<User> user = userStorage.findByUsername(host);
 
 
+
         Optional<User> guestUsername = userStorage.findByUsername(guest);
-        if(!user.isPresent()|| !guestUsername.isPresent()){
+        if (!user.isPresent() || !guestUsername.isPresent()) {
 
         }
         return user.get().getHosts().contains(guestUsername.get());
@@ -409,6 +412,7 @@ public class UserService {
      */
 
 
+
     public List<User> getGuestsOf(@NonNull final String username) {
 
 
@@ -418,6 +422,7 @@ public class UserService {
             });
         }).collect(Collectors.toList());
     }
+
 
 
 

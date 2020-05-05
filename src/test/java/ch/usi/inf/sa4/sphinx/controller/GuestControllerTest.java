@@ -3,18 +3,24 @@ package ch.usi.inf.sa4.sphinx.controller;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> #124: Gitlab suggestions applied (#5)
+=======
+>>>>>>> 91b9bfdcfe122435c340422aea538530d8b58595
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import org.junit.jupiter.api.Test;
 >>>>>>> #124: Gitlab suggestions applied (#3)
 =======
 >>>>>>> #124: Gitlab suggestions applied (#5)
+=======
+>>>>>>> 91b9bfdcfe122435c340422aea538530d8b58595
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,6 +39,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 =======
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 >>>>>>> #124: Added some tests for guest routes (not implemented)
+=======
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+>>>>>>> 91b9bfdcfe122435c340422aea538530d8b58595
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +53,7 @@ import org.junit.jupiter.api.Disabled;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GuestControllerTest {
 
@@ -264,6 +275,9 @@ public class GuestControllerTest {
 =======
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 >>>>>>> #124: Gitlab suggestions applied (#5)
+=======
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+>>>>>>> 91b9bfdcfe122435c340422aea538530d8b58595
 public class GuestControllerTest {
 
     @Autowired
@@ -478,7 +492,11 @@ public class GuestControllerTest {
 
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> #124: Gitlab suggestions applied (#2)
 =======
 
 >>>>>>> #124: Gitlab suggestions applied (#5)
+=======
+
+>>>>>>> 91b9bfdcfe122435c340422aea538530d8b58595

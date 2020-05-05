@@ -3,7 +3,9 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
@@ -26,8 +28,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import java.util.stream.Collectors;
-
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class GuestController {
     @Autowired
     private UserService userService;
+
 
 
     @Autowired
@@ -61,6 +62,7 @@ public class GuestController {
 
 
 
+
         Optional<User> user = userService.get(username);
 
 
@@ -70,13 +72,10 @@ public class GuestController {
             throw new UnauthorizedException("");
 
 
-
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
         users = guest.toArray(SerialisableUser[]::new);
-
-
 
         return ResponseEntity.ok(users);
 
@@ -99,14 +98,18 @@ public class GuestController {
 
 
 
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
 
             throw new UnauthorizedException("");
 
         }
 
 
+
         List<User> guestOf = userService.otherHousesAccess(username).get();
+
 
         SerialisableUser[] users ;
         users = guestOf.toArray(SerialisableUser[]::new);
@@ -127,12 +130,10 @@ public class GuestController {
 
                                                                     @PathVariable("owner_username") String host, @RequestHeader("user") String username) {
 
-
-
-
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
+
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
@@ -143,6 +144,7 @@ public class GuestController {
             }
 
 
+
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
 
 
@@ -151,10 +153,12 @@ public class GuestController {
                 .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
 
+
         return ResponseEntity.ok(devicesArray);
 
 
     }
+
 
 //
 //    /**
@@ -180,8 +184,10 @@ public class GuestController {
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
 
 
+
 //                SerialisableScene[] scenes ;
 //                scenes = scenesIds.orElse(null).toArray(Serialisablescene:: new);
+
 //            }
 //        }
 //        throw new UnauthorizedException("");
@@ -206,7 +212,6 @@ public class GuestController {
                                                           @RequestHeader("user") String username) {
         Optional<User> guestUsername = userService.get(guest);
         Optional<User> user = userService.get(username);
-
 
 
 
@@ -244,12 +249,12 @@ public class GuestController {
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
+
             throw new UnauthorizedException("");
 
 
         }
         if (!userService.removeGuest(username, guest_username)) {
-
 
             throw new ServerErrorException("");
         } else {
