@@ -227,7 +227,8 @@ public class GuestController {
             if (!user.isPresent() || !guest.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
-                throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
+
 
 
 
