@@ -58,7 +58,7 @@ public class UserController {
 
 //THIS GIVES UNCHECKED WARNING USE THE PATTERN ABOVE
 //        return user.map(u -> userService.validSession(username, session_token) ?
-//                ResponseEntity.ok(serialiser.serialiseUser(u))
+//                ResponseEntity.ok(Serialiser.serialiseUser(u))
 //                : ResponseEntity.status(401).build()).orElse(new ResponseEntity<SerialisableUser>(HttpStatus.NOT_FOUND));
 
     }
