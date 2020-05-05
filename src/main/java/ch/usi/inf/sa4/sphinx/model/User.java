@@ -1,27 +1,27 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
-import com.google.gson.annotations.Expose;
+        import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+        import com.google.gson.annotations.Expose;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+        import javax.persistence.*;
+        import javax.validation.constraints.NotBlank;
+        import javax.validation.constraints.Size;
+        import java.util.ArrayList;
+        import java.util.List;
+        import java.util.UUID;
+        import java.util.stream.Collectors;
 
 
 /**
  *
  */
 @Entity
-@Table(name="sh_user")
-public class User extends StorableE{
+@Table(name = "sh_user")
+public class User extends StorableE {
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(max=255) //TODO add later
+    @Size(max = 255) //TODO add later
     private String username;
     @Expose
     @Column(nullable = false, unique = true)
@@ -40,19 +40,19 @@ public class User extends StorableE{
             cascade = CascadeType.ALL,
             mappedBy = "user",
             orphanRemoval = true)
-    private  List<Room> rooms;
+    private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-   // @GeneratedValue(generator = "uuidGenerator")
-  //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
+    // @GeneratedValue(generator = "uuidGenerator")
+    //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
-    private  String verificationToken;
+    private String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private  List<User> hosts;
-    private boolean camsVisible = false;
+    private List<User> hosts;
 
+    private boolean camsVisible = false;
 
 //TODO find way to auto generate verificationToken
 
@@ -80,7 +80,10 @@ public class User extends StorableE{
     }
 
 
-    public User(){};
+    public User() {
+    }
+
+    ;
 
 
     /**
@@ -204,7 +207,7 @@ public class User extends StorableE{
      * @param username username
      */
     public boolean setUsername(final String username) {
-        this.username =username;
+        this.username = username;
         return true;
     }
 
@@ -236,10 +239,10 @@ public class User extends StorableE{
     /**
      * adds a the given room to the User notice that this won't update the storage version
      *
-     * @param room  the room to be added
+     * @param room the room to be added
      */
-    public void addRoom(final Room room){
-        if(room == null){
+    public void addRoom(final Room room) {
+        if (room == null) {
             throw new IllegalArgumentException("Room can't be null");
         }
         room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
@@ -253,8 +256,8 @@ public class User extends StorableE{
      * @param roomId id of the room to remove
      */
     public void removeRoom(final Integer roomId) {
-        for(Room r: rooms){
-            if(r.getId().equals(roomId)){
+        for (Room r : rooms) {
+            if (r.getId().equals(roomId)) {
                 rooms.remove(r);
             }
         }
@@ -302,37 +305,43 @@ public class User extends StorableE{
         return hosts;
     }
 
-    /** Add user to the list of user hub's our user has access to as guest.
+    /**
+     * Add user to the list of user hub's our user has access to as guest.
+     *
      * @param user the user to add
      **/
-    public void addHost(final User user){
+
+    public void addHost(final User user) {
+
         hosts.add(user);
     }
 
-    /** Removes a house access from deleting a user's name from our list.
+    /**
+     * Removes a house access from deleting a user's name from our list.
+     *
      * @param user the user to remove
      **/
-    public void removeHost(final User user){
+
+    public void removeHost(final User user) {
         hosts.remove(user);
     }
 
-    /** Check if cameras are accessible by guests.
-     * @return  true if the cameras are visible to the guests
+    /**
+     * Check if cameras are accessible by guests.
+     *
+     * @return true if the cameras are visible to the guests
      **/
-    public boolean areCamsVisible(){
+
+
+    public boolean areCamsVisible() {
         return camsVisible;
     }
 
     /**
      * Switches the cam visibility from on to off and vice versa.
      **/
-    public void switchCamerasAccessibility(){
+    public void switchCamerasAccessibility() {
         camsVisible = !camsVisible;
+
     }
-
-
-
-
-
 }
-

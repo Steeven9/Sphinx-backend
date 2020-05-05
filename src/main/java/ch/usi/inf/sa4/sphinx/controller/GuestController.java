@@ -94,13 +94,18 @@ public class GuestController {
     /**
      * Get the list of devices the guests can access.
      * @param username     the username of the user.
+<<<<<<< HEAD
      * @param guest_username the username of the guest
+=======
+>>>>>>> 7a5e78bc32885cba4de0922bb6a8468c6289b7ed
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
     @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String sessionToken,
+
                                                                     @PathVariable @RequestHeader("username") String username) {
+
 
 
         Optional<User> user = userService.get(username);
@@ -119,6 +124,7 @@ public class GuestController {
         }
 
 
+
         List<Device> devices = userService.getPopulatedDevices(guest_username).get();//if user exists optional is present
         devices.stream()
                 .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
@@ -129,6 +135,7 @@ public class GuestController {
         SerialisableDevice[] devicesArray =  devices.stream()
                 .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                 .map(device -> serialiser.serialiseDevice(device, guest.get())).toArray(SerialisableDevice[]::new);
+
 
 
         return ResponseEntity.ok(devicesArray);
