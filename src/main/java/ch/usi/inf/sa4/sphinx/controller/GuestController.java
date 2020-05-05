@@ -1,8 +1,6 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-
-
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -27,7 +25,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
-
 
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
@@ -117,59 +114,52 @@ public class GuestController {
     }
 
 
+    /**
+     * Get the list of devices the guests can access.\
+     *
+     * @param username       the username of the user.
+     * @param guest_username the username of the guest
+     * @param sessionToken   the session token used for validation
+     * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
+     */
 
 
+    @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
+    public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
+    (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
+            sessionToken,
+     @PathVariable @RequestHeader("user") String username) {
 
 
-
-        /**
-         * Get the list of devices the guests can access.\
-         *
-         * @param username       the username of the user.
-         * @param guest_username the username of the guest
-         * @param sessionToken   the session token used for validation
-         * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
-         */
+        Optional<User> user = userService.get(username);
+        Optional<User> owner = userService.get(host);
+        Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
-        @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
-        public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
-        (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
-        sessionToken,
-                @PathVariable @RequestHeader("user") String username){
+        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+            throw new UnauthorizedException("Invalid credential");
+        }
 
-
-            Optional<User> user = userService.get(username);
-            Optional<User> owner = userService.get(host);
-            Optional<List<Integer>> devicesIds = userService.getDevices(username);
-
-
-            if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
-                throw new UnauthorizedException("Invalid credential");
-            }
-
-                boolean camsVisible = owner.get().areCamsVisible();
+        boolean camsVisible = owner.get().areCamsVisible();
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
         SerialisableDevice[] devicesArray;
-        if(camsVisible) {
+        if (camsVisible) {
 
             devicesArray = devices.stream()
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
         } else {
 
-             devicesArray = devices.stream()
+            devicesArray = devices.stream()
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
-            }
-
-
-
-            return ResponseEntity.ok(devicesArray);
-
         }
 
+
+        return ResponseEntity.ok(devicesArray);
+
+    }
 
 
 //    /**
@@ -210,7 +200,8 @@ public class GuestController {
 
     /**
      * Adds the name of the user who wants the guest, to the list of the guest.
-     * @param username       the username of the user.
+     *
+     * @param username      the username of the user.
      * @param sessionToken  the session token used for validation
      * @param guestUsername a String representing the username who wants to add the former as guest guest
      * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
@@ -220,70 +211,63 @@ public class GuestController {
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
-        Optional<User> guest= userService.get(guestUsername);
+        Optional<User> guest = userService.get(guestUsername);
         Optional<User> user = userService.get(username);
 
 
-            if (!user.isPresent() || !guest.isPresent() || !userService.validSession(username, sessionToken)) {
+        if (!user.isPresent() || !guest.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
 
 
-
-
-            }
-
-
-            userService.addGuest(username, guestUsername);
-            return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guestUsername).get()));
-
-
         }
 
 
+        userService.addGuest(username, guestUsername);
+        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guestUsername).get()));
 
-        /**
-         * Deletes a guest.
-         * @param username       the user who want to delete a guest
-         * @param guest_username the guest to delete
-         * @param sessionToken   the session token used to authenticate
-         * @return a ResponseEntity containing one of the following status codes:
-         * 404 if no user with the given username exists
-         * 401 if the session token does not match
-         * 204 if the operation was successful
-         */
-
-
-
-
-        @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
-        public ResponseEntity<SerialisableUser> deleteGuestOf (@PathVariable("guest_username") String
-        guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username){
-
-
-
-            Optional<User> user = userService.get(username);
-
-
-
-
-            if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-            throw new UnauthorizedException("");
-
-
-            }
-            if (!userService.removeGuest(username, guest_username)) {
-
-                throw new ServerErrorException("");
-            } else {
-
-                return ResponseEntity.status(204).build();
-            }
-
-
-        }
 
     }
+
+
+    /**
+     * Deletes a guest.
+     *
+     * @param username       the user who want to delete a guest
+     * @param guest_username the guest to delete
+     * @param sessionToken   the session token used to authenticate
+     * @return a ResponseEntity containing one of the following status codes:
+     * 404 if no user with the given username exists
+     * 401 if the session token does not match
+     * 204 if the operation was successful
+     */
+
+
+    @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
+    public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String
+                                                                  guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
+
+
+        Optional<User> user = userService.get(username);
+
+
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
+            throw new UnauthorizedException("Invalid credentials");
+
+
+        }
+        if (!userService.removeGuest(username, guest_username)) {
+
+            throw new ServerErrorException("");
+        } else {
+
+            return ResponseEntity.status(204).build();
+        }
+
+
+    }
+
+}
 
