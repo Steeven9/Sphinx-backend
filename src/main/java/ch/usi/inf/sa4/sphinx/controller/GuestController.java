@@ -106,8 +106,10 @@ public class GuestController {
         }
 
 
+
         List<User> guestOf = userService.otherHousesAccess(username).get();
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
+
 
 
 
@@ -131,43 +133,37 @@ public class GuestController {
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
 
+
     @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
 
-     @RequestHeader("user") String username) {
+     @PathVariable @RequestHeader("user") String username) {
+
+
+
 
 
 
 
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
+        Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
 
+        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
 
-        if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
-            throw new UnauthorizedException("Invalid credential");
-        }
+            throw new UnauthorizedException("");
 
-        boolean camsVisible = owner.get().areCamsVisible();
+            }
+
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
-        SerialisableDevice[] devicesArray;
-        if (camsVisible) {
 
-
-
-            devicesArray = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-        } else {
-
-            // filter all devices except cams
-            devicesArray = devices.stream()
-                    .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-
-        }
+        SerialisableDevice[] devicesArray =  devices.stream()
+                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
 
 
@@ -224,10 +220,16 @@ public class GuestController {
      * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
      * 401 if unauthorized
      */
-    @PostMapping(value = {"", "/"})
-    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
+
+
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,
+
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
+        Optional<User> guestUsername = userService.get(guest);
+        Optional<User> user = userService.get(username);
+
+
 
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
@@ -241,8 +243,11 @@ public class GuestController {
         }
 
 
-        userService.addGuest(guestUsername, username);
-        return ResponseEntity.status(201).build();
+
+        userService.addGuest(username, guest_username);
+        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+
+
 
 
     }
