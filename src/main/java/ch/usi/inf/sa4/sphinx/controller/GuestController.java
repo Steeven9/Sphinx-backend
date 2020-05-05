@@ -141,6 +141,9 @@ public class GuestController {
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
+        boolean camsVisible = owner.get().areCamsVisible();
+
+
         if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
 
 
@@ -150,15 +153,21 @@ public class GuestController {
 
 
         List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
+        SerialisableDevice[] devicesArray;
+        if(camsVisible) {
+
+            devicesArray = devices.stream()
+                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+        } else {
 
 
-        SerialisableDevice[] devicesArray =  devices.stream()
-                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT )|| device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
-                .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
-
+             devicesArray = devices.stream()
+                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
+                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+        }
 
         return ResponseEntity.ok(devicesArray);
-
 
     }
 
