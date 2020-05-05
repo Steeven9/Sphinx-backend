@@ -133,7 +133,7 @@ public class GuestController {
         sessionToken,
                 @PathVariable @RequestHeader("user") String username){
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+
 
 
             Optional<User> user = userService.get(username);
@@ -148,6 +148,7 @@ public class GuestController {
 
                 throw new UnauthorizedException("");
 
+
             }
 
 
@@ -161,9 +162,9 @@ public class GuestController {
             return ResponseEntity.ok(devicesArray);
 
         }
-        throw new UnauthorizedException("");
 
-        }
+
+
 
 //    /**
 //     * Get the list of scenes the guests can access.
