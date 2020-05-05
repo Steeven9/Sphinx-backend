@@ -195,7 +195,7 @@ public class RoomController {
      */
     @DeleteMapping("/{roomId}")
     @ApiOperation(value = "Deletes a Room")
-    public ResponseEntity<SerialisableRoom> deleteRoom(@NotBlank @PathVariable Integer roomId,
+    public ResponseEntity<SerialisableRoom> deleteRoom(@NotNull @PathVariable Integer roomId,
                                                        @NotBlank @RequestHeader("session-token") String sessionToken,
                                                        @NotBlank @RequestHeader("user") String username) {
         check(sessionToken, username, null, roomId);

@@ -141,7 +141,7 @@ public class UserService {
         if (!ownsRoom(username, roomId)) {
             return false;
         }
-
+//
 
         final Optional<User> user = userStorage.findByUsername(username);
         user.ifPresent(

@@ -292,7 +292,8 @@ public class DeviceController {
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
 
-        deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+
+        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
 
         if (!userService.validSession(username, sessionToken)) {
@@ -303,7 +304,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
 
-        deviceService.remove(deviceId);
+        roomService.removeDevice(storageDevice.getRoom().getId(), storageDevice.getId());
 
         return ResponseEntity.noContent().build();
     }

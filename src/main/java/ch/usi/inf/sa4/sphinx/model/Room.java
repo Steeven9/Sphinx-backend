@@ -34,7 +34,7 @@ public class Room extends StorableE{
 			fetch = FetchType.LAZY)
 	private List<Device> devices;
 	//not all since otherwise it will try to persist the User
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false) //TODO check why merge cascade type
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
@@ -159,8 +159,8 @@ public class Room extends StorableE{
 	 * @param deviceId the id of the Device to remove from this Room
 	 * @see Device
 	 */
-	public void removeDevice(Integer deviceId){
-		devices.remove(deviceId);
+	public void removeDevice(Integer deviceId) {
+		devices.removeIf(device -> device.getId().equals(deviceId));
 	}
 
 	/**
