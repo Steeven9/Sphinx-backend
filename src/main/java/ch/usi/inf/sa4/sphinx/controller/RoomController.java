@@ -59,7 +59,7 @@ public class RoomController {
 
         check(sessionToken, username,null);
 
-        return ResponseEntity.ok(serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
+        return ResponseEntity.ok(Serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
     }
 
 
