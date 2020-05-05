@@ -139,7 +139,7 @@ public class GuestController {
         if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
 
 
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
 
             }
 
