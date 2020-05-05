@@ -94,7 +94,8 @@ public class GuestController {
         }
 
 
-        List<User> guestOf = userService.otherHousesAccess(username);
+
+        List<User> guestOf = userService.otherHousesAccess(username).get();
 
         SerialisableUser[] users;
 
@@ -113,7 +114,7 @@ public class GuestController {
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
-<<<<<<< HEAD
+
 
 
     @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
@@ -121,47 +122,29 @@ public class GuestController {
     (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
             sessionToken,
      @PathVariable @RequestHeader("user") String username) {
-=======
-    @GetMapping(value = {"/{username}/devices/{guest_username}","/{username}/devices/{guest_username}/"})
-    public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String sessionToken,
-                                                                    @PathVariable @RequestHeader("username") String username) {
->>>>>>> #124: Gitlab suggestions applied (#8)
+
+
 
 
         Optional<User> user = userService.get(username);
-
-
-        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-
-            throw new UnauthorizedException("");
-
-        }
-        Optional<User> guest = userService.get(guest_username);
+        Optional<User> owner = userService.get(host);
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
-        if (!guest.isPresent() || !devicesIds.isPresent()) {
+
+
+
+        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
 
             throw new UnauthorizedException("");
 
+            }
 
-        }
-
-
-        List<Device> devices = userService.getPopulatedDevices(guest_username).get();//if user exists optional is present
-        devices.stream()
-                .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
-                .map(device -> serialiser.serialiseDevice(device, user.get()))
-                .collect(Collectors.toList()).toArray(SerialisableDevice[]::new);
-
-<<<<<<< HEAD
-        devicesArray = devices.toArray(SerialisableDevice[]::new);
-=======
+        List<Device> devices = userService.getPopulatedDevices(host).get();//if user exists optional is present
 
         SerialisableDevice[] devicesArray =  devices.stream()
                 .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
-                .map(device -> serialiser.serialiseDevice(device, guest.get())).toArray(SerialisableDevice[]::new);
+                .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
 
->>>>>>> #124: Gitlab suggestions applied (#8)
         return ResponseEntity.ok(devicesArray);
 
     }
@@ -215,13 +198,13 @@ public class GuestController {
      */
     @PostMapping(value = {"", "/"})
 
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guest,
 
-    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody SerialisableUser guest,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
-        Optional<User> guestUsername = userService.get(guest.username);
+        Optional<User> guestUsername = userService.get(guest);
         Optional<User> user = userService.get(username);
-        String guest_username = guest.username;
+
 
         if (!user.isPresent() || !guestUsername.isPresent() || !userService.validSession(username, sessionToken)) {
 
@@ -229,8 +212,10 @@ public class GuestController {
             throw new UnauthorizedException("");
         }
 
+
         userService.addGuest(username, guest_username);
         return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
+
 
 
     }
