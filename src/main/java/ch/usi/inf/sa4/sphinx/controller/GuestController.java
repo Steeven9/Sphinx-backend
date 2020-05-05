@@ -263,7 +263,7 @@ public class GuestController {
             throw new ServerErrorException("Couldn't save data");
         } else {
 
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         }
 
 
