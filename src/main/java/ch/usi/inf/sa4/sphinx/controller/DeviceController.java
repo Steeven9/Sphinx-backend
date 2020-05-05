@@ -8,6 +8,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.ApiOperation;
+import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -64,7 +65,7 @@ public class DeviceController {
 
         if (user.isPresent()) {
             if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
+                throw new UnauthorizedException("Invalid credentials");
             }
 
             List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
@@ -74,7 +75,7 @@ public class DeviceController {
             return ResponseEntity.ok(serializedDevices);
 
         }
-        throw new NotFoundException("");
+        throw new UnauthorizedException("Invalid credentials");
 
     }
 
@@ -100,11 +101,15 @@ public class DeviceController {
         Optional<Device> device = deviceService.get(deviceId);
 
         if (device.isEmpty()) {
-            throw new NotFoundException("this device does not exist");
+            throw new NotFoundException("No devices found");
         }
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("");
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        if  (!userService.ownsDevice(username, deviceId)) {
+            throw new UnauthorizedException("You don't own this device");
         }
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
@@ -132,22 +137,22 @@ public class DeviceController {
                                                            Errors errors) {
 
         if (errors.hasErrors() || Objects.isNull(device.roomId) || Objects.isNull(device.type)) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Some fields are missing");
         }
 
         if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         if (!userService.ownsRoom(username, device.roomId)) {
-            throw new ForbiddenException("you don't own this room");
+            throw new UnauthorizedException("You don't own this room");
         }
 
         User user = userService.get(username).get(); //If the session is valid the User exists
 
 
         Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
-                .orElseThrow(() -> new ServerErrorException(""));
+                .orElseThrow(() -> new ServerErrorException("Couldn't add device to room"));
 
         Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
 
@@ -155,7 +160,7 @@ public class DeviceController {
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
         if (device.name != null && !device.name.isBlank()) d.setName(device.name);
 
-        if (!deviceService.update(d)) throw new ServerErrorException("");
+        if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
 
         return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get(), user));
 
@@ -189,18 +194,18 @@ public class DeviceController {
                                                            Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("check that all the required fields are not blank");
+            throw new BadRequestException("Some fields are missing");
         }
 
         if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new ForbiddenException("you don't own this device!");
+            throw new UnauthorizedException("You don't own this device");
         }
 
-        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
         User user = userService.get(username).get(); //exists if prev is valid
 
@@ -221,10 +226,10 @@ public class DeviceController {
             if (device.roomId != null && !device.roomId.equals(owningRoom)) {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
-            return ResponseEntity.status(200).body(serialiser.serialiseDevice(storageDevice, user));
+            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
 
         }
-        throw new ServerErrorException("");
+        throw new ServerErrorException("Couldn't save data");
     }
 
 
@@ -248,22 +253,26 @@ public class DeviceController {
     public ResponseEntity<Boolean> resetSmartPlug(@PathVariable Integer deviceId,
                                                   @RequestHeader("session-token") String sessionToken,
                                                   @RequestHeader("user") String username) {
-        Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+        Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, deviceId)) {
-            return ResponseEntity.status(401).build();
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        if  (!userService.ownsDevice(username, deviceId)) {
+            throw new UnauthorizedException("You don't own this device");
         }
 
         if (!DeviceType.SMART_PLUG.equals(DeviceType.deviceToDeviceType(plug))) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Not a smart plug");
         }
 
         // safe because of the if statement immediately above this
         ((SmartPlug) plug).reset();
 
         if (!deviceService.update(plug)) {
-            return ResponseEntity.status(500).build();
+            throw new ServerErrorException("Couldn't save data");
         }
         return ResponseEntity.noContent().build();
     }
@@ -283,16 +292,21 @@ public class DeviceController {
                                                @RequestHeader("session-token") String sessionToken,
                                                @RequestHeader("user") String username) {
 
-        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(""));
+
+        Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
 
-        if (!userService.ownsDevice(username, deviceId) || !userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("");
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        if  (!userService.ownsDevice(username, deviceId)) {
+            throw new UnauthorizedException("You don't own this device");
         }
 
         roomService.removeDevice(storageDevice.getRoom().getId(), storageDevice.getId());
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -318,23 +332,27 @@ public class DeviceController {
                                                           @PathVariable String device2_id) {
 
         if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Some fields are missing");
         }
 
         Integer id1 = Integer.parseInt(device1_id);
         Integer id2 = Integer.parseInt(device2_id);
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
-            return ResponseEntity.status(401).build();
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
         }
 
-        Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
-        Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
+        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+            throw new UnauthorizedException("You don't own one of the devices");
+        }
+
+        Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
+        Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
 
 
         if (deviceService.createCoupling(device1, device2)) {
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(500).build();
+            throw new ServerErrorException("Couldn't save data");
         }
     }
     /**
@@ -356,18 +374,22 @@ public class DeviceController {
                                                   @PathVariable String device2_id){
 
         if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Some fields are missing");
         }
 
         Integer id1 = Integer.parseInt(device1_id);
         Integer id2 = Integer.parseInt(device2_id);
 
-        if (!userService.validSession(username, sessionToken) || !userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
-            return ResponseEntity.status(401).build();
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
         }
 
-        deviceService.get(id1).orElseThrow(() -> new NotFoundException(""));
-        deviceService.get(id2).orElseThrow(() -> new NotFoundException(""));
+        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+            throw new UnauthorizedException("You don't own one of the devices");
+        }
+
+        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
+        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
 
 
         couplingService.removeByDevicesIds(id1, id2);

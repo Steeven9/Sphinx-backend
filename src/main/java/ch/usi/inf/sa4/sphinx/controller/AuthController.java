@@ -45,11 +45,11 @@ public class AuthController {
                 .orElse(userService.getByMail(username).orElse(null));
 
         if(user == null){
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         if (!userService.validSession(user.getUsername(), sessionToken)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         return ResponseEntity.ok().body(user.getUsername());
@@ -73,7 +73,7 @@ public class AuthController {
     public ResponseEntity<String> login(@NotBlank @PathVariable String username, @NotBlank @RequestBody String password, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("Check if all the required fields are not blank");
+            throw new BadRequestException("Some fields are missing");
         }
         User user;
 
@@ -81,20 +81,20 @@ public class AuthController {
                 .orElse(userService.getByMail(username).orElse(null));
 
         if(user == null){
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         if (!user.isVerified()) {
-            throw new ForbiddenException("");
+            throw new ForbiddenException("User is already verified");
         }
 
         if (!user.getPassword().equals(password)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         user.createSessionToken();
         if (!userService.update(user)) {
-            throw new ServerErrorException("");
+            throw new ServerErrorException("Couldn't save data");
         }
 
         return ResponseEntity.ok(user.getSessionToken());
@@ -114,18 +114,18 @@ public class AuthController {
      */
     @PostMapping("/verify/{email}")
     public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (verifiedUser.isVerified()) {
             throw new BadRequestException("User is already verified");
         }
         if (!verifiedUser.getVerificationToken().equals(verificationCode)) {
-            throw new UnauthorizedException("verificationCode is not valid");
+            throw new UnauthorizedException("Invalid verification code");
         }
 
         verifiedUser.setVerified(true);
         if (!userService.update(verifiedUser)) {
-            throw new ServerErrorException("server failed to update user verification");
+            throw new ServerErrorException("Couldn't save data");
         }
 
         return ResponseEntity.ok().build();
@@ -142,13 +142,13 @@ public class AuthController {
     @PostMapping("/reset/{email}")
     public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
         User resetUser = userService.getByMail(email)
-                .orElseThrow(() -> new UnauthorizedException("user not found"));
+                .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
         String resetCode = resetUser.createResetCode();
 
         mailer.send(email,
-                "Reset your password on smarthut.xyz",
+                "Reset your SmartHut password",
                 "Visit this link to reset your password: https://smarthut.xyz/changepassword?email=" + email + "&code=" + resetCode +
                         "\nOr, from local, http://localhost:3000/changepassword?email=" + email + "&code=" + resetCode);
 
@@ -172,20 +172,20 @@ public class AuthController {
                                                   @NotBlank @RequestBody String newPassword, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("email,resetCode or password is blank or missing");
+            throw new BadRequestException("Some fields are missing");
         }
 
         User changedUser = userService.getByMail(email)
-                .orElseThrow(() -> new UnauthorizedException("user not found"));
+                .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (!resetCode.equals(changedUser.getResetCode())) {
-            throw new UnauthorizedException("wrong reset code");
+            throw new UnauthorizedException("Invalid reset code");
         }
 
         changedUser.setPassword(newPassword);
 
         if (!userService.update(changedUser)) {
-            throw new ServerErrorException("");
+            throw new ServerErrorException("Couldn't save data");
         }
         return ResponseEntity.noContent().build();
 
@@ -202,10 +202,10 @@ public class AuthController {
     @PostMapping("/resend/{email}")
     public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
         if (email == null) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Some fields are missing");
         }
         User user = userService.getByMail(email)
-                .orElseThrow(() -> new UnauthorizedException("no user with this mail"));
+                .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (user.isVerified()) {
             throw new BadRequestException("User is already verified");
@@ -216,6 +216,6 @@ public class AuthController {
                 "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + email + "&code=" + user.getVerificationToken() +
                         "\nOr, from local, http://localhost:3000/verification?email=" + email + "&code=" + user.getVerificationToken());
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 }

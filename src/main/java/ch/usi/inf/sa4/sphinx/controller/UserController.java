@@ -54,13 +54,8 @@ public class UserController {
             Optional<User> user = userService.get(username);
             return ResponseEntity.ok(serialiser.serialiseUser(user.get()));
         }
-        throw new UnauthorizedException("");
 
-//THIS GIVES UNCHECKED WARNING USE THE PATTERN ABOVE
-//        return user.map(u -> userService.validSession(username, session_token) ?
-//                ResponseEntity.ok(serialiser.serialiseUser(u))
-//                : ResponseEntity.status(401).build()).orElse(new ResponseEntity<SerialisableUser>(HttpStatus.NOT_FOUND));
-
+        throw new UnauthorizedException("Invalid credentials");
     }
 
     /**
@@ -80,7 +75,7 @@ public class UserController {
                 .orElse(userService.getByMail(user.email).orElse(null));
 
         if (findUser != null) {
-            throw new BadRequestException("This user already exists!");
+            throw new BadRequestException("This user already exists");
         }
 
         User newUser = new User(user.email, user.password, username, user.fullname);
@@ -88,9 +83,9 @@ public class UserController {
         try {
             userService.insert(newUser);
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-            throw new BadRequestException("Check that you're providing username, fullname, password and email");
+            throw new BadRequestException("Some fields are missing");
         }
-        newUser = userService.get(username).orElseThrow(() -> new ServerErrorException(""));
+        newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
 
         try {
             mailer.send(newUser.getEmail(),
@@ -98,7 +93,7 @@ public class UserController {
                     "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
         } catch (MailException e) {
-            throw new BadRequestException("Please insert a valid mail!");
+            throw new BadRequestException("Please insert a valid email");
 
         }
 
@@ -126,14 +121,14 @@ public class UserController {
                                                        @RequestHeader("session-token") String session_token, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Some fields are missing");
         }
 
         if (!userService.validSession(username, session_token)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
-        User changedUser = userService.get(username).orElseThrow(() -> new NotFoundException("username not found"));
+        User changedUser = userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
         if (user.email != null) changedUser.setEmail(user.email);
@@ -165,9 +160,9 @@ public class UserController {
                                                        @RequestHeader("session-token") String session_token) {
 
         if (!userService.validSession(username, session_token)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
-        userService.get(username).orElseThrow(() -> new NotFoundException("Could not find user"));
+        userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
         userService.delete(username);
