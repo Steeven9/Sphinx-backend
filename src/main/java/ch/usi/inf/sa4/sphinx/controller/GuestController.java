@@ -260,7 +260,7 @@ public class GuestController {
         }
         if (!userService.removeGuest(username, guest_username)) {
 
-            throw new ServerErrorException("");
+            throw new ServerErrorException("Couldn't save data");
         } else {
 
             return ResponseEntity.status(204).build();
