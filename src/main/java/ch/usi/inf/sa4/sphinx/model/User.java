@@ -287,7 +287,6 @@ public class User extends StorableE {
         sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
-        sd.password = this.password;
         sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
     }
