@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import com.google.gson.annotations.Expose;
 
@@ -92,6 +93,8 @@ public class Scene implements Runnable{
 
     }
 =======
+=======
+>>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 public class Scene extends Device{
@@ -120,5 +123,8 @@ public class Scene extends Device{
         return new Scene(s);
     }
 
+<<<<<<< HEAD
+>>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
+=======
 >>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
 }
