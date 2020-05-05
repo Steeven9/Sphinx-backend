@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -25,7 +23,7 @@ public class SphinxApplication {
     private boolean dummyDataEnabled;
 
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(SphinxApplication.class, args);
     }
 

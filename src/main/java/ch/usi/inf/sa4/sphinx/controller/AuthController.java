@@ -11,7 +11,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -34,12 +33,12 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/validate")
-    @ApiOperation(value = "Validates a given session token")
-    public ResponseEntity<String> validate(@RequestHeader("user") String username,
-                                           @RequestHeader("session-token") String sessionToken) {
+    @ApiOperation("Validates a given session token")
+    public ResponseEntity<String> validate(@RequestHeader("user") final String username,
+                                           @RequestHeader("session-token") final String sessionToken) {
 
 
-        User user;
+        final User user;
 
         user = userService.get(username)
                 .orElse(userService.getByMail(username).orElse(null));
@@ -70,12 +69,12 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/login/{username}")
-    public ResponseEntity<String> login(@NotBlank @PathVariable String username, @NotBlank @RequestBody String password, Errors errors) {
+    public ResponseEntity<String> login(@NotBlank @PathVariable final String username, @NotBlank @RequestBody final String password, final Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException("Some fields are missing");
         }
-        User user;
+        final User user;
 
         user = userService.get(username)
                 .orElse(userService.getByMail(username).orElse(null));
@@ -114,8 +113,8 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/verify/{email}")
-    public ResponseEntity<SerialisableUser> verifyUser(@PathVariable String email, @RequestBody String verificationCode) {
-        User verifiedUser = userService.getByMail(email).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
+    public ResponseEntity<SerialisableUser> verifyUser(@PathVariable final String email, @RequestBody final String verificationCode) {
+        final User verifiedUser = userService.getByMail(email).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (verifiedUser.isVerified()) {
             throw new BadRequestException("User is already verified");
@@ -141,12 +140,12 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/reset/{email}")
-    public ResponseEntity<Boolean> resetUser(@PathVariable String email) {
-        User resetUser = userService.getByMail(email)
+    public ResponseEntity<Boolean> resetUser(@PathVariable final String email) {
+        final User resetUser = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
 
-        String resetCode = resetUser.createResetCode();
+        final String resetCode = resetUser.createResetCode();
 
         mailer.send(email,
                 "Reset your SmartHut password",
@@ -169,14 +168,14 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/reset/{email}/{resetCode}")
-    public ResponseEntity<Boolean> changePassword(@NotBlank @PathVariable String email, @NotBlank @PathVariable String resetCode,
-                                                  @NotBlank @RequestBody String newPassword, Errors errors) {
+    public ResponseEntity<Boolean> changePassword(@NotBlank @PathVariable final String email, @NotBlank @PathVariable final String resetCode,
+                                                  @NotBlank @RequestBody final String newPassword, final Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException("Some fields are missing");
         }
 
-        User changedUser = userService.getByMail(email)
+        final User changedUser = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (!resetCode.equals(changedUser.getResetCode())) {
@@ -204,11 +203,11 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/resend/{email}")
-    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable String email) {
+    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable final String email) {
         if (email == null) {
             throw new BadRequestException("Some fields are missing");
         }
-        User user = userService.getByMail(email)
+        final User user = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (user.isVerified()) {

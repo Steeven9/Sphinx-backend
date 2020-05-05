@@ -14,7 +14,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
     /**
      * @param deviceID The Device linked to this Effect
      */
-    public DeviceSetOnEffect(int deviceID) {
+    public DeviceSetOnEffect(final int deviceID) {
         super(deviceID);
     }
 
@@ -25,7 +25,7 @@ public class DeviceSetOnEffect extends Effect<Boolean> {
      *
      * @param effect: the current value of the device
      **/
-    public void execute(Boolean effect) {
+    public void execute(final Boolean effect) {
         deviceService.get(getDeviceId()).get().setOn(effect);
     }
 }

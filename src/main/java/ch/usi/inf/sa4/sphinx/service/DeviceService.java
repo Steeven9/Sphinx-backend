@@ -4,7 +4,6 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,7 @@ public final class DeviceService {
      * @return the Device with corresponding deviceId
      */
 
-    public Optional<Device> get(Integer deviceId){
+    public Optional<Device> get(final Integer deviceId){
         return deviceStorage.findById(deviceId);
     }
 
@@ -43,10 +42,10 @@ public final class DeviceService {
      * @param device the device to update
      * @return true if the update succeds else false
      */
-    public boolean update(Device device){
+    public boolean update(final Device device){
         try {
             deviceStorage.save(device);
-        }catch (DataIntegrityViolationException e){
+        }catch (final DataIntegrityViolationException e){
             return false;
         }
         return true;
@@ -60,8 +59,8 @@ public final class DeviceService {
      * @return the list of ids of Device(s) that switch it
      * @see Device
      */
-    public List<Integer> getSwitchedBy(int deviceId){
-        return couplingStorage.findAll().stream().filter(c->{
+    public List<Integer> getSwitchedBy(final int deviceId){
+        return couplingStorage.findAll().stream().filter(c -> {
                 return c.getEffects().stream()
                         .anyMatch(effect -> effect.getDeviceId() == deviceId);
         }).map(coupling -> coupling.getEvent().getDeviceId()).collect(Collectors.toList());
@@ -75,7 +74,7 @@ public final class DeviceService {
      * @return the list of ids of Device(s) that it switches
      * @see Device
      */
-    public List<Integer> getSwitches(int deviceId){
+    public List<Integer> getSwitches(final int deviceId){
         return couplingStorage.findAll().stream()
                 .filter(coupling -> coupling.getEvent().getDeviceId() == deviceId)
                 .flatMap(coupling -> coupling.getEffects().stream().map(Effect::getDeviceId))
@@ -104,12 +103,12 @@ public final class DeviceService {
      * @param key  the id of the switch
      * @return event corresponding to the switch
      */
-    private <T> Event<T> eventHelper(DeviceType type, Integer key) {
-        if (DeviceType.SWITCH.equals(type)) {
+    private <T> Event<T> eventHelper(final DeviceType type, final Integer key) {
+        if (type == DeviceType.SWITCH) {
             return (Event<T>) new SwitchChangedEvent(key);
-        } else if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(type)) {
+        } else if (type == DeviceType.STATELESS_DIMMABLE_SWITCH) {
             return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
-        } else if (DeviceType.DIMMABLE_SWITCH.equals(type)) {
+        } else if (type == DeviceType.DIMMABLE_SWITCH) {
             return (Event<T>) new DimmSwitchChangedEvent(key);
         } else {
             return null;
@@ -124,13 +123,13 @@ public final class DeviceService {
      * @param key        the id of the switch
      * @return corresponding effect
      */
-    private <T> Effect<T> effectHelper(DeviceType switchType, DeviceType lightType, Integer key) {
-        if (DeviceType.SWITCH.equals(switchType)) {
+    private <T> Effect<T> effectHelper(final DeviceType switchType, final DeviceType lightType, final Integer key) {
+        if (switchType == DeviceType.SWITCH) {
             return (Effect<T>) (new DeviceSetOnEffect(key));
-        } else if (DeviceType.DIMMABLE_LIGHT.equals(lightType)) {
-            if (DeviceType.STATELESS_DIMMABLE_SWITCH.equals(switchType)) {
+        } else if (lightType == DeviceType.DIMMABLE_LIGHT) {
+            if (switchType == DeviceType.STATELESS_DIMMABLE_SWITCH) {
                 return (Effect<T>) (new DimmableLightStateInc(key));
-            } else if (DeviceType.DIMMABLE_SWITCH.equals(switchType)) {
+            } else if (switchType == DeviceType.DIMMABLE_SWITCH) {
                 return (Effect<T>) (new DimmableLightStateSet(key));
             } else {
                 return null;
@@ -147,12 +146,12 @@ public final class DeviceService {
      * @param device2 second device to couple
      * @return true if coupling was succeed, false otherwise
      */
-    public boolean createCoupling(Device device1, Device device2) {
-        List<DeviceType> switches = List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH);
-        List<DeviceType> lights = List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT);
-        DeviceType type1 = DeviceType.deviceToDeviceType(device1);
-        DeviceType type2 = DeviceType.deviceToDeviceType(device2);
-        boolean ordered;
+    public boolean createCoupling(final Device device1, final Device device2) {
+        final List<DeviceType> switches = List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH);
+        final List<DeviceType> lights = List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT);
+        final DeviceType type1 = DeviceType.deviceToDeviceType(device1);
+        final DeviceType type2 = DeviceType.deviceToDeviceType(device2);
+        final boolean ordered;
 
         //check if first is a switch and second is a light
         if (switches.contains(type1) && lights.contains(type2)) {
