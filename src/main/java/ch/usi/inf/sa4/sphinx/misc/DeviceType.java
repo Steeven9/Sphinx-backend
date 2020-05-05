@@ -12,6 +12,7 @@ package ch.usi.inf.sa4.sphinx.misc;
 10 (=MotionSensor)
 11 (=Thermostat)
 12 (=SmartCurtain)
+14 (=Scene)
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
@@ -48,7 +49,8 @@ public enum DeviceType {
     MOTION_SENSOR,
     SMART_CURTAIN,
     SECURITY_CAMERA,
-    THERMOSTAT;
+    THERMOSTAT,
+    SCENE;
 
 
     /**
@@ -85,6 +87,8 @@ public enum DeviceType {
                 return SMART_CURTAIN;
             case 13:
                 return SECURITY_CAMERA;
+            case 14:
+                return SCENE;
             default:
                 return INVALID_DEVICE;
         }
@@ -148,6 +152,9 @@ public enum DeviceType {
         if (Thermostat.class.equals(clazz)) {
             return THERMOSTAT;
         }
+        if (Scene.class.equals(c)) {
+            return SCENE;
+        }
         return INVALID_DEVICE;
     }
 
@@ -186,6 +193,8 @@ public enum DeviceType {
                 return 12;
             case SECURITY_CAMERA:
                 return 13;
+            case SCENE:
+                return 14;
             default:
                 return 0;
         }
@@ -226,6 +235,8 @@ public enum DeviceType {
                 return new SecurityCamera();
             case THERMOSTAT:
                 return new Thermostat();
+            case SCENE:
+                return new Scene();
             default:
                 return null;
         }
