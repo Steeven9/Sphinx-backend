@@ -379,6 +379,7 @@ public class UserService {
 
             user.get().addHost(hostUsername.get());
 
+
         }
 
         return hostUsername;
@@ -394,6 +395,7 @@ public class UserService {
      * @return a list of the guests
      **/
 
+
     public Optional<List<User>> otherHousesAccess(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
 
@@ -403,6 +405,7 @@ public class UserService {
 
 
         return Optional.ofNullable(user.get().getHosts());
+
 
 
     }

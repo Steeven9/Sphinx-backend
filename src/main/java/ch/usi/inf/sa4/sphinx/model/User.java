@@ -54,8 +54,6 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
-
-
     private List<User> hosts;
     private boolean camsVisible = false;
 
@@ -302,7 +300,6 @@ public class User extends StorableE {
 
 
     /**
-     *
      * asserts if there's a match between the User's hashed password and the one in plaintext
      *
      * @param password the plaintext password to check
@@ -343,7 +340,6 @@ public class User extends StorableE {
 
     public void addHost(final User user) {
 
-
         hosts.add(user);
 
 
@@ -355,11 +351,10 @@ public class User extends StorableE {
      * @param user the user to remove
      **/
 
+
     public void removeHost(final User user) {
 
-
         hosts.remove(user);
-
 
 
     }
@@ -368,7 +363,6 @@ public class User extends StorableE {
      * Check if cameras are accessible by guests.
      *
      * @return true if the cameras are visible to the guests
-
      **/
 
 
@@ -377,15 +371,21 @@ public class User extends StorableE {
 
     }
 
-    /**
-     * Switches the cam visibility from on to off and vice versa.
-     **/
 
-    public void switchCamerasAccessibility() {
-        camsVisible = !camsVisible;
+        /**
+         * Switches the cam visibility from on to off and vice versa.
+         **/
+
+
+        public void switchCamerasAccessibility () {
+            camsVisible = !camsVisible;
+
+        }
 
 
     }
 
-}
+
+
+
 

@@ -99,13 +99,6 @@ public class GuestController {
 
 
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-<<<<<<< HEAD
-=======
-
-            throw new UnauthorizedException("");
->>>>>>> #124: Gitlab suggestions applied (#6)
-
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
                 throw new UnauthorizedException("");
@@ -117,12 +110,12 @@ public class GuestController {
 
             SerialisableUser[] users;
 
+
             users = guestOf.toArray(SerialisableUser[]::new);
             return ResponseEntity.ok(users);
 
-
         }
-    }
+
 
 
         /**
