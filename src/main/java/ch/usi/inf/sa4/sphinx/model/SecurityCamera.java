@@ -50,7 +50,7 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return isOn() + " URL:" + url;
+        return isOn() + " URL: " + url;
     }
 
 
