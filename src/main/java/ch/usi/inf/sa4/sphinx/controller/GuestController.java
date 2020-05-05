@@ -220,7 +220,7 @@ public class GuestController {
 
         if (!user.isPresent() || !guest.isPresent() ||  !userService.validSession(username, sessionToken)) {
 
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
 
 
 
@@ -253,16 +253,16 @@ public class GuestController {
 
 
 
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
 
 
         }
         if (!userService.removeGuest(username, guest_username)) {
 
-            throw new ServerErrorException("");
+            throw new ServerErrorException("Couldn't save data");
         } else {
 
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         }
 
 
