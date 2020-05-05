@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Disabled;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 
@@ -50,7 +51,9 @@ public class GuestControllerTest {
     }
 
 
+
     @Disabled("post doesnt work")
+
 
     @Test
     public void shouldGet400FromNoToken() throws Exception {
@@ -207,10 +210,13 @@ public class GuestControllerTest {
     }
 
 
+
     @Disabled()
+
 
     @Test
     public void shouldGet401FromNoGuest() throws Exception {
+
 
 
 
