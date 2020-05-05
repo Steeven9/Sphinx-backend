@@ -225,8 +225,10 @@ public class GuestController {
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
 
+
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
+
 
 
             throw new UnauthorizedException("Invalid credentials");
