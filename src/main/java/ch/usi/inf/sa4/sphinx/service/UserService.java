@@ -396,17 +396,17 @@ public class UserService {
      **/
 
 
+
     public Optional<List<User>> otherHousesAccess(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
 
         if (!user.isPresent()) {
+
             return Optional.empty();
         }
 
 
         return Optional.ofNullable(user.get().getHosts());
-
-
 
     }
 

@@ -50,6 +50,7 @@ public class GuestController {
 
     /**
      * Get all the guests of a certain user.
+     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of guests  or
@@ -60,22 +61,17 @@ public class GuestController {
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
-
         Optional<User> user = userService.get(username);
-
-
 
 
         if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("");
 
 
-
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
         users = guest.toArray(SerialisableUser[]::new);
-
 
 
         return ResponseEntity.ok(users);
@@ -86,6 +82,7 @@ public class GuestController {
 
     /**
      * Get the list of houses the  user is allowed to access as guest.
+     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
@@ -98,23 +95,26 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
-
-
-            if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("");
-
-            }
-
-
-            List<User> guestOf = userService.otherHousesAccess(username).get();
-
-            SerialisableUser[] users;
-
-
-            users = guestOf.toArray(SerialisableUser[]::new);
-            return ResponseEntity.ok(users);
+        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("");
 
         }
+
+
+        List<User> guestOf = userService.otherHousesAccess(username).get();
+
+
+        SerialisableUser[] users;
+
+
+        users = guestOf.toArray(SerialisableUser[]::new);
+        return ResponseEntity.ok(users);
+
+
+    }
+
+
+
 
 
 
@@ -127,13 +127,13 @@ public class GuestController {
          * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
          */
 
-
         @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
         public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
         (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
         sessionToken,
                 @PathVariable @RequestHeader("user") String username){
 
+        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
 
 
             Optional<User> user = userService.get(username);
@@ -157,7 +157,11 @@ public class GuestController {
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
+
             return ResponseEntity.ok(devicesArray);
+
+        }
+        throw new UnauthorizedException("");
 
         }
 
@@ -263,7 +267,7 @@ public class GuestController {
 
             if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
 
-     throw new UnauthorizedException("");
+            throw new UnauthorizedException("");
 
 
             }
