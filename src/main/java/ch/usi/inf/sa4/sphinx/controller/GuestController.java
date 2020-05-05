@@ -123,18 +123,21 @@ public class GuestController {
     /**
      * Get the list of devices the guests can access.\
      *
+
      * @param username       the username of the guest.
      * @param host the username of the owner
      * @param sessionToken   the session token used for validation
+
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
-
 
     @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
+
      @RequestHeader("user") String username) {
+
 
 
 

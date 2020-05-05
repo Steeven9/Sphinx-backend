@@ -371,41 +371,20 @@ public class User extends StorableE {
 
     }
 
-    /** Add user to the list of user hub's our user has access to as guest.
-     * @param user the user to add
-     **/
-    public void addGuestOf(final User user){
 
 
-        hosts.add(user);
-
-
-    }
-
-    /** Removes a house access from deleting a user's name from our list.
-     * @param user the user to remove
-     **/
-    public void removeGuestOf(final User user){
-
-
-        hosts.remove(user);
-
-
-    }
-
-    /** Check if cameras are accessible by guests.
-     * @return  true if the cameras are visible to the guests
-     **/
-    public boolean visibilityStatus(){
-        return visibleCams;
-    }
 
     /**
      * Switches the cam visibility from on to off and vice versa.
      **/
-    public void oppositeSwitch(){
-        visibleCams = !visibleCams;
+
+    public void switchCamerasAccessibility(){
+        camsVisible = !camsVisible;
+
+
     }
+
+
 
 
 
