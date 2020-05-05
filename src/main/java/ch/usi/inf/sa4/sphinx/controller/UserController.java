@@ -80,12 +80,17 @@ public class UserController {
 
         User newUser = new User(user.email, user.password, username, user.fullname);
 
+        //TODO switch to throws only in service
         try {
-            userService.insert(newUser);
+            if (!userService.insert(newUser)) {
+                throw new BadRequestException("Check that you're providing username, fullname, password and email");
+            }
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
             throw new BadRequestException("Some fields are missing");
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
+
+
 
         try {
             mailer.send(newUser.getEmail(),
@@ -94,7 +99,6 @@ public class UserController {
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
         } catch (MailException e) {
             throw new BadRequestException("Please insert a valid email");
-
         }
 
         return ResponseEntity.status(201).body(serialiser.serialiseUser(newUser));

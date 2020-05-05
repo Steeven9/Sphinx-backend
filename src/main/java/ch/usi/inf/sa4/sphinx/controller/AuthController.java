@@ -88,8 +88,9 @@ public class AuthController {
             throw new ForbiddenException("User is already verified");
         }
 
-        if (!user.getPassword().equals(password)) {
-            throw new UnauthorizedException("Invalid credentials");
+
+        if (!user.matchesPassword(password)) {
+            throw new UnauthorizedException("");
         }
 
         user.createSessionToken();
@@ -182,11 +183,14 @@ public class AuthController {
             throw new UnauthorizedException("Invalid reset code");
         }
 
-        changedUser.setPassword(newPassword);
 
+        changedUser.setPassword(newPassword);
         if (!userService.update(changedUser)) {
-            throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException("");
         }
+
+
+
         return ResponseEntity.noContent().build();
 
     }

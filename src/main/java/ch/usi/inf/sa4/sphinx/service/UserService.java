@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * User service.
  * It has methods to interact with User entities.
  * In general it implements a layer of abstraction over the storage.
+ *
  * @see User
  */
 @Service
@@ -42,8 +43,7 @@ public class UserService {
 
 
     /**
-     * @deprecated
-     * Do not use directly this constructor
+     * @deprecated Do not use directly this constructor
      */
     //Needed public otherwise context creation will fail...
     public UserService() {
@@ -89,9 +89,8 @@ public class UserService {
      * @return true if success else false
      */
     public boolean insert(final User user) {
-        if (user.getId() != null) return false;
+        if (user.getId() != null || user.getPassword() == null) return false;
         user.createResetCode();
-
         userStorage.save(user);
         return true;
     }
@@ -104,11 +103,10 @@ public class UserService {
      * @return true if successful update else false
      */
     public boolean update(@NonNull final User user) {
-        if (userStorage.existsById(user.getId())) {
-            userStorage.save(user); //Now the newly added rooms will be inserted in storage by jpa
-            return true;
-        }
-        return false;
+        if (!userStorage.existsById(user.getId())) return false;
+
+        userStorage.save(user);
+        return true;
     }
 
 
@@ -322,5 +320,10 @@ public class UserService {
         }
     }
 
+
+    //returns the hashed password of a user
+    private Optional<String> getUserHash(@NonNull String username) {
+        return get(username).map(User::getPassword);
+    }
 
 }
