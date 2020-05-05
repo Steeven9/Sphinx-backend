@@ -96,10 +96,12 @@ public class GuestController {
 
         }
         throw new ServerErrorException("");
+
     }
 
 
     /**
+<<<<<<< HEAD
      * Get the list of houses the is allowed to access as guest.
      *
      * @param username      the username of the user.
@@ -109,6 +111,7 @@ public class GuestController {
     @GetMapping("/guests/{username}/devices/{guest_username}")
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices(@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String session_token,
                                                                      @RequestHeader("username") String username) {
+
 
 
         Optional<User> user = userStorage.findByUsername(username);
@@ -135,6 +138,7 @@ public class GuestController {
 
 
 // TODO: Implement scenes route
+
 
 
 //    /**
@@ -187,6 +191,7 @@ public class GuestController {
             }
 
 
+
             Optional<User> addedTo = userService.addGuest(username, guest_username);
 
 
@@ -197,6 +202,7 @@ public class GuestController {
                 return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guest_username).get()));
 
             }
+
 
         }
         throw new ServerErrorException("");

@@ -351,9 +351,20 @@ public class UserService {
      * @param username the user's username
      * @return a list of the guests
      **/
+<<<<<<< HEAD
     public List<User> getGuests(final String username){
         Optional<User> user =  userStorage.findByUsername(username);
         return user.orElse(null).getGuestsOf();
+=======
+    public Optional<List<User>> otherHousesAccess(final String username){
+        Optional<User> user =  userStorage.findByUsername(username);
+
+        if(!user.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(user.get().getHosts());
+>>>>>>> #124: Gitlab suggestions applied (#9)
     }
 
     /**
