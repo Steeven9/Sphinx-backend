@@ -332,14 +332,14 @@ public class UserService {
 
 
     /**
-     * Removes the user1  from the guest list of user2 .
+     * Removes the user1  from the guest list of user2  (aka, user1 is the host, user2 is the guest).
      *
      * @param host  the user1 username
      * @param guest the user2 username
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
-        if (!isGuestOf(host, guest)) {
+        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
             return false;
         }
 
@@ -351,13 +351,13 @@ public class UserService {
         if (guestUser.isPresent() && user.isPresent()) {
 
 
-            user.get().removeHost(guestUser.get());
+            guestUser.get().removeHost(user.get());
             userStorage.save(user.get());
-
+            return true;
 
         }
 
-        return true;
+        return false;
 
     }
 
@@ -423,6 +423,7 @@ public class UserService {
 
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if (!user.isPresent() || !guestUsername.isPresent()) {
+            return false;
 
         }
         return user.get().getHosts().contains(guestUsername.get());

@@ -58,10 +58,10 @@ public class GuestController {
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
-        Optional<User> user = userService.get(username);
 
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
+        if ( !userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
 
 
@@ -89,10 +89,10 @@ public class GuestController {
     public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username) {
 
-        Optional<User> user = userService.get(username);
 
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+
+        if ( !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
@@ -117,18 +117,18 @@ public class GuestController {
     /**
      * Get the list of devices the guests can access.\
      *
-     * @param username       the username of the user.
-     * @param guest_username the username of the guest
+     * @param username       the username of the guest.
+     * @param host the username of the owner
      * @param sessionToken   the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of user's houses the guest has access to
      */
 
 
-    @GetMapping(value = {"/{username}/devices/{guest_username}", "/{username}/devices/{guest_username}/"})
+    @GetMapping(value = {"/{owner_username}/devices/", "/{owner_username}/devices"})
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
-    (@NotNull @PathVariable("guest_username") String guest_username, @RequestHeader("session-token") String
+    (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
-     @PathVariable @RequestHeader("user") String username) {
+      @RequestHeader("user") String username) {
 
 
         Optional<User> user = userService.get(username);
@@ -136,7 +136,7 @@ public class GuestController {
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+        if (!userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
 
@@ -212,10 +212,10 @@ public class GuestController {
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
         Optional<User> guest = userService.get(guestUsername);
-        Optional<User> user = userService.get(username);
 
 
-        if (!user.isPresent() || !guest.isPresent() || !userService.validSession(username, sessionToken)) {
+
+        if (!guest.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
             throw new UnauthorizedException("Invalid credentials");
@@ -252,7 +252,7 @@ public class GuestController {
         Optional<User> user = userService.get(username);
 
 
-        if (!user.isPresent() || !userService.validSession(username, sessionToken)) {
+        if (  !userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("Invalid credentials");
 
