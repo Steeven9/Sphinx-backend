@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -101,12 +102,13 @@ public class RoomController {
                                                                     @NotNull @RequestHeader("user") final String username) {
 
         check(sessionToken, username, null, roomId);
-        //regen
 
-        final User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
+        final User user = userService.get(username).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
         final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
+        List<Device> list = room.getDevices();
 
-        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
+        deviceService.generateValue(list);
+        return ResponseEntity.ok(serialiser.serialiseDevices(list, user));
     }
 
 
