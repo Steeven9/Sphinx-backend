@@ -95,7 +95,9 @@ public class GuestController {
 
 
 
+
         if ( !userService.validSession(username, sessionToken)) {
+
 
 
 
@@ -134,7 +136,9 @@ public class GuestController {
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
+
      @RequestHeader("user") String username) {
+
 
 
 
@@ -144,7 +148,9 @@ public class GuestController {
 
 
 
+
         if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
+
             throw new UnauthorizedException("Invalid credential");
         }
 
@@ -226,6 +232,8 @@ public class GuestController {
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
 
+
+
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
 
@@ -268,7 +276,9 @@ public class GuestController {
 
 
 
+
         if (  !userService.validSession(username, sessionToken)) {
+
 
 
             throw new UnauthorizedException("Invalid credentials");

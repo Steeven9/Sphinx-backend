@@ -336,16 +336,23 @@ public class UserService {
 
     /**
      * Removes the user1  from the guest list of user2  (aka, user1 is the host, user2 is the guest).
+<<<<<<< HEAD
 
+=======
+>>>>>>> #124: fixed errors in UserService
      *
      * @param host  the user1 username
      * @param guest the user2 username
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
+<<<<<<< HEAD
 
         if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
 
+=======
+        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+>>>>>>> #124: fixed errors in UserService
             return false;
         }
 
@@ -358,10 +365,15 @@ public class UserService {
 
 
             guestUser.get().removeHost(user.get());
+<<<<<<< HEAD
 
             userStorage.save(user.get());
             return true;
 
+=======
+            userStorage.save(user.get());
+            return true;
+>>>>>>> #124: fixed errors in UserService
 
         }
 
@@ -948,6 +960,7 @@ import java.util.stream.Collectors;
 
         Optional<User> guestUsername = userStorage.findByUsername(guest);
         if (!user.isPresent() || !guestUsername.isPresent()) {
+            return false;
 
             return false;
 
