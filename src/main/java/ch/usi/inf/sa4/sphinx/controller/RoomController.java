@@ -103,6 +103,7 @@ public class RoomController {
                                                                     @NotNull @RequestHeader("user") final String username) {
 
         check(sessionToken, username, null, roomId);
+        //regen
 
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 

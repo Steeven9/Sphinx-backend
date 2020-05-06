@@ -28,7 +28,7 @@ public class Thermostat extends TempSensor {
      */
     public Thermostat() {
         super();
-        this.targetTemp = this.getValue();
+        this.targetTemp = this.getLastValue();
         this.state = States.IDLE;
         this.source = Sources.SELF;
     }
@@ -119,13 +119,13 @@ public class Thermostat extends TempSensor {
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
                 if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
-                    averageTemp += ((TempSensor) device).getValue();
+                    averageTemp += ((TempSensor) device).getLastValue();
                     sensors++;
                 }
             }
         }
 
-        averageTemp += this.getValue();
+        averageTemp += this.getLastValue();
         averageTemp /= sensors;
 
         return averageTemp;

@@ -1,8 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import com.google.gson.annotations.Expose;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 
 /**
@@ -11,12 +16,13 @@ import javax.persistence.Entity;
 @Entity
 public abstract class Sensor extends Device {
     private double quantity;
+    @Transient
+    private double lastValue;
 
     private final Random rand = new Random();
 
     /**
-     * @deprecated
-     * This constructor should not be used. It exists only for use by the JPA.
+     * @deprecated This constructor should not be used. It exists only for use by the JPA.
      */
     @Deprecated(forRemoval = false)
     public Sensor() {}
@@ -28,14 +34,15 @@ public abstract class Sensor extends Device {
      */
     protected Sensor(final double quantity) {
         this.quantity = quantity;
+        this.lastValue = quantity;
     }
 
 
     /** Getter for the quantity.
      * @return quantity
      **/
-    private double getQuantity() {
-        return quantity;
+    protected double getLastValue() {
+        return lastValue;
     }
 
     /**
