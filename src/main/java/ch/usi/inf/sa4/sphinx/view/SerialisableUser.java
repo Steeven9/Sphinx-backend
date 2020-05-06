@@ -10,4 +10,13 @@ public class SerialisableUser {
     public String fullname;
     public String password;
     public Integer[] rooms;
+<<<<<<< HEAD
+=======
+    public boolean camVisible;
+
+    /** Constructor.**/
+    public SerialisableUser(){
+
+    }
+>>>>>>> #124: allowed to update camVisibility in userController
 }

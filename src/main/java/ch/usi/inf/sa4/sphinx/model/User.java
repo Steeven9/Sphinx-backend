@@ -57,6 +57,7 @@ public class User extends StorableE {
     private List<User> hosts;
 
 
+
     private boolean camsVisible = false;
 
 
@@ -75,6 +76,7 @@ public class User extends StorableE {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
+        this.camsVisible = false;
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -279,18 +281,6 @@ public class User extends StorableE {
     }
 
 
-    /**
-     * @return a serialised version of the USer
-     * @see SerialisableUser
-     */
-    public SerialisableUser serialise() {
-        final SerialisableUser sd = new SerialisableUser();
-        sd.username = this.username;
-        sd.email = this.email;
-        sd.fullname = this.fullname;
-        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-        return sd;
-    }
 
 
     /**
@@ -300,9 +290,26 @@ public class User extends StorableE {
      * @return true if matching else false
      */
 
+
     public boolean matchesPassword(@NonNull String password) {
         return BCrypt.checkpw(password, this.password);
     }
+
+        /**
+         * @return a serialised version of the USer
+         * @see SerialisableUser
+         */
+        public SerialisableUser serialise () {
+            final SerialisableUser sd = new SerialisableUser();
+            sd.username = this.username;
+            sd.email = this.email;
+            sd.fullname = this.fullname;
+            sd.password = this.password;
+            sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
+            sd.camVisible = this.camsVisible;
+            return sd;
+        }
+
 
 
     private String hashPassword(String password) {
@@ -392,6 +399,17 @@ public class User extends StorableE {
 
         }
 
+    /**
+     * @return a serialised version of the USer
+     * @see SerialisableUser
+     */
+    public SerialisableUser minimalSerialise () {
+        final SerialisableUser sd = new SerialisableUser();
+        sd.username = this.username;
+        sd.email = this.email;
+        sd.fullname = this.fullname;
+        return sd;
+    }
 
         /**
          * Remove user from the list of user hub's he is guest.

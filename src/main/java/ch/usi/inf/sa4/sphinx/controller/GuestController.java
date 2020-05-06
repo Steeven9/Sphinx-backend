@@ -89,6 +89,7 @@ public class GuestController {
 
     @GetMapping(value = {"/houses/", "/houses"})
     public ResponseEntity<List<SerialisableUser>> getHouses(@RequestHeader("session-token") String sessionToken,
+
                                                             @RequestHeader("user") String username) {
 
 
@@ -112,9 +113,15 @@ public class GuestController {
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
 
 
+
         return ResponseEntity.ok(users);
 
 
+        guestOf.stream().map(user ->serialiser.serialiseUser(user));
+
+        //return ResponseEntity.ok();
+
+        return null;
     }
 
 
