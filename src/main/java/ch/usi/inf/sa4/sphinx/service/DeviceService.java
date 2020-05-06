@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
  * @see Device
  */
 @Service
-public final class DeviceService {
+@Transactional
+public class DeviceService {
 
     @Autowired
     CouplingService couplingService;
@@ -43,6 +44,8 @@ public final class DeviceService {
      * @return true if the update succeds else false
      */
     public boolean update(final Device device){
+        if(device.getId()== null || !deviceStorage.existsById(device.getId())) return false;
+
         try {
             deviceStorage.save(device);
         }catch (final DataIntegrityViolationException e){
