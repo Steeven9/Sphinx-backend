@@ -1,17 +1,19 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
 import lombok.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
+        import javax.persistence.*;
+        import javax.validation.constraints.NotBlank;
+        import javax.validation.constraints.Size;
+        import java.util.ArrayList;
+        import java.util.List;
+        import java.util.UUID;
+        import java.util.stream.Collectors;
 
 
 /**
@@ -54,8 +56,10 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+
     private List<User> hosts;
     private boolean camsVisible = false;
+
 
 
 //TODO find way to auto generate verificationToken
@@ -86,6 +90,7 @@ public class User extends StorableE {
 
     public User() {
     }
+
 
 
     /**
@@ -208,168 +213,176 @@ public class User extends StorableE {
      *
      * @param username username
      */
+
     public void setUsername(final String username) {
         this.username = username;
-    }
 
-    /**
-     * setter for full user name
-     *
-     * @param fullname full name of the user
-     */
-    public void setFullname(final String fullname) {
-        this.fullname = fullname;
-    }
-
-
-    /**
-     * sets the verified status of the user to true
-     *
-     * @param status the new status to set
-     */
-    public void setVerified(final boolean status) {
-        this.verified = status;
-    }
-
-
-    /**
-     * Sets the status of the user to verified
-     */
-    public void verify() {
-        verified = true;
-    }
-
-    /**
-     * adds a the given room to the User notice that this won't update the storage version
-     *
-     * @param room the room to be added
-     */
-    public void addRoom(final Room room) {
-        if (room == null) {
-            throw new IllegalArgumentException("Room can't be null");
         }
-        room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
-        rooms.add(room);
-    }
+
+        /**
+         * setter for full user name
+         *
+         * @param fullname full name of the user
+         */
+        public void setFullname ( final String fullname){
+            this.fullname = fullname;
+        }
 
 
-    /**
-     * removes the room with the selected id
-     *
-     * @param roomId id of the room to remove
-     */
-    public void removeRoom(final Integer roomId) {
-        rooms.removeIf(r -> r.getId().equals(roomId));
-    }
+        /**
+         * sets the verified status of the user to true
+         *
+         * @param status the new status to set
+         */
+        public void setVerified ( final boolean status){
+            this.verified = status;
+        }
 
 
-    /**
-     * generates and sets a session token for the  user
-     *
-     * @return the generated session token
-     */
-    public String createSessionToken() {
-        sessionToken = UUID.randomUUID().toString();
-        return sessionToken;
-    }
+        /**
+         * Sets the status of the user to verified
+         */
+        public void verify () {
+            verified = true;
+        }
 
-    /**
-     * generates and sets a reset code for the user
-     *
-     * @return the generated reset code
-     */
-    public String createResetCode() {
-        resetCode = UUID.randomUUID().toString();
-        return resetCode;
-    }
-
-
-    /**
-     * @return a serialised version of the USer
-     * @see SerialisableUser
-     */
-    public SerialisableUser serialise() {
-        final SerialisableUser sd = new SerialisableUser();
-        sd.username = this.username;
-        sd.email = this.email;
-        sd.fullname = this.fullname;
-        sd.password = this.password;
-        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-        return sd;
-    }
+        /**
+         * adds a the given room to the User notice that this won't update the storage version
+         *
+         * @param room the room to be added
+         */
+        public void addRoom ( final Room room){
+            if (room == null) {
+                throw new IllegalArgumentException("Room can't be null");
+            }
+            room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
+            rooms.add(room);
+        }
 
 
-    /**
-     * asserts if there's a match between the User's hashed password and the one in plaintext
-     *
-     * @param password the plaintext password to check
-     * @return true if matching else false
-     */
+        /**
+         * removes the room with the selected id
+         *
+         * @param roomId id of the room to remove
+         */
+        public void removeRoom ( final Integer roomId){
 
-    public boolean matchesPassword(@NonNull String password) {
-        return BCrypt.checkpw(password, this.password);
-    }
+            rooms.removeIf(r -> r.getId().equals(roomId));
 
-
-    private String hashPassword(String password) {
-        if (password == null) return null;
-        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+        }
 
 
-    }
+        /**
+         * generates and sets a session token for the  user
+         *
+         * @return the generated session token
+         */
+        public String createSessionToken () {
+            sessionToken = UUID.randomUUID().toString();
+            return sessionToken;
+        }
+
+        /**
+         * generates and sets a reset code for the user
+         *
+         * @return the generated reset code
+         */
+        public String createResetCode () {
+            resetCode = UUID.randomUUID().toString();
+            return resetCode;
+        }
 
 
-    /**
-     * getter for guest
-     *
-     * @return returns a list of the houses the user has access to as guest
-     */
-    public List<User> getHosts() {
-
-        return hosts;
-
-
-    }
-
-    /**
-     * Add user to the list of user hub's our user has access to as guest.
-     *
-     * @param user the user to add
-     **/
+        /**
+         * @return a serialised version of the USer
+         * @see SerialisableUser
+         */
+        public SerialisableUser serialise () {
+            final SerialisableUser sd = new SerialisableUser();
+            sd.username = this.username;
+            sd.email = this.email;
+            sd.fullname = this.fullname;
+            sd.password = this.password;
+            sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
+            return sd;
+        }
 
 
-    public void addHost(final User user) {
 
-        hosts.add(user);
+        /**
+         * asserts if there's a match between the User's hashed password and the one in plaintext
+         *
+         * @param password the plaintext password to check
+         * @return true if matching else false
+         */
 
-
-    }
-
-    /**
-     * Removes a house access from deleting a user's name from our list.
-     *
-     * @param user the user to remove
-     **/
-
-
-    public void removeHost(final User user) {
-
-        hosts.remove(user);
+        public boolean matchesPassword (@NonNull String password){
+            return BCrypt.checkpw(password, this.password);
+        }
 
 
-    }
-
-    /**
-     * Check if cameras are accessible by guests.
-     *
-     * @return true if the cameras are visible to the guests
-     **/
+        private String hashPassword (String password){
+            if (password == null) return null;
+            return BCrypt.hashpw(password, BCrypt.gensalt(12));
 
 
-    public boolean areCamsVisible() {
-        return camsVisible;
+        }
 
-    }
+
+
+        /**
+         * getter for guest
+         *
+         * @return returns a list of the houses the user has access to as guest
+         */
+        public List<User> getHosts () {
+
+
+            return hosts;
+
+
+        }
+
+        /**
+         * Add user to the list of user hub's our user has access to as guest.
+         *
+         * @param user the user to add
+         **/
+
+
+        public void addHost ( final User user){
+
+            hosts.add(user);
+
+
+        }
+
+
+        /**
+         * Removes a house access from deleting a user's name from our list.
+         *
+         * @param user the user to remove
+         **/
+
+
+        public void removeHost ( final User user){
+
+            hosts.remove(user);
+
+
+        }
+
+        /**
+         * Check if cameras are accessible by guests.
+         *
+         * @return true if the cameras are visible to the guests
+         **/
+
+
+        public boolean areCamsVisible () {
+            return camsVisible;
+
+        }
 
 
         /**
@@ -377,13 +390,15 @@ public class User extends StorableE {
          **/
 
 
-        public void switchCamerasAccessibility () {
+        public void switchCamerasAccessibility(){
             camsVisible = !camsVisible;
 
         }
 
 
-    }
+
+}
+
 
 
 

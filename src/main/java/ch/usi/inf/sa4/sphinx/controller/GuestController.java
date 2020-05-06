@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
+
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
@@ -24,8 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import java.util.stream.Collectors;
-
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -35,11 +34,13 @@ public class GuestController {
     private UserService userService;
 
 
+
     @Autowired
     private UserStorage userStorage;
 
     @Autowired
     private UserService deviceService;
+
     @Autowired
 
     private Serialiser serialiser;
@@ -47,7 +48,6 @@ public class GuestController {
 
     /**
      * Get all the guests of a certain user.
-     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of guests  or
@@ -62,6 +62,7 @@ public class GuestController {
 
 
         if ( !userService.validSession(username, sessionToken)) {
+
             throw new UnauthorizedException("Invalid credentials");
 
 
@@ -79,7 +80,6 @@ public class GuestController {
 
     /**
      * Get the list of houses the  user is allowed to access as guest.
-     *
      * @param username     the username of the user.
      * @param sessionToken the session token used for validation
      * @return a ResponseEntity with status code 200 and a body with the list of the houses the user can access as guest
@@ -92,10 +92,13 @@ public class GuestController {
 
 
 
+
         if ( !userService.validSession(username, sessionToken)) {
 
 
+
             throw new UnauthorizedException("Invalid credentials");
+
 
 
         }
@@ -131,9 +134,11 @@ public class GuestController {
       @RequestHeader("user") String username) {
 
 
+
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
         Optional<List<Integer>> devicesIds = userService.getDevices(username);
+
 
 
         if (!userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
@@ -145,10 +150,12 @@ public class GuestController {
         SerialisableDevice[] devicesArray;
         if (camsVisible) {
 
+
             devicesArray = devices.stream()
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
         } else {
+
 
             devicesArray = devices.stream()
                     .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
@@ -160,6 +167,7 @@ public class GuestController {
         return ResponseEntity.ok(devicesArray);
 
     }
+
 
 
 //    /**
@@ -185,6 +193,7 @@ public class GuestController {
 //                Optional<List<Integer>> scenesIds = userService.getScenes(username);
 
 
+
 //                SerialisableScene[] scenes ;
 //                scenes = scenesIds.orElse(null).toArray(Serialisablescene:: new);
 
@@ -196,6 +205,7 @@ public class GuestController {
 //        }
 //        throw new UnauthorizedException("");
 //    }
+
 
 
     /**
@@ -211,6 +221,7 @@ public class GuestController {
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody String guestUsername,
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
+
         Optional<User> guest = userService.get(guestUsername);
 
 
@@ -218,7 +229,9 @@ public class GuestController {
         if (!guest.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
+
             throw new UnauthorizedException("Invalid credentials");
+
 
 
         }
@@ -233,6 +246,7 @@ public class GuestController {
 
     /**
      * Deletes a guest.
+
      *
      * @param username       the user who want to delete a guest
      * @param guest_username the guest to delete
@@ -244,6 +258,7 @@ public class GuestController {
      */
 
 
+
     @DeleteMapping(value = {"/{guest_username}", "/{guest_username}/"})
     public ResponseEntity<SerialisableUser> deleteGuestOf(@PathVariable("guest_username") String
                                                                   guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
@@ -253,6 +268,7 @@ public class GuestController {
 
 
         if (  !userService.validSession(username, sessionToken)) {
+
 
             throw new UnauthorizedException("Invalid credentials");
 
