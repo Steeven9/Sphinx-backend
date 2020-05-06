@@ -68,6 +68,8 @@ public final class Serialiser {
         return user.serialise();
     }
 
+
+
     /**
      * Serialises a Room. For the description of the serialised fields consult SerialisableRoom.
      * Fields whose value cannot be determined by looking at the Room are set to null.
