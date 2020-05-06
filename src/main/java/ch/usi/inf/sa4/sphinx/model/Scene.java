@@ -21,9 +21,4 @@ public class Scene{
     public String getIcon(){
         return this.icon;
     }
-
-    public List<Effect> getEffects() {
-        return this.effects;
-    }
-
 }
