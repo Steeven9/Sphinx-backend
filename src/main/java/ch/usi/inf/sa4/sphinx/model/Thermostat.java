@@ -17,6 +17,8 @@ public class Thermostat extends TempSensor {
 
     @Expose
     private double targetTemp;
+    @Expose
+    private double averageTemp;
     @Transient
     private States state;
     @Transient
@@ -131,6 +133,9 @@ public class Thermostat extends TempSensor {
         return averageTemp;
     }
 
+    public void setAverageTemp(double averageTemp) {
+        this.averageTemp = averageTemp;
+    }
 
     /**
      * {@inheritDoc}

@@ -28,6 +28,15 @@ public abstract class Sensor extends Device {
     public Sensor() {}
 
     /**
+     * Getter for the quantity.
+     *
+     * @return quantity
+     **/
+    public double getLastValue() {
+        return this.lastValue;
+    }
+
+    /**
      * Creates a Sensor with given physical quantity for measurement.
      *
      * @param quantity a physical quantity
@@ -37,16 +46,12 @@ public abstract class Sensor extends Device {
         this.lastValue = quantity;
     }
 
-
-    /** Getter for the quantity.
-     * @return quantity
-     **/
-    protected double getLastValue() {
-        return lastValue;
+    public void setLastValue(double lastValue) {
+        this.lastValue = lastValue;
     }
 
     /**
-     * Returns the measured physical quantity in given room, with small random error [-0.5, +0.5].
+     * Returns the measured physical quantity in given room.
      *
      * @return the physical quantity
      */
@@ -61,7 +66,7 @@ public abstract class Sensor extends Device {
      */
     @Override
     public String getLabel() {
-        return new DecimalFormat("#.##").format(this.getValue()) + " " + this.getPhQuantity();
+        return new DecimalFormat("#.##").format(this.getLastValue()) + " " + this.getPhQuantity();
     }
 
     /**

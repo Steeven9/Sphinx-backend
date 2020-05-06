@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -103,7 +104,6 @@ public class RoomController {
                                                                     @NotNull @RequestHeader("user") final String username) {
 
         check(sessionToken, username, null, roomId);
-        //regen
 
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
