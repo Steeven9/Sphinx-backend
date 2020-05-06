@@ -401,7 +401,7 @@ public class User extends StorableE {
      * @return a serialised version of the USer
      * @see SerialisableUser
      */
-    public SerialisableUser minimalSerialise () {
+    public SerialisableUser serialiseAsGuest () {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;

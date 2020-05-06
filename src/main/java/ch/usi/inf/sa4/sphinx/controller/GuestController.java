@@ -105,18 +105,16 @@ public class GuestController {
 
 
         List<User> guestOf = userService.otherHousesAccess(username).get();
+        List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsGuest()).collect(Collectors.toList());
 
 
 
-       // SerialisableUser[] users;
 
 
 
-        guestOf.stream().map(user ->serialiser.serialiseUser(user));
+        return ResponseEntity.ok(users);
 
-        //return ResponseEntity.ok();
 
-        return null;
     }
 
 
