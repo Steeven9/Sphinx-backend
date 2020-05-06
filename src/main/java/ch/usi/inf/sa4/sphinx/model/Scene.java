@@ -1,56 +1,26 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
-import com.google.gson.annotations.Expose;
 
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a Scene.
- * The Scene can contain Effect(s)
- */
-public class Scene implements Runnable{
-    @Expose
+public class Scene{
     private String name;
-    @Expose
     private String icon;
-    @Expose
-    @OneToMany(orphanRemoval = true,
-            cascade = CascadeType.ALL,
-            mappedBy = "scene",
-            fetch = FetchType.LAZY)
     private List<Effect> effects;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Scene(List<Effect> effects, String name, String icon){
         this.effects = effects;
         this.name = name;
         this.icon = icon;
-
-    }
-
-    public Scene(){
-        name = "Scene";
-        effects = new ArrayList<>();
-        icon = "./img/icons/scenes/icon-generic-scene.svg";
-    }
-
-    public Scene(SerialisableScene serialisableScene) {
-        this();
-        if(serialisableScene.name != null) this.name = serialisableScene.name;
-        if(serialisableScene.icon != null) this.icon = serialisableScene.icon;
     }
 
     public String getName(){
         return this.name;
     }
+
     /**
      * Used to set the onwer of the Scene.
      * @param user the owner of this Scene
@@ -87,44 +57,4 @@ public class Scene implements Runnable{
         return ss;
 
     }
-
-    @Override
-    public void run() {
-
-    }
-=======
-=======
->>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-
-public class Scene extends Device{
-
-    public Scene(){
-        super();
-    }
-
-    @Override
-    protected DeviceType getDeviceType() {
-        return DeviceType.SCENE;
-    }
-
-    @Override
-    public String getLabel() {
-        return "Scene";
-    }
-
-    private Scene(Scene s){
-        super.setIcon(s.getIcon());
-        super.setName(s.getName());
-        super.setOn(s.isOn());
-    }
-
-    public Scene makeCopy(Scene s){
-        return new Scene(s);
-    }
-
-<<<<<<< HEAD
->>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
-=======
->>>>>>> #73: added set-up for Scene model, DeviceType modified to support Scene
 }
