@@ -1,20 +1,16 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import java.util.List;
+
 public class Scene{
     private String name;
     private String icon;
-    private Effect<?> effect;
+    private List<Effect> effects;
 
-    public Scene(Effect<?> e, String n, String i){
-        this.effect = e;
-        this.name = n;
+    public Scene(List<Effect> effects, String name, String i){
+        this.effects = effects;
+        this.name = name;
         this.icon = i;
-    }
-
-    private Scene (Scene s){
-        this.effect = s.getEffect();
-        this.name = s.getName();
-        this.icon = s.getIcon();
     }
 
     public String getName(){
@@ -26,12 +22,8 @@ public class Scene{
         return this.icon;
     }
 
-    public Effect<?> getEffect(){
-        return this.effect;
-    }
-
-    public Scene makeCopy(Scene s){
-        return new Scene(s);
+    public List<Effect> getEffects(){
+        return this.effects;
     }
 
 }
