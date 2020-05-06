@@ -69,7 +69,7 @@ public class GuestController {
         }
         List<User> guest = userService.getGuestsOf(username);
         SerialisableUser[] users;
-        users = guest.toArray(SerialisableUser[]::new);
+        users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
 
 
         return ResponseEntity.ok(users);
@@ -110,7 +110,8 @@ public class GuestController {
         SerialisableUser[] users;
 
 
-        users = guestOf.toArray(SerialisableUser[]::new);
+
+        users = guestOf.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
         return ResponseEntity.ok(users);
 
 
@@ -137,11 +138,11 @@ public class GuestController {
 
         Optional<User> user = userService.get(username);
         Optional<User> owner = userService.get(host);
-        Optional<List<Integer>> devicesIds = userService.getDevices(username);
 
 
 
-        if (!userService.validSession(username, sessionToken) || !devicesIds.isPresent() || !owner.isPresent()) {
+
+        if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
 
