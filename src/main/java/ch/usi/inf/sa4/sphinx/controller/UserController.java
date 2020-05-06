@@ -120,10 +120,14 @@ public class UserController {
     @ApiOperation("Modifies a User")
     public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable final String username, @NotNull @RequestBody final SerialisableUser user,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                        @RequestHeader("session-token") final String sessionToken, final Errors errors) {
 =======
                                                        @RequestHeader("session-token") final String session_token, final Errors errors, @RequestBody boolean camVisible) {
 >>>>>>> #124: allowed to update camVisibility in userController
+=======
+                                                       @RequestHeader("session-token") final String session_token, final Errors errors) {
+>>>>>>> removed second @RequestBody in updateUser() and change camVisible variable to Boolean
 
         if (errors.hasErrors()) {
             throw new BadRequestException("Some fields are missing");
@@ -137,8 +141,8 @@ public class UserController {
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
         if (user.password != null) changedUser.setPassword(user.password);
-        if(camVisible  && user.camVisible == false) changedUser.switchCamerasAccessibility();
-        if(camVisible == false && user.camVisible ) changedUser.switchCamerasAccessibility();
+        if(user.guestsHaveCameraAccess!= null ) changedUser.switchCamerasAccessibility();
+
 
 
 

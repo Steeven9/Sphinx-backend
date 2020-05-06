@@ -1,9 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
 import lombok.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -54,14 +56,20 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 
 
+
     private List<User> hosts;
+    private boolean camsVisible;
 
-
-
-    private boolean camsVisible = false;
 
 
 //TODO find way to auto generate verificationToken
+
+//    @Component
+//    private final static class UuidGenerator implements IdentifierGenerator {
+//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
+//            return UUID.randomUUID().toString();
+//        }
+//    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -77,12 +85,14 @@ public class User extends StorableE {
         this.rooms = new ArrayList<>();
         this.verified = false;
         this.camsVisible = false;
+        this.hosts = new ArrayList<>();
         this.verificationToken = UUID.randomUUID().toString();
     }
 
 
     public User() {
     }
+
 
 
     /**
@@ -205,8 +215,10 @@ public class User extends StorableE {
      *
      * @param username username
      */
+
     public void setUsername(final String username) {
         this.username = username;
+
     }
 
     /**
@@ -214,7 +226,7 @@ public class User extends StorableE {
      *
      * @param fullname full name of the user
      */
-    public void setFullname(final String fullname) {
+    public void setFullname ( final String fullname){
         this.fullname = fullname;
     }
 
@@ -224,7 +236,7 @@ public class User extends StorableE {
      *
      * @param status the new status to set
      */
-    public void setVerified(final boolean status) {
+    public void setVerified ( final boolean status){
         this.verified = status;
     }
 
@@ -232,7 +244,7 @@ public class User extends StorableE {
     /**
      * Sets the status of the user to verified
      */
-    public void verify() {
+    public void verify () {
         verified = true;
     }
 
@@ -241,7 +253,7 @@ public class User extends StorableE {
      *
      * @param room the room to be added
      */
-    public void addRoom(final Room room) {
+    public void addRoom ( final Room room){
         if (room == null) {
             throw new IllegalArgumentException("Room can't be null");
         }
@@ -255,8 +267,10 @@ public class User extends StorableE {
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom(final Integer roomId) {
+    public void removeRoom ( final Integer roomId){
+
         rooms.removeIf(r -> r.getId().equals(roomId));
+
     }
 
 
@@ -265,7 +279,7 @@ public class User extends StorableE {
      *
      * @return the generated session token
      */
-    public String createSessionToken() {
+    public String createSessionToken () {
         sessionToken = UUID.randomUUID().toString();
         return sessionToken;
     }
@@ -275,11 +289,26 @@ public class User extends StorableE {
      *
      * @return the generated reset code
      */
-    public String createResetCode() {
+    public String createResetCode () {
         resetCode = UUID.randomUUID().toString();
         return resetCode;
     }
 
+
+    /**
+     * @return a serialised version of the USer
+     * @see SerialisableUser
+     */
+    public SerialisableUser serialise () {
+        final SerialisableUser sd = new SerialisableUser();
+        sd.username = this.username;
+        sd.email = this.email;
+        sd.fullname = this.fullname;
+        sd.password = this.password;
+        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
+        sd.allowSecurityCameras = this.camsVisible;
+        return sd;
+    }
 
 
 
@@ -290,30 +319,12 @@ public class User extends StorableE {
      * @return true if matching else false
      */
 
-
-    public boolean matchesPassword(@NonNull String password) {
+    public boolean matchesPassword (@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
 
-        /**
-         * @return a serialised version of the USer
-         * @see SerialisableUser
-         */
-        public SerialisableUser serialise () {
-            final SerialisableUser sd = new SerialisableUser();
-            sd.username = this.username;
-            sd.email = this.email;
-            sd.fullname = this.fullname;
-            sd.password = this.password;
-            sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-            sd.camVisible = this.camsVisible;
-            return sd;
-        }
 
-
-
-    private String hashPassword(String password) {
-
+    private String hashPassword (String password){
         if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
 
@@ -321,14 +332,17 @@ public class User extends StorableE {
     }
 
 
+
     /**
      * getter for guest
      *
      * @return returns a list of the houses the user has access to as guest
      */
+    public List<User> getHosts () {
 
-    public List<User> getHosts() {
+
         return hosts;
+
 
     }
 
@@ -339,71 +353,57 @@ public class User extends StorableE {
      **/
 
 
-    public void addHost(final User user) {
-
+    public void addHost ( final User user){
 
         hosts.add(user);
 
 
     }
 
+
     /**
      * Removes a house access from deleting a user's name from our list.
      *
      * @param user the user to remove
      **/
-    public void removeHost(final User user) {
 
 
+    public void removeHost ( final User user){
 
-            hosts.remove(user);
-
+        hosts.remove(user);
 
 
     }
 
-
-        /** Check if cameras are accessible by guests.
-         * @return true if the cameras are visible to the guests
-         **/
-
-
-        public boolean areCamsVisible () {
-            return camsVisible;
+    /**
+     * Check if cameras are accessible by guests.
+     *
+     * @return true if the cameras are visible to the guests
+     **/
 
 
-        }
+    public Boolean areCamsVisible () {
+        return camsVisible;
 
+    }
 
-        /**
-         * getter for guest
-         *
-         * @return returns a list of the houses the user has access to as guest
-         */
-        public List<User> getGuestsOf () {
-
-
-            return hosts;
-
-
-        }
-
-
-        /**
-         * Switches the cam visibility from on to off and vice versa.
-         **/
-
-
-        public void switchCamerasAccessibility () {
-            camsVisible = !camsVisible;
-
-        }
 
     /**
-     * @return a serialised version of the USer
+     * Switches the cam visibility from on to off and vice versa.
+     **/
+
+
+    public void switchCamerasAccessibility(boolean status){
+        camsVisible = status;
+
+    }
+
+    /**
+     * Serialiases a user as host but with only data about the username, email and full name.
+     * @return a serialised version of the User
      * @see SerialisableUser
      */
-    public SerialisableUser serialiseAsGuest () {
+    public SerialisableUser serialiseAsHost () {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
@@ -411,20 +411,9 @@ public class User extends StorableE {
         return sd;
     }
 
-        /**
-         * Remove user from the list of user hub's he is guest.
-         *
-         * @param user the user to remove
-         **/
 
-        public void removeGuestOf ( final User user){
-            hosts.remove(user);
+}
 
-
-        }
-
-
-    }
 
 
 

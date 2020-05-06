@@ -11,8 +11,12 @@ public class SerialisableUser {
     public String password;
     public Integer[] rooms;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     public boolean camVisible;
+=======
+    public Boolean guestsHaveCameraAccess;
+>>>>>>> removed second @RequestBody in updateUser() and change camVisible variable to Boolean
 
     /** Constructor.**/
     public SerialisableUser(){
