@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-
 import javax.validation.constraints.NotNull;
 
 
@@ -10,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @see StatelessDimmableSwitch
  */
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
-    private double increment;
+    private final double increment;
 
     /**
      * Constructor.
@@ -18,7 +16,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      * @param deviceID  the id of a device
      * @param increment value for incrementing
      **/
-    public StatelessDimmSwitchChangedEvent(@NotNull Integer deviceID, double increment) {
+    public StatelessDimmSwitchChangedEvent(@NotNull final Integer deviceID, final double increment) {
         super(deviceID);
         this.increment = increment;
     }

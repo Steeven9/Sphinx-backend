@@ -14,7 +14,7 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      *
      * @param deviceID the id to set the DimmSwitchChangedEvent to
      **/
-    public DimmSwitchChangedEvent(@NonNull int deviceID) {
+    public DimmSwitchChangedEvent(@NonNull final int deviceID) {
         super(deviceID);
     }
 

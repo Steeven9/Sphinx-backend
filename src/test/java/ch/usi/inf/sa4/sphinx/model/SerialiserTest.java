@@ -1,19 +1,12 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.*;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,7 +46,7 @@ class SerialiserTest {
     @Test
     @DisplayName("Transform this device in a serialiseDevice")
     void isSerializedDevice() {
-        SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device);
+        SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device, user);
         assertNotNull(serialisableDevice);
         assertEquals(SerialisableDevice.class, serialisableDevice.getClass());
     }
@@ -61,7 +54,7 @@ class SerialiserTest {
     @Test
     @DisplayName("Transform this room in a serialiseRoom")
     void isSerialisableRoom() {
-        SerialisableRoom serialisableRoom = serialiser.serialiseRoom(room);
+        SerialisableRoom serialisableRoom = Serialiser.serialiseRoom(room);
         assertNotNull(serialisableRoom);
         assertEquals(SerialisableRoom.class, serialisableRoom.getClass());
     }
@@ -69,7 +62,7 @@ class SerialiserTest {
     @Test
     @DisplayName("Transform this user in a serialiseUser")
     void isSerialisableUser() {
-        SerialisableUser serialisableUser = serialiser.serialiseUser(user);
+        SerialisableUser serialisableUser = Serialiser.serialiseUser(user);
         assertNotNull(serialisableUser);
         assertEquals(SerialisableUser.class, serialisableUser.getClass());
     }

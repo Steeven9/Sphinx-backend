@@ -1,11 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-
 import java.text.DecimalFormat;
-import javax.persistence.Entity;
 import java.util.Random;
 import javax.persistence.Entity;
 
@@ -29,7 +24,7 @@ public abstract class Sensor extends Device {
      *
      * @param quantity a physical quantity
      */
-    protected Sensor(double quantity) {
+    protected Sensor(final double quantity) {
         this.quantity = quantity;
     }
 
@@ -47,8 +42,8 @@ public abstract class Sensor extends Device {
      * @return the physical quantity
      */
     public double getValue() {
-        double var = new Random().nextDouble();
-        return this.quantity + var - 0.5;
+        final double variance = new Random().nextDouble();
+        return this.quantity + variance - 0.5;
     }
 
 

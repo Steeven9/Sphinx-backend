@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,11 +13,11 @@ public class SwitchChangedEvent extends Event<Boolean> {
      *
      * @param deviceId the id of a device
      */
-    public SwitchChangedEvent(@NotNull int deviceId) {
+    public SwitchChangedEvent(@NotNull final int deviceId) {
         super(deviceId);
     }
 
-    private SwitchChangedEvent(SwitchChangedEvent other) {
+    private SwitchChangedEvent(final SwitchChangedEvent other) {
         super(other);
     }
 
@@ -30,7 +28,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ((Switch) this.deviceService.get(getDeviceId()).get()).isOn();
+        return this.deviceService.get(getDeviceId()).get().isOn();
     }
 
 }

@@ -1,16 +1,17 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 
-public class SerialisableException {
-    private HttpStatus status;
-    private String message;
-    private int code;
+public class SerialisableException extends RuntimeException {
+    private final HttpStatus status;
+    private final String message;
+    private final int code;
 
-    public SerialisableException(HttpStatus error, String message) {
+    public SerialisableException(@NonNull final HttpStatus error, final String message) {
         this.status = error;
         this.message = message;
-        if(error != null) this.code = error.value();
+        this.code = error.value();
     }
 
 

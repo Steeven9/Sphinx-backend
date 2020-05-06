@@ -34,17 +34,16 @@ public class SwaggerConfig {
 
 
     private ApiInfo metaInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Sphinx API",
-                "Description for Sphinx API", //TODO
+                "API for SmartHut, Sphinx's SA4 project",
                 "1.0",
                 "Terms", //TODO
-                new Contact("Sphinx", "https://localhost:8080",
+                new Contact("Sphinx", "http://localhost:8080",
                         "info@smarthut.xyz"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html"
         );
-        return apiInfo;
     }
 }
 

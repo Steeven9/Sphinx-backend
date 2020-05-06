@@ -54,11 +54,11 @@ public enum DeviceType {
     /**
      * Given an integer, returns the device type assigned to that value.
      *
-     * @param d the int representing the DeviceType according to the API
+     * @param deviceType the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
-    public static DeviceType intToDeviceType(int d) {
-        switch (d) {
+    public static DeviceType intToDeviceType(final int deviceType) {
+        switch (deviceType) {
             case 1:
                 return LIGHT;
             case 2:
@@ -94,11 +94,11 @@ public enum DeviceType {
     /**
      * Given a device, returns the DeviceType corresponding to the device's class.
      *
-     * @param d a given Device
+     * @param device a given Device
      * @return the DeviceType of the given Device
      */
-    public static DeviceType deviceToDeviceType(Device d) {
-        return deviceClassToDeviceType(d.getClass());
+    public static DeviceType deviceToDeviceType(final Device device) {
+        return deviceClassToDeviceType(device.getClass());
     }
 
 
@@ -108,7 +108,7 @@ public enum DeviceType {
      * @param c class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
-    public static DeviceType deviceClassToDeviceType(Class c) {
+    public static DeviceType deviceClassToDeviceType(final Class c) {
         if (Light.class.equals(c)) {
             return LIGHT;
         }
@@ -155,11 +155,11 @@ public enum DeviceType {
     /**
      * Given a DeviceType returns the integer value used to transmit the enum over the network.
      *
-     * @param d the DeviceType
+     * @param type the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
-    public static int deviceTypetoInt(DeviceType d) {
-        switch (d) {
+    public static int deviceTypetoInt(final DeviceType type) {
+        switch (type) {
             case LIGHT:
                 return 1;
             case DIMMABLE_LIGHT:
@@ -195,11 +195,11 @@ public enum DeviceType {
     /**
      * Given a DeviceType, returns a new object of that type.
      *
-     * @param d the device type
+     * @param type the device type
      * @return a new Device according to the DeviceType
      */
-    public static Device makeDevice(DeviceType d) {
-        switch (d) {
+    public static Device makeDevice(final DeviceType type) {
+        switch (type) {
             case LIGHT:
                 return new Light();
             case DIMMABLE_LIGHT:

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * Exception thrown to indicate a 500 INTERNAL_SERVER_ERROR
  */
 public class ServerErrorException extends HttpException{
-    public ServerErrorException(String message) {
+    public ServerErrorException(final String message) {
         super(message);
     }
 
