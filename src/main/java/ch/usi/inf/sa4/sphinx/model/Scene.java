@@ -1,27 +1,33 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+public class Scene{
+    private String name;
+    private String icon;
+    private Effect<?> effect;
 
-public class Scene extends Device{
-
-    public Scene(){
-        super();
+    public Scene(Effect<?> e, String n, String i){
+        this.effect = e;
+        this.name = n;
+        this.icon = i;
     }
 
-    @Override
-    protected DeviceType getDeviceType() {
-        return DeviceType.SCENE;
+    private Scene (Scene s){
+        this.effect = s.getEffect();
+        this.name = s.getName();
+        this.icon = s.getIcon();
     }
 
-    @Override
-    public String getLabel() {
-        return "Scene";
+    public String getName(){
+        return this.name;
     }
 
-    private Scene(Scene s){
-        super.setIcon(s.getIcon());
-        super.setName(s.getName());
-        super.setOn(s.isOn());
+
+    public String getIcon(){
+        return this.icon;
+    }
+
+    public Effect<?> getEffect(){
+        return this.effect;
     }
 
     public Scene makeCopy(Scene s){
