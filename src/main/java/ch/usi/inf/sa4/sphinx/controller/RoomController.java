@@ -101,6 +101,7 @@ public class RoomController {
                                                                     @NotNull @RequestHeader("user") final String username) {
 
         check(sessionToken, username, null, roomId);
+        //regen
 
         final User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
         final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check

@@ -219,6 +219,9 @@ public class DeviceController {
         if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
             ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
         }
+        if (storageDevice instanceof Thermostat && device.slider != null) {
+            ((Thermostat) storageDevice).setTargetTemp(device.slider);
+        }
 
 
         if (deviceService.update(storageDevice)) {
