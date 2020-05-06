@@ -112,10 +112,6 @@ public class GuestController {
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
 
 
-
-
-
-
         return ResponseEntity.ok(users);
 
 
@@ -149,7 +145,9 @@ public class GuestController {
 
 
 
+
         if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
+
 
             throw new UnauthorizedException("Invalid credential");
         }
