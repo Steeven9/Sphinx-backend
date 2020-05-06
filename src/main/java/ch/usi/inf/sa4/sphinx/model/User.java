@@ -58,7 +58,7 @@ public class User extends StorableE {
 
 
     private List<User> hosts;
-    private boolean camsVisible = false;
+    private boolean camsVisible;
 
 
 
@@ -84,6 +84,7 @@ public class User extends StorableE {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
+        this.camsVisible = false;
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -304,6 +305,7 @@ public class User extends StorableE {
             sd.fullname = this.fullname;
             sd.password = this.password;
             sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
+            sd.camVisible = this.camsVisible;
             return sd;
         }
 
@@ -395,6 +397,17 @@ public class User extends StorableE {
 
         }
 
+    /**
+     * @return a serialised version of the USer
+     * @see SerialisableUser
+     */
+    public SerialisableUser minimalSerialise () {
+        final SerialisableUser sd = new SerialisableUser();
+        sd.username = this.username;
+        sd.email = this.email;
+        sd.fullname = this.fullname;
+        return sd;
+    }
 
 
 }

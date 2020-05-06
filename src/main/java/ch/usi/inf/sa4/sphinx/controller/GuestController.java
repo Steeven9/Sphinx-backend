@@ -86,7 +86,7 @@ public class GuestController {
      */
 
     @GetMapping(value = {"/houses/", "/houses"})
-    public ResponseEntity<SerialisableUser[]> getHouses(@RequestHeader("session-token") String sessionToken,
+    public ResponseEntity<List<SerialisableUser>> getHouses(@RequestHeader("session-token") String sessionToken,
                                                         @RequestHeader("user") String username) {
 
 
@@ -107,14 +107,16 @@ public class GuestController {
         List<User> guestOf = userService.otherHousesAccess(username).get();
 
 
-        SerialisableUser[] users;
+
+       // SerialisableUser[] users;
 
 
 
-        users = guestOf.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
-        return ResponseEntity.ok(users);
+        guestOf.stream().map(user ->serialiser.serialiseUser(user));
 
+        //return ResponseEntity.ok();
 
+        return null;
     }
 
 
