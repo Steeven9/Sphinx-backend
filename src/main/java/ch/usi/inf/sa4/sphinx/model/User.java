@@ -58,7 +58,7 @@ public class User extends StorableE {
 
 
     private List<User> hosts;
-    private boolean camsVisible;
+    private Boolean camsVisible;
 
 
 
@@ -84,7 +84,7 @@ public class User extends StorableE {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.camsVisible = false;
+        this.camsVisible = null;
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -305,7 +305,7 @@ public class User extends StorableE {
             sd.fullname = this.fullname;
             sd.password = this.password;
             sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-            sd.camVisible = this.camsVisible;
+            sd.guestsHaveCameraAccess = this.camsVisible;
             return sd;
         }
 
@@ -381,7 +381,7 @@ public class User extends StorableE {
          **/
 
 
-        public boolean areCamsVisible () {
+        public Boolean areCamsVisible () {
             return camsVisible;
 
         }
@@ -406,6 +406,7 @@ public class User extends StorableE {
         sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
+        sd.guestsHaveCameraAccess = this.camsVisible;
         return sd;
     }
 

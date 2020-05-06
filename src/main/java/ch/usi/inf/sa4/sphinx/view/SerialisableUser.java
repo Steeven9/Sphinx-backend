@@ -10,7 +10,7 @@ public class SerialisableUser {
     public String fullname;
     public String password;
     public Integer[] rooms;
-    public boolean camVisible;
+    public Boolean guestsHaveCameraAccess;
 
     /** Constructor.**/
     public SerialisableUser(){
