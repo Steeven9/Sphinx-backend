@@ -78,27 +78,13 @@ public abstract class Device extends StorableE {
         return room;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     /**
      * @return the DeviceType of this device
      * @see DeviceType
      */
-    protected abstract DeviceType getDeviceType();
-=======
-   public abstract DeviceType getDeviceType();
->>>>>>> #124: Gitlab suggestions applied (#6)
-=======
-   public abstract DeviceType getDeviceType();
->>>>>>> #124: Gitlab suggestions applied (#6)
-=======
-   public abstract DeviceType getDeviceType();
->>>>>>> #124: Gitlab suggestions applied (#6)
-=======
-   public abstract DeviceType getDeviceType();
->>>>>>> d2be37c764cec7aa02a8508b17ec9532430c4d0f
+    public abstract DeviceType getDeviceType();
+
 
 
     /**
