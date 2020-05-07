@@ -236,6 +236,7 @@ public class GuestController {
 
 
 
+
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
 
