@@ -1,10 +1,12 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 /**
  * Event associated with the change of the on status of a Switch.
  */
+@Entity
 public class SwitchChangedEvent extends Event<Boolean> {
 
 

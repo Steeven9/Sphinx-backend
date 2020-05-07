@@ -4,10 +4,13 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.Entity;
+
 /**
  * Effect that sets a DimmableLight state
  * @see DimmableLight
  */
+@Entity
 public class DimmableLightStateSet extends Effect<Double> {
 
     @Autowired

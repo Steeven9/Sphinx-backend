@@ -3,10 +3,13 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import org.springframework.lang.NonNull;
 
+import javax.persistence.Entity;
+
 /**
  * Event linked to the change of intensity of a DimmableSwitch
  * @see DimmableSwitch
  */
+@Entity
 public class DimmSwitchChangedEvent extends Event<Double> {
 
     /**

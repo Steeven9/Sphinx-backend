@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotNull;
  * An event linked to the action of a StatelessDimmableSwitch
  * @see StatelessDimmableSwitch
  */
+@Entity
 public class StatelessDimmSwitchChangedEvent extends Event<Double> {
     private final double increment;
 
