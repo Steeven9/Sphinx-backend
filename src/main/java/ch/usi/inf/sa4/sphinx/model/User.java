@@ -58,7 +58,7 @@ public class User extends StorableE {
 
 
     private List<User> hosts;
-    private Boolean camsVisible;
+    private boolean camsVisible;
 
 
 
@@ -84,7 +84,7 @@ public class User extends StorableE {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.camsVisible = null;
+        this.camsVisible = false;
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -392,8 +392,8 @@ public class User extends StorableE {
          **/
 
 
-        public void switchCamerasAccessibility(){
-            camsVisible = !camsVisible;
+        public void switchCamerasAccessibility(boolean status){
+            camsVisible = status;
 
         }
 
