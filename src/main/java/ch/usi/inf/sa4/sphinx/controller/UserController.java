@@ -141,7 +141,7 @@ public class UserController {
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
         if (user.password != null) changedUser.setPassword(user.password);
-        if(user.guestsHaveCameraAccess!= null ) changedUser.switchCamerasAccessibility();
+        if(user.guestsHaveCameraAccess!= null ) changedUser.switchCamerasAccessibility(user.guestsHaveCameraAccess);
 
 
 
