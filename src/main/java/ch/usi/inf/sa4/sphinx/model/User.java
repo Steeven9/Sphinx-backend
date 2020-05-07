@@ -398,15 +398,15 @@ public class User extends StorableE {
         }
 
     /**
-     * @return a serialised version of the USer
+     * Serialiases a user as host but with only data about the username, email and full name.
+     * @return a serialised version of the User
      * @see SerialisableUser
      */
-    public SerialisableUser serialiseAsGuest () {
+    public SerialisableUser serialiseAsHost () {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
-        sd.guestsHaveCameraAccess = this.camsVisible;
         return sd;
     }
 
