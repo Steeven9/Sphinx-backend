@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * Directly inserts users into the database
  */
 @Component
-@Transactional
+//@Transactional
 public class DummyDataAdder {
 
 
@@ -37,11 +38,20 @@ public class DummyDataAdder {
 
     //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
 
+    @PostConstruct
+    private void deleteUsers(){
+        userService.delete("user1");
+        userService.delete("user2");
+        userService.delete("randUser");
+        userService.delete("emptyUser");
+        userService.delete("unverifiedUser");
+    }
+
+
     /**
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
      */
-    @Transactional
     protected void user1() {
         try {
 
@@ -73,7 +83,6 @@ public class DummyDataAdder {
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
-    @Transactional
     protected void user2() {
         try {
             final User newUser = new User("luigi@smarthut.xyz", "1234", "user2", "luigi rossi");
@@ -128,7 +137,6 @@ public class DummyDataAdder {
      * logged in
      */
     //user with 20 rooms and random devices in them
-    @Transactional
     protected  void randUser() {
         try {
             final User newUser = new User("rand@smarthut.xyz", "1234", "randUser", "randomUser");
@@ -157,7 +165,6 @@ public class DummyDataAdder {
      * adds a user called emptyUser in storage, it will have no rooms. This user has
      * sessionToken="emptyUserSessionToken"
      */
-    @Transactional
     protected void emptyUser() {
         try {
             final User newUser = new User("empty@smarthut.xyz", "1234", "emptyUser", "Empty User");
@@ -172,7 +179,6 @@ public class DummyDataAdder {
     /**
      * adds an unverified user called unverifiedUser in storage
      */
-    @Transactional
     protected void unverifiedUser() {
         try {
             final User newUser = new User("unv@smarthut.xyz", "1234", "unverifiedUser", "edeefefefef");
@@ -181,7 +187,7 @@ public class DummyDataAdder {
             logger.warn("Something is wrong in unverifiedUser");
         }
     }
-    @Transactional
+    
     public void addDummyData(){
         emptyUser();
         randUser();
