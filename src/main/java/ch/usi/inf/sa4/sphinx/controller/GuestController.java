@@ -225,9 +225,6 @@ public class GuestController {
                                                           @RequestHeader("user") String username) {
 
         Optional<User> guest = userService.get(guestUsername);
-
-
-
         if (!guest.isPresent() || !userService.validSession(username, sessionToken)) {
 
 
@@ -266,7 +263,7 @@ public class GuestController {
                                                                   guest_username, @RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
-        Optional<User> user = userService.get(username);
+
 
 
         if (  !userService.validSession(username, sessionToken)) {
