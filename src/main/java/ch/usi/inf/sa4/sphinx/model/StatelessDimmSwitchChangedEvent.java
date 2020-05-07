@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -29,7 +32,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) deviceService.get(getDeviceId()).get()).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new)).isIncrementing() ? increment : -increment;
     }
 
 }

@@ -53,6 +53,7 @@ public class User extends StorableE {
     private boolean verified;
 
 
+
 //TODO find way to auto generate verificationToken
 
 //    @Component

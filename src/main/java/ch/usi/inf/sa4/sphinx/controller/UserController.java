@@ -1,10 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
-import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -52,7 +49,7 @@ public class UserController {
 
         if (userService.validSession(username, session_token)) { // at the same time checks if username exists
             final Optional<User> user = userService.get(username);
-            return ResponseEntity.ok(Serialiser.serialiseUser(user.get()));
+            return ResponseEntity.ok(Serialiser.serialiseUser(user.orElseThrow(WrongUniverseException::new)));
         }
 
         throw new UnauthorizedException("Invalid credentials");

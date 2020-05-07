@@ -12,6 +12,8 @@ import java.util.Random;
 @Entity
 public class MotionSensor extends Device {
 
+    private final Random rnd = new Random();
+
     /**
      * Creates a MotionSensor with initial state set to false.
      */
@@ -24,7 +26,6 @@ public class MotionSensor extends Device {
      * @return true if the person is detected, false otherwise
      */
     public boolean isDetected() {
-        final Random rnd = new Random();
         triggerEffects();
         return rnd.nextBoolean();
     }

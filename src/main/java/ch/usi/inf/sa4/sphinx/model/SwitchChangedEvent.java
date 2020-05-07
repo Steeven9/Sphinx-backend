@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,7 +31,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return this.deviceService.get(getDeviceId()).get().isOn();
+        return ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new).isOn();
     }
 
 }

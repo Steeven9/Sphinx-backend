@@ -41,7 +41,7 @@ public class CouplingService {
      * @return the effects belonging to the specified coupling
      */
     public List<Effect> getEffects(@NotNull final Integer id) {
-        return couplingStorage.findById(id).map(Coupling::getEffects).orElse(new ArrayList<>());
+        return couplingStorage.findById(id).map(Coupling::getEffects).orElseGet(ArrayList::new);
     }
 
     /**
@@ -53,21 +53,8 @@ public class CouplingService {
         for (final Coupling coupling : couplings) {
             final List<Effect> effects = coupling.getEffects();
 
-            for (final Effect effect : effects) {
-                boolean boolId1 = false;
-                boolean boolId2 = false;
-
-                if(effect.getDeviceId().equals(id1)){
-                    boolId1 = true;
-                } else if(effect.getDeviceId().equals(id2)){
-                    boolId2 = true;
-                }
-                if(boolId1 && coupling.getEvent().getDeviceId() == id2){ //if effect.deviceId is id1 then event.deviceId should be id2
-                    effects.remove(effect);
-                }else if(boolId2 && coupling.getEvent().getDeviceId() == id1){//if effect.deviceId is id2 then event.deviceId should be id1
-                    effects.remove(effect);
-                }
-            }
+            effects.removeIf(effect -> effect.getDeviceId().equals(id1) && coupling.getEvent().getDeviceId() == id2
+                                    || effect.getDeviceId().equals(id2) && coupling.getEvent().getDeviceId() == id1);
 
             if(effects.size() > 1){
                 couplingStorage.save(coupling);

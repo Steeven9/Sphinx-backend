@@ -126,7 +126,7 @@ public class Coupling extends StorableE {
      * @param effect the Effect to add to this Coupling
      * @see Effect
      */
-    public void addEffect(@NonNull final Effect effect) {
+    public final void addEffect(@NonNull final Effect effect) {
         effects.add(effect);
     }
 
@@ -136,7 +136,12 @@ public class Coupling extends StorableE {
         if(other == this) return true;
         final Coupling otherCoupling = (Coupling) other;
         if(id == null || otherCoupling.getId() == null) return false;
-        return  id.equals(((Coupling) other).getId());
+        return id.equals(((Coupling) other).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
 

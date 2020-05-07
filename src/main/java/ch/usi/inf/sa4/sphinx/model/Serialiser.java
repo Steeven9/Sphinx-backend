@@ -20,11 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public final class Serialiser {
     @Autowired
-    private UserService userService;
-    @Autowired
     private DeviceService deviceService;
-    @Autowired
-    private RoomService roomService;
 
     private Serialiser() {
     }
@@ -58,8 +54,8 @@ public final class Serialiser {
         sd.roomId = owningRoom.getId();
         sd.roomName = owningRoom.getName();
         sd.userName = owningUser.getUsername();
-        sd.switched = deviceService.getSwitchedBy(device.getId()).stream().mapToInt(i->i).toArray();
-        sd.switches = deviceService.getSwitches(device.getId()).stream().mapToInt(i->i).toArray();
+        sd.switched = deviceService.getSwitchedBy(device.getId()).stream().mapToInt(Integer::intValue).toArray();
+        sd.switches = deviceService.getSwitches(device.getId()).stream().mapToInt(Integer::intValue).toArray();
         if(sd.switched.length == 0) sd.switched = null;
         if(sd.switches.length == 0) sd.switches = null;
         return sd;
@@ -104,7 +100,7 @@ public final class Serialiser {
      * @return the serialized rooms
      * @see Serialiser#serialiseRoom(Room)
      */
-    public static List<SerialisableRoom> serialiseRooms(final Collection<Room> rooms) {
+    public static List<SerialisableRoom> serialiseRooms(final Collection<? extends Room> rooms) {
         return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 

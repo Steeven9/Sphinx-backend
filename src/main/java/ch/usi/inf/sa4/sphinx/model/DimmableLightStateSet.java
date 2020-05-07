@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see DimmableLight
  */
 public class DimmableLightStateSet extends Effect<Double> {
-
-    @Autowired
-    private DeviceService deviceService;
 
     /**
      * Constructor.
@@ -30,9 +29,9 @@ public class DimmableLightStateSet extends Effect<Double> {
      * @param effect: new value of the state
      **/
     public void execute(final Double effect) {
-        final DimmableLight dl = ((DimmableLight) deviceService.get(getDeviceId()).get());
+        final DimmableLight dl = ((DimmableLight) ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new));
         dl.setState(effect);
-        deviceService.update(dl);
+        ServiceProvider.getStaticDeviceService().update(dl);
     }
 
 

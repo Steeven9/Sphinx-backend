@@ -68,7 +68,7 @@ public class DeviceController {
                 throw new UnauthorizedException("Invalid credentials");
             }
 
-            final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+            final List<Device> devices = userService.getPopulatedDevices(username).orElseThrow(WrongUniverseException::new);//if user exists optional is present
             final List<SerialisableDevice> serializedDevices = devices.stream()
                     .map(device -> serialiser.serialiseDevice(device, user.get()))
                     .collect(Collectors.toList());
@@ -112,7 +112,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
 
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).orElseThrow(WrongUniverseException::new)));
     }
 
 
@@ -148,13 +148,13 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this room");
         }
 
-        final User user = userService.get(username).get(); //If the session is valid the User exists
+        final User user = userService.get(username).orElseThrow(WrongUniverseException::new); //If the session is valid the User exists
 
 
         final Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
                 .orElseThrow(() -> new ServerErrorException("Couldn't add device to room"));
 
-        final Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
+        final Device d = deviceService.get(deviceId).orElseThrow(WrongUniverseException::new); //Since the previous exists then this does too
 
 
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
@@ -162,7 +162,7 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
 
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get(), user));
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new), user));
 
     }
 
@@ -207,7 +207,7 @@ public class DeviceController {
 
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
-        final User user = userService.get(username).get(); //exists if prev is valid
+        final User user = userService.get(username).orElseThrow(WrongUniverseException::new); //exists if prev is valid
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
@@ -334,8 +334,8 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        final Integer id1 = Integer.parseInt(device1_id);
-        final Integer id2 = Integer.parseInt(device2_id);
+        final int id1 = Integer.parseInt(device1_id);
+        final int id2 = Integer.parseInt(device2_id);
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
@@ -376,8 +376,8 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        final Integer id1 = Integer.parseInt(device1_id);
-        final Integer id2 = Integer.parseInt(device2_id);
+        final int id1 = Integer.parseInt(device1_id);
+        final int id2 = Integer.parseInt(device2_id);
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
