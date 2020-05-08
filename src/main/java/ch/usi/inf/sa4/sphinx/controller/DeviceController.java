@@ -94,7 +94,7 @@ public class DeviceController {
      */
     @GetMapping("/{deviceId}")
     @ApiOperation("Gets the device with the given id")
-    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable final Integer deviceId,
+    public ResponseEntity<SerialisableDevice> getDevice(@NotNull @PathVariable final Integer deviceId,
                                                         @RequestHeader("session-token") final String sessionToken,
                                                         @RequestHeader("user") final String username) {
 
@@ -187,7 +187,7 @@ public class DeviceController {
      */
     @PutMapping("/{deviceId}")
     @ApiOperation("Modifies a Device")
-    public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable final Integer deviceId,
+    public ResponseEntity<SerialisableDevice> modifyDevice(@NotNull @PathVariable final Integer deviceId,
                                                            @NotBlank @RequestBody final SerialisableDevice device,
                                                            @RequestHeader("session-token") final String sessionToken,
                                                            @RequestHeader("user") final String username,
@@ -250,8 +250,8 @@ public class DeviceController {
      */
     @PutMapping("/reset/{deviceId}")
     @ApiOperation("Resets a smartplug")
-    public ResponseEntity<Boolean> resetSmartPlug(@PathVariable final Integer deviceId,
-                                                  @RequestHeader("session-token") final String sessionToken,
+    public ResponseEntity<Boolean> resetSmartPlug(@NotNull @PathVariable final Integer deviceId,
+                                                  @NotNull@RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username) {
         final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
@@ -288,7 +288,7 @@ public class DeviceController {
      */
     @DeleteMapping("/{deviceId}")
     @ApiOperation("Deletes the device with the given id")
-    public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable final Integer deviceId,
+    public ResponseEntity<Device> deleteDevice(@NotNull @PathVariable final Integer deviceId,
                                                @RequestHeader("session-token") final String sessionToken,
                                                @RequestHeader("user") final String username) {
 

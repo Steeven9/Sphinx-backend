@@ -75,7 +75,7 @@ public class RoomController {
      */
     @GetMapping("/{roomId}")
     @ApiOperation("Returns a Room given its id")
-    public ResponseEntity<SerialisableRoom> getRoom(@PathVariable final Integer roomId,
+    public ResponseEntity<SerialisableRoom> getRoom(@NotNull @PathVariable final Integer roomId,
                                                     @NotNull @RequestHeader("session-token") final String sessionToken,
                                                     @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
@@ -96,7 +96,7 @@ public class RoomController {
      */
     @GetMapping("/{roomId}/devices")
     @ApiOperation("Returns all devices in the given Room")
-    public ResponseEntity<Collection<SerialisableDevice>> getDevice(@PathVariable final Integer roomId,
+    public ResponseEntity<Collection<SerialisableDevice>> getDevice(@NotNull @PathVariable final Integer roomId,
                                                                     @NotNull @RequestHeader("session-token") final String sessionToken,
                                                                     @NotNull @RequestHeader("user") final String username) {
 
@@ -120,8 +120,8 @@ public class RoomController {
      */
     @PostMapping({"", "/"})
     @ApiOperation("Creates a Room")
-    public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username,
+    public ResponseEntity<SerialisableRoom> createRoom(@NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username,
                                                        @NotNull @RequestBody final SerialisableRoom serialisableRoom,
                                                        final Errors errors) {
 
@@ -151,10 +151,10 @@ public class RoomController {
      */
     @PutMapping("/{roomId}")
     @ApiOperation("Modifies a Room")
-    public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable final Integer roomId,
-                                                       @NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username,
-                                                       @NotBlank @RequestBody final SerialisableRoom serialisableRoom,
+    public ResponseEntity<SerialisableRoom> modifyRoom(@NotNull @PathVariable final Integer roomId,
+                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username,
+                                                       @NotNull @RequestBody final SerialisableRoom serialisableRoom,
                                                        final Errors errors) {
         check(sessionToken, username, errors, roomId);
 
@@ -196,8 +196,8 @@ public class RoomController {
     @DeleteMapping("/{roomId}")
     @ApiOperation("Deletes a Room")
     public ResponseEntity<SerialisableRoom> deleteRoom(@NotNull @PathVariable final Integer roomId,
-                                                       @NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username) {
+                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
 
         if (!userService.removeRoom(username, roomId)) {
