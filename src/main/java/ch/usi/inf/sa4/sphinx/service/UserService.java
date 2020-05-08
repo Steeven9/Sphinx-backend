@@ -1,20 +1,16 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -324,4 +320,21 @@ public class UserService {
         return get(username).map(User::getPassword);
     }
 
+
+    /**
+     * Updates values of all sensors of a given user.
+     */
+    public void generateValue(String username) {
+        Optional<List<Device>> optionalDevices = this.getPopulatedDevices(username);
+        if (optionalDevices.isPresent()) {
+            List<Device> devices = optionalDevices.get();
+            for (Device device : devices) {
+                DeviceType type = DeviceType.deviceToDeviceType(device);
+                if (type == DeviceType.TEMP_SENSOR || type == DeviceType.HUMIDITY_SENSOR || type == DeviceType.LIGHT_SENSOR || type == DeviceType.THERMOSTAT) {
+                    ((Sensor) device).getValue(); //updates the value of every sensor
+                    deviceService.update(device);
+                }
+            }
+        }
+    }
 }

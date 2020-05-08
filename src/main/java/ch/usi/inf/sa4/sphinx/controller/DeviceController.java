@@ -68,10 +68,8 @@ public class DeviceController {
                 throw new UnauthorizedException("Invalid credentials");
             }
 
-            List<Room> rooms = userService.getPopulatedRooms(username);
-            for (Room room : rooms) {
-                deviceService.generateValue(room.getDevices());
-            }
+            userService.generateValue(username);
+
             final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
             final List<SerialisableDevice> serializedDevices = devices.stream()
                     .map(device -> serialiser.serialiseDevice(device, user.get()))

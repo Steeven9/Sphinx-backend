@@ -106,7 +106,7 @@ public class RoomController {
         final User user = userService.get(username).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
         final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
 
-        deviceService.generateValue(room.getDevices());
+        userService.generateValue(username);
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
     }
 

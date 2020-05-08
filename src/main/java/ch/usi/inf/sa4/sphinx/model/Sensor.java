@@ -50,12 +50,14 @@ public abstract class Sensor extends Device {
     }
 
     /**
-     * Returns the measured physical quantity in given room.
+     * Returns the measured physical quantity in given room with a random error [-0.5, 0.5].
      *
      * @return the physical quantity
      */
     public double getValue() {
-        return this.quantity;
+        final double variance = new Random().nextDouble();
+        this.lastValue = this.quantity + variance - 0.5;
+        return this.lastValue;
     }
 
 

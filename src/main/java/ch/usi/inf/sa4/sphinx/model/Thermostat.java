@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
+import java.util.List;
 
 /**
  * A Thermostat is a device, which can control the temperature in a given room. It is embedded to a Temperature sensor.
@@ -15,7 +16,6 @@ public class Thermostat extends TempSensor {
 
     @Expose
     private double targetTemp;
-    private double averageTemp;
     private States state;
     private Sources source;
 
@@ -28,7 +28,6 @@ public class Thermostat extends TempSensor {
         this.targetTemp = this.getLastValue();
         this.state = States.IDLE;
         this.source = Sources.SELF;
-        this.averageTemp = this.getLastValue();
     }
 
     /**
@@ -110,12 +109,24 @@ public class Thermostat extends TempSensor {
      * @return the average temperature
      */
     public double getAverageTemp() {
-        return this.averageTemp;
+        final List<Device> devices = this.getRoom().getDevices();
+        double averageTemp = 0.0, sensors = 1.0;
+
+        if (!(devices.isEmpty())) {
+            for (final Device device : devices) {
+                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                    averageTemp += ((TempSensor) device).getLastValue();
+                    sensors++;
+                }
+            }
+        }
+
+        averageTemp += this.getLastValue(); //gets last value since all sensors have been updated
+        averageTemp /= sensors;
+
+        return averageTemp;
     }
 
-    public void setAverageTemp(double averageTemp) {
-        this.averageTemp = averageTemp;
-    }
 
     /**
      * {@inheritDoc}
