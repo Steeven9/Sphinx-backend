@@ -251,7 +251,7 @@ public class DeviceController {
     @PutMapping("/reset/{deviceId}")
     @ApiOperation("Resets a smartplug")
     public ResponseEntity<Boolean> resetSmartPlug(@NotNull @PathVariable final Integer deviceId,
-                                                  @NotNull@RequestHeader("session-token") final String sessionToken,
+                                                  @NotNull @RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username) {
         final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
