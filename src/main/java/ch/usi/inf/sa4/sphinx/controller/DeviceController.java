@@ -64,8 +64,11 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
+        userService.generateValue(username);
+
         final List<Device> devices = userService.getPopulatedDevices(username)
                 .orElseThrow(WrongUniverseException::new);//if user exists optional is present
+
         final List<SerialisableDevice> serializedDevices = devices.stream()
                 .map(device -> serialiser.serialiseDevice(device))
                 .collect(Collectors.toList());

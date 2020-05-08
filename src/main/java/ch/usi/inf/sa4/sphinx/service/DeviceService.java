@@ -158,36 +158,4 @@ public class DeviceService {
         }
         return true;
     }
-
-    /**
-     * Updates values of all sensors. In case of temperature sensor, calculate the average temperature. If thermostat is
-     * present save average temperature adding the one from thermostat.
-     *
-     * @param devices list of all devices in this room
-     */
-    public void generateValue(List<Device> devices) {
-        double averageTemp = 0.0, sensors = 0.0;
-        Thermostat thermostat = null;
-        for (Device device : devices) {
-            DeviceType type = DeviceType.deviceToDeviceType(device);
-            if (type == DeviceType.TEMP_SENSOR || type == DeviceType.HUMIDITY_SENSOR || type == DeviceType.LIGHT_SENSOR || type == DeviceType.THERMOSTAT) {
-                final double variance = new Random().nextDouble();
-                double value = ((Sensor) device).getValue() + variance - 0.5;
-                ((Sensor) device).setLastValue(value);
-                this.update(device);
-
-                if (type == DeviceType.TEMP_SENSOR || type == DeviceType.THERMOSTAT) {
-                    ++sensors;
-                    averageTemp += value;
-                    if (type == DeviceType.THERMOSTAT) {
-                        thermostat = (Thermostat) device;
-                    }
-                }
-            }
-        }
-        if (thermostat != null) {
-            thermostat.setAverageTemp(averageTemp / sensors);
-            this.update(thermostat);
-        }
-    }
 }

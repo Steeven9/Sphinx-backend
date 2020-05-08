@@ -107,6 +107,7 @@ public class RoomController {
 
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
+        userService.generateValue(username);
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices()));
     }
 
