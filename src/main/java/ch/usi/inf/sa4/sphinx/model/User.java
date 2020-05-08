@@ -45,18 +45,7 @@ public class User extends StorableE {
     private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private List<User> hosts;
-    private boolean camsVisible;
-
-
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
     private List<Scene> scenes;
-
     // @GeneratedValue(generator = "uuidGenerator")
     //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
@@ -87,17 +76,11 @@ public class User extends StorableE {
         this.fullname = fullname;
         this.rooms = new ArrayList<>();
         this.verified = false;
-        this.camsVisible = false;
-        this.hosts = new ArrayList<>();
         this.verificationToken = UUID.randomUUID().toString();
     }
 
 
-
-    public User() {
-        // default constructor required by JPA
-    }
-
+    public User() {}
 
 
     /**
@@ -142,15 +125,12 @@ public class User extends StorableE {
     /**
      * getter for resetcode
      *
-     *  * @return reset code of the user
+     * @return reset code of the user used to ...?
      */
     public String getResetCode() {
         return resetCode;
     }
-    /**
-     * gets the rooms of this User
-     * @return a list of rooms that belong to this user
-     */
+
     public List<Room> getRooms() {
         return rooms;
     }
@@ -159,19 +139,25 @@ public class User extends StorableE {
         return scenes;
     }
 
-        /**
-         * getter for session token
-         *
-         * @return the session token of the user
-         */
+    /**
+     * getter for rooms
+     *
+     * @return returns a list of the Ids of the rooms owned by the user
+     */
+    public List<Integer> getRoomsIds() {
+        return rooms.stream().map(Room::getId).collect(Collectors.toList());
+    }
+
+
+    /**
+     * getter for session token
+     *
+     * @return the session token of the user
+     */
     public String getSessionToken() {
         return sessionToken;
     }
 
-    /**
-     * Sets this User's session token
-     * @param sessionToken the new value of the session token
-     */
 
     public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
@@ -310,7 +296,6 @@ public class User extends StorableE {
 
 
     /**
-     * Serialises a User. Fields whose value cannot be determined by looking at the User are set to null.
      * @return a serialised version of the USer
      * @see SerialisableUser
      */
@@ -320,7 +305,6 @@ public class User extends StorableE {
         sd.email = this.email;
         sd.fullname = this.fullname;
         sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-        sd.allowSecurityCameras = this.camsVisible;
         return sd;
     }
 
@@ -330,77 +314,14 @@ public class User extends StorableE {
      * @param password the plaintext password to check
      * @return true if matching else false
      */
-    public boolean matchesPassword(@NonNull final String password){
+    public boolean matchesPassword(@NonNull String password){
         return BCrypt.checkpw(password, this.password);
     }
 
 
-    /**
-     * Given a password string, returns its salted and hashed equivalent.
-     * @param password the string to hash
-     * @return a string containing the hash of {@code password} and the salt used to hash it
-     */
-    private static String hashPassword(final String password){
-        if (password == null) return null;
+    private String hashPassword( String password) {
+        if(password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
-    }
-
-    /**
-     * getter for guest
-     *
-     * @return returns a list of the houses the user has access to as guest
-     */
-    public List<User> getHosts() {
-        return hosts;
-    }
-
-    /**
-     * Add user to the list of user hub's our user has access to as guest.
-     *
-     * @param user the user to add
-     **/
-    public void addHost(final User user){
-        hosts.add(user);
-    }
-
-    /**
-     * Removes a house access from deleting a user's name from our list.
-     *
-     * @param user the user to remove
-     **/
-    public void removeHost(final User user){
-        hosts.remove(user);
-    }
-
-    /**
-     * Check if cameras are accessible by guests.
-     *
-     * @return true if the cameras are visible to the guests
-     **/
-    public Boolean areCamsVisible() {
-        return camsVisible;
-    }
-
-    /**
-     * Sets the cam visibility to the desired value.
-     *
-     * @param status the new value
-     * */
-    public void switchCamerasAccessibility(final boolean status){
-        camsVisible = status;
-    }
-
-    /**
-     * Serialiases a user as host but with only data about the username, email and full name.
-     * @return a serialised version of the User
-     * @see SerialisableUser
-     */
-    public SerialisableUser serialiseAsHost() {
-        final SerialisableUser sd = new SerialisableUser();
-        sd.username = this.username;
-        sd.email = this.email;
-        sd.fullname = this.fullname;
-        return sd;
     }
 }
 
