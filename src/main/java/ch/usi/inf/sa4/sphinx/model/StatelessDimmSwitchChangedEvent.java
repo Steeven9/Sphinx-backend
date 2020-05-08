@@ -32,7 +32,7 @@ public class StatelessDimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((StatelessDimmableSwitch) ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new)).isIncrementing() ? increment : -increment;
+        return ((StatelessDimmableSwitch) ServiceProvider.getDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new)).isIncrementing() ? increment : -increment;
     }
 
 }

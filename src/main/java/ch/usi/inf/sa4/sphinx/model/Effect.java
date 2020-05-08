@@ -19,7 +19,7 @@ public abstract class Effect<T> extends StorableE {
      * @deprecated
      * This constructor should not be used. It exists only for use by the JPA.
      */
-    @Deprecated
+    @Deprecated(forRemoval = false)
     public Effect() {}
 
     /**

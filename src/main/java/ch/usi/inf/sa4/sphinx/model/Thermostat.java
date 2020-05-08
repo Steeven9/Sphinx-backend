@@ -113,7 +113,8 @@ public class Thermostat extends TempSensor {
      */
     public double getAverageTemp() {
         final List<Device> devices = this.getRoom().getDevices();
-        double averageTemp = 0.0, sensors = 1.0;
+        double averageTemp = 0.0;
+        double sensors = 1.0;
 
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {

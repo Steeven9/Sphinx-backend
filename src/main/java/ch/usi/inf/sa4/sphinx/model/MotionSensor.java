@@ -15,13 +15,6 @@ public class MotionSensor extends Device {
     private final Random rnd = new Random();
 
     /**
-     * Creates a MotionSensor with initial state set to false.
-     */
-    public MotionSensor() {
-    }
-
-
-    /**
      * Checks if the person is detected.
      * @return true if the person is detected, false otherwise
      */

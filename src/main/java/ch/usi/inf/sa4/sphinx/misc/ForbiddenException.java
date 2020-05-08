@@ -9,6 +9,9 @@ public class ForbiddenException extends HttpException {
     public ForbiddenException(final String message) {
         super("Forbidden: " + message);
     }
+    public ForbiddenException(final String message, final Exception cause) {
+        super("Forbidden: " + message, cause);
+    }
 
     @Override
     public HttpStatus getStatus() {

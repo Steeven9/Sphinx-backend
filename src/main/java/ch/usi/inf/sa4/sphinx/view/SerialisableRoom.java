@@ -13,7 +13,4 @@ public class SerialisableRoom {
     public String background;
     @ApiModelProperty(notes = "ids of the devices owned by the room")
     public Integer[] devices;
-
-    /** Constructor.**/
-    public SerialisableRoom(){}
 }

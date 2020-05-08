@@ -34,7 +34,7 @@ public class ServiceProvider {
      * @return The DeviceService
      * @see DeviceService
      */
-    public static DeviceService getStaticDeviceService() {
+    public static DeviceService getDeviceService() {
         return staticDeviceService;
     }
 
@@ -42,7 +42,7 @@ public class ServiceProvider {
      * @return The UserService
      * @see UserService
      */
-    public static UserService getStaticUserService() {
+    public static UserService getUserService() {
         return staticUserService;
     }
 
@@ -50,7 +50,7 @@ public class ServiceProvider {
      * @return The CouplingService
      * @see CouplingService
      */
-    public static CouplingService getStaticCouplingService() {
+    public static CouplingService getCouplingService() {
         return staticCouplingService;
     }
 

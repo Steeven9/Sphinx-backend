@@ -35,9 +35,6 @@ public abstract class Device extends StorableE {
             referencedColumnName = "id"
     )
     private Room room;
-    @Expose
-    @Transient
-    private final DeviceType deviceType;
 
 
     /**
@@ -48,7 +45,6 @@ public abstract class Device extends StorableE {
         name = "Device";
         on = true;
         this.couplings = new ArrayList<>();
-        this.deviceType = getDeviceType();
     }
 
 
@@ -84,6 +80,15 @@ public abstract class Device extends StorableE {
      */
     protected abstract DeviceType getDeviceType();
 
+    /**
+     * Sets properties of this device to conform with the given SerialisableDevice
+     * @param sd the SerialisableDevice with the properties that are desired in this Device
+     */
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        if (sd.icon != null) icon = sd.icon;
+        if (sd.name != null) name = sd.name;
+        if (sd.on != null) on = sd.on;
+    }
 
     /**
      * @param icon the icon to set

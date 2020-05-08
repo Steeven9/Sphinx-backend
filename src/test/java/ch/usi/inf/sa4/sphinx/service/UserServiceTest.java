@@ -44,7 +44,7 @@ class UserServiceTest {
         User newUser = new User("name@it", "1234", "username", "fullname");
         userService.insert(newUser);
         boolean found = userService.get("username").isPresent();
-        assert (found);
+        assertTrue(found);
     }
 
     @Test

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * into the appropriate ResponseEntity.
  */
 @ControllerAdvice
-public class ControllerAdvisor {
+public final class ControllerAdvisor {
+    private ControllerAdvisor(){}
     @ExceptionHandler(HttpException.class)
     public static ResponseEntity<SerialisableException> handleHttpException(final HttpException e) {
         // log exception

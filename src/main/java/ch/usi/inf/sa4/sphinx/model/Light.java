@@ -11,15 +11,6 @@ import javax.persistence.Entity;
 public class Light extends Device {
 
     /**
-     * Constructor.
-     * Creates a light.
-     */
-    public Light(){
-    }
-
-
-
-    /**
      * {@inheritDoc}
      */
     @Override

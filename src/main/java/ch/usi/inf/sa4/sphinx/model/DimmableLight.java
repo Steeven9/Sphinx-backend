@@ -15,6 +15,7 @@ public class DimmableLight extends Dimmable {
      * Creates a special light that can be dimmable.
      */
     public DimmableLight() {
+        // Does not need any implementation. Is required in this class only to add the javadoc.
     }
 
     @Override

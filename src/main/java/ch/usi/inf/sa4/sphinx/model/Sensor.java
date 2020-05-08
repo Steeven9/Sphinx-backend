@@ -12,11 +12,13 @@ import javax.persistence.Entity;
 public abstract class Sensor extends Device {
     private double quantity;
 
+    private final Random rand = new Random();
+
     /**
      * @deprecated
      * This constructor should not be used. It exists only for use by the JPA.
      */
-    @Deprecated
+    @Deprecated(forRemoval = false)
     public Sensor() {}
 
     /**
@@ -42,7 +44,7 @@ public abstract class Sensor extends Device {
      * @return the physical quantity
      */
     public double getValue() {
-        final double variance = new Random().nextDouble();
+        final double variance = rand.nextDouble();
         return this.quantity + variance - 0.5;
     }
 

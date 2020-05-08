@@ -2,8 +2,6 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class DimmableLightStateInc extends Effect<Double> {
 
@@ -25,9 +23,9 @@ public class DimmableLightStateInc extends Effect<Double> {
      **/
     @Override
     public void execute(final Double value) {
-        final DimmableLight light = (DimmableLight) ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new);
+        final DimmableLight light = (DimmableLight) ServiceProvider.getDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new);
         light.setState(light.getIntensity() + value);
-        ServiceProvider.getStaticDeviceService().update(light);
+        ServiceProvider.getDeviceService().update(light);
     }
 
 }

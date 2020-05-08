@@ -9,6 +9,9 @@ public class ServerErrorException extends HttpException{
     public ServerErrorException(final String message) {
         super(message);
     }
+    public ServerErrorException(final String message, final Exception cause) {
+        super(message, cause);
+    }
 
     @Override
     public HttpStatus getStatus() {

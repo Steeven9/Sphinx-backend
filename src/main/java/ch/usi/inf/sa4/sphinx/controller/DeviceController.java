@@ -3,12 +3,14 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.*;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.ApiOperation;
-import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -70,7 +72,7 @@ public class DeviceController {
 
             final List<Device> devices = userService.getPopulatedDevices(username).orElseThrow(WrongUniverseException::new);//if user exists optional is present
             final List<SerialisableDevice> serializedDevices = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device, user.get()))
+                    .map(device -> serialiser.serialiseDevice(device))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(serializedDevices);
 
@@ -112,7 +114,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
 
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).orElseThrow(WrongUniverseException::new)));
+        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
     }
 
 
@@ -162,7 +164,7 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
 
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new), user));
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
 
     }
 
@@ -209,16 +211,7 @@ public class DeviceController {
 
         final User user = userService.get(username).orElseThrow(WrongUniverseException::new); //exists if prev is valid
 
-        if (device.icon != null) storageDevice.setIcon(device.icon);
-        if (device.name != null) storageDevice.setName(device.name);
-
-        if (device.on != null) storageDevice.setOn(device.on);
-        if (storageDevice instanceof Dimmable && device.slider != null) {
-            ((Dimmable) storageDevice).setState(device.slider);
-        }
-        if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
-            ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
-        }
+        storageDevice.setPropertiesFrom(device);
 
 
         if (deviceService.update(storageDevice)) {
@@ -226,7 +219,7 @@ public class DeviceController {
             if (device.roomId != null && !device.roomId.equals(owningRoom)) {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
-            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
+            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
 
         }
         throw new ServerErrorException("Couldn't save data");

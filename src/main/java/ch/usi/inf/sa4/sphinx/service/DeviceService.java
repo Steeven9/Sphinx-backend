@@ -63,10 +63,9 @@ public class DeviceService {
      * @see Device
      */
     public List<Integer> getSwitchedBy(final int deviceId){
-        return couplingStorage.findAll().stream().filter(c -> {
-                return c.getEffects().stream()
-                        .anyMatch(effect -> effect.getDeviceId() == deviceId);
-        }).map(coupling -> coupling.getEvent().getDeviceId()).collect(Collectors.toList());
+        return couplingStorage.findAll().stream().filter(c -> c.getEffects().stream()
+                    .anyMatch(effect -> effect.getDeviceId() == deviceId))
+                .map(coupling -> coupling.getEvent().getDeviceId()).collect(Collectors.toList());
     }
 
 
@@ -83,20 +82,6 @@ public class DeviceService {
                 .flatMap(coupling -> coupling.getEffects().stream().map(Effect::getDeviceId))
                 .collect(Collectors.toList());
     }
-
-//
-//    public List<Integer> getSwitches(int deviceId){
-//        return couplingStorage.findAll().stream().filter(c->{
-//            if(c.getEvent().getDeviceId() == deviceId){
-//                return c.getEffects().stream()
-//                        .anyMatch(effect -> effect.getDeviceId() == deviceId);
-//            }
-//            return false;
-//        }).map(Coupling::getId).collect(Collectors.toList());
-//    }
-
-
-
 
 
     /**

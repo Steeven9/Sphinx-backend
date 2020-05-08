@@ -2,8 +2,6 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
@@ -26,28 +24,16 @@ public final class Serialiser {
     }
 
     /**
-     * Serializes a Device for the description of the serialized fields consult SerialisableDevice
-     * the field that can't be retrieved from the device alone will be null
-     *
-     * @param device the device to serialize
-     * @return the serialized device
-     */
-    private static SerialisableDevice serialiseDevice(final Device device) {
-        return device.serialise();
-    }
-
-    /**
      * Serializes a device with additional info coming from the owner User:
      * the id of the room that owns the device
      * the name of the room that owns the device
      * the username of the user that owns the device
      *
      * @param device the device to serialize
-     * @param user   the User that owns the device
      * @return the serialized device
      */
-    public SerialisableDevice serialiseDevice(final Device device, final User user) {
-        final SerialisableDevice sd = serialiseDevice(device);
+    public SerialisableDevice serialiseDevice(final Device device) {
+        final SerialisableDevice sd = device.serialise();
 
         final Room owningRoom = device.getRoom();
         final User owningUser = owningRoom.getUser();
@@ -63,12 +49,11 @@ public final class Serialiser {
 
     /**
      * @param devices the Devices to serialise
-     * @param user the onwer of the Devices to serialise
-     * @return a list of serilised devices with info about their owner
-     * @see Serialiser#serialiseDevice(Device, User)
+     * @return a list of serialised devices with info about their owner
+     * @see Serialiser#serialiseDevice(Device)
      */
-    public List<SerialisableDevice> serialiseDevices(final Collection<? extends Device> devices, final User user) {
-        return devices.stream().map(device -> serialiseDevice(device, user)).collect(Collectors.toList());
+    public List<SerialisableDevice> serialiseDevices(final Collection<? extends Device> devices) {
+        return devices.stream().map(this::serialiseDevice).collect(Collectors.toList());
     }
 
 

@@ -11,6 +11,10 @@ public abstract class HttpException extends RuntimeException {
         super(message);
     }
 
+    public HttpException(final String message, final Exception cause) {
+        super(message, cause);
+    }
+
     /**
      * @return the status linked to this exception
      * @see HttpStatus
