@@ -36,6 +36,7 @@ public class Room extends StorableE{
     private User user;
 
 
+
     /**
      * Creates a room with default name,background,icon and no devices.
      */

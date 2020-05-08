@@ -4,6 +4,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.Scene;
 import ch.usi.inf.sa4.sphinx.model.User;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class UserService {
     private DeviceService deviceService;
     @Autowired
     private DeviceStorage deviceStorage;
+    @Autowired
+    private SceneStorage sceneStorage;
+    @Autowired
+    private SceneService sceneService;
 
     //Will be used to check that each room belongs to a single user
     private static final HashMap<String, String> roomToUser = new HashMap<>();
@@ -217,6 +222,16 @@ public class UserService {
                         r -> r.getDevices().stream()).collect(Collectors.toList()));
     }
 
+    /**
+     * Returns a list of rooms of this user.
+     *
+     * @param username User of these/this room/s
+     * @return a list of rooms
+     */
+    @Transactional
+    public List<Scene> getPopulatedScenes(final String username) {
+        return sceneStorage.findByUsername(username).stream().collect(Collectors.toList());
+    }
 
     /**
      * Checks if the given session token is a match to the one in Storage

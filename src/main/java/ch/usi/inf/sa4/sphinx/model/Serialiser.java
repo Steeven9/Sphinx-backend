@@ -6,6 +6,7 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
+import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,10 @@ public final class Serialiser {
      */
     private static SerialisableDevice serialiseDevice(final Device device) {
         return device.serialise();
+    }
+
+    public static List<SerialisableScene> serialiseScenes(List<Scene> populatedScenes) {
+        return populatedScenes.stream().map(s -> serialiseScene(s)).collect(Collectors.toList());
     }
 
     /**
@@ -96,6 +101,17 @@ public final class Serialiser {
      */
     public static SerialisableRoom serialiseRoom(final Room room) {
         return room.serialise();
+    }
+
+    /**
+     * Serialises a Room. For the description of the serialised fields consult SerialisableRoom.
+     * Fields whose value cannot be determined by looking at the Room are set to null.
+     *
+     * @param scene the room to serialize
+     * @return the serialized room
+     */
+    public static SerialisableScene serialiseScene(final Scene scene) {
+        return scene.serialise();
     }
 
 

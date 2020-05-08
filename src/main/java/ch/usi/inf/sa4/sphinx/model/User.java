@@ -45,6 +45,7 @@ public class User extends StorableE {
     private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
+    private List<Scene> scenes;
     // @GeneratedValue(generator = "uuidGenerator")
     //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
@@ -130,9 +131,12 @@ public class User extends StorableE {
         return resetCode;
     }
 
-
     public List<Room> getRooms() {
         return rooms;
+    }
+
+    public List<Scene> getScenes() {
+        return scenes;
     }
 
     /**
@@ -247,6 +251,20 @@ public class User extends StorableE {
     }
 
 
+
+    /**
+     * adds a the given scene to the User
+     * @param scene the scene to be added
+     */
+    public void addScene(final Scene scene) {
+        if (scene == null) {
+            throw new IllegalArgumentException("Scene can't be null");
+        }
+        scene.setUser(this);
+        scenes.add(scene);
+    }
+
+
     /**
      * removes the room with the selected id
      *
@@ -255,7 +273,6 @@ public class User extends StorableE {
     public void removeRoom(final Integer roomId) {
         rooms.removeIf(r -> r.getId().equals(roomId));
     }
-
 
     /**
      * generates and sets a session token for the  user
