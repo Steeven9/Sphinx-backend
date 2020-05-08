@@ -2,14 +2,12 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.*;
-import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Scene;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.service.SceneService;
-import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +19,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -68,32 +65,8 @@ public class SceneController {
 
             return ResponseEntity.ok(Serialiser.serialiseScenes(userService.getPopulatedScenes(username)));
         }
-        /**
-         * Creates a new room.
-         *
-         * @param sessionToken     session token of the user
-         * @param username         the username of the user
-         * @param serialisableScene a new room
-         * @param errors           in case error occur
-         * @return a new room
-         */
-        @PostMapping({"", "/"})
-        @ApiOperation("Creates a Scene")
-        public ResponseEntity<SerialisableScene> createScene(@NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                           @NotBlank @RequestHeader("user") final String username,
-                                                           @NotNull @RequestBody final SerialisableScene serialisableScene,
-                                                           final Errors errors) {
 
 
-            check(sessionToken, username, errors);
-
-            final Scene scene = new Scene(serialisableScene);
-            final Scene sc = userService.addScene(username, scene).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
-            final SerialisableScene res = Serialiser.serialiseScene(sc);
-
-            return ResponseEntity.status(201).body(res);
-
-        }
         /**
          * Checks if the request parameters are correct. Throws if they are not.
          * It will check that:
