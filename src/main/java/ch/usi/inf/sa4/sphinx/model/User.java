@@ -45,14 +45,7 @@ public class User extends StorableE {
     private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-
-
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
     private List<Scene> scenes;
-
     // @GeneratedValue(generator = "uuidGenerator")
     //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
