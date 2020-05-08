@@ -324,6 +324,8 @@ public class UserService {
 
     /**
      * Updates values of all sensors of a given user.
+     *
+     * @param username owner of all devices
      */
     public void generateValue(String username) {
         Optional<List<Device>> optionalDevices = this.getPopulatedDevices(username);
