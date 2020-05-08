@@ -31,10 +31,4 @@ public class SerialisableDevice {
     public int state;
     public int source;
 
-    /**
-     * Constructor.
-     **/
-    public SerialisableDevice() {
-    }
-
 }

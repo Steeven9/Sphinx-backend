@@ -20,10 +20,6 @@ public class SwitchChangedEvent extends Event<Boolean> {
         super(deviceId);
     }
 
-    private SwitchChangedEvent(final SwitchChangedEvent other) {
-        super(other);
-    }
-
     /**
      * Gets current state of device
      *
@@ -31,7 +27,7 @@ public class SwitchChangedEvent extends Event<Boolean> {
      **/
     @Override
     public Boolean get() {
-        return ServiceProvider.getStaticDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new).isOn();
+        return ServiceProvider.getDeviceService().get(getDeviceId()).orElseThrow(WrongUniverseException::new).isOn();
     }
 
 }

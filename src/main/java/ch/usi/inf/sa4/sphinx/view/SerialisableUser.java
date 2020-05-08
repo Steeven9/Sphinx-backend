@@ -10,9 +10,4 @@ public class SerialisableUser {
     public String fullname;
     public String password;
     public Integer[] rooms;
-
-    /** Constructor.**/
-    public SerialisableUser(){
-
-    }
 }

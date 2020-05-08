@@ -66,8 +66,7 @@ class DeviceTypeTest {
     @MethodSource("valueDeviceAndDeviceTypeProvider")
     @DisplayName("Compare Device with its DeviceType")
     void TestDeviceClassToDeviceType(Device device, DeviceType type) {
-        assertEquals(DeviceType.deviceToDeviceType(device), type);
-        assertEquals(DeviceType.deviceClassToDeviceType(User.class), DeviceType.INVALID_DEVICE);
+        assertEquals(type, DeviceType.deviceToDeviceType(device));
     }
 
     @ParameterizedTest

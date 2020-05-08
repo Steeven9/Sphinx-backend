@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -35,16 +33,13 @@ public class UserService {
     @Autowired
     private DeviceStorage deviceStorage;
 
-    //Will be used to check that each room belongs to a single user
-    private static final HashMap<String, String> roomToUser = new HashMap<>();
-
-
     /**
      * @deprecated Do not use directly this constructor
      */
     //Needed public otherwise context creation will fail...
-    @Deprecated
+    @Deprecated(forRemoval = false)
     public UserService() {
+        // JPA needs a default constructor.
     }
 
 
@@ -171,7 +166,7 @@ public class UserService {
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(final String username, final Integer deviceId) {
-        return getDevices(username).map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))).orElse(false);
+        return getDevices(username).map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))).orElse(Boolean.FALSE);
     }
 
 
@@ -195,7 +190,7 @@ public class UserService {
     public boolean ownsRoom(@NonNull final String username, final Integer roomId) {
         return userStorage.findByUsername(username)
                 .map(user -> user.getRooms().stream().anyMatch(r -> r.getId().equals(roomId)))
-                .orElse(false);
+                .orElse(Boolean.FALSE);
     }
 
 
@@ -221,7 +216,7 @@ public class UserService {
      */
     public boolean validSession(@NonNull final String username, @NonNull final String sessionToken) {
         return userStorage.findByUsername(username)
-                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
+                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(Boolean.FALSE);
     }
 
 
@@ -270,8 +265,8 @@ public class UserService {
         return roomStorage.findById(endRoomId).map(room -> deviceStorage.findById(deviceId).map(device -> {
             device.setRoom(room);
             deviceStorage.save(device);
-            return true;
-        }).orElse(false)).orElse(false);
+            return Boolean.TRUE;
+        }).orElse(Boolean.FALSE)).orElse(Boolean.FALSE);
     }
 
     /**
@@ -304,17 +299,11 @@ public class UserService {
             return userStorage.findByUsername(oldUsername).map(user -> {
                 user.setUsername(newUsername);
                 userStorage.save(user);
-                return true;
-            }).orElse(false);
+                return Boolean.TRUE;
+            }).orElse(Boolean.FALSE);
         } catch (final ConstraintViolationException e) {
             return false;
         }
-    }
-
-
-    //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull String username) {
-        return get(username).map(User::getPassword);
     }
 
 }

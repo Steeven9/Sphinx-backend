@@ -31,7 +31,7 @@ class SerialiserTest {
 
     @BeforeAll
      void createDeviceAndUser() {
-        dummyDataAdder.user1();
+        dummyDataAdder.addUser1();
         user = userService.get("user1").get();
     }
 
@@ -46,7 +46,7 @@ class SerialiserTest {
     @Test
     @DisplayName("Transform this device in a serialiseDevice")
     void isSerializedDevice() {
-        SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device, user);
+        SerialisableDevice serialisableDevice = serialiser.serialiseDevice(device);
         assertNotNull(serialisableDevice);
         assertEquals(SerialisableDevice.class, serialisableDevice.getClass());
     }

@@ -9,6 +9,9 @@ public class NotFoundException extends HttpException {
     public NotFoundException(final String message) {
         super("Not found: " + message);
     }
+    public NotFoundException(final String message, final Exception cause) {
+        super("Not found: " + message, cause);
+    }
 
     @Override
      public HttpStatus getStatus() {

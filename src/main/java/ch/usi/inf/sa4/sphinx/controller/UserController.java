@@ -69,7 +69,7 @@ public class UserController {
     @ApiOperation("Creates a new User")
     public ResponseEntity<SerialisableUser> createUser(@PathVariable final String username, @RequestBody final SerialisableUser user) {
         final User findUser = userService.get(username)
-                .orElse(userService.getByMail(user.email).orElse(null));
+                .orElseGet(() -> userService.getByMail(user.email).orElse(null));
 
         if (findUser != null) {
             throw new BadRequestException("This user already exists");
@@ -83,7 +83,7 @@ public class UserController {
                 throw new BadRequestException("Check that you're providing username, fullname, password and email");
             }
         } catch (final ConstraintViolationException | DataIntegrityViolationException e) {
-            throw new BadRequestException("Some fields are missing");
+            throw new BadRequestException("Some fields are missing", e);
         }
         newUser = userService.get(username).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
 
@@ -95,7 +95,7 @@ public class UserController {
                     "Visit this link to confirm your email address: https://smarthut.xyz/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken() +
                             "\nOr, from local, http://localhost:3000/verification?email=" + newUser.getEmail() + "&code=" + newUser.getVerificationToken());
         } catch (final MailException e) {
-            throw new BadRequestException("Please insert a valid email");
+            throw new BadRequestException("Please insert a valid email", e);
         }
 
         return ResponseEntity.status(201).body(Serialiser.serialiseUser(newUser));
@@ -140,7 +140,7 @@ public class UserController {
             userService.changeUsername(username, user.username);
         }
 
-        return ResponseEntity.ok(Serialiser.serialiseUser(userService.getById(changedUser.getId()).get()));
+        return ResponseEntity.ok(Serialiser.serialiseUser(userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new)));
     }
 
     /**
@@ -162,8 +162,6 @@ public class UserController {
         if (!userService.validSession(username, session_token)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
-
 
         userService.delete(username);
         return ResponseEntity.noContent().build();

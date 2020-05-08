@@ -35,12 +35,7 @@ public class SphinxApplication {
         //edit configurations and set dummy_data=true)
         if (dummyDataEnabled) {
             LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
-            dummyDataAdder.emptyUser();
-            dummyDataAdder.randUser();
-            dummyDataAdder.user1();
-            dummyDataAdder.user2();
-            dummyDataAdder.unverifiedUser();
-
+            dummyDataAdder.addDummyData();
         }
     }
 }

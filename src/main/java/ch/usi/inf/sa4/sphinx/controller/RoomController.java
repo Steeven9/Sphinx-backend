@@ -102,10 +102,10 @@ public class RoomController {
 
         check(sessionToken, username, null, roomId);
 
-        final User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
-        final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
+        final User user = userService.get(username).orElseThrow(WrongUniverseException::new);//It exists from previous check
+        final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
-        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
+        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices()));
     }
 
 
@@ -158,7 +158,7 @@ public class RoomController {
                                                        final Errors errors) {
         check(sessionToken, username, errors, roomId);
 
-        final Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));
+        final Room storageRoom = roomService.get(roomId).orElseThrow(() -> new NotFoundException("No rooms found"));
 
 
         final String newName = serialisableRoom.name;

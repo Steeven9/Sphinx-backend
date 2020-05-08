@@ -19,16 +19,6 @@ public abstract class StorableE {
     @Expose
     protected Integer id;
 
-
-    @Expose
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
-
-
-    @Expose
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
-
     /**
      * Gets the unique id associated to this entity.
      * @return the id or null if not yet stored

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -24,7 +23,6 @@ import java.util.UUID;
  * Directly inserts users into the database
  */
 @Component
-//@Transactional
 public class DummyDataAdder {
 
 
@@ -59,7 +57,7 @@ public class DummyDataAdder {
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
      */
-    public void user1() {
+    public void addUser1() {
         try {
 
             final User newUser = new User("mario@smarthut.xyz", "1234", USER1, "mario rossi");
@@ -74,9 +72,7 @@ public class DummyDataAdder {
             final Room newRoom2 = new Room();
             newRoom2.setName("room2");
             final Integer roomId1 = userService.addRoom(USER1, newRoom1).orElseThrow(WrongUniverseException::new);//leave roomId1 for debugging
-            final Integer roomId2 = userService.addRoom(USER1, newRoom2).orElseThrow(WrongUniverseException::new);
-            final var room = roomService.get(roomId1);
-            final var rooms = userService.get(USER1).orElseThrow(WrongUniverseException::new).getRooms();
+            userService.addRoom(USER1, newRoom2).orElseThrow(WrongUniverseException::new);
 
             roomService.addDevice(roomId1, DeviceType.LIGHT);
         } catch (final RuntimeException e) {
@@ -89,7 +85,7 @@ public class DummyDataAdder {
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
-    public void user2() {
+    public void addUser2() {
         try {
             final User newUser = new User("luigi@smarthut.xyz", "1234", USER2, "luigi rossi");
             newUser.setVerified(true);
@@ -110,13 +106,12 @@ public class DummyDataAdder {
             final Integer roomId1 = userService.addRoom(USER2, newRoom1).orElseThrow(WrongUniverseException::new);
             final Integer roomId2 = userService.addRoom(USER2, newRoom2).orElseThrow(WrongUniverseException::new);
             final Integer roomId3 = userService.addRoom(USER2, newRoom3).orElseThrow(WrongUniverseException::new);
-            final Integer roomId4 = userService.addRoom(USER2, newRoom4).orElseThrow(WrongUniverseException::new);
+            userService.addRoom(USER2, newRoom4).orElseThrow(WrongUniverseException::new);
             final Integer roomId5 = userService.addRoom(USER2, newRoom5).orElseThrow(WrongUniverseException::new);
-            final Optional<Integer> device1Id = roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
+            roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
             roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
             roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
-            final Integer deviceId2 = roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR).orElseThrow(WrongUniverseException::new);
-            final Integer ownerRoomId = deviceService.get(deviceId2).orElseThrow(WrongUniverseException::new).getRoom().getId();
+            roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR).orElseThrow(WrongUniverseException::new);
 
             roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
             roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);
@@ -132,18 +127,18 @@ public class DummyDataAdder {
         }
     }
 
-
+    // This is only here to make SonarQube shut up. The method is only called once so it really doesn't hurt to make
+    // this a local.
+    private final Random rand = new Random();
     /**
      * adds a user called randUser to storage that has randomly filled rooms, this user has no session token and must be
      * logged in
      */
-    //user with 20 rooms and random devices in them
-    public void randUser() {
+    public void addRandUser() {
         try {
             final User newUser = new User("rand@smarthut.xyz", "1234", RAND, "randomUser");
             newUser.setVerified(true);
             userService.insert(newUser);
-            final Random rand = new Random();
             for (int i = 0; i < 20; i++) {
                 final Room newRoom = new Room();
                 newRoom.setName(UUID.randomUUID().toString());
@@ -166,7 +161,7 @@ public class DummyDataAdder {
      * adds a user called emptyUser in storage, it will have no rooms. This user has
      * sessionToken="emptyUserSessionToken"
      */
-    public void emptyUser() {
+    public void addEmptyUser() {
         try {
             final User newUser = new User("empty@smarthut.xyz", "1234", EMPTY, "Empty User");
             newUser.setVerified(true);
@@ -180,7 +175,7 @@ public class DummyDataAdder {
     /**
      * adds an unverified user called unverifiedUser in storage
      */
-    public void unverifiedUser() {
+    public void addUnverifiedUser() {
         try {
             final User newUser = new User("unv@smarthut.xyz", "1234", UNVERIFIED, "edeefefefef");
             if (userService.insert(newUser)) logger.info("unverifiedUser added to storage");
@@ -193,11 +188,11 @@ public class DummyDataAdder {
      * Adds all dummyData users
      */
     public void addDummyData(){
-        emptyUser();
-        randUser();
-        user1();
-        user2();
-        unverifiedUser();
+        addEmptyUser();
+        addRandUser();
+        addUser1();
+        addUser2();
+        addUnverifiedUser();
     }
 
 }

@@ -21,8 +21,6 @@ public class CouplingService {
 
     @Autowired
     private CouplingStorage couplingStorage;
-    @Autowired
-    private DeviceStorage deviceStorage;
 
 
     /**
@@ -113,11 +111,11 @@ public class CouplingService {
                     try {
                         coupling.addEffect(effect);
                         couplingStorage.save(coupling);
-                        return true;
+                        return Boolean.TRUE;
                     } catch (IllegalArgumentException e) {
-                        return false;
+                        return Boolean.FALSE;
                     }
                 }
-        ).orElse(false);
+        ).orElse(Boolean.FALSE);
     }
 }
