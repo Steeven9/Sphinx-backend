@@ -15,6 +15,7 @@ package ch.usi.inf.sa4.sphinx.misc;
  */
 
 import ch.usi.inf.sa4.sphinx.model.*;
+import org.springframework.test.context.TestPropertySource;
 
 
 /**

@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import org.springframework.lang.NonNull;
 
 /**
@@ -26,7 +28,8 @@ public class DimmSwitchChangedEvent extends Event<Double> {
      **/
     @Override
     public Double get() {
-        return ((DimmableSwitch) deviceService.get(getDeviceId()).get()).getIntensity();
+        return ((DimmableSwitch) ServiceProvider.getStaticDeviceService().get(getDeviceId())
+                .orElseThrow(WrongUniverseException::new)).getIntensity();
     }
 
 }

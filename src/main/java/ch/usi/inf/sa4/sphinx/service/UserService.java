@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -31,10 +32,6 @@ public class UserService {
     private UserStorage userStorage;
     @Autowired
     private RoomStorage roomStorage;
-    @Autowired
-    private RoomService roomService;
-    @Autowired
-    private DeviceService deviceService;
     @Autowired
     private DeviceStorage deviceStorage;
 
@@ -124,8 +121,8 @@ public class UserService {
 
         return user.map(u -> {
             room.setUser(u);
-            return Optional.of(roomStorage.save(room).getId());
-        }).orElse(Optional.empty());
+            return roomStorage.save(room).getId();
+        });
     }
 
 
@@ -174,9 +171,7 @@ public class UserService {
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(final String username, final Integer deviceId) {
-        return getDevices(username)
-                .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
-                ).orElse(false);
+        return getDevices(username).map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))).orElse(false);
     }
 
 
@@ -186,9 +181,8 @@ public class UserService {
      * @param username User of these/this room/s
      * @return a list of rooms
      */
-    @Transactional
     public List<Room> getPopulatedRooms(final String username) {
-        return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
+        return userStorage.findByUsername(username).map(User::getRooms).orElseGet(ArrayList::new);
     }
 
     /**
@@ -306,7 +300,6 @@ public class UserService {
      * @return true if successful else false
      */
     public boolean changeUsername(@NonNull final String oldUsername, @NonNull final String newUsername) {
-        if (newUsername == null) return false;
         try {
             return userStorage.findByUsername(oldUsername).map(user -> {
                 user.setUsername(newUsername);

@@ -41,11 +41,7 @@ public class AuthController {
         final User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElse(null));
-
-        if(user == null){
-            throw new UnauthorizedException("Invalid credentials");
-        }
+                .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
         if (!userService.validSession(user.getUsername(), sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
@@ -77,7 +73,7 @@ public class AuthController {
         final User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElse(null));
+                .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
         if(user == null){
             throw new UnauthorizedException("Invalid credentials");

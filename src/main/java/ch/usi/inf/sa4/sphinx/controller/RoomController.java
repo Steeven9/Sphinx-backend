@@ -80,7 +80,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
         //if check didn't throw the room is here
-        return ResponseEntity.ok(Serialiser.serialiseRoom(roomService.get(roomId).get()));
+        return ResponseEntity.ok(Serialiser.serialiseRoom(roomService.get(roomId).orElseThrow(WrongUniverseException::new)));
 
     }
 
