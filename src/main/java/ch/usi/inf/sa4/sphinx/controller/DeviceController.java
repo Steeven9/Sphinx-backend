@@ -62,23 +62,15 @@ public class DeviceController {
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username) {
 
+        userService.validateSession(username, sessionToken);
 
-        final Optional<User> user = userService.get(username);
+        final List<Device> devices = userService.getPopulatedDevices(username)
+                .orElseThrow(WrongUniverseException::new);//if user exists optional is present
+        final List<SerialisableDevice> serializedDevices = devices.stream()
+                .map(device -> serialiser.serialiseDevice(device))
+                .collect(Collectors.toList());
 
-        if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("Invalid credentials");
-            }
-
-            final List<Device> devices = userService.getPopulatedDevices(username).orElseThrow(WrongUniverseException::new);//if user exists optional is present
-            final List<SerialisableDevice> serializedDevices = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device))
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(serializedDevices);
-
-        }
-        throw new UnauthorizedException("Invalid credentials");
-
+        return ResponseEntity.ok(serializedDevices);
     }
 
 
@@ -106,11 +98,9 @@ public class DeviceController {
             throw new NotFoundException("No devices found");
         }
 
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
-        if  (!userService.ownsDevice(username, deviceId)) {
+        if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
 
@@ -142,15 +132,11 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         if (!userService.ownsRoom(username, device.roomId)) {
             throw new UnauthorizedException("You don't own this room");
         }
-
-        final User user = userService.get(username).orElseThrow(WrongUniverseException::new); //If the session is valid the User exists
 
 
         final Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
@@ -199,17 +185,13 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
 
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
-
-        final User user = userService.get(username).orElseThrow(WrongUniverseException::new); //exists if prev is valid
 
         storageDevice.setPropertiesFrom(device);
 
@@ -248,10 +230,7 @@ public class DeviceController {
                                                   @RequestHeader("user") final String username) {
         final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
-
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
@@ -287,10 +266,7 @@ public class DeviceController {
 
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
-
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
@@ -329,9 +305,8 @@ public class DeviceController {
 
         final int id1 = Integer.parseInt(device1_id);
         final int id2 = Integer.parseInt(device2_id);
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+
+        userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
@@ -372,9 +347,7 @@ public class DeviceController {
         final int id1 = Integer.parseInt(device1_id);
         final int id2 = Integer.parseInt(device2_id);
 
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");

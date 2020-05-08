@@ -43,9 +43,7 @@ public class AuthController {
         user = userService.get(username)
                 .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
-        if (!userService.validSession(user.getUsername(), sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(user.getUsername(), sessionToken);
 
         return ResponseEntity.ok().body(user.getUsername());
     }
@@ -80,12 +78,12 @@ public class AuthController {
         }
 
         if (!user.isVerified()) {
-            throw new ForbiddenException("User is already verified");
+            throw new ForbiddenException("User is not verified");
         }
 
 
         if (!user.matchesPassword(password)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         user.createSessionToken();

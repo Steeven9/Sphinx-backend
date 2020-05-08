@@ -224,11 +224,8 @@ public class RoomController {
         if (errors != null && errors.hasErrors()) {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
 
-
+        userService.validateSession(username, sessionToken);
     }
 
     /**

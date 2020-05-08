@@ -76,7 +76,7 @@ public class DummyDataAdder {
 
             roomService.addDevice(roomId1, DeviceType.LIGHT);
         } catch (final RuntimeException e) {
-            logger.warn("SOMETHING IS WRONG IN user1:\n" + Arrays.toString(e.getStackTrace()));
+            logger.warn("SOMETHING IS WRONG IN user1", e);
         }
     }
 

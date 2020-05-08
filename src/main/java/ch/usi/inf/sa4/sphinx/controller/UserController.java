@@ -36,7 +36,7 @@ public class UserController {
      * Gets a User.
      *
      * @param username      the username of the requested user
-     * @param session_token the session token used for authentication
+     * @param sessionToken the session token used for authentication
      * @return a ResponseEntity with the data of the requested user if successful or
      * status code 404 if no user with the requested username exists
      * status code 401 if the provided session token does not match (or does not exist)
@@ -45,14 +45,13 @@ public class UserController {
      */
     @GetMapping("/{username}")
     @ApiOperation("Gets a User")
-    public ResponseEntity<SerialisableUser> getUser(@PathVariable final String username, @RequestHeader("session-token") final String session_token) {
+    public ResponseEntity<SerialisableUser> getUser(@PathVariable final String username, @RequestHeader("session-token") final String sessionToken) {
 
-        if (userService.validSession(username, session_token)) { // at the same time checks if username exists
-            final Optional<User> user = userService.get(username);
-            return ResponseEntity.ok(Serialiser.serialiseUser(user.orElseThrow(WrongUniverseException::new)));
-        }
 
-        throw new UnauthorizedException("Invalid credentials");
+        userService.validateSession(username, sessionToken);
+
+        final User user = userService.get(username).orElseThrow(WrongUniverseException::new);
+        return ResponseEntity.ok(Serialiser.serialiseUser(user));
     }
 
     /**
@@ -107,7 +106,7 @@ public class UserController {
      *
      * @param username      the username of the user to change
      * @param user          a SerialisableUser containing the new data of the user
-     * @param session_token the session token used for authentication
+     * @param sessionToken the session token used for authentication
      * @param errors        validation errors
      * @return a ResponseEntity with status 200 and body containing the data of the changed user or
      * 404 if no user with the requested username exists
@@ -119,17 +118,15 @@ public class UserController {
     @PutMapping("/{username}")
     @ApiOperation("Modifies a User")
     public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable final String username, @NotNull @RequestBody final SerialisableUser user,
-                                                       @RequestHeader("session-token") final String session_token, final Errors errors) {
+                                                       @RequestHeader("session-token") final String sessionToken, final Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException("Some fields are missing");
         }
 
-        if (!userService.validSession(username, session_token)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
-        final User changedUser = userService.get(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
+        final User changedUser = userService.get(username).orElseThrow(WrongUniverseException::new);
 
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
@@ -147,7 +144,7 @@ public class UserController {
      * Deletes a user.
      *
      * @param username      the username of the user to delete
-     * @param session_token the session token used to authenticate
+     * @param sessionToken the session token used to authenticate
      * @return a ResponseEntity containing one of the following status codes:
      * 404 if no user with the given username exists
      * 401 if the session token does not match
@@ -157,11 +154,9 @@ public class UserController {
     @DeleteMapping("/{username}")
     @ApiOperation("Deletes a User")
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable final String username,
-                                                       @RequestHeader("session-token") final String session_token) {
+                                                       @RequestHeader("session-token") final String sessionToken) {
 
-        if (!userService.validSession(username, session_token)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
 
         userService.delete(username);
         return ResponseEntity.noContent().build();
