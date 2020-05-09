@@ -87,7 +87,7 @@ public abstract class Device extends StorableE {
     public void setPropertiesFrom(final SerialisableDevice sd) {
         if (sd.icon != null) icon = sd.icon;
         if (sd.name != null) name = sd.name;
-        if (sd.on != null) on = sd.on;
+        if (sd.on != null) setOn(sd.on);
     }
 
     /**
