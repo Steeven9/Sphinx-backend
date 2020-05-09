@@ -215,9 +215,11 @@ public class UserService {
      * @throws UnauthorizedException if session is invalid or user does not exist
      */
     public void validateSession(@NonNull final String username, @NonNull final String sessionToken) {
-        userStorage.findByUsername(username)
-                .map(user -> sessionToken.equals(user.getSessionToken()))
-                .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
+        final Optional<Boolean> foundMatch = userStorage.findByUsername(username)
+                .map(user -> sessionToken.equals(user.getSessionToken()));
+        if (foundMatch.isEmpty() || !foundMatch.get()) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
     }
 
 
