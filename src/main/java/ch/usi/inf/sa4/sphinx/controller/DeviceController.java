@@ -353,10 +353,6 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
-        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
-        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
-
-
         couplingService.removeByDevicesIds(id1, id2);
 
         return ResponseEntity.ok().build();
