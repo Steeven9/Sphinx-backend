@@ -5,10 +5,8 @@ import ch.usi.inf.sa4.sphinx.service.CouplingService;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Provides access to the Service layer.
@@ -20,14 +18,14 @@ public class ServiceProvider {
     private static UserService staticUserService;
     private static CouplingService staticCouplingService;
     private static RoomService staticRoomService;
-    @Autowired
-    private DeviceService deviceService;
-    @Autowired
-    private CouplingService couplingService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoomService roomService;
+
+    public ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
+                           @NonNull final UserService userService, @NonNull final RoomService roomService) {
+        staticDeviceService = deviceService;
+        staticCouplingService = couplingService;
+        staticUserService = userService;
+        staticRoomService = roomService;
+    }
 
 
     /**
@@ -61,14 +59,5 @@ public class ServiceProvider {
     public static RoomService getRoomService() {
         return staticRoomService;
     }
-
-    @PostConstruct
-    private void init() {
-        staticCouplingService = couplingService;
-        staticDeviceService = deviceService;
-        staticRoomService = roomService;
-        staticUserService = userService;
-    }
-
 
 }

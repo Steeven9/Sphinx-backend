@@ -35,8 +35,6 @@ public class DummyDataAdder {
     @Autowired
     private UserService userService;
     @Autowired
-    private DeviceService deviceService;
-    @Autowired
     private RoomService roomService;
     private static final Logger logger = LoggerFactory.getLogger(DummyDataAdder.class);
 
@@ -72,11 +70,11 @@ public class DummyDataAdder {
             final Room newRoom2 = new Room();
             newRoom2.setName("room2");
             final Integer roomId1 = userService.addRoom(USER1, newRoom1).orElseThrow(WrongUniverseException::new);//leave roomId1 for debugging
-            userService.addRoom(USER1, newRoom2).orElseThrow(WrongUniverseException::new);
+            userService.addRoom(USER1, newRoom2);
 
             roomService.addDevice(roomId1, DeviceType.LIGHT);
         } catch (final RuntimeException e) {
-            logger.warn("SOMETHING IS WRONG IN user1:\n" + Arrays.toString(e.getStackTrace()));
+            logger.warn("SOMETHING IS WRONG IN user1", e);
         }
     }
 
@@ -106,12 +104,12 @@ public class DummyDataAdder {
             final Integer roomId1 = userService.addRoom(USER2, newRoom1).orElseThrow(WrongUniverseException::new);
             final Integer roomId2 = userService.addRoom(USER2, newRoom2).orElseThrow(WrongUniverseException::new);
             final Integer roomId3 = userService.addRoom(USER2, newRoom3).orElseThrow(WrongUniverseException::new);
-            userService.addRoom(USER2, newRoom4).orElseThrow(WrongUniverseException::new);
+            userService.addRoom(USER2, newRoom4);
             final Integer roomId5 = userService.addRoom(USER2, newRoom5).orElseThrow(WrongUniverseException::new);
             roomService.addDevice(roomId1, DeviceType.DIMMABLE_LIGHT);
             roomService.addDevice(roomId1, DeviceType.LIGHT_SENSOR);
             roomService.addDevice(roomId2, DeviceType.HUMIDITY_SENSOR);
-            roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR).orElseThrow(WrongUniverseException::new);
+            roomService.addDevice(roomId3, DeviceType.MOTION_SENSOR);
 
             roomService.addDevice(roomId3, DeviceType.SMART_PLUG);
             roomService.addDevice(roomId3, DeviceType.STATELESS_DIMMABLE_SWITCH);

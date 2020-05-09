@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -58,7 +59,7 @@ class UserServiceTest {
                 () -> assertTrue(userService.get(username).isEmpty()),
                 () -> assertTrue(userService.getByMail(email).isEmpty()),
                 () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
-                () -> assertFalse(userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
 
 
@@ -76,11 +77,11 @@ class UserServiceTest {
                 () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
                 () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
                 () -> assertNull(returnedUserByUsername.getSessionToken()),
-                () -> assertFalse(userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
         newUser.setSessionToken("token");
         userService.update(newUser);
-        assertTrue(userService.validSession(username, "token"));
+        assertDoesNotThrow(() -> userService.validateSession(username, "token"));
         userService.delete(username);
         assertTrue(userService.get(username).isEmpty());
 

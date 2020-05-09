@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -206,17 +207,19 @@ public class UserService {
                         r -> r.getDevices().stream()).collect(Collectors.toList()));
     }
 
-
     /**
-     * Checks if the given session token is a match to the one in Storage
-     *
-     * @param username     the username of the User
-     * @param sessionToken the session token
-     * @return true if they match, false if the User does not exist or they don't match
+     * Checks if there exists a valid session with the given username and sessionToken.
+     * Throws an UnauthorisedException if not.
+     * @param username the username to authenticate as
+     * @param sessionToken the session token of the user
+     * @throws UnauthorizedException if session is invalid or user does not exist
      */
-    public boolean validSession(@NonNull final String username, @NonNull final String sessionToken) {
-        return userStorage.findByUsername(username)
-                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(Boolean.FALSE);
+    public void validateSession(@NonNull final String username, @NonNull final String sessionToken) {
+        final Optional<Boolean> foundMatch = userStorage.findByUsername(username)
+                .map(user -> sessionToken.equals(user.getSessionToken()));
+        if (foundMatch.isEmpty() || !foundMatch.get()) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
     }
 
 

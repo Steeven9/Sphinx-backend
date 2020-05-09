@@ -106,7 +106,7 @@ public class Thermostat extends TempSensor {
 
 
     /**
-     * Returns the average temperature in this room. It is computed as the media of all temperature sensors and
+     * Returns the average temperature in this room. It is computed as the average of all temperature sensors and
      * temperature of this Thermostat.
      *
      * @return the average temperature
@@ -161,14 +161,6 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * Turns off the thermostat.
-     */
-    public void turnOff() {
-        this.on = false;
-        this.state = States.OFF;
-    }
-
-    /**
      * Sets the thermostat to idle state. In case it is off, then the thermostat is switched on.
      */
     public void setIdle() {
@@ -176,12 +168,15 @@ public class Thermostat extends TempSensor {
         this.state = States.IDLE;
     }
 
-    /**
-     * Turns on the thermostat computing the correct state basing on Source.
-     */
-    public void turnOn() {
-        this.on = true;
-        this.state = this.determineState(this.targetTemp);
+    @Override
+    public void setOn(final boolean on) {
+        if (on) {
+            this.on = true;
+            this.state = this.determineState(this.targetTemp);
+        } else {
+            this.on = false;
+            this.state = States.OFF;
+        }
     }
 
     /**
@@ -205,5 +200,12 @@ public class Thermostat extends TempSensor {
     @Override
     protected DeviceType getDeviceType() {
         return DeviceType.THERMOSTAT;
+    }
+
+    @Override
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if (sd.slider != null) targetTemp = sd.slider;
+        if (sd.source != null) setSource(sd.source);
     }
 }

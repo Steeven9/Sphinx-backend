@@ -28,7 +28,7 @@ public class SerialisableDevice {
     public Boolean on;
     public String url;
     public double averageTemp;
-    public int state;
-    public int source;
+    public Integer state;
+    public Integer source;
 
 }
