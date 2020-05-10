@@ -384,7 +384,9 @@ public class UserService {
 
         if (!user.isPresent() || !host.isPresent()) {
 
+
             throw new NotFoundException("This user does not exist");
+
 
         }
         user.get().addHost(host.get());
