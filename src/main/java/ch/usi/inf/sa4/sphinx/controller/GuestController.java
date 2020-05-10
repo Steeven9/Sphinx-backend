@@ -4,6 +4,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
@@ -225,19 +226,19 @@ public class GuestController {
                                                           @RequestHeader("user") String username) {
 
         Optional<User> guest = userService.get(guestUsername);
-        if (!guest.isPresent() || !userService.validSession(username, sessionToken)) {
-
-
+        if (!userService.validSession(username, sessionToken)) {
 
             throw new UnauthorizedException("Invalid credentials");
 
+        }
 
-
+        if(!guest.isPresent()){
+            throw new NotFoundException("This user doesn't exist");
         }
 
 
-        userService.addGuest(username, guestUsername);
-        return ResponseEntity.status(201).body(serialiser.serialiseUser(userService.get(guestUsername).get()));
+        userService.addGuest(guestUsername, username);
+        return ResponseEntity.status(201).build();
 
 
     }
