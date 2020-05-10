@@ -99,6 +99,10 @@ public class DeviceService {
 
 
 
+
+
+
+
     /**
      * Generates an Event basing on switch type.
      *

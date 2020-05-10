@@ -30,7 +30,7 @@ public class Coupling extends StorableE {
     private List<Effect> effects;
 
 
-    private Integer deviceId;
+   // private Integer deviceId;
 
     /**
      * @deprecated

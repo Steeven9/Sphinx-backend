@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.StatusHolder;
 
 import javax.persistence.Entity;
 
@@ -9,7 +10,7 @@ import javax.persistence.Entity;
  * A switch is a switch that can turn on and off a device.
  */
 @Entity
-public class Switch extends Device {
+public class Switch extends Device implements StatusHolder<Boolean> {
 
     /**
      * Creates a switch, which is on.
@@ -26,6 +27,11 @@ public class Switch extends Device {
      */
     public boolean getState(){
         return on;
+    }
+
+    @Override
+    public Boolean getStatus() {
+        return getState();
     }
 
     /**
