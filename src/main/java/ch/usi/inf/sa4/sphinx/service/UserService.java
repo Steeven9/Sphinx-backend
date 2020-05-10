@@ -368,9 +368,8 @@ public class UserService {
      *
      * @param guest the user1
      * @param hostUsername the user2
-     * @return true if successfull, false otherwise
      **/
-    public boolean addGuest(final String guest, final String hostUsername) {
+    public void addGuest(final String guest, final String hostUsername) {
         final Optional<User> user = userStorage.findByUsername(guest);
         final Optional<User> host = userStorage.findByUsername(hostUsername);
 
@@ -382,12 +381,12 @@ public class UserService {
         if (user.isPresent() && host.isPresent()) {
 
             user.get().addHost(host.get());
-            return true;
+
 
 
         }
 
-        return false;
+
 
 
     }
