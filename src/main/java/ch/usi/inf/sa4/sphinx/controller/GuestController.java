@@ -237,13 +237,14 @@ public class GuestController {
 
 
 
-
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
+
 
             throw new UnauthorizedException("Invalid credentials");
 
         }
+
 
         if(!guest.isPresent()){
             throw new NotFoundException("This user doesn't exist");
