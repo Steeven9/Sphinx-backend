@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -366,23 +367,27 @@ public class UserService {
      * Add the user2 (username2) in the guest list of user1 (username1).
      *
      * @param guest the user1
-     * @param host  the user2
-     * @return the added guest
+     * @param hostUsername the user2
+     * @return true if successfull, false otherwise
      **/
-    public Optional<User> addGuest(final String guest, final String host) {
+    public boolean addGuest(final String guest, final String hostUsername) {
         final Optional<User> user = userStorage.findByUsername(guest);
+        final Optional<User> host = userStorage.findByUsername(hostUsername);
 
+        if(user.equals(hostUsername)){
+            throw new UnauthorizedException("This action isn't allow");
 
-        final Optional<User> hostUsername = userStorage.findByUsername(host);
+        }
 
-        if (user.isPresent() && hostUsername.isPresent()) {
+        if (user.isPresent() && host.isPresent()) {
 
-            user.get().addHost(hostUsername.get());
+            user.get().addHost(host.get());
+            return true;
 
 
         }
 
-        return hostUsername;
+        return false;
 
 
     }
