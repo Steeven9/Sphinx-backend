@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -217,7 +218,9 @@ public class UserService {
     public void validateSession(@NonNull final String username, @NonNull final String sessionToken) {
         final Optional<Boolean> foundMatch = userStorage.findByUsername(username)
                 .map(user -> sessionToken.equals(user.getSessionToken()));
-        if (foundMatch.isEmpty() || !foundMatch.get()) {
+        // Java sucks and sonarqube is a mess, therefore we need to write this shit.
+        // Do not refactor back to !foundMatch.get()
+        if (foundMatch.isEmpty() || Boolean.FALSE.equals(foundMatch.get())) {
             throw new UnauthorizedException("Invalid credentials");
         }
     }
@@ -259,7 +262,7 @@ public class UserService {
         }
 
         final Room startRoom = roomStorage.findById(startRoomId)
-                .orElseThrow(() -> new ImproperImplementationException("the method ownsRoom doesnt work properly"));
+                .orElseThrow(WrongUniverseException::new);
 
         if (!startRoom.getDevicesIds().contains(deviceId)) {
             return false;

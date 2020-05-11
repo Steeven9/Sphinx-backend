@@ -11,6 +11,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("")
 public class DocsController {
+
+    private DocsController() {}
+    
     @GetMapping("/docs")
     public static ModelAndView redirectToSwaggerDocs(final Map<String, ?> model) {
         //model.addAttribute("attribute", "MY_ATTRIBUTE"); //use this to set extra attributes if needed

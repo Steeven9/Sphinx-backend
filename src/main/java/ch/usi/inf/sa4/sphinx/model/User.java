@@ -52,16 +52,7 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
 
-
-
 //TODO find way to auto generate verificationToken
-
-//    @Component
-//    private final static class UuidGenerator implements IdentifierGenerator {
-//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
-//            return UUID.randomUUID().toString();
-//        }
-//    }
 
     /**
      * @param email    user email: can't be the same as other users
