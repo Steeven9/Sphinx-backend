@@ -9,12 +9,12 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/docs")
 public class DocsController {
 
     private DocsController() {}
-    
-    @GetMapping("/docs")
+
+    @GetMapping({"", "/"})
     public static ModelAndView redirectToSwaggerDocs(final Map<String, ?> model) {
         //model.addAttribute("attribute", "MY_ATTRIBUTE"); //use this to set extra attributes if needed
         return new ModelAndView("redirect:/swagger-ui.html", model);
