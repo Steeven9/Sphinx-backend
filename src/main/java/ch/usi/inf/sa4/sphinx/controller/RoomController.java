@@ -9,14 +9,16 @@ import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -102,7 +104,6 @@ public class RoomController {
 
         check(sessionToken, username, null, roomId);
 
-        final User user = userService.get(username).orElseThrow(WrongUniverseException::new);//It exists from previous check
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices()));

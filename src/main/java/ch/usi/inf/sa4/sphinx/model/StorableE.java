@@ -1,11 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import com.google.gson.annotations.Expose;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Parent class for all models.

@@ -5,7 +5,6 @@ import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -127,7 +125,7 @@ public class DummyDataAdder {
 
     // This is only here to make SonarQube shut up. The method is only called once so it really doesn't hurt to make
     // this a local.
-    private final Random rand = new Random();
+    private final Random random = new Random();
     /**
      * adds a user called randUser to storage that has randomly filled rooms, this user has no session token and must be
      * logged in
@@ -142,9 +140,9 @@ public class DummyDataAdder {
                 newRoom.setName(UUID.randomUUID().toString());
                 final Integer roomId = userService.addRoom(RAND, newRoom).orElseThrow(WrongUniverseException::new);
 
-                final int devices = rand.nextInt(30);
-                for (i = 0; i < devices; i++) {
-                    final DeviceType dt = DeviceType.intToDeviceType(rand.nextInt(9) + 1);
+                final int devices = random.nextInt(30);
+                for (int j = 0; j < devices; j++) {
+                    final DeviceType dt = DeviceType.intToDeviceType(random.nextInt(9) + 1);
                     roomService.addDevice(roomId, dt);
                 }
 
