@@ -331,9 +331,8 @@ public class UserService {
         if (optionalDevices.isPresent()) {
             List<Device> devices = optionalDevices.get();
             for (Device device : devices) {
-                DeviceType type = DeviceType.deviceToDeviceType(device);
-                if (type == DeviceType.TEMP_SENSOR || type == DeviceType.HUMIDITY_SENSOR || type == DeviceType.LIGHT_SENSOR || type == DeviceType.THERMOSTAT) {
-                    ((Sensor) device).getValue(); //updates the value of every sensor
+                if (device instanceof Sensor) {
+                    ((Sensor) device).generateValue(); //updates the value of every sensor
                     deviceService.update(device);
                 }
             }

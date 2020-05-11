@@ -57,7 +57,7 @@ public class Thermostat extends TempSensor {
     private States determineState(final double target) {
         final double temp;
         if (this.source == Sources.SELF) {
-            temp = this.getValue();
+            temp = this.getLastValue();
         } else {
             temp = this.getAverageTemp();
         }

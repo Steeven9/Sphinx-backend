@@ -1,13 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import com.google.gson.annotations.Expose;
 
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 
 /**
@@ -16,8 +12,8 @@ import javax.persistence.Transient;
 @Entity
 public abstract class Sensor extends Device {
     private double quantity;
-    @Transient
     private double lastValue;
+    private double tolerance = 1.0;
 
     /**
      * @deprecated This constructor should not be used. It exists only for use by the JPA.
@@ -36,6 +32,24 @@ public abstract class Sensor extends Device {
     }
 
     /**
+     * Returns fix quantity of this sensor.
+     *
+     * @return quantity of this sensor
+     */
+    public double getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * Sets the quantity for this Sensor, i.e. changes its internal state.
+     *
+     * @param quantity quantity to be set
+     */
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    /**
      * Creates a Sensor with given physical quantity for measurement.
      *
      * @param quantity a physical quantity
@@ -50,16 +64,26 @@ public abstract class Sensor extends Device {
     }
 
     /**
-     * Returns the measured physical quantity in given room with a random error [-0.5, 0.5].
+     * Sets the tolerance of error for given sensor; [-{@code tolerance}, {@code tolerance}].
      *
-     * @return the physical quantity
+     * @param tolerance the tolerance of error
+     * @throws IllegalArgumentException if parameter is less than zero
      */
-    public double getValue() {
-        final double variance = new Random().nextDouble();
-        this.lastValue = this.quantity + variance - 0.5;
-        return this.lastValue;
+    public void setTolerance(double tolerance) throws IllegalArgumentException {
+        if (tolerance < 0) {
+            throw new IllegalArgumentException("tolerance should be greater than 0");
+        }
+        this.tolerance = tolerance;
     }
 
+    /**
+     * Sets the physical quantity in given room with a random error set by user.
+     */
+    public void generateValue() {
+        Random random = new Random();
+        int variance = random.nextInt((int) this.tolerance * 2);
+        this.lastValue = this.quantity + (double) variance - this.tolerance;
+    }
 
     /**
      * {@inheritDoc}
