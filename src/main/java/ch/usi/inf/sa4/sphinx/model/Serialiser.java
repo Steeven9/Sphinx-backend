@@ -57,27 +57,6 @@ public final class Serialiser {
     }
 
 
-    /**
-     * Serialises a User. For the description of the serialised fields consult SerialisableUser.
-     * fields whose value cannot be determined by looking at the User are set to null.
-     *
-     * @param user the user to serialize
-     * @return the serialized user
-     */
-    public static SerialisableUser serialiseUser(final User user) {
-        return user.serialise();
-    }
-
-    /**
-     * Serialises a Room. For the description of the serialised fields consult SerialisableRoom.
-     * Fields whose value cannot be determined by looking at the Room are set to null.
-     *
-     * @param room the room to serialize
-     * @return the serialized room
-     */
-    public static SerialisableRoom serialiseRoom(final Room room) {
-        return room.serialise();
-    }
 
 
     /**

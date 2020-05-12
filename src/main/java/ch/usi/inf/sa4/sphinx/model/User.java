@@ -271,10 +271,21 @@ public class User extends StorableE {
 
 
     /**
+     * Serialises a User. For the description of the serialised fields consult SerialisableUser.
+     * fields whose value cannot be determined by looking at the User are set to null.
+     *
+     * @param user the user to serialize
+     * @return the serialized user
+     */
+    public static SerialisableUser serialiseUser(final User user) {
+        return user.serialise();
+    }
+
+    /**
      * @return a serialised version of the USer
      * @see SerialisableUser
      */
-    public SerialisableUser serialise() {
+    private SerialisableUser serialise() {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
@@ -282,7 +293,6 @@ public class User extends StorableE {
         sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
         return sd;
     }
-
 
     /**
      * asserts if there's a match between the User's hashed password and the one in plaintext

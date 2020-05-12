@@ -51,21 +51,7 @@ class SerialiserTest {
         assertEquals(SerialisableDevice.class, serialisableDevice.getClass());
     }
 
-    @Test
-    @DisplayName("Transform this room in a serialiseRoom")
-    void isSerialisableRoom() {
-        SerialisableRoom serialisableRoom = Serialiser.serialiseRoom(room);
-        assertNotNull(serialisableRoom);
-        assertEquals(SerialisableRoom.class, serialisableRoom.getClass());
-    }
 
-    @Test
-    @DisplayName("Transform this user in a serialiseUser")
-    void isSerialisableUser() {
-        SerialisableUser serialisableUser = Serialiser.serialiseUser(user);
-        assertNotNull(serialisableUser);
-        assertEquals(SerialisableUser.class, serialisableUser.getClass());
-    }
 
 
     //TODO Device cant exist without a Room right?

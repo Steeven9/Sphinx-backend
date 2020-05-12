@@ -52,7 +52,7 @@ public class UserController {
         userService.validateSession(username, sessionToken);
 
         final User user = userService.get(username).orElseThrow(WrongUniverseException::new);
-        return ResponseEntity.ok(Serialiser.serialiseUser(user));
+        return ResponseEntity.ok(User.serialiseUser(user));
     }
 
     /**
@@ -98,7 +98,7 @@ public class UserController {
             throw new BadRequestException("Please insert a valid email", e);
         }
 
-        return ResponseEntity.status(201).body(Serialiser.serialiseUser(newUser));
+        return ResponseEntity.status(201).body(User.serialiseUser(newUser));
     }
 
 
@@ -138,7 +138,7 @@ public class UserController {
             userService.changeUsername(username, user.username);
         }
 
-        return ResponseEntity.ok(Serialiser.serialiseUser(userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new)));
+        return ResponseEntity.ok(User.serialiseUser(userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new)));
     }
 
     /**

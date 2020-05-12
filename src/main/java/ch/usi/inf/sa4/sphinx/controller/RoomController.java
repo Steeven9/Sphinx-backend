@@ -81,7 +81,7 @@ public class RoomController {
                                                     @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
         //if check didn't throw the room is here
-        return ResponseEntity.ok(Serialiser.serialiseRoom(roomService.get(roomId).orElseThrow(WrongUniverseException::new)));
+        return ResponseEntity.ok(Room.serialiseRoom(roomService.get(roomId).orElseThrow(WrongUniverseException::new)));
 
     }
 
@@ -131,7 +131,7 @@ public class RoomController {
 
         final Room room = new Room(serialisableRoom);
         final Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
-        final SerialisableRoom res = Serialiser.serialiseRoom(roomService.get(id).orElseThrow(
+        final SerialisableRoom res = Room.serialiseRoom(roomService.get(id).orElseThrow(
                 () -> new ServerErrorException("Couldn't serialise room")
         ));
 
@@ -181,7 +181,7 @@ public class RoomController {
             throw new ServerErrorException("Couldn't save data");
         }
 
-        final SerialisableRoom res = Serialiser.serialiseRoom(storageRoom);
+        final SerialisableRoom res = Room.serialiseRoom(storageRoom);
         return ResponseEntity.ok().body(res);
     }
 
