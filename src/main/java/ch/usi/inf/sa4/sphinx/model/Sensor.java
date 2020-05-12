@@ -6,6 +6,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 
 /**
@@ -16,7 +17,7 @@ public abstract class Sensor extends Device {
     private double quantity;
     private double lastValue;
     private double tolerance;
-
+    @Transient
     private final Random rand = new Random();
 
     /**
@@ -90,8 +91,7 @@ public abstract class Sensor extends Device {
      * Sets the physical quantity in given room with a random error set by user.
      */
     public void generateValue() {
-        Random random = new Random();
-        double variance = random.nextDouble() * this.tolerance * 2;
+        double variance = rand.nextDouble() * this.tolerance * 2;
         this.lastValue = this.quantity + variance - this.tolerance;
     }
 
