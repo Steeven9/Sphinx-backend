@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
@@ -102,7 +104,19 @@ public abstract class Sensor extends Device {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected SerialisableDevice serialise() {
+        final SerialisableDevice sd = super.serialise();
+        sd.tolerance = this.getTolerance();
+        sd.quantity = this.getQuantity();
+        return sd;
+    }
+
+    /**
      * Returns the name of physical quantity of a given sensor.
+     *
      * @return the name of physical quantity
      */
     protected abstract String getPhQuantity();

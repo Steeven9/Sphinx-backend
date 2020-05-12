@@ -74,11 +74,11 @@ class ThermostatTest {
 
     @Test
     void testSwitches() {
-        thermostat.turnOff();
+        thermostat.setOn(false);
         assertEquals(Thermostat.States.OFF, thermostat.getState());
         assertFalse(thermostat.isOn());
 
-        thermostat.turnOn();
+        thermostat.setOn(true);
         assertEquals(Thermostat.States.IDLE, thermostat.getState());
         assertTrue(thermostat.isOn());
 
@@ -87,12 +87,12 @@ class ThermostatTest {
         assertTrue(thermostat.isOn());
 
         thermostat.setTargetTemp(100);
-        thermostat.turnOn();
+        thermostat.setOn(true);
         assertEquals(Thermostat.States.HEATING, thermostat.getState());
 
-        thermostat.turnOff();
+        thermostat.setOn(false);
         thermostat.setTargetTemp(2);
-        thermostat.turnOn();
+        thermostat.setOn(true);
         assertEquals(Thermostat.States.COOLING, thermostat.getState());
     }
 
@@ -105,6 +105,8 @@ class ThermostatTest {
                 () -> assertEquals(sd.slider, thermostat.getTargetTemp()),
                 () -> assertEquals(1, sd.state),
                 () -> assertEquals(0, sd.source),
+                () -> assertEquals(thermostat.getTolerance(), sd.tolerance),
+                () -> assertEquals(thermostat.getQuantity(), sd.quantity),
                 () -> assertTrue(sd.averageTemp <= quantity + tolerance && sd.averageTemp >= quantity - tolerance)
         );
 
@@ -114,7 +116,7 @@ class ThermostatTest {
         thermostat.setTargetTemp(1);
         assertEquals(2, thermostat.serialise().state);
 
-        thermostat.turnOff();
+        thermostat.setOn(false);
         assertEquals(0, thermostat.serialise().state);
     }
 

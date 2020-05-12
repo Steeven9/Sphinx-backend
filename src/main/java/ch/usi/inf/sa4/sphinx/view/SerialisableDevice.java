@@ -30,5 +30,13 @@ public class SerialisableDevice {
     public double averageTemp;
     public Integer state;
     public Integer source;
+    public Double tolerance;
+    public Double quantity;
+
+    /**
+     * Constructor.
+     **/
+    public SerialisableDevice() {
+    }
 
 }
