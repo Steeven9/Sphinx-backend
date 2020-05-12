@@ -105,6 +105,8 @@ class ThermostatTest {
                 () -> assertEquals(sd.slider, thermostat.getTargetTemp()),
                 () -> assertEquals(1, sd.state),
                 () -> assertEquals(0, sd.source),
+                () -> assertEquals(thermostat.getTolerance(), sd.tolerance),
+                () -> assertEquals(thermostat.getQuantity(), sd.quantity),
                 () -> assertTrue(sd.averageTemp <= quantity + tolerance && sd.averageTemp >= quantity - tolerance)
         );
 
