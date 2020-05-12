@@ -121,7 +121,8 @@ public class Thermostat extends TempSensor {
      */
     public double getAverageTemp() {
         final List<Device> devices = this.getRoom().getDevices();
-        double averageTemp = 0.0, sensors = 1.0;
+        double averageTemp = 0.0;
+        double sensors = 1.0;
 
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
@@ -209,10 +210,13 @@ public class Thermostat extends TempSensor {
         return DeviceType.THERMOSTAT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if (sd.slider != null) targetTemp = sd.slider;
         if (sd.source != null) setSource(sd.source);
+        if (sd.slider != null) setTargetTemp(sd.slider);
     }
 }

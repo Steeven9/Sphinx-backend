@@ -33,10 +33,4 @@ public class SerialisableDevice {
     public Double tolerance;
     public Double quantity;
 
-    /**
-     * Constructor.
-     **/
-    public SerialisableDevice() {
-    }
-
 }

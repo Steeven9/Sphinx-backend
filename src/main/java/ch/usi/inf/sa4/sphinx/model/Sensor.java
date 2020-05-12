@@ -115,6 +115,16 @@ public abstract class Sensor extends Device {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setPropertiesFrom(SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if (sd.tolerance != null) this.setTolerance(sd.tolerance);
+        if (sd.quantity != null) this.setQuantity(sd.quantity);
+    }
+
+    /**
      * Returns the name of physical quantity of a given sensor.
      *
      * @return the name of physical quantity

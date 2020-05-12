@@ -1,8 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.*;
