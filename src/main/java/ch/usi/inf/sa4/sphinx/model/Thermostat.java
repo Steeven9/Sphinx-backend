@@ -49,6 +49,15 @@ public class Thermostat extends TempSensor {
     }
 
     /**
+     * Returns target temperature of this thermostat.
+     *
+     * @return target temperature
+     */
+    public double getTargetTemp() {
+        return targetTemp;
+    }
+
+    /**
      * Returns a State basing on given target temperature and considering the Source.
      *
      * @param target the target temperature
@@ -62,7 +71,8 @@ public class Thermostat extends TempSensor {
             temp = this.getAverageTemp();
         }
 
-        if (temp < target + 0.5 && temp > target - 0.5) {
+        double tolerance = this.getTolerance();
+        if (temp <= target + tolerance && temp >= target - tolerance) {
             return States.IDLE;
         } else {
             if (target > temp) {
@@ -85,10 +95,11 @@ public class Thermostat extends TempSensor {
 
     /**
      * Maps a state of thermostat to an int.
+     *
      * @param state a State of thermostat
      * @return int mapping to thermostat
      */
-    private static int fromStateToInt(final States state) {
+    private int fromStateToInt(final States state) {
         switch (state) {
             case IDLE:
                 return 1;
@@ -136,7 +147,7 @@ public class Thermostat extends TempSensor {
         final SerialisableDevice sd = super.serialise();
         sd.slider = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();
-        sd.state = Thermostat.fromStateToInt(this.state);
+        sd.state = this.fromStateToInt(this.state);
         sd.source = this.source == Sources.SELF ? 0 : 1;
         return sd;
     }
@@ -185,7 +196,7 @@ public class Thermostat extends TempSensor {
     /**
      * The two possible sources of thermostat.
      */
-    private enum Sources {
+    public enum Sources {
         SELF, AVERAGE
     }
 

@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 public abstract class Sensor extends Device {
     private double quantity;
     private double lastValue;
-    private double tolerance = 1.0;
+    private double tolerance;
 
     private final Random rand = new Random();
 
@@ -24,12 +24,14 @@ public abstract class Sensor extends Device {
     public Sensor() {}
 
     /**
-     * Getter for the quantity.
+     * Creates a Sensor with given physical quantity for measurement.
      *
-     * @return quantity
-     **/
-    public double getLastValue() {
-        return this.lastValue;
+     * @param quantity a physical quantity
+     */
+    protected Sensor(final double quantity) {
+        this.quantity = quantity;
+        this.lastValue = quantity;
+        this.tolerance = 1.0;
     }
 
     /**
@@ -42,6 +44,15 @@ public abstract class Sensor extends Device {
     }
 
     /**
+     * Getter for the quantity.
+     *
+     * @return quantity
+     **/
+    public double getLastValue() {
+        return this.lastValue;
+    }
+
+    /**
      * Sets the quantity for this Sensor, i.e. changes its internal state.
      *
      * @param quantity quantity to be set
@@ -51,18 +62,14 @@ public abstract class Sensor extends Device {
     }
 
     /**
-     * Creates a Sensor with given physical quantity for measurement.
+     * Returns the tolerance of error of this sensor.
      *
-     * @param quantity a physical quantity
+     * @return the tolerance
      */
-    protected Sensor(final double quantity) {
-        this.quantity = quantity;
-        this.lastValue = quantity;
+    public double getTolerance() {
+        return tolerance;
     }
 
-    public void setLastValue(double lastValue) {
-        this.lastValue = lastValue;
-    }
 
     /**
      * Sets the tolerance of error for given sensor; [-{@code tolerance}, {@code tolerance}].
