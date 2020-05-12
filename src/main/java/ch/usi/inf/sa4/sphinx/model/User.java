@@ -297,6 +297,7 @@ public class User extends StorableE {
     }
 
 
+
     /**
      * @return a serialised version of the USer
      * @see SerialisableUser
@@ -311,6 +312,7 @@ public class User extends StorableE {
         sd.allowSecurityCameras = this.camsVisible;
         return sd;
     }
+
 
 
 

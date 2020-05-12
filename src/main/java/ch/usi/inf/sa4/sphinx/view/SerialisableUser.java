@@ -12,11 +12,15 @@ public class SerialisableUser {
     public Integer[] rooms;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     public boolean camVisible;
 =======
     public Boolean guestsHaveCameraAccess;
 >>>>>>> removed second @RequestBody in updateUser() and change camVisible variable to Boolean
+=======
+    public Boolean allowSecurityCameras;
+>>>>>>> #124: change SerialisableUser field name for camera access
 
     /** Constructor.**/
     public SerialisableUser(){

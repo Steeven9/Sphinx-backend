@@ -196,7 +196,23 @@ public class DeviceController {
 
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
+<<<<<<< HEAD
         storageDevice.setPropertiesFrom(device);
+=======
+        final User user = userService.get(username).get(); //exists if prev is valid
+        //check if user is a guest
+
+        if (device.icon != null) storageDevice.setIcon(device.icon);
+        if (device.name != null) storageDevice.setName(device.name);
+
+        if (device.on != null) storageDevice.setOn(device.on);
+        if (storageDevice instanceof Dimmable && device.slider != null) {
+            ((Dimmable) storageDevice).setState(device.slider);
+        }
+        if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
+            ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
+        }
+>>>>>>> #124: change SerialisableUser field name for camera access
 
 
         if (deviceService.update(storageDevice)) {
