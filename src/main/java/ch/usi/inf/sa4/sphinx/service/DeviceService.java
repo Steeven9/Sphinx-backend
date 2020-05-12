@@ -157,5 +157,4 @@ public class DeviceService {
         }
         return true;
     }
-
 }

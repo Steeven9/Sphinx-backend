@@ -6,7 +6,6 @@ import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -17,9 +16,7 @@ public class Thermostat extends TempSensor {
 
     @Expose
     private double targetTemp;
-    @Transient
     private States state;
-    @Transient
     private Sources source;
 
     /**
@@ -28,7 +25,7 @@ public class Thermostat extends TempSensor {
      */
     public Thermostat() {
         super();
-        this.targetTemp = this.getValue();
+        this.targetTemp = this.getLastValue();
         this.state = States.IDLE;
         this.source = Sources.SELF;
     }
@@ -52,6 +49,15 @@ public class Thermostat extends TempSensor {
     }
 
     /**
+     * Returns target temperature of this thermostat.
+     *
+     * @return target temperature
+     */
+    public double getTargetTemp() {
+        return targetTemp;
+    }
+
+    /**
      * Returns a State basing on given target temperature and considering the Source.
      *
      * @param target the target temperature
@@ -60,12 +66,13 @@ public class Thermostat extends TempSensor {
     private States determineState(final double target) {
         final double temp;
         if (this.source == Sources.SELF) {
-            temp = this.getValue();
+            temp = this.getLastValue();
         } else {
             temp = this.getAverageTemp();
         }
 
-        if (temp < target + 0.5 && temp > target - 0.5) {
+        double tolerance = this.getTolerance();
+        if (temp <= target + tolerance && temp >= target - tolerance) {
             return States.IDLE;
         } else {
             if (target > temp) {
@@ -88,6 +95,7 @@ public class Thermostat extends TempSensor {
 
     /**
      * Maps a state of thermostat to an int.
+     *
      * @param state a State of thermostat
      * @return int mapping to thermostat
      */
@@ -119,13 +127,13 @@ public class Thermostat extends TempSensor {
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
                 if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
-                    averageTemp += ((TempSensor) device).getValue();
+                    averageTemp += ((TempSensor) device).getLastValue();
                     sensors++;
                 }
             }
         }
 
-        averageTemp += this.getValue();
+        averageTemp += this.getLastValue(); //gets last value since all sensors have been updated
         averageTemp /= sensors;
 
         return averageTemp;
@@ -189,7 +197,7 @@ public class Thermostat extends TempSensor {
     /**
      * The two possible sources of thermostat.
      */
-    private enum Sources {
+    public enum Sources {
         SELF, AVERAGE
     }
 
@@ -202,10 +210,13 @@ public class Thermostat extends TempSensor {
         return DeviceType.THERMOSTAT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if (sd.slider != null) targetTemp = sd.slider;
         if (sd.source != null) setSource(sd.source);
+        if (sd.slider != null) setTargetTemp(sd.slider);
     }
 }
