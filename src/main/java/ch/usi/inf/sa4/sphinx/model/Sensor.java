@@ -91,8 +91,8 @@ public abstract class Sensor extends Device {
      */
     public void generateValue() {
         Random random = new Random();
-        int variance = random.nextInt((int) this.tolerance * 2);
-        this.lastValue = this.quantity + (double) variance - this.tolerance;
+        double variance = random.nextDouble() * this.tolerance * 2;
+        this.lastValue = this.quantity + variance - this.tolerance;
     }
 
     /**
