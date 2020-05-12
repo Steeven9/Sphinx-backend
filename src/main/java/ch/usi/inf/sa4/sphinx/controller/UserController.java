@@ -4,7 +4,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
@@ -30,8 +29,6 @@ public class UserController {
     Mailer mailer;
     @Autowired
     UserService userService;
-    @Autowired
-    Serialiser serialiser;
 
     /**
      * Gets a User.

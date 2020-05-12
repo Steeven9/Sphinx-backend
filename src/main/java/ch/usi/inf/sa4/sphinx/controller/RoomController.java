@@ -1,8 +1,8 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -35,8 +35,6 @@ public class RoomController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
-    @Autowired
-    Serialiser serialiser;
 
     /**
      * Returns a list of all rooms which belong to the given user.
@@ -60,7 +58,7 @@ public class RoomController {
 
         check(sessionToken, username,null);
 
-        return ResponseEntity.ok(Serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
+        return ResponseEntity.ok(Room.serialiseRooms(userService.getPopulatedRooms(username)));
     }
 
 
@@ -106,7 +104,7 @@ public class RoomController {
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
         userService.generateValue(username);
-        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices()));
+        return ResponseEntity.ok(Device.serialiseDevices(room.getDevices()));
     }
 
 

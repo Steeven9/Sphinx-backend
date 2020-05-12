@@ -172,9 +172,18 @@ public class Room extends StorableE{
     }
 
     /**
+     * @param rooms the rooms to serialize
+     * @return the serialized rooms
+     * @see Room#serialiseRoom(Room)
+     */
+    public static List<SerialisableRoom> serialiseRooms(final Collection<? extends Room> rooms) {
+        return rooms.stream().map(Room::serialiseRoom).collect(Collectors.toList());
+    }
+
+    /**
      * @return a serialised version of this Room
      */
-    public SerialisableRoom serialise() {
+    private SerialisableRoom serialise() {
         final SerialisableRoom sd = new SerialisableRoom();
         sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
         sd.background = background;

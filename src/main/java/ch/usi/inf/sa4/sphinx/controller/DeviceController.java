@@ -41,8 +41,6 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
-    @Autowired
-    Serialiser serialiser;
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
 
@@ -70,7 +68,7 @@ public class DeviceController {
                 .orElseThrow(WrongUniverseException::new);//if user exists optional is present
 
         final List<SerialisableDevice> serializedDevices = devices.stream()
-                .map(device -> serialiser.serialiseDevice(device))
+                .map(Device::serialiseDevice)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(serializedDevices);
@@ -107,7 +105,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
         userService.generateValue(username);
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
+        return ResponseEntity.ok(Device.serialiseDevice(device.get()));
     }
 
 
@@ -153,7 +151,7 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
         userService.generateValue(username);
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
+        return ResponseEntity.status(201).body(Device.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
 
     }
 
@@ -205,7 +203,7 @@ public class DeviceController {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             userService.generateValue(username);
-            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
+            return ResponseEntity.ok().body(Device.serialiseDevice(storageDevice));
 
         }
         throw new ServerErrorException("Couldn't save data");

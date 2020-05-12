@@ -1,14 +1,17 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -179,9 +182,46 @@ public abstract class Device extends StorableE {
 
     /**
      * set the Room that owns this Device.
+     *
      * @param room the Room
      */
     public void setRoom(final Room room) {
         this.room = room;
+    }
+
+
+    /**
+     * Serializes a device with additional info coming from the owner User:
+     * the id of the room that owns the device
+     * the name of the room that owns the device
+     * the username of the user that owns the device
+     *
+     * @param device the device to serialize
+     * @return the serialized device
+     */
+    public static SerialisableDevice serialiseDevice(final Device device) {
+        final SerialisableDevice sd = device.serialise();
+        final DeviceService deviceService = ServiceProvider.getDeviceService();
+
+        final Room owningRoom = device.getRoom();
+        final User owningUser = owningRoom.getUser();
+        sd.roomId = owningRoom.getId();
+        sd.roomName = owningRoom.getName();
+        sd.userName = owningUser.getUsername();
+        sd.switched = deviceService.getSwitchedBy(device.getId()).stream().mapToInt(Integer::intValue).toArray();
+        sd.switches = deviceService.getSwitches(device.getId()).stream().mapToInt(Integer::intValue).toArray();
+        if (sd.switched.length == 0) sd.switched = null;
+        if (sd.switches.length == 0) sd.switches = null;
+        return sd;
+    }
+
+
+    /**
+     * @param devices the Devices to serialise
+     * @return a list of serialised devices with info about their owner
+     * @see Device#serialiseDevice(Device)
+     */
+    public static List<SerialisableDevice> serialiseDevices(final Collection<? extends Device> devices) {
+        return devices.stream().map(Device::serialiseDevice).collect(Collectors.toList());
     }
 }
