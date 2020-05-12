@@ -99,7 +99,7 @@ public class Thermostat extends TempSensor {
      * @param state a State of thermostat
      * @return int mapping to thermostat
      */
-    private int fromStateToInt(final States state) {
+    private static int fromStateToInt(final States state) {
         switch (state) {
             case IDLE:
                 return 1;
@@ -147,7 +147,7 @@ public class Thermostat extends TempSensor {
         final SerialisableDevice sd = super.serialise();
         sd.slider = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();
-        sd.state = this.fromStateToInt(this.state);
+        sd.state = Thermostat.fromStateToInt(this.state);
         sd.source = this.source == Sources.SELF ? 0 : 1;
         return sd;
     }
