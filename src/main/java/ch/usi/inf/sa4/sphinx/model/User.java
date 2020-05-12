@@ -305,7 +305,7 @@ public class User extends StorableE {
             sd.fullname = this.fullname;
             sd.password = this.password;
             sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-            sd.guestsHaveCameraAccess = this.camsVisible;
+            sd.allowSecurityCameras = this.camsVisible;
             return sd;
         }
 

@@ -208,6 +208,7 @@ public class DeviceController {
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
         final User user = userService.get(username).get(); //exists if prev is valid
+        //check if user is a guest
 
         if (device.icon != null) storageDevice.setIcon(device.icon);
         if (device.name != null) storageDevice.setName(device.name);
