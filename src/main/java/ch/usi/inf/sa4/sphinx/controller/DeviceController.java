@@ -64,7 +64,12 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
+<<<<<<< HEAD
         userService.generateValue(username);
+=======
+        final Optional<User> user = userService.get(username);
+        
+>>>>>>> #124: updated addGuest() method in UserService
 
         final List<Device> devices = userService.getPopulatedDevices(username)
                 .orElseThrow(WrongUniverseException::new);//if user exists optional is present

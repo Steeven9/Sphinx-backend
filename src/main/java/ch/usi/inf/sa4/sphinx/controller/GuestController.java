@@ -89,16 +89,13 @@ public class GuestController {
 
     @GetMapping(value = {"/houses/", "/houses"})
     public ResponseEntity<List<SerialisableUser>> getHouses(@RequestHeader("session-token") String sessionToken,
-
                                                             @RequestHeader("user") String username) {
 
 
 
 
 
-
         if ( !userService.validSession(username, sessionToken)) {
-
 
 
 
@@ -110,9 +107,9 @@ public class GuestController {
 
 
         List<User> guestOf = userService.otherHousesAccess(username).get();
-
-
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
+
+
 
 
 
@@ -137,9 +134,7 @@ public class GuestController {
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
-
      @RequestHeader("user") String username) {
-
 
 
 
@@ -149,11 +144,7 @@ public class GuestController {
 
 
 
-
-
         if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
-
-
             throw new UnauthorizedException("Invalid credential");
         }
 
@@ -235,16 +226,12 @@ public class GuestController {
                                                           @RequestHeader("session-token") String sessionToken,
                                                           @RequestHeader("user") String username) {
 
-
-
         Optional<User> guest = userService.get(guestUsername);
         if (!userService.validSession(username, sessionToken)) {
-
 
             throw new UnauthorizedException("Invalid credentials");
 
         }
-
 
         if(!guest.isPresent()){
             throw new NotFoundException("This user doesn't exist");
@@ -281,9 +268,7 @@ public class GuestController {
 
 
 
-
         if (  !userService.validSession(username, sessionToken)) {
-
 
 
             throw new UnauthorizedException("Invalid credentials");
