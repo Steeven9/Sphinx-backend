@@ -11,11 +11,7 @@ class MotionSensorTest {
     void testMotionSensor() {
         MotionSensor motionSensor = new MotionSensor();
         assertNotNull(motionSensor);
-        if (motionSensor.isDetected()) {
-            assertEquals("true", motionSensor.getLabel());
-        } else {
-            assertEquals("false", motionSensor.getLabel());
-        }
+        assertEquals(String.class, motionSensor.getLabel().getClass());
         assertEquals(DeviceType.MOTION_SENSOR, motionSensor.getDeviceType());
     }
 }
