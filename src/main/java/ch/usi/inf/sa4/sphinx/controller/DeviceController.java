@@ -94,7 +94,7 @@ public class DeviceController {
      */
     @GetMapping("/{deviceId}")
     @ApiOperation("Gets the device with the given id")
-    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable final Integer deviceId,
+    public ResponseEntity<SerialisableDevice> getDevice(@NotNull @PathVariable final Integer deviceId,
                                                         @RequestHeader("session-token") final String sessionToken,
                                                         @RequestHeader("user") final String username) {
 

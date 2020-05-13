@@ -4,10 +4,12 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 public class DimmableLightStateInc extends Effect<Double> {
     @Autowired
+    @Transient
     DeviceService deviceService;
 
     /**

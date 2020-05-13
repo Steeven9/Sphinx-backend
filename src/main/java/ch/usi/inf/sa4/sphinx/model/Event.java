@@ -6,15 +6,22 @@ import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Event<T> extends StorableE {
+public abstract class Event<T> extends StorableE implements Runnable{
     private int deviceId;
+    @ManyToOne
+    private Coupling coupling;
+    @ManyToOne
+    private Automation automation;
+
+
+    public Event(Coupling coupling, Automation automation) {
+        this.coupling = coupling;
+        this.automation = automation;
+    }
 
     @Transient
     protected transient DeviceService deviceService;
@@ -32,6 +39,12 @@ public abstract class Event<T> extends StorableE {
         if(deviceService == null) {
             throw new ImproperImplementationException("ServiceProvider not providing access to requested Services");
         }
+    }
+
+
+    public void run(){
+        if(coupling != null) coupling.run();
+        if(automation != null) automation.run();
     }
 
 

@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-@Entity
+//@Entity
 public class RunAutomation extends Effect<Object> {
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")

@@ -4,6 +4,5 @@ public enum ConditionType {
     GREATER_TARGET,
     SMALLER_TARGET,
     EQUAL_TARGET,
-    BOOL_INEQUALITY,
-    BOOLEAN_EQUALITY
+    UNEQUAL_TARGET
 }

@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * Effect that sets a DimmableLight state
@@ -14,6 +15,7 @@ import javax.persistence.Entity;
 public class DimmableLightStateSet extends Effect<Double> {
 
     @Autowired
+    @Transient
     private DeviceService deviceService;
 
     /**
@@ -24,7 +26,6 @@ public class DimmableLightStateSet extends Effect<Double> {
     public DimmableLightStateSet(final Integer deviceID) {
         super(deviceID);
     }
-
 
 
     /**

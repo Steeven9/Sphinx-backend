@@ -1,9 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.*;
 
 /**
  * This class reproduces a generic effect on a given Device
@@ -11,9 +9,10 @@ import javax.persistence.InheritanceType;
  * @see Device
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Effect<T> extends StorableE {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Effect<T> extends StorableE{
     private int deviceId;
+
 
     /**
      * @deprecated

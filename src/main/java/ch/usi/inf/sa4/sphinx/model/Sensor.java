@@ -1,5 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.misc.StatusHolder;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
@@ -9,7 +11,7 @@ import javax.persistence.Entity;
  * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
  */
 @Entity
-public abstract class Sensor extends Device {
+public abstract class Sensor extends Device implements StatusHolder<Double> {
     private double quantity;
 
     /**
@@ -34,6 +36,11 @@ public abstract class Sensor extends Device {
      **/
     private double getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public Double getStatus() {
+        return getQuantity();
     }
 
     /**
