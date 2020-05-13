@@ -123,6 +123,7 @@ public class DeviceController {
         userService.validateSession(username, sessionToken);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
@@ -130,6 +131,9 @@ public class DeviceController {
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
 =======
         //
+=======
+
+>>>>>>> #124: updated GET devices route in GuestController
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
 >>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
