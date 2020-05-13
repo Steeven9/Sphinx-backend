@@ -68,11 +68,25 @@ public class DeviceController {
         userService.generateValue(username);
 =======
         final Optional<User> user = userService.get(username);
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
         
 >>>>>>> #124: updated addGuest() method in UserService
 
+<<<<<<< HEAD
         final List<Device> devices = userService.getPopulatedDevices(username)
                 .orElseThrow(WrongUniverseException::new);//if user exists optional is present
+=======
+        if (user.isPresent()) {
+
+
+            final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
+            final List<SerialisableDevice> serializedDevices = devices.stream()
+                    .map(device -> serialiser.serialiseDevice(device, user.get()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(serializedDevices);
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
         final List<SerialisableDevice> serializedDevices = devices.stream()
                 .map(device -> serialiser.serialiseDevice(device))
@@ -108,11 +122,17 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
+<<<<<<< HEAD
         if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
         userService.generateValue(username);
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
+=======
+        //
+
+        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
     }
 
 
@@ -193,23 +213,35 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
+<<<<<<< HEAD
         userService.validateSession(username, sessionToken);
 
-        if (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
+=======
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
         }
+        // in case user is a guest
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
+        if (!userService.ownsDevice(username, deviceId)) {
 
-        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+          final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+          final User guest = userService.get(username).get(); //exists if prev is valid
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         storageDevice.setPropertiesFrom(device);
 =======
         final User user = userService.get(username).get(); //exists if prev is valid
         //check if user is a guest
+=======
+            if(storageDevice.getDeviceType().equals(DeviceType.LIGHT) ||
+                    storageDevice.getDeviceType().equals(DeviceType.DIMMABLE_LIGHT) ||
+                    storageDevice.getDeviceType().equals(DeviceType.SMART_CURTAIN)){
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
-        if (device.icon != null) storageDevice.setIcon(device.icon);
-        if (device.name != null) storageDevice.setName(device.name);
+                if (device.on != null) storageDevice.setOn(device.on);
 
+<<<<<<< HEAD
         if (device.on != null) storageDevice.setOn(device.on);
         if (storageDevice instanceof Dimmable && device.slider != null) {
             ((Dimmable) storageDevice).setState(device.slider);
@@ -218,16 +250,48 @@ public class DeviceController {
             ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
         }
 >>>>>>> #124: change SerialisableUser field name for camera access
+=======
+                if (storageDevice instanceof Dimmable && device.slider != null) {
+                    ((Dimmable) storageDevice).setState(device.slider);
+                }
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, guest));
 
-        if (deviceService.update(storageDevice)) {
-            final Integer owningRoom = storageDevice.getRoom().getId();
-            if (device.roomId != null && !device.roomId.equals(owningRoom)) {
-                userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
+<<<<<<< HEAD
             userService.generateValue(username);
             return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
+=======
+        } else {
 
+
+            final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+
+            final User user = userService.get(username).get(); //exists if prev is valid
+
+
+            if (device.icon != null) storageDevice.setIcon(device.icon);
+            if (device.name != null) storageDevice.setName(device.name);
+>>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
+
+            if (device.on != null) storageDevice.setOn(device.on);
+            if (storageDevice instanceof Dimmable && device.slider != null) {
+                ((Dimmable) storageDevice).setState(device.slider);
+            }
+            if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
+                ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
+            }
+
+
+            if (deviceService.update(storageDevice)) {
+                final Integer owningRoom = storageDevice.getRoom().getId();
+                if (device.roomId != null && !device.roomId.equals(owningRoom)) {
+                    userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
+                }
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
+
+            }
         }
         throw new ServerErrorException("Couldn't save data");
     }
