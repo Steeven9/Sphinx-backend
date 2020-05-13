@@ -161,7 +161,6 @@ public class GuestController {
 
 
             devicesArray = devices.stream()
-                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
         }

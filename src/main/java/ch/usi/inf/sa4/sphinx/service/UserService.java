@@ -2,6 +2,8 @@ package ch.usi.inf.sa4.sphinx.service;
 
 
 import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
@@ -373,18 +375,24 @@ public class UserService {
         final Optional<User> user = userStorage.findByUsername(guest);
         final Optional<User> host = userStorage.findByUsername(hostUsername);
 
-        if(user.equals(hostUsername)){
-            throw new UnauthorizedException("This action isn't allow");
+        if(user.equals(host)){
+            throw new UnauthorizedException("You can't add yourself as guest");
 
         }
 
-        if (user.isPresent() && host.isPresent()) {
 
+
+        if (!user.isPresent() || !host.isPresent()) {
+
+            throw new NotFoundException("This user does not exist");
+
+
+
+        } else {
             user.get().addHost(host.get());
-
-
-
         }
+
+        throw new ServerErrorException("");
 
 
 

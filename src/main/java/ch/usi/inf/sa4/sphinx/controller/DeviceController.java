@@ -62,6 +62,7 @@ public class DeviceController {
 
 
         final Optional<User> user = userService.get(username);
+        
 
         if (user.isPresent()) {
             if (!userService.validSession(username, sessionToken)) {
