@@ -62,12 +62,13 @@ public class DeviceController {
 
 
         final Optional<User> user = userService.get(username);
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
         
 
         if (user.isPresent()) {
-            if (!userService.validSession(username, sessionToken)) {
-                throw new UnauthorizedException("Invalid credentials");
-            }
+
 
             final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
             final List<SerialisableDevice> serializedDevices = devices.stream()
@@ -109,9 +110,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
-        }
+        //
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
     }
@@ -201,35 +200,53 @@ public class DeviceController {
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-
+        // in case user is a guest
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
-        }
 
-        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+          final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+          final User guest = userService.get(username).get(); //exists if prev is valid
 
-        final User user = userService.get(username).get(); //exists if prev is valid
-        //check if user is a guest
+            if(storageDevice.getDeviceType().equals(DeviceType.LIGHT) ||
+                    storageDevice.getDeviceType().equals(DeviceType.DIMMABLE_LIGHT) ||
+                    storageDevice.getDeviceType().equals(DeviceType.SMART_CURTAIN)){
 
-        if (device.icon != null) storageDevice.setIcon(device.icon);
-        if (device.name != null) storageDevice.setName(device.name);
+                if (device.on != null) storageDevice.setOn(device.on);
 
-        if (device.on != null) storageDevice.setOn(device.on);
-        if (storageDevice instanceof Dimmable && device.slider != null) {
-            ((Dimmable) storageDevice).setState(device.slider);
-        }
-        if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
-            ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
-        }
+                if (storageDevice instanceof Dimmable && device.slider != null) {
+                    ((Dimmable) storageDevice).setState(device.slider);
+                }
 
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, guest));
 
-        if (deviceService.update(storageDevice)) {
-            final Integer owningRoom = storageDevice.getRoom().getId();
-            if (device.roomId != null && !device.roomId.equals(owningRoom)) {
-                userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
-            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
+        } else {
 
+
+            final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+
+            final User user = userService.get(username).get(); //exists if prev is valid
+
+
+            if (device.icon != null) storageDevice.setIcon(device.icon);
+            if (device.name != null) storageDevice.setName(device.name);
+
+            if (device.on != null) storageDevice.setOn(device.on);
+            if (storageDevice instanceof Dimmable && device.slider != null) {
+                ((Dimmable) storageDevice).setState(device.slider);
+            }
+            if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
+                ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
+            }
+
+
+            if (deviceService.update(storageDevice)) {
+                final Integer owningRoom = storageDevice.getRoom().getId();
+                if (device.roomId != null && !device.roomId.equals(owningRoom)) {
+                    userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
+                }
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
+
+            }
         }
         throw new ServerErrorException("Couldn't save data");
     }

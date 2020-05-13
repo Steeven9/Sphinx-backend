@@ -392,7 +392,7 @@ public class UserService {
             user.get().addHost(host.get());
         }
 
-        throw new ServerErrorException("");
+        throw new ServerErrorException("Couldn't add guest");
 
 
 
