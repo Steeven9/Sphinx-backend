@@ -109,7 +109,7 @@ class ThermostatTest {
                 () -> assertEquals(thermostat.getQuantity(), sd.quantity),
                 () -> assertTrue(sd.averageTemp <= quantity + tolerance && sd.averageTemp >= quantity - tolerance)
         );
-
+        thermostat.setPropertiesFrom(sd);
         thermostat.setTargetTemp(100);
         assertEquals(3, thermostat.serialise().state);
 
