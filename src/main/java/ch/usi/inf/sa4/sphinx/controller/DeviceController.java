@@ -110,7 +110,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        //
+
 
         return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
     }

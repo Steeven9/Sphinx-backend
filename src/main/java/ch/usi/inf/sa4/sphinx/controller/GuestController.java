@@ -154,16 +154,29 @@ public class GuestController {
         if (camsVisible) {
 
 
+
             devicesArray = devices.stream()
-                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) || device.getDeviceType().equals(DeviceType.SECURITY_CAMERA))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
         } else {
 
-
+            // filter all devices except cams
             devicesArray = devices.stream()
+                    .filter(device -> device.getDeviceType().equals(DeviceType.LIGHT) ||
+                            device.getDeviceType().equals(DeviceType.HUMIDITY_SENSOR) ||
+                            device.getDeviceType().equals(DeviceType.DIMMABLE_LIGHT) ||
+                            device.getDeviceType().equals(DeviceType.SWITCH) ||
+                            device.getDeviceType().equals(DeviceType.DIMMABLE_SWITCH) ||
+                            device.getDeviceType().equals(DeviceType.STATELESS_DIMMABLE_SWITCH) ||
+                            device.getDeviceType().equals(DeviceType.SMART_PLUG) ||
+                            device.getDeviceType().equals(DeviceType.LIGHT_SENSOR) ||
+                            device.getDeviceType().equals(DeviceType.TEMP_SENSOR) ||
+                            device.getDeviceType().equals(DeviceType.MOTION_SENSOR) ||
+                            device.getDeviceType().equals(DeviceType.SMART_CURTAIN) ||
+                            device.getDeviceType().equals(DeviceType.THERMOSTAT))
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
         }
+
 
 
         return ResponseEntity.ok(devicesArray);
