@@ -277,8 +277,8 @@ public class User extends StorableE {
      * @param user the user to serialize
      * @return the serialized user
      */
-    public static SerialisableUser serialiseUser(final User user) {
-        return user.serialise();
+    public SerialisableUser serialiseUser() {
+        return this.serialise();
     }
 
     /**
