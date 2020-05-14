@@ -160,30 +160,22 @@ public class Room extends StorableE{
         devices.remove(device);
     }
 
-    /**
-     * Serialises a Room. For the description of the serialised fields consult SerialisableRoom.
-     * Fields whose value cannot be determined by looking at the Room are set to null.
-     *
-     * @param room the room to serialize
-     * @return the serialized room
-     */
-    public static SerialisableRoom serialiseRoom(final Room room) {
-        return room.serialise();
-    }
 
     /**
      * @param rooms the rooms to serialize
      * @return the serialized rooms
-     * @see Room#serialiseRoom(Room)
+     * @see Room#serialise()
      */
     public static List<SerialisableRoom> serialiseRooms(final Collection<? extends Room> rooms) {
-        return rooms.stream().map(Room::serialiseRoom).collect(Collectors.toList());
+        return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 
     /**
+     * Serialises a Room. Fields whose value cannot be determined by looking at the Room are set to null.
+     *
      * @return a serialised version of this Room
      */
-    private SerialisableRoom serialise() {
+    public SerialisableRoom serialise() {
         final SerialisableRoom sd = new SerialisableRoom();
         sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
         sd.background = background;

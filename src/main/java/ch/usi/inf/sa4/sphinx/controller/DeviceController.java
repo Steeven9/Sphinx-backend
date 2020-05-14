@@ -105,7 +105,7 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own this device");
         }
         userService.generateValue(username);
-        return ResponseEntity.ok(Device.serialiseDevice(device.get()));
+        return ResponseEntity.ok(device.get().serialiseDevice());
     }
 
 
@@ -151,7 +151,8 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
         userService.generateValue(username);
-        return ResponseEntity.status(201).body(Device.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
+        Device device1 = deviceService.get(deviceId).orElseThrow(WrongUniverseException::new);
+        return ResponseEntity.status(201).body(device1.serialiseDevice());
 
     }
 
@@ -203,7 +204,7 @@ public class DeviceController {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             userService.generateValue(username);
-            return ResponseEntity.ok().body(Device.serialiseDevice(storageDevice));
+            return ResponseEntity.ok().body(storageDevice.serialiseDevice());
 
         }
         throw new ServerErrorException("Couldn't save data");
