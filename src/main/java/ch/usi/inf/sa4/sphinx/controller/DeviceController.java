@@ -65,9 +65,8 @@ public class DeviceController {
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        
 
-        if (user.isPresent()) {
+        if (user.isPresent() ) {
 
 
             final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
@@ -102,17 +101,31 @@ public class DeviceController {
 
         final Optional<Device> device = deviceService.get(deviceId);
 
+
         if (device.isEmpty()) {
             throw new NotFoundException("No devices found");
         }
+
+        final User deviceOwner = device.get().getRoom().getUser();
+        // check if the deviceOwner is in the user's host name, meaning the user is a guest
+        boolean isGuest = userService.get(username).get().getHosts().stream().anyMatch(user -> user == deviceOwner);
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
 
+        if  (!userService.ownsDevice(username, deviceId)  && isGuest) {
+
+            throw new UnauthorizedException("You don't own this device");
+
+        }else if (!userService.ownsDevice(username, deviceId)  && isGuest ){
+            return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
 
 
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+        } else {
+
+            return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+        }
     }
 
 
