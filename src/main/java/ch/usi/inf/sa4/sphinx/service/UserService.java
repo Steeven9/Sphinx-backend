@@ -386,14 +386,8 @@ public class UserService {
 
             throw new NotFoundException("This user does not exist");
 
-        } else {
-            user.get().addHost(host.get());
         }
-
-
-
-
-
+            user.get().addHost(host.get());
 
     }
 
