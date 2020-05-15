@@ -467,7 +467,10 @@ public class UserService {
      **/
     public List<User> getGuests(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
-        return user.orElse(null).getHosts();
+        if(user.isPresent()) {
+            return user.get().getHosts();
+        }
+        throw new NotFoundException("This user does not exist");
     }
 
 
