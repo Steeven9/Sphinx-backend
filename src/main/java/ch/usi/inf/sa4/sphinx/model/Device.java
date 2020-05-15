@@ -51,21 +51,15 @@ public abstract class Device extends StorableE {
     }
 
 
-
-
     /**
-     * @return a serialised copy of this Device
-     * @see SerialisableDevice
+     * Serializes a list of devices.
+     *
+     * @param devices the Devices to serialise
+     * @return a list of serialised devices with info about their owner
+     * @see Device#serialise()
      */
-    protected SerialisableDevice serialise() {
-        final SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.on = this.on;
-        serialisableDevice.icon = this.icon;
-        serialisableDevice.name = this.name;
-        serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
-        serialisableDevice.label = getLabel();
-        return serialisableDevice;
+    public static List<SerialisableDevice> serialise(final Collection<? extends Device> devices) {
+        return devices.stream().map(Device::serialise).collect(Collectors.toList());
     }
 
 
@@ -189,37 +183,30 @@ public abstract class Device extends StorableE {
         this.room = room;
     }
 
-
     /**
-     * @param devices the Devices to serialise
-     * @return a list of serialised devices with info about their owner
-     * @see Device#serialiseDevice()
-     */
-    public static List<SerialisableDevice> serialiseDevices(final Collection<? extends Device> devices) {
-        return devices.stream().map(Device::serialiseDevice).collect(Collectors.toList());
-    }
-
-    /**
-     * Serializes a device with additional info coming from the owner User:
-     * the id of the room that owns the device
-     * the name of the room that owns the device
-     * the username of the user that owns the device
+     * Serializes the device.
      *
-     * @return the serialized device
+     * @return a serialised copy of this Device
+     * @see SerialisableDevice
      */
-    public SerialisableDevice serialiseDevice() {
-        final SerialisableDevice sd = this.serialise();
+    public SerialisableDevice serialise() {
+        final SerialisableDevice serialisableDevice = new SerialisableDevice();
         final DeviceService deviceService = ServiceProvider.getDeviceService();
-
+        serialisableDevice.on = this.on;
+        serialisableDevice.icon = this.icon;
+        serialisableDevice.name = this.name;
+        serialisableDevice.id = this.id;
+        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.label = getLabel();
         final Room owningRoom = this.getRoom();
         final User owningUser = owningRoom.getUser();
-        sd.roomId = owningRoom.getId();
-        sd.roomName = owningRoom.getName();
-        sd.userName = owningUser.getUsername();
-        sd.switched = deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray();
-        sd.switches = deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray();
-        if (sd.switched.length == 0) sd.switched = null;
-        if (sd.switches.length == 0) sd.switches = null;
-        return sd;
+        serialisableDevice.roomId = owningRoom.getId();
+        serialisableDevice.roomName = owningRoom.getName();
+        serialisableDevice.userName = owningUser.getUsername();
+        serialisableDevice.switched = deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray();
+        serialisableDevice.switches = deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray();
+        if (serialisableDevice.switched.length == 0) serialisableDevice.switched = null;
+        if (serialisableDevice.switches.length == 0) serialisableDevice.switches = null;
+        return serialisableDevice;
     }
 }

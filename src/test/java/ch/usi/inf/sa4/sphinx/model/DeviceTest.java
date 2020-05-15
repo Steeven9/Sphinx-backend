@@ -1,13 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,8 +59,8 @@ class DeviceTest {
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
-        Event event = new DimmSwitchChangedEvent(1);
-        Effect effect = new DimmableLightStateInc(1);
+        DimmSwitchChangedEvent event = new DimmSwitchChangedEvent(1);
+        DimmableLightStateInc effect = new DimmableLightStateInc(1);
         Coupling observer = new Coupling(event, effect);
         d.addObserver(observer);
         List<Coupling> observers = d.getCouplings();

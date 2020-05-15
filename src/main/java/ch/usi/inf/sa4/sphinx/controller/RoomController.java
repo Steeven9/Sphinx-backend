@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 @Validated
-@Api(value = "Room endpoint", description = "Room Controller")
+@Api(value = "Room endpoint")
 public class RoomController {
 
     @Autowired
@@ -36,6 +36,7 @@ public class RoomController {
     @Autowired
     RoomService roomService;
 
+    private static final String DATANOTSAVED = "Couldn't save data";
     /**
      * Returns a list of all rooms which belong to the given user.
      *
@@ -58,7 +59,7 @@ public class RoomController {
 
         check(sessionToken, username,null);
 
-        return ResponseEntity.ok(Room.serialiseRooms(userService.getPopulatedRooms(username)));
+        return ResponseEntity.ok(Room.serialise(userService.getPopulatedRooms(username)));
     }
 
 
@@ -105,7 +106,7 @@ public class RoomController {
         final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
         userService.generateValue(username);
-        return ResponseEntity.ok(Device.serialiseDevices(room.getDevices()));
+        return ResponseEntity.ok(Device.serialise(room.getDevices()));
     }
 
 
@@ -129,7 +130,7 @@ public class RoomController {
         check(sessionToken, username, errors);
 
         final Room room = new Room(serialisableRoom);
-        final Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
+        final Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(DATANOTSAVED));
         Room room1 = roomService.get(id).orElseThrow(() -> new ServerErrorException("Couldn't serialise room"));
         final SerialisableRoom res = room1.serialise();
 
@@ -176,7 +177,7 @@ public class RoomController {
         }
 
         if (!roomService.update(storageRoom)) {
-            throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
 
         final SerialisableRoom res = storageRoom.serialise();
@@ -200,7 +201,7 @@ public class RoomController {
         check(sessionToken, username, null, roomId);
 
         if (!userService.removeRoom(username, roomId)) {
-           throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
 
         return ResponseEntity.noContent().build();

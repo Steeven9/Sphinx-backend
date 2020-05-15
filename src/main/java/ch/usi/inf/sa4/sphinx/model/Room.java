@@ -166,7 +166,7 @@ public class Room extends StorableE{
      * @return the serialized rooms
      * @see Room#serialise()
      */
-    public static List<SerialisableRoom> serialiseRooms(final Collection<? extends Room> rooms) {
+    public static List<SerialisableRoom> serialise(final Collection<? extends Room> rooms) {
         return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 
