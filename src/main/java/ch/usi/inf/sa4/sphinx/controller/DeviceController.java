@@ -114,17 +114,14 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, deviceId)  && isGuest) {
+        if  (userService.ownsDevice(username, deviceId) || (!userService.ownsDevice(username, deviceId)  && isGuest )) {
 
-            throw new UnauthorizedException("You don't own this device");
 
-        }else if (!userService.ownsDevice(username, deviceId)  && isGuest ){
             return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
-
 
         } else {
 
-            return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+            throw new UnauthorizedException("You don't own this device");
         }
     }
 
