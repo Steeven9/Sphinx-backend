@@ -3,14 +3,12 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.ApiOperation;
+import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -62,23 +60,13 @@ public class DeviceController {
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username) {
 
-        userService.validateSession(username, sessionToken);
 
-<<<<<<< HEAD
-        userService.generateValue(username);
-=======
         final Optional<User> user = userService.get(username);
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        
->>>>>>> #124: updated addGuest() method in UserService
 
-<<<<<<< HEAD
-        final List<Device> devices = userService.getPopulatedDevices(username)
-                .orElseThrow(WrongUniverseException::new);//if user exists optional is present
-=======
-        if (user.isPresent()) {
+        if (user.isPresent() ) {
 
 
             final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
@@ -86,13 +74,10 @@ public class DeviceController {
                     .map(device -> serialiser.serialiseDevice(device, user.get()))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(serializedDevices);
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
-        final List<SerialisableDevice> serializedDevices = devices.stream()
-                .map(device -> serialiser.serialiseDevice(device))
-                .collect(Collectors.toList());
+        }
+        throw new UnauthorizedException("Invalid credentials");
 
-        return ResponseEntity.ok(serializedDevices);
     }
 
 
@@ -110,33 +95,34 @@ public class DeviceController {
      */
     @GetMapping("/{deviceId}")
     @ApiOperation("Gets the device with the given id")
-    public ResponseEntity<SerialisableDevice> getDevice(@NotNull @PathVariable final Integer deviceId,
+    public ResponseEntity<SerialisableDevice> getDevice(@NotBlank @PathVariable final Integer deviceId,
                                                         @RequestHeader("session-token") final String sessionToken,
                                                         @RequestHeader("user") final String username) {
 
         final Optional<Device> device = deviceService.get(deviceId);
 
+
         if (device.isEmpty()) {
             throw new NotFoundException("No devices found");
         }
 
-        userService.validateSession(username, sessionToken);
+        final User deviceOwner = device.get().getRoom().getUser();
+        // check if the deviceOwner is in the user's host name, meaning the user is a guest
+        boolean isGuest = userService.get(username).get().getHosts().stream().anyMatch(user -> user == deviceOwner);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (!userService.ownsDevice(username, deviceId)) {
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        if  (userService.ownsDevice(username, deviceId) || isGuest) {
+
+
+            return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+
+        } else {
+
             throw new UnauthorizedException("You don't own this device");
         }
-        userService.generateValue(username);
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
-=======
-        //
-=======
-
->>>>>>> #124: updated GET devices route in GuestController
-
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
     }
 
 
@@ -164,25 +150,29 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        userService.validateSession(username, sessionToken);
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if (!userService.ownsRoom(username, device.roomId)) {
             throw new UnauthorizedException("You don't own this room");
         }
 
+        final User user = userService.get(username).get(); //If the session is valid the User exists
+
 
         final Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
                 .orElseThrow(() -> new ServerErrorException("Couldn't add device to room"));
 
-        final Device d = deviceService.get(deviceId).orElseThrow(WrongUniverseException::new); //Since the previous exists then this does too
+        final Device d = deviceService.get(deviceId).get(); //Since the previous exists then this does too
 
 
         if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
         if (device.name != null && !device.name.isBlank()) d.setName(device.name);
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
-        userService.generateValue(username);
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
+
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get(), user));
 
     }
 
@@ -207,7 +197,7 @@ public class DeviceController {
      */
     @PutMapping("/{deviceId}")
     @ApiOperation("Modifies a Device")
-    public ResponseEntity<SerialisableDevice> modifyDevice(@NotNull @PathVariable final Integer deviceId,
+    public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable final Integer deviceId,
                                                            @NotBlank @RequestBody final SerialisableDevice device,
                                                            @RequestHeader("session-token") final String sessionToken,
                                                            @RequestHeader("user") final String username,
@@ -217,56 +207,28 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-<<<<<<< HEAD
-        userService.validateSession(username, sessionToken);
-
-=======
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
         // in case user is a guest
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
         if (!userService.ownsDevice(username, deviceId)) {
 
-          final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
-          final User guest = userService.get(username).get(); //exists if prev is valid
+            final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+            final User guest = userService.get(username).get(); //exists if prev is valid
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        storageDevice.setPropertiesFrom(device);
-=======
-        final User user = userService.get(username).get(); //exists if prev is valid
-        //check if user is a guest
-=======
             if(storageDevice.getDeviceType().equals(DeviceType.LIGHT) ||
                     storageDevice.getDeviceType().equals(DeviceType.DIMMABLE_LIGHT) ||
                     storageDevice.getDeviceType().equals(DeviceType.SMART_CURTAIN)){
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
                 if (device.on != null) storageDevice.setOn(device.on);
 
-<<<<<<< HEAD
-        if (device.on != null) storageDevice.setOn(device.on);
-        if (storageDevice instanceof Dimmable && device.slider != null) {
-            ((Dimmable) storageDevice).setState(device.slider);
-        }
-        if (storageDevice instanceof StatelessDimmableSwitch && device.slider != null) {
-            ((StatelessDimmableSwitch) storageDevice).setIncrement(device.slider > 0);
-        }
->>>>>>> #124: change SerialisableUser field name for camera access
-=======
                 if (storageDevice instanceof Dimmable && device.slider != null) {
                     ((Dimmable) storageDevice).setState(device.slider);
                 }
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
                 return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, guest));
 
             }
-<<<<<<< HEAD
-            userService.generateValue(username);
-            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
-=======
         } else {
 
 
@@ -277,7 +239,6 @@ public class DeviceController {
 
             if (device.icon != null) storageDevice.setIcon(device.icon);
             if (device.name != null) storageDevice.setName(device.name);
->>>>>>> #124: updated PUT and GET devices/{deviceId} route to accomodate guests
 
             if (device.on != null) storageDevice.setOn(device.on);
             if (storageDevice instanceof Dimmable && device.slider != null) {
@@ -318,12 +279,15 @@ public class DeviceController {
      */
     @PutMapping("/reset/{deviceId}")
     @ApiOperation("Resets a smartplug")
-    public ResponseEntity<Boolean> resetSmartPlug(@NotNull @PathVariable final Integer deviceId,
-                                                  @NotNull @RequestHeader("session-token") final String sessionToken,
+    public ResponseEntity<Boolean> resetSmartPlug(@PathVariable final Integer deviceId,
+                                                  @RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username) {
         final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
-        userService.validateSession(username, sessionToken);
+
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if  (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
@@ -353,13 +317,16 @@ public class DeviceController {
      */
     @DeleteMapping("/{deviceId}")
     @ApiOperation("Deletes the device with the given id")
-    public ResponseEntity<Device> deleteDevice(@NotNull @PathVariable final Integer deviceId,
+    public ResponseEntity<Device> deleteDevice(@NotBlank @PathVariable final Integer deviceId,
                                                @RequestHeader("session-token") final String sessionToken,
                                                @RequestHeader("user") final String username) {
 
         final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
 
-        userService.validateSession(username, sessionToken);
+
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if  (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
@@ -396,10 +363,11 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        final int id1 = Integer.parseInt(device1_id);
-        final int id2 = Integer.parseInt(device2_id);
-
-        userService.validateSession(username, sessionToken);
+        final Integer id1 = Integer.parseInt(device1_id);
+        final Integer id2 = Integer.parseInt(device2_id);
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
@@ -437,14 +405,20 @@ public class DeviceController {
             throw new BadRequestException("Some fields are missing");
         }
 
-        final int id1 = Integer.parseInt(device1_id);
-        final int id2 = Integer.parseInt(device2_id);
+        final Integer id1 = Integer.parseInt(device1_id);
+        final Integer id2 = Integer.parseInt(device2_id);
 
-        userService.validateSession(username, sessionToken);
+        if (!userService.validSession(username, sessionToken)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
         }
+
+        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
+        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
+
 
         couplingService.removeByDevicesIds(id1, id2);
 
