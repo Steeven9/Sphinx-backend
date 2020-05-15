@@ -85,6 +85,7 @@ public class User extends StorableE {
         this.rooms = new ArrayList<>();
         this.verified = false;
         this.camsVisible = false;
+        this.hosts = new ArrayList<>();
         this.verificationToken = UUID.randomUUID().toString();
     }
 

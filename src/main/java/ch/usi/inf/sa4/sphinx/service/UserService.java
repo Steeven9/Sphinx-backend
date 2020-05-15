@@ -375,7 +375,7 @@ public class UserService {
         final Optional<User> user = userStorage.findByUsername(guest);
         final Optional<User> host = userStorage.findByUsername(hostUsername);
 
-        if(user.equals(host)){
+        if(guest == hostUsername){
             throw new UnauthorizedException("You can't add yourself as guest");
 
         }
@@ -386,13 +386,11 @@ public class UserService {
 
             throw new NotFoundException("This user does not exist");
 
-
-
         } else {
             user.get().addHost(host.get());
         }
 
-        throw new ServerErrorException("Couldn't add guest");
+
 
 
 
