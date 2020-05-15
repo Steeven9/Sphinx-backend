@@ -162,7 +162,9 @@ public class GuestController {
             // filter all devices except cams
             devicesArray = devices.stream()
 
+
                     .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
+
 
                     .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
 
