@@ -114,6 +114,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
+
         if  (userService.ownsDevice(username, deviceId) || isGuest) {
 
 
