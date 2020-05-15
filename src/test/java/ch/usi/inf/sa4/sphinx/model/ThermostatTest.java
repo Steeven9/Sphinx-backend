@@ -2,10 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,6 +94,7 @@ class ThermostatTest {
     }
 
     @Test
+    @Disabled(value = "test serialize method inside controller tests to ensure correct flow")
     void testSerializer() {
         SerialisableDevice sd = thermostat.serialise();
         double quantity = thermostat.getQuantity();
