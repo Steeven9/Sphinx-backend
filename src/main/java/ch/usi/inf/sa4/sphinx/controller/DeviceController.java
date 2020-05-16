@@ -71,7 +71,7 @@ public class DeviceController {
 
             final List<Device> devices = userService.getPopulatedDevices(username).get();//if user exists optional is present
             final List<SerialisableDevice> serializedDevices = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device, user.get()))
+                    .map(device -> serialiser.serialiseDevice(device))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(serializedDevices);
 
@@ -118,7 +118,7 @@ public class DeviceController {
         if  (userService.ownsDevice(username, deviceId) || isGuest) {
 
 
-            return ResponseEntity.ok(serialiser.serialiseDevice(device.get(), userService.get(username).get()));
+            return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
 
         } else {
 
@@ -173,7 +173,7 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
 
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get(), user));
+        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).get()));
 
     }
 
@@ -228,7 +228,7 @@ public class DeviceController {
                     ((Dimmable) storageDevice).setState(device.slider);
                 }
 
-                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, guest));
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
 
             }
         } else {
@@ -256,7 +256,7 @@ public class DeviceController {
                 if (device.roomId != null && !device.roomId.equals(owningRoom)) {
                     userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
                 }
-                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice, user));
+                return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
 
             }
         }

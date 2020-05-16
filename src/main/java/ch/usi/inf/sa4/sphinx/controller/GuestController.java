@@ -160,7 +160,7 @@ public class GuestController {
 
 
             devicesArray = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+                    .map(device -> serialiser.serialiseDevice(device)).toArray(SerialisableDevice[]::new);
         } else {
 
             // filter all devices except cams
@@ -171,7 +171,7 @@ public class GuestController {
                     .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
 
 
-                    .map(device -> serialiser.serialiseDevice(device, user.get())).toArray(SerialisableDevice[]::new);
+                    .map(device -> serialiser.serialiseDevice(device)).toArray(SerialisableDevice[]::new);
 
         }
 
