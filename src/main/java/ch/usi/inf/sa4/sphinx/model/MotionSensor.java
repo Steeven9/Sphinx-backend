@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Entity;
 import java.util.Random;
@@ -11,7 +12,7 @@ import java.util.Random;
  */
 @Entity
 public class MotionSensor extends Device {
-
+    @Transient
     private final Random rnd = new Random();
 
     /**

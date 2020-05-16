@@ -1,14 +1,17 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -48,21 +51,15 @@ public abstract class Device extends StorableE {
     }
 
 
-
-
     /**
-     * @return a serialised copy of this Device
-     * @see SerialisableDevice
+     * Serializes a list of devices.
+     *
+     * @param devices the Devices to serialise
+     * @return a list of serialised devices with info about their owner
+     * @see Device#serialise()
      */
-    protected SerialisableDevice serialise() {
-        final SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.on = this.on;
-        serialisableDevice.icon = this.icon;
-        serialisableDevice.name = this.name;
-        serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
-        serialisableDevice.label = getLabel();
-        return serialisableDevice;
+    public static List<SerialisableDevice> serialise(final Collection<? extends Device> devices) {
+        return devices.stream().map(Device::serialise).collect(Collectors.toList());
     }
 
 
@@ -179,9 +176,37 @@ public abstract class Device extends StorableE {
 
     /**
      * set the Room that owns this Device.
+     *
      * @param room the Room
      */
     public void setRoom(final Room room) {
         this.room = room;
+    }
+
+    /**
+     * Serializes the device.
+     *
+     * @return a serialised copy of this Device
+     * @see SerialisableDevice
+     */
+    public SerialisableDevice serialise() {
+        final SerialisableDevice serialisableDevice = new SerialisableDevice();
+        final DeviceService deviceService = ServiceProvider.getDeviceService();
+        serialisableDevice.on = this.on;
+        serialisableDevice.icon = this.icon;
+        serialisableDevice.name = this.name;
+        serialisableDevice.id = this.id;
+        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.label = getLabel();
+        final Room owningRoom = this.getRoom();
+        final User owningUser = owningRoom.getUser();
+        serialisableDevice.roomId = owningRoom.getId();
+        serialisableDevice.roomName = owningRoom.getName();
+        serialisableDevice.userName = owningUser.getUsername();
+        serialisableDevice.switched = deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray();
+        serialisableDevice.switches = deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray();
+        if (serialisableDevice.switched.length == 0) serialisableDevice.switched = null;
+        if (serialisableDevice.switches.length == 0) serialisableDevice.switches = null;
+        return serialisableDevice;
     }
 }

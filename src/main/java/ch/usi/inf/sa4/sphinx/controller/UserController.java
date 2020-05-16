@@ -4,7 +4,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
@@ -30,8 +29,6 @@ public class UserController {
     Mailer mailer;
     @Autowired
     UserService userService;
-    @Autowired
-    Serialiser serialiser;
 
     /**
      * Gets a User.
@@ -52,7 +49,7 @@ public class UserController {
         userService.validateSession(username, sessionToken);
 
         final User user = userService.get(username).orElseThrow(WrongUniverseException::new);
-        return ResponseEntity.ok(Serialiser.serialiseUser(user));
+        return ResponseEntity.ok(user.serialise());
     }
 
     /**
@@ -98,7 +95,7 @@ public class UserController {
             throw new BadRequestException("Please insert a valid email", e);
         }
 
-        return ResponseEntity.status(201).body(Serialiser.serialiseUser(newUser));
+        return ResponseEntity.status(201).body(newUser.serialise());
     }
 
 
@@ -137,8 +134,8 @@ public class UserController {
         if (user.username != null && !username.equals(user.username)) {
             userService.changeUsername(username, user.username);
         }
-
-        return ResponseEntity.ok(Serialiser.serialiseUser(userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new)));
+        User user1 = userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new);
+        return ResponseEntity.ok(user1.serialise());
     }
 
     /**

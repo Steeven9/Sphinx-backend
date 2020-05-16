@@ -41,10 +41,11 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
-    @Autowired
-    Serialiser serialiser;
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-
+    private static final String NODEVICESFOUND = "No devices found";
+    private static final String NOTOWNS = "You don't own this device";
+    private static final String FIELDSMISSING = "Some fields are missing";
+    private static final String DATANOTSAVED = "Couldn't save data";
 
     /**
      * Gets the devices owned by a User.
@@ -70,7 +71,7 @@ public class DeviceController {
                 .orElseThrow(WrongUniverseException::new);//if user exists optional is present
 
         final List<SerialisableDevice> serializedDevices = devices.stream()
-                .map(device -> serialiser.serialiseDevice(device))
+                .map(Device::serialise)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(serializedDevices);
@@ -98,16 +99,16 @@ public class DeviceController {
         final Optional<Device> device = deviceService.get(deviceId);
 
         if (device.isEmpty()) {
-            throw new NotFoundException("No devices found");
+            throw new NotFoundException(NODEVICESFOUND);
         }
 
         userService.validateSession(username, sessionToken);
 
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
+            throw new UnauthorizedException(NOTOWNS);
         }
         userService.generateValue(username);
-        return ResponseEntity.ok(serialiser.serialiseDevice(device.get()));
+        return ResponseEntity.ok(device.get().serialise());
     }
 
 
@@ -132,7 +133,7 @@ public class DeviceController {
                                                            final Errors errors) {
 
         if (errors.hasErrors() || Objects.isNull(device.roomId) || Objects.isNull(device.type)) {
-            throw new BadRequestException("Some fields are missing");
+            throw new BadRequestException(FIELDSMISSING);
         }
 
         userService.validateSession(username, sessionToken);
@@ -153,7 +154,8 @@ public class DeviceController {
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
         userService.generateValue(username);
-        return ResponseEntity.status(201).body(serialiser.serialiseDevice(deviceService.get(deviceId).orElseThrow(WrongUniverseException::new)));
+        Device device1 = deviceService.get(deviceId).orElseThrow(WrongUniverseException::new);
+        return ResponseEntity.status(201).body(device1.serialise());
 
     }
 
@@ -185,16 +187,16 @@ public class DeviceController {
                                                            final Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new BadRequestException("Some fields are missing");
+            throw new BadRequestException(FIELDSMISSING);
         }
 
         userService.validateSession(username, sessionToken);
 
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
+            throw new UnauthorizedException(NOTOWNS);
         }
 
-        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
 
         storageDevice.setPropertiesFrom(device);
 
@@ -205,10 +207,10 @@ public class DeviceController {
                 userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
             }
             userService.generateValue(username);
-            return ResponseEntity.ok().body(serialiser.serialiseDevice(storageDevice));
+            return ResponseEntity.ok().body(storageDevice.serialise());
 
         }
-        throw new ServerErrorException("Couldn't save data");
+        throw new ServerErrorException(DATANOTSAVED);
     }
 
 
@@ -232,12 +234,12 @@ public class DeviceController {
     public ResponseEntity<Boolean> resetSmartPlug(@NotNull @PathVariable final Integer deviceId,
                                                   @NotNull @RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username) {
-        final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+        final Device plug = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
 
         userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
+            throw new UnauthorizedException(NOTOWNS);
         }
 
         if (DeviceType.deviceToDeviceType(plug) != DeviceType.SMART_PLUG) {
@@ -248,7 +250,7 @@ public class DeviceController {
         ((SmartPlug) plug).reset();
 
         if (!deviceService.update(plug)) {
-            throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
         return ResponseEntity.noContent().build();
     }
@@ -268,12 +270,12 @@ public class DeviceController {
                                                @RequestHeader("session-token") final String sessionToken,
                                                @RequestHeader("user") final String username) {
 
-        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
+        final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
 
         userService.validateSession(username, sessionToken);
 
         if  (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException("You don't own this device");
+            throw new UnauthorizedException(NOTOWNS);
         }
 
         roomService.removeDevice(storageDevice.getRoom().getId(), storageDevice.getId());
@@ -304,7 +306,7 @@ public class DeviceController {
                                                           @PathVariable final String device2_id) {
 
         if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
-            throw new BadRequestException("Some fields are missing");
+            throw new BadRequestException(FIELDSMISSING);
         }
 
         final int id1 = Integer.parseInt(device1_id);
@@ -312,18 +314,18 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
-        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+        if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
-        final Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
-        final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
+        final Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (1)"));
+        final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (2)"));
 
 
         if (deviceService.createCoupling(device1, device2)) {
             return ResponseEntity.noContent().build();
         } else {
-            throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
     }
     /**
@@ -345,7 +347,7 @@ public class DeviceController {
                                                   @PathVariable final String device2_id){
 
         if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
-            throw new BadRequestException("Some fields are missing");
+            throw new BadRequestException(FIELDSMISSING);
         }
 
         final int id1 = Integer.parseInt(device1_id);
