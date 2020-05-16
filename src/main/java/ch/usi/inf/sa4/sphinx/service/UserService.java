@@ -377,11 +377,14 @@ public class UserService {
 
 
 
+
         if(guest.equals(hostUsername)){
+
 
             throw new UnauthorizedException("You can't add yourself as guest");
 
         }
+
 
 
         if (!user.isPresent() || !host.isPresent()) {
@@ -397,6 +400,7 @@ public class UserService {
 
         }
         user.get().addHost(host.get());
+
 
 
     }
@@ -421,6 +425,7 @@ public class UserService {
 
 
         return Optional.ofNullable(user.get().getHosts());
+
 
     }
 

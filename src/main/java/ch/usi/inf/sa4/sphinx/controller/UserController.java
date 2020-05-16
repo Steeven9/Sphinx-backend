@@ -138,6 +138,7 @@ public class UserController {
         final User changedUser = userService.get(username).orElseThrow(WrongUniverseException::new);
 
 
+
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
         if (user.password != null) changedUser.setPassword(user.password);

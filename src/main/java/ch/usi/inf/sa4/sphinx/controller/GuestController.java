@@ -89,7 +89,9 @@ public class GuestController {
 
     @GetMapping(value = {"/houses/", "/houses"})
     public ResponseEntity<List<SerialisableUser>> getHouses(@RequestHeader("session-token") String sessionToken,
+
                                                             @RequestHeader("user") String username) {
+
 
 
 
@@ -134,7 +136,9 @@ public class GuestController {
     public ResponseEntity<SerialisableDevice[]> getAuthorizedDevices
     (@NotNull @PathVariable("owner_username") String host, @RequestHeader("session-token") String
             sessionToken,
+
      @RequestHeader("user") String username) {
+
 
 
 
@@ -161,6 +165,7 @@ public class GuestController {
 
             // filter all devices except cams
             devicesArray = devices.stream()
+
 
 
                     .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))

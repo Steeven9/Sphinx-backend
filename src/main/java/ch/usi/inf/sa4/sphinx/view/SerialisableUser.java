@@ -13,6 +13,7 @@ public class SerialisableUser {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     public boolean camVisible;
 =======
@@ -21,6 +22,9 @@ public class SerialisableUser {
 =======
     public Boolean allowSecurityCameras;
 >>>>>>> #124: change SerialisableUser field name for camera access
+=======
+    public Boolean allowSecurityCameras;
+>>>>>>> 347d2e84e817cea701da328d3531144c574bab19
 
     /** Constructor.**/
     public SerialisableUser(){

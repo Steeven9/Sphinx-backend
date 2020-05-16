@@ -85,10 +85,7 @@ public class User extends StorableE {
         this.rooms = new ArrayList<>();
         this.verified = false;
         this.camsVisible = false;
-
-
         this.hosts = new ArrayList<>();
-
         this.verificationToken = UUID.randomUUID().toString();
     }
 
@@ -298,7 +295,6 @@ public class User extends StorableE {
     }
 
 
-
     /**
      * @return a serialised version of the USer
      * @see SerialisableUser
@@ -313,7 +309,6 @@ public class User extends StorableE {
         sd.allowSecurityCameras = this.camsVisible;
         return sd;
     }
-
 
 
 
@@ -398,10 +393,8 @@ public class User extends StorableE {
      **/
 
 
-
     public void switchCamerasAccessibility(boolean status){
         camsVisible = status;
-
 
     }
 

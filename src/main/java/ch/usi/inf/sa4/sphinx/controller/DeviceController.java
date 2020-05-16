@@ -217,6 +217,7 @@ public class DeviceController {
             final Device storageDevice = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException("No devices found"));
             final User guest = userService.get(username).get(); //exists if prev is valid
 
+
             if(storageDevice.getDeviceType().equals(DeviceType.LIGHT) ||
                     storageDevice.getDeviceType().equals(DeviceType.DIMMABLE_LIGHT) ||
                     storageDevice.getDeviceType().equals(DeviceType.SMART_CURTAIN)){

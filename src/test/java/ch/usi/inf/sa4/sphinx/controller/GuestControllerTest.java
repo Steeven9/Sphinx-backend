@@ -15,10 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,9 +29,8 @@ import org.junit.jupiter.api.Disabled;
 
 
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
-
 
 public class GuestControllerTest {
 
@@ -50,11 +46,7 @@ public class GuestControllerTest {
         dummyDataAdder.addDummyData();
     }
 
-
-
     @Disabled("post doesnt work")
-
-
     @Test
     public void shouldGet400FromNoToken() throws Exception {
         this.mockmvc.perform(get("/guests/").header("username", "user2"))
@@ -72,7 +64,6 @@ public class GuestControllerTest {
         this.mockmvc.perform(post("/guests/").header("username", "user2"))
                 .andDo(print())
                 .andExpect(status().is(400));
-
 
         this.mockmvc.perform(delete(("/guests/guest3")).header("username", "user2"))
                 .andDo(print())
@@ -112,34 +103,12 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401));
 
-
-        this.mockmvc.perform(get("/guests/user2/devices/guest2")
-
-
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-
-        this.mockmvc.perform(delete(("/guests/guest1"))
-
-
-                .header("session-token", "banana")
-                .header("user", "user2"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
         this.mockmvc.perform(get("/guests/user2/devices/guest3")
-        .header("session-token", "banana")
-        .header("user", "user2"))
+                .header("session-token", "banana")
+                .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
-
-
-}
-
+    }
     @Disabled("Not Implemented")
     @Test
     public void shouldGet401FromWrongUser() throws Exception {
@@ -168,37 +137,9 @@ public class GuestControllerTest {
 //                .andDo(print())
 //                .andExpect(status().is(401));
 
-
-
-
-
-
-        this.mockmvc.perform(get("/guests/houses")
-
-                .header("user", "fakeUser")
-                .header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-        this.mockmvc.perform(get("/guests/user2/devices/guest1")
-                .header("user", "fakeUser")
-                .header("session-token", "user2SessionToken"))
-                .andDo(print())
-                .andExpect(status().is(401));
-
-//        this.mockmvc.perform(post("/guests/")
-//                .header("user", "fakeUser")
-//                .header("session-token", "user2SessionToken"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
-
         this.mockmvc.perform(delete(("/guests/guest2"))
-
                 .header("user", "fakeUser")
-
                 .header("session-token", "user2SessionToken"))
-
-
                 .andDo(print())
                 .andExpect(status().is(401));
 
@@ -209,19 +150,12 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
     }
 
-
-
     @Disabled()
-
-
     @Test
     public void shouldGet401FromNoGuest() throws Exception {
 
 
-
-
         this.mockmvc.perform(get("/guests/user2/devices")
-
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -302,12 +236,10 @@ public class GuestControllerTest {
 //    @Disabled("Not Implemented")
 //    @Test
 //    public void shouldSuccessfullyGetGuestScenes() throws Exception {
-
 //        this.mockmvc.perform(get("/guests/user2/scenes/{guest_username}").header("user", "user2").header("session-token", "banana"))
 //                .andDo(print())
 //                .andExpect(status().is(200))
- //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
-
+    //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
 //    }
 
 

@@ -34,8 +34,8 @@ class SerialiserTest {
 
 
 
-        dummyDataAdder.addDummyData();
 
+        dummyDataAdder.addDummyData();
 
 
         user = userService.get("user1").get();
