@@ -59,7 +59,7 @@ class UserServiceTest {
                 () -> assertTrue(userService.get(username).isEmpty()),
                 () -> assertTrue(userService.getByMail(email).isEmpty()),
                 () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
-                () -> assertThrows(UnauthorizedException.class, () -> userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
 
 
@@ -77,11 +77,11 @@ class UserServiceTest {
                 () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
                 () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
                 () -> assertNull(returnedUserByUsername.getSessionToken()),
-                () -> assertThrows(UnauthorizedException.class, () -> userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
         newUser.setSessionToken("token");
         userService.update(newUser);
-        assertDoesNotThrow(() -> userService.validSession(username, "token"));
+        assertDoesNotThrow(() -> userService.validateSession(username, "token"));
         userService.delete(username);
         assertTrue(userService.get(username).isEmpty());
 

@@ -43,7 +43,7 @@ public class AuthController {
         user = userService.get(username)
                 .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
-        userService.validSession(user.getUsername(), sessionToken);
+        userService.validateSession(user.getUsername(), sessionToken);
 
         return ResponseEntity.ok().body(user.getUsername());
     }
