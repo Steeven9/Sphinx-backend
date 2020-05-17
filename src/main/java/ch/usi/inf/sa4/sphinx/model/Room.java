@@ -156,14 +156,26 @@ public class Room extends StorableE{
      * @param device the Device to remove from this Room
      * @see Device
      */
-    public void removeDevice(final Device device){
+    public void removeDevice(final Device device) {
         devices.remove(device);
     }
 
+
     /**
+     * @param rooms the rooms to serialize
+     * @return the serialized rooms
+     * @see Room#serialise()
+     */
+    public static List<SerialisableRoom> serialise(final Collection<? extends Room> rooms) {
+        return rooms.stream().map(Room::serialise).collect(Collectors.toList());
+    }
+
+    /**
+     * Serialises a Room. Fields whose value cannot be determined by looking at the Room are set to null.
+     *
      * @return a serialised version of this Room
      */
-    public SerialisableRoom serialise(){
+    public SerialisableRoom serialise() {
         final SerialisableRoom sd = new SerialisableRoom();
         sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
         sd.background = background;
@@ -171,8 +183,6 @@ public class Room extends StorableE{
         sd.name = name;
         sd.id = getId();
         return sd;
-
     }
-
 }
 

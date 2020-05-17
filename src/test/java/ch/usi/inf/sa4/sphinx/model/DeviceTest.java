@@ -1,13 +1,9 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,21 +47,25 @@ class DeviceTest {
         assertFalse(d.isOn());
     }
 //
-    @Test
+@Test
+@Disabled(value = "test serialize method inside controller tests to ensure correct flow")
     void shouldReturnSerialisableVersion() {
-        Device d = new LightSensor();
-        d.setOn(false);
-        d.setName("TEST_NAME");
-        SerialisableDevice sd = d.serialise();
-        assertEquals("TEST_NAME", sd.name);
-        assertFalse(d.isOn());
-    }
+    Device d = new LightSensor();
+    Room room = new Room();
+    room.setUser(new User());
+    d.setRoom(room);
+    d.setOn(false);
+    d.setName("TEST_NAME");
+    SerialisableDevice sd = d.serialise();
+    assertEquals("TEST_NAME", sd.name);
+    assertFalse(d.isOn());
+}
 //
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
-        Event event = new DimmSwitchChangedEvent(1);
-        Effect effect = new DimmableLightStateInc(1);
+        DimmSwitchChangedEvent event = new DimmSwitchChangedEvent(1);
+        DimmableLightStateInc effect = new DimmableLightStateInc(1);
         Coupling observer = new Coupling(event, effect);
         d.addObserver(observer);
         List<Coupling> observers = d.getCouplings();
