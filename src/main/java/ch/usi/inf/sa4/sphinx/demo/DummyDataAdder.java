@@ -52,12 +52,11 @@ public class DummyDataAdder {
      * adds a User called user1 into storage this user has 1 Device Light in its "room1", the user has
      * sessionToken="user1SessionToken"
      */
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
 
     @Transactional
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     protected void user1() {
         try {
 
@@ -89,12 +88,11 @@ public class DummyDataAdder {
     /**
      * adds a User called user2 into storage with 5 rooms one of which is empty. This user owns all types of devices
      */
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
 
     @Transactional
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     protected void user2() {
         try {
             final User newUser = new User("luigi@smarthut.xyz", "1234", "user2", "luigi rossi");
@@ -135,10 +133,7 @@ public class DummyDataAdder {
             roomService.addDevice(roomId5, DeviceType.DIMMABLE_LIGHT);
 
 
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
-=======
 
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
         } catch (final RuntimeException e) {
 
             logger.warn("Something is wrong in user2");
@@ -152,12 +147,11 @@ public class DummyDataAdder {
      * logged in
      */
     //user with 20 rooms and random devices in them
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
 
     @Transactional
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     protected  void randUser() {
         try {
             final User newUser = new User("rand@smarthut.xyz", "1234", "randUser", "randomUser");
@@ -186,12 +180,11 @@ public class DummyDataAdder {
      * adds a user called emptyUser in storage, it will have no rooms. This user has
      * sessionToken="emptyUserSessionToken"
      */
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
 
     @Transactional
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     protected void emptyUser() {
         try {
             final User newUser = new User("empty@smarthut.xyz", "1234", "emptyUser", "Empty User");
@@ -206,12 +199,11 @@ public class DummyDataAdder {
     /**
      * adds an unverified user called unverifiedUser in storage
      */
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
 
     @Transactional
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     protected void unverifiedUser() {
         try {
             final User newUser = new User("unv@smarthut.xyz", "1234", "unverifiedUser", "edeefefefef");
@@ -220,11 +212,9 @@ public class DummyDataAdder {
             logger.warn("Something is wrong in unverifiedUser");
         }
     }
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
+
     @Transactional
-=======
-    
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
+
     public void addDummyData(){
         emptyUser();
         randUser();
@@ -232,9 +222,6 @@ public class DummyDataAdder {
         user2();
         unverifiedUser();
     }
-<<<<<<< HEAD:src/main/java/ch/usi/inf/sa4/sphinx/demo/DummyDataAdder.java
 
-=======
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19:src/main/java/ch/usi/inf/sa4/sphinx/Demo/DummyDataAdder.java
 
 }

@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.Serialiser;
+import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -103,9 +104,11 @@ public class RoomController {
 
         check(sessionToken, username, null, roomId);
 
-        final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
-        userService.generateValue(username);
+
+        final User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
+        final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
+
         return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices()));
     }
 
@@ -226,7 +229,7 @@ public class RoomController {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
 
-        userService.validateSession(username, sessionToken);
+        userService.validSession(username, sessionToken);
     }
 
     /**

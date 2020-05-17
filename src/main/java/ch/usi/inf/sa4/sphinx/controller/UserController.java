@@ -49,7 +49,7 @@ public class UserController {
     public ResponseEntity<SerialisableUser> getUser(@PathVariable final String username, @RequestHeader("session-token") final String sessionToken) {
 
 
-        userService.validateSession(username, sessionToken);
+        userService.validSession(username, sessionToken);
 
         final User user = userService.get(username).orElseThrow(WrongUniverseException::new);
         return ResponseEntity.ok(Serialiser.serialiseUser(user));
@@ -119,21 +119,16 @@ public class UserController {
     @PutMapping("/{username}")
     @ApiOperation("Modifies a User")
     public ResponseEntity<SerialisableUser> updateUser(@NotBlank @PathVariable final String username, @NotNull @RequestBody final SerialisableUser user,
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                                       @RequestHeader("session-token") final String sessionToken, final Errors errors) {
-=======
-                                                       @RequestHeader("session-token") final String session_token, final Errors errors, @RequestBody boolean camVisible) {
->>>>>>> #124: allowed to update camVisibility in userController
-=======
-                                                       @RequestHeader("session-token") final String session_token, final Errors errors) {
->>>>>>> removed second @RequestBody in updateUser() and change camVisible variable to Boolean
+
+
+                                                       @RequestHeader("session-token") final String sessionToken, final Errors errors, @RequestBody boolean camVisible) {
+
 
         if (errors.hasErrors()) {
             throw new BadRequestException("Some fields are missing");
         }
 
-        userService.validateSession(username, sessionToken);
+        userService.validSession(username, sessionToken);
 
         final User changedUser = userService.get(username).orElseThrow(WrongUniverseException::new);
 
@@ -172,7 +167,7 @@ public class UserController {
     public ResponseEntity<SerialisableUser> deleteUser(@PathVariable final String username,
                                                        @RequestHeader("session-token") final String sessionToken) {
 
-        userService.validateSession(username, sessionToken);
+        userService.validSession(username, sessionToken);
 
         userService.delete(username);
         return ResponseEntity.noContent().build();

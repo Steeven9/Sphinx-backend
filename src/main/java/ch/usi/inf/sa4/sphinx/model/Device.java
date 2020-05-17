@@ -79,11 +79,7 @@ public abstract class Device extends StorableE {
      * @return the DeviceType of this device
      * @see DeviceType
      */
-<<<<<<< HEAD
-=======
-    public abstract DeviceType getDeviceType();
 
->>>>>>> 347d2e84e817cea701da328d3531144c574bab19
 
    public abstract DeviceType getDeviceType();
 
