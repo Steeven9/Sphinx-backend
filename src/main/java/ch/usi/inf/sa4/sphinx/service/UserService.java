@@ -1,10 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
-import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
-import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
@@ -381,7 +378,7 @@ public class UserService {
         if(guest.equals(hostUsername)){
 
 
-            throw new UnauthorizedException("You can't add yourself as guest");
+            throw new ForbiddenException("You can't add yourself as guest");
 
         }
 
