@@ -20,7 +20,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -32,6 +31,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/devices")
 public class DeviceController {
 
+    private static final List<DeviceType> TYPES_GUEST_CAN_EDIT =
+            List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT, DeviceType.SMART_CURTAIN);
 
     @Autowired
     CouplingService couplingService;
@@ -96,25 +97,24 @@ public class DeviceController {
                                                         @RequestHeader("session-token") final String sessionToken,
                                                         @RequestHeader("user") final String username) {
 
-        final Optional<Device> device = deviceService.get(deviceId);
-
-        if (device.isEmpty()) {
-            throw new NotFoundException(NODEVICESFOUND);
-        }
-
+        final Device device = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
 
         userService.validateSession(username, sessionToken);
 
-        final User owner = device.get().getRoom().getUser();
+        final User owner = device.getRoom().getUser();
         final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
                 .anyMatch(user -> user.getId().equals(owner.getId()));
 
-
+        // This can be written as a single expression but I tried and it became way too long and convoluted.
+        // I hope it's a bit more readable like this.
         if (!userService.ownsDevice(username, deviceId)) {
-            throw new UnauthorizedException(NOTOWNS);
+            if (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
+                    && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA))) {
+                throw new UnauthorizedException(NOTOWNS);
+            }
         }
         userService.generateValue(username);
-        return ResponseEntity.ok(device.get().serialise());
+        return ResponseEntity.ok(device.serialise());
     }
 
 
@@ -205,7 +205,8 @@ public class DeviceController {
         final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
                 .anyMatch(user -> user.getId().equals(owner.getId()));
 
-        if (!userService.ownsDevice(username, deviceId) && !isGuest) {
+        if (!userService.ownsDevice(username, deviceId)
+                && !(isGuest && TYPES_GUEST_CAN_EDIT.contains(storageDevice.getDeviceType()))) {
             throw new UnauthorizedException(NOTOWNS);
         }
 
