@@ -51,15 +51,8 @@ public class GuestController {
     public ResponseEntity<SerialisableUser[]> getGuests(@RequestHeader("session-token") String sessionToken, @RequestHeader("user") String username) {
 
 
+        userService.validateSession(username, sessionToken);
 
-
-
-        if ( !userService.validSession(username, sessionToken)) {
-
-            throw new UnauthorizedException("Invalid credentials");
-
-
-        }
         List<User> guest = userService.returnOwnGuests(username);
         SerialisableUser[] users;
         users = guest.stream().map(user ->user.serialise()).toArray(SerialisableUser[]::new);
@@ -84,20 +77,7 @@ public class GuestController {
 
                                                             @RequestHeader("user") String username) {
 
-
-
-
-
-
-        if ( !userService.validSession(username, sessionToken)) {
-
-
-
-            throw new UnauthorizedException("Invalid credentials");
-
-
-
-        }
+        userService.validateSession(username, sessionToken);
 
 
         List<User> guestOf = userService.otherHousesAccess(username).get();
@@ -138,9 +118,9 @@ public class GuestController {
         Optional<User> owner = userService.get(host);
 
 
+        userService.validateSession(username, sessionToken);
 
-
-        if (!userService.validSession(username, sessionToken)  || !owner.isPresent()) {
+        if ( !owner.isPresent()) {
             throw new UnauthorizedException("Invalid credential");
         }
 
@@ -228,11 +208,8 @@ public class GuestController {
                                                           @RequestHeader("user") String username) {
 
         Optional<User> guest = userService.get(guestUsername);
-        if (!userService.validSession(username, sessionToken)) {
+        userService.validateSession(username, sessionToken);
 
-            throw new UnauthorizedException("Invalid credentials");
-
-        }
 
         if(!guest.isPresent()){
             throw new NotFoundException("This user doesn't exist");
@@ -269,13 +246,7 @@ public class GuestController {
 
 
 
-        if (  !userService.validSession(username, sessionToken)) {
-
-
-            throw new UnauthorizedException("Invalid credentials");
-
-
-        }
+        userService.validateSession(username, sessionToken);
         if (!userService.removeGuest(username, guest_username)) {
 
             throw new ServerErrorException("Couldn't save data");

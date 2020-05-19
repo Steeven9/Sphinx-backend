@@ -442,5 +442,20 @@ public class UserService {
         throw new NotFoundException("This user does not exist");
     }
 
+    /**
+     * Returns the list of users who have access to your house as guests.
+     *
+     * @param username the name of the user
+     * @return all the guests of a given user
+     */
+    public List<User> returnOwnGuests(@NonNull final String username) {
+
+        return userStorage.findAll().stream().filter(user -> {
+            return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
+                return s.equals(username);
+            });
+        }).collect(Collectors.toList());
+    }
+
 
 }

@@ -1,7 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
