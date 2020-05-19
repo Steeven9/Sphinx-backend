@@ -144,7 +144,7 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
-    protected SerialisableDevice serialise() {
+    public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
         sd.slider = this.targetTemp;
         sd.averageTemp = this.getAverageTemp();

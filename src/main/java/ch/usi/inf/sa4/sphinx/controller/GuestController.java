@@ -1,28 +1,22 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.UserStorage;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import ch.usi.inf.sa4.sphinx.service.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,9 +36,7 @@ public class GuestController {
     @Autowired
     private UserService deviceService;
 
-    @Autowired
 
-    private Serialiser serialiser;
 
 
     /**
@@ -70,7 +62,7 @@ public class GuestController {
         }
         List<User> guest = userService.returnOwnGuests(username);
         SerialisableUser[] users;
-        users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
+        users = guest.stream().map(user ->user.serialise()).toArray(SerialisableUser[]::new);
 
 
         return ResponseEntity.ok(users);
@@ -160,7 +152,7 @@ public class GuestController {
 
 
             devicesArray = devices.stream()
-                    .map(device -> serialiser.serialiseDevice(device)).toArray(SerialisableDevice[]::new);
+                    .map(device -> device.serialise()).toArray(SerialisableDevice[]::new);
         } else {
 
             // filter all devices except cams
@@ -171,7 +163,7 @@ public class GuestController {
                     .filter(device -> !(device.getDeviceType() == DeviceType.SECURITY_CAMERA))
 
 
-                    .map(device -> serialiser.serialiseDevice(device)).toArray(SerialisableDevice[]::new);
+                    .map(device -> device.serialise()).toArray(SerialisableDevice[]::new);
 
         }
 

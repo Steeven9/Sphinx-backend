@@ -78,9 +78,8 @@ public abstract class Sensor extends Device {
      * Sets the tolerance of error for given sensor; [-{@code tolerance}, {@code tolerance}].
      *
      * @param tolerance the tolerance of error
-     * @throws IllegalArgumentException if parameter is less than zero
      */
-    public void setTolerance(double tolerance) throws IllegalArgumentException {
+    public void setTolerance(double tolerance) {
         if (tolerance < 0) {
             throw new IllegalArgumentException("tolerance should be greater than 0");
         }
@@ -107,7 +106,7 @@ public abstract class Sensor extends Device {
      * {@inheritDoc}
      */
     @Override
-    protected SerialisableDevice serialise() {
+    public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
         sd.tolerance = this.getTolerance();
         sd.quantity = this.getQuantity();
