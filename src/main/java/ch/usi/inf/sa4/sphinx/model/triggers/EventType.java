@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.model.events;
+package ch.usi.inf.sa4.sphinx.model.triggers;
 
 public enum EventType {
     SENSOR_OVER,

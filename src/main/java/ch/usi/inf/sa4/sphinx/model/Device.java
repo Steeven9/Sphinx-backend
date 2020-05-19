@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
@@ -23,11 +24,11 @@ public abstract class Device extends StorableE {
     @Column(name = "active")
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
 
-    @OneToMany(orphanRemoval = false,
-            cascade = CascadeType.PERSIST,
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY
     )
-    protected final List<Coupling> couplings;
+    protected final List<Observer> observers;
 
     @ManyToOne //TODO check why this had a merge cascade type
     @JoinColumn(name = "room_id",
@@ -47,7 +48,7 @@ public abstract class Device extends StorableE {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
-        this.couplings = new ArrayList<>();
+        this.observers = new ArrayList<>();
         this.deviceType = getDeviceType();
     }
 
@@ -140,8 +141,8 @@ public abstract class Device extends StorableE {
      *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(final Coupling observer) {
-        couplings.add(observer);
+    public void addObserver(final Observer observer) {
+        observers.add(observer);
     }
 
 
@@ -150,7 +151,7 @@ public abstract class Device extends StorableE {
      * @param observer the Coupling to remove
      */
     public void removeObserver(final Coupling observer) {
-        couplings.remove(observer);
+        observers.remove(observer);
     }
 
 
@@ -160,16 +161,14 @@ public abstract class Device extends StorableE {
      */
     //TODO fix unchecked
     protected void triggerEffects() {
-        for (final Coupling coupling : couplings) {
-            coupling.run();
-        }
+        observers.forEach(Observer::run);
     }
 
     /**
      * @return All Coupling linked to this Device
      */
-    public List<Coupling> getCouplings() {
-        return couplings;
+    public List<Observer> getObservers() {
+        return observers;
     }
 
     /**

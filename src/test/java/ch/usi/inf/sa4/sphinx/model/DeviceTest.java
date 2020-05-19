@@ -1,13 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
+import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,12 +60,11 @@ class DeviceTest {
 //
     @Test
     void shouldAddObserver() {
-        Device d = new SmartPlug();
-        Event event = new DimmSwitchChangedEvent(1);
-        Effect effect = new DimmableLightStateInc(1);
-        Coupling observer = new Coupling(event, effect);
-        d.addObserver(observer);
-        List<Coupling> observers = d.getCouplings();
+        Switch d1 = new Switch();
+        Device d2 = new DimmableLight();
+        Coupling observer = new SwitchToDevice(d1, d2);
+        d1.addObserver(observer);
+        List<Observer> observers = d1.getObservers();
         assertTrue(observers.contains(observer));
     }
 //

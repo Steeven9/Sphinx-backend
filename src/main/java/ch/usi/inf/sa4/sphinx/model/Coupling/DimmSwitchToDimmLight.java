@@ -1,0 +1,24 @@
+package ch.usi.inf.sa4.sphinx.model.Coupling;
+
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.model.DimmableLight;
+import ch.usi.inf.sa4.sphinx.model.DimmableSwitch;
+
+import javax.persistence.Entity;
+
+@Entity
+public class DimmSwitchToDimmLight extends Coupling<DimmableSwitch, DimmableLight> {
+    public DimmSwitchToDimmLight(DimmableSwitch device1, DimmableLight device2) {
+        super(device1, device2);
+    }
+
+    @Override
+    public void run() {
+        device2.setState(device1.getIntensity());
+        deviceService.update(device2);
+    }
+
+
+    public DimmSwitchToDimmLight() {
+    }
+}

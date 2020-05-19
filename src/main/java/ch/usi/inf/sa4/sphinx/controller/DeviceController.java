@@ -2,13 +2,18 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.*;
+import ch.usi.inf.sa4.sphinx.service.CouplingService;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
+import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.ApiOperation;
-import org.h2.tools.Server;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -46,6 +51,7 @@ public class DeviceController {
 
     /**
      * Gets the devices owned by a User.
+     *
      * @param sessionToken the session token of the User
      * @param username     the username of the User
      * @return a ResponseEntity with the ids of the devices owned by the user or
@@ -82,9 +88,10 @@ public class DeviceController {
 
     /**
      * Gets a device with a given Id.
-     * @param deviceId id of the device
+     *
+     * @param deviceId     id of the device
      * @param sessionToken a session token that should match the User's
-     * @param username the username of the User
+     * @param username     the username of the User
      * @return a ResponseEntity with the data of the requested device (200) or
      * - 404 if not found or
      * - 401 if not authorized
@@ -108,7 +115,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, deviceId)) {
+        if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
 
@@ -260,7 +267,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, deviceId)) {
+        if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
 
@@ -278,9 +285,9 @@ public class DeviceController {
     }
 
     /**
-     * @param deviceId id  of the device to be deleted
+     * @param deviceId     id  of the device to be deleted
      * @param sessionToken a session token that should match the User's
-     * @param username the username of the User
+     * @param username     the username of the User
      * @return a ResponseEntity with 204 if deletion is successful or
      * - 404 if not found or
      * - 401 if not authorized
@@ -299,7 +306,7 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, deviceId)) {
+        if (!userService.ownsDevice(username, deviceId)) {
             throw new UnauthorizedException("You don't own this device");
         }
 
@@ -309,12 +316,12 @@ public class DeviceController {
     }
 
     /**
-     * Creates a coupling between two devices.
+     * Creates a coupling between two devices. The order of the ids should not matter.
      *
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
-     * @param device1_id   id of the first device to couple
-     * @param device2_id   id of the second device to couple
+     * @param id1  id of the first device to couple
+     * @param id2  id of the second device to couple
      * @return a ResponseEntity with 204 if coupling is successful or
      * - 404 if not found or
      * - 401 if not authorized or
@@ -327,20 +334,14 @@ public class DeviceController {
     @ApiOperation("Creates a coupling between two devices")
     public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") final String sessionToken,
                                                           @RequestHeader("user") final String username,
-                                                          @PathVariable final String device1_id,
-                                                          @PathVariable final String device2_id) {
+                                                          @NonNull @PathVariable(name = "device1_id") final Integer id1,
+                                                          @NonNull @PathVariable(name = "device2_id") final Integer id2) {
 
-        if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
-            throw new BadRequestException("Some fields are missing");
-        }
-
-        final Integer id1 = Integer.parseInt(device1_id);
-        final Integer id2 = Integer.parseInt(device2_id);
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+        if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
@@ -348,12 +349,14 @@ public class DeviceController {
         final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
 
 
-        if (deviceService.createCoupling(device1, device2)) {
+        try {
+            couplingService.createCoupling(device1, device2);
             return ResponseEntity.noContent().build();
-        } else {
-            throw new ServerErrorException("Couldn't save data");
+        } catch (BadCouplingException e) {
+            throw new BadRequestException(e.getMessage());
         }
     }
+
     /**
      * Deletes a coupling between two devices.
      *
@@ -370,7 +373,7 @@ public class DeviceController {
     public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username,
                                                   @PathVariable final String device1_id,
-                                                  @PathVariable final String device2_id){
+                                                  @PathVariable final String device2_id) {
 
         if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
             throw new BadRequestException("Some fields are missing");
@@ -383,12 +386,12 @@ public class DeviceController {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+        if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
-        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
-        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
+//        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
+//        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
 
 
         couplingService.removeByDevicesIds(id1, id2);

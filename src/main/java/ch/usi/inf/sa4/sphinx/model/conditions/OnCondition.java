@@ -15,12 +15,12 @@ public class OnCondition extends  Condition<Boolean> {
         ON,
         OFF;
 
-        private boolean act(boolean a, boolean b) {
+        private boolean act(boolean a) {
             switch (this) {
                 case ON:
-                    return a == b;
+                    return a;
                 case OFF:
-                    return a != b;
+                    return !a;
             }
             return false;
         }
@@ -28,23 +28,21 @@ public class OnCondition extends  Condition<Boolean> {
 
     @ManyToOne
     private Device device;
-    private Boolean target;
+//    private Boolean target;
     private Operator operator;
 
     /**
-     *
      * @param device the device to target
-     * @param target the status on/off
-     * @param operator
+     * @param operator ON/OFF depending on the condition to check
      */
-    public OnCondition(Device device, Boolean target, Operator operator) {
-        this.target = target;
+    public OnCondition(Device device, Operator operator) {
+//        this.target = target;
         this.device = device;
         this.operator = operator;
     }
 
     @Override
     public boolean check() {
-        return operator.act(device.isOn(), target);
+        return operator.act(device.isOn());
     }
 }

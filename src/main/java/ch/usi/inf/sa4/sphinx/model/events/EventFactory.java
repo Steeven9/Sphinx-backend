@@ -1,80 +1,38 @@
-package ch.usi.inf.sa4.sphinx.model.events;
-
-import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.model.conditions.MotionCondition;
-import ch.usi.inf.sa4.sphinx.model.conditions.OnCondition;
-import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
-import lombok.NonNull;
-
-public class EventFactory {
-    public static Event makeEvent(@NonNull Device device,
-                                  @NonNull Object target,
-                                  @NonNull EventType type,
-                                  @NonNull Automation automation) {
-
-        try {
-            switch (type) {
-                case SENSOR_OVER:
-                    return new SensorChanged((Sensor) device, automation, (Double) target, SensorQuantityCondition.Operator.GREATER);
-                case SENSOR_UNDER:
-                    return new SensorChanged((Sensor) device, automation, (Double) target, SensorQuantityCondition.Operator.SMALLER);
-                case MOTION_DETECTED:
-                    return new MotionChanged((MotionSensor) device, automation, (Boolean) target, MotionCondition.Operator.EQUAL);
-                case MOTION_NOT_DETECTED:
-                    return new MotionChanged((MotionSensor) device, automation, (Boolean) target, MotionCondition.Operator.NOT_EQUAL);
-                case DEVICE_ON:
-                    return new OnChanged(device, automation, (Boolean) target, OnCondition.Operator.ON);
-                case DEVICE_OFF:
-                    return new OnChanged(device, automation, (Boolean) target, OnCondition.Operator.OFF);
-                default:
-                    throw new IllegalArgumentException("Invalid type");
-            }
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Incompatible event type/target type");
-        }
-    }
-
-
-//    public static Event makeEvent(@NonNull Device device,
-//                                  @NonNull Boolean target,
-//                                  @NonNull EventType type,
-//                                  @NonNull Automation automation) {
+//package ch.usi.inf.sa4.sphinx.model.events;
+//
+//import ch.usi.inf.sa4.sphinx.model.*;
+//import ch.usi.inf.sa4.sphinx.model.effects.DeviceSetOnEffect;
+//import ch.usi.inf.sa4.sphinx.model.effects.DimmableLightStateInc;
+//import ch.usi.inf.sa4.sphinx.model.effects.DimmableLightStateSet;
+//import ch.usi.inf.sa4.sphinx.model.effects.Effect;
+//
+//public class EventFactory {
+//    public Event make(Device d1, Device d2){
+//        return make(d1, d2, true);
+//    }
+//
+//    private Event make(Device d1, Device d2, boolean firstIteration){
 //        try {
-//            switch (type) {
-//                case MOTION_DETECTED:
-//                    return new MotionChanged((MotionSensor) device, automation, target, MotionCondition.Operator.EQUAL);
-//                case MOTION_NOT_DETECTED:
-//                    return new MotionChanged((MotionSensor) device, automation, target, MotionCondition.Operator.NOT_EQUAL);
-//                case DEVICE_ON:
-//                    return new OnChanged(device, automation, target, OnCondition.Operator.ON);
-//                case DEVICE_OFF:
-//                    return new OnChanged(device, automation, target, OnCondition.Operator.OFF);
-//                default:
-//                    throw new IllegalArgumentException("Invalid type");
+//            if(d1 instanceof Switch){
+//                return new SwitchChangedEvent((Switch) d1, new DeviceSetOnEffect(d2));
 //            }
-//        } catch (ClassCastException e) {
-//            throw new IllegalArgumentException("Incompatible event type/target type");
+//
+//            if(d1 instanceof StatelessDimmableSwitch){
+//                Effect<Double> effect= new DimmableLightStateInc((DimmableLight) d2);
+//                return new StatelessDimmSwitchChangedEvent((StatelessDimmableSwitch) d1, effect, 0.1);
+//            }
+//
+//            if(d1 instanceof DimmableSwitch){
+//                 Effect<Double> effect = new  DimmableLightStateSet((DimmableLight) d2);
+//                return new DimmSwitchChangedEvent((DimmableSwitch) d1, effect );
+//            }
+//
+//            throw new IllegalArgumentException("No compatible device coupling found");
+//
+//        } catch (ClassCastException e){
+//            if(firstIteration) return make(d2, d1, false);
+//            throw new IllegalArgumentException("No compatible device coupling found");
 //        }
 //    }
 //
-//
-//    public static Event makeEvent(@NonNull Device device,
-//                                  @NonNull Double target,
-//                                  @NonNull EventType type,
-//                                  @NonNull Automation automation) {
-//        try {
-//            switch (type) {
-//                case SENSOR_OVER:
-//                    return new SensorChanged((Sensor) device, automation, (Double) target, SensorQuantityCondition.Operator.GREATER);
-//                case SENSOR_UNDER:
-//                    return new SensorChanged((Sensor) device, automation, (Double) target, SensorQuantityCondition.Operator.SMALLER);
-//                default:
-//                    throw new IllegalArgumentException("Invalid type");
-//            }
-//        } catch (ClassCastException e) {
-//            throw new IllegalArgumentException("Incompatible event type/target type");
-//        }
-//    }
-
-
-}
+//}

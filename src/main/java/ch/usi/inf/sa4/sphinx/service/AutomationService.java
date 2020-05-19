@@ -3,12 +3,12 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.model.Automation;
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Event;
 import ch.usi.inf.sa4.sphinx.model.Scene;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.model.conditions.ConditionFactory;
-import ch.usi.inf.sa4.sphinx.model.events.EventFactory;
-import ch.usi.inf.sa4.sphinx.model.events.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
+import ch.usi.inf.sa4.sphinx.model.triggers.TriggerFactory;
+import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +29,11 @@ public class AutomationService {
     @Qualifier("userStorage")
     @Autowired
     private UserStorage userStorage;
+//    @Autowired
+//    private EventStorage eventStorage;
+    @Qualifier("triggerStorage")
     @Autowired
-    private EventStorage eventStorage;
+    private TriggerStorage triggerStorage;
 
 
     public Optional<Automation> createAutomation(@NonNull String username) {
@@ -46,8 +49,8 @@ public class AutomationService {
     public void addTrigger(Integer automationId, Integer deviceId, EventType type, Object target) {
         Automation automation = automationStorage.findById(automationId).orElseThrow(()->new NotFoundException(""));
         Device device = deviceStorage.findById(deviceId).orElseThrow(()->new NotFoundException(""));
-        Event event = EventFactory.makeEvent(device, target, type, automation);
-        eventStorage.save(event);
+        Trigger trigger = TriggerFactory.makeEvent(device, target, type, automation);
+        triggerStorage.save(trigger);
     }
 
     public void addCondition(Integer automationId, Integer deviceId, EventType type,  Object target){

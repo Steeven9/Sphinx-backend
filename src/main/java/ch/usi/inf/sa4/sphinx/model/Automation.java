@@ -31,16 +31,17 @@ public class Automation extends StorableE implements Runnable {
         return name;
     }
 
-    /**
-     * Adds an event to the list of those that will trigger this automation
-     *
-     * @param event the event that will trigger this automation
-     */
-    public void addTrigger(@NonNull Event<?> event, Device device) {
-//        Coupling newTrigger = new Coupling(event, new RunAutomation(this));
-//        device.addObserver(newTrigger);
-        //triggers.add(newTrigger);
-    }
+
+//    /**
+//     * Adds an event to the list of those that will trigger this automation
+//     *
+//     * @param event the event that will trigger this automation
+//     */
+//    public void addTrigger(@NonNull Event<?> event, Device device) {
+////        Coupling newTrigger = new Coupling(event, new RunAutomation(this));
+////        device.addObserver(newTrigger);
+//        //triggers.add(newTrigger);
+//    }
 
 
     public void addScene(@NonNull Scene scene) {

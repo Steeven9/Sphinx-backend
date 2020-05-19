@@ -15,12 +15,14 @@ public class SerialisableAutomation {
 
 
 
-    public SerialisableAutomation(Integer id, String name, String icon, Integer ownerId, List<SerialisableCondition> triggers) {
+    public SerialisableAutomation(Integer id, String name, String icon, Integer ownerId, List<Integer> scenes,List<SerialisableCondition> triggers,List<SerialisableCondition> conditions ) {
         this.id = id;
         this.name = name;
         this.icon = icon;
         this.ownerId = ownerId;
         this.triggers = triggers;
+        this.conditions = conditions;
+        this.scenes = scenes;
     }
 
     public SerialisableAutomation(){

@@ -3,12 +3,20 @@ package ch.usi.inf.sa4.sphinx.model.conditions;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.MotionSensor;
 import ch.usi.inf.sa4.sphinx.model.Sensor;
-import ch.usi.inf.sa4.sphinx.model.events.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
 import lombok.NonNull;
 
 public class ConditionFactory {
 
 
+    /**
+     * Makes a Condition based on the specified device, target and type of condition.
+     * Will throw an IllegalArgumentException if the Device is not compatible with the type of condition.
+     * @param device the device that the condition will target
+     * @param target the target value for the condition
+     * @param type the type of Condition
+     * @return the Condition
+     */
     public static Condition make(@NonNull Device device,
                                  @NonNull Object target,
                                  @NonNull EventType type
@@ -25,9 +33,9 @@ public class ConditionFactory {
                 case MOTION_NOT_DETECTED:
                     return new MotionCondition((MotionSensor) device, (Boolean) target, MotionCondition.Operator.NOT_EQUAL);
                 case DEVICE_ON:
-                    return new OnCondition(device, (Boolean) target, OnCondition.Operator.ON);
+                    return new OnCondition(device,  OnCondition.Operator.ON);
                 case DEVICE_OFF:
-                    return new OnCondition(device, (Boolean) target, OnCondition.Operator.OFF);
+                    return new OnCondition(device,  OnCondition.Operator.OFF);
                 default:
                     throw new IllegalArgumentException("Invalid type");
             }

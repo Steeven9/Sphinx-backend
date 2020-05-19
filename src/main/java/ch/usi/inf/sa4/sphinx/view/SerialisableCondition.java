@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.events.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
 
 public class SerialisableCondition {
     private EventType eventType;
