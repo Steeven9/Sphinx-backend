@@ -80,7 +80,7 @@ public class GuestController {
         userService.validateSession(username, sessionToken);
 
 
-        List<User> guestOf = userService.otherHousesAccess(username).get();
+        List<User> guestOf = userService.getHosts(username);
         List<SerialisableUser> users = guestOf.stream().map(user -> user.serialiseAsHost()).collect(Collectors.toList());
 
 

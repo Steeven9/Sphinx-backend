@@ -394,16 +394,7 @@ public class UserService {
         user.get().addHost(host.get());
     }
 
-    /**
-     * Returns a list of the users whose house you can access as guest.
-     *
-     * @param username the user's username
-     * @return a list of the guests
-     **/
 
-    public Optional<List<User>> otherHousesAccess(final String username) {
-        return userStorage.findByUsername(username).map(User::getHosts);
-    }
 
     /**
      * Determines if user is a guest of second user.
@@ -433,7 +424,7 @@ public class UserService {
      * @return a list of the guests
      **/
 
-    public List<User> getGuests(final String username) {
+    public List<User> getHosts(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
         if (user.isPresent()) {
 
