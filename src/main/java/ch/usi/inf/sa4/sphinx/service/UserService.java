@@ -368,7 +368,7 @@ public class UserService {
     /**
      * Add the user2 (username2) in the guest list of user1 (username1).
      *
-     * @param guest the user1
+     * @param guest        the user1
      * @param hostUsername the user2
      **/
     public void addGuest(final String guest, final String hostUsername) {
@@ -376,9 +376,7 @@ public class UserService {
         final Optional<User> host = userStorage.findByUsername(hostUsername);
 
 
-
-
-        if(guest.equals(hostUsername)){
+        if (guest.equals(hostUsername)) {
 
 
             throw new UnauthorizedException("You can't add yourself as guest");
@@ -386,21 +384,16 @@ public class UserService {
         }
 
 
-
         if (!user.isPresent() || !host.isPresent()) {
-
-
 
 
             throw new NotFoundException("This user does not exist");
 
 
-
-
-
         }
-        user.get().addHost(host.get());
 
+        user.get().addHost(host.get());
+        userStorage.save(user.get());
 
 
     }
@@ -412,7 +405,6 @@ public class UserService {
      * @param username the user's username
      * @return a list of the guests
      **/
-
 
 
     public Optional<List<User>> otherHousesAccess(final String username) {
@@ -449,23 +441,7 @@ public class UserService {
 
     }
 
-    /**
-     * Returns the list of users who have access to your house as guests.
-     *
-     * @param username the name of the user
-     * @return all the guests of a given user
-     */
 
-
-    public List<User> getGuestsOf(@NonNull final String username) {
-
-
-        return userStorage.findAll().stream().filter(user -> {
-            return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
-                return s.equals(username);
-            });
-        }).collect(Collectors.toList());
-    }
 
 
     /**
@@ -476,7 +452,7 @@ public class UserService {
      **/
     public List<User> getGuests(final String username) {
         Optional<User> user = userStorage.findByUsername(username);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             return user.get().getHosts();
         }
         throw new NotFoundException("This user does not exist");
@@ -497,9 +473,6 @@ public class UserService {
             });
         }).collect(Collectors.toList());
     }
-
-
-
 
 
 }

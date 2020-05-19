@@ -68,7 +68,7 @@ public class GuestController {
 
 
         }
-        List<User> guest = userService.getGuestsOf(username);
+        List<User> guest = userService.returnOwnGuests(username);
         SerialisableUser[] users;
         users = guest.stream().map(user ->serialiser.serialiseUser(user)).toArray(SerialisableUser[]::new);
 
