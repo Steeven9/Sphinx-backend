@@ -94,7 +94,6 @@ class ThermostatTest {
     }
 
 
-
     @Test
     void testAverage() {
         Room room = new Room();
