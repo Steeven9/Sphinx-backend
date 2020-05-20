@@ -81,7 +81,7 @@ public class DeviceService {
      * @see Device
      */
     public List<Integer> getSwitches(final int deviceId) {
-        return couplingStorage.findByDevice1IdOrderById(deviceId)
+        return couplingStorage.findByDeviceIdOrderById(deviceId)
                 .stream()
                 .map(Coupling::getDevice2)
                 .map(device -> ((Device) device).getId()).collect(Collectors.toList());

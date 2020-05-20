@@ -3,10 +3,9 @@ package ch.usi.inf.sa4.sphinx.model.conditions;
 import ch.usi.inf.sa4.sphinx.model.Sensor;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 
 @Entity
-public class SensorQuantityCondition extends Condition<Double> {
+public class SensorQuantityCondition extends Condition<Sensor> {
     public enum Operator {
         GREATER,
         SMALLER,
@@ -26,19 +25,18 @@ public class SensorQuantityCondition extends Condition<Double> {
         }
     }
 
-    @ManyToOne
-    private Sensor device;
     private Operator operator;
     private Double target;
 
     public SensorQuantityCondition(Sensor device, Double target, Operator operator) {
+        super(device);
         this.target = target;
-        this.device = device;
         this.operator = operator;
     }
 
     @Override
     public boolean check() {
-        return operator.act(device.getStatus(), target);
+        return operator.act(getDevice().getStatus(), target);
     }
+
 }

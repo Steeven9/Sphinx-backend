@@ -33,7 +33,7 @@ public class SphinxApplication {
         //enable dummy_data as an environment variable to add these users
         // (in INTELLIJ SphinxApplication at the left of >
         //edit configurations and set dummy_data=true)
-        if (dummyDataEnabled) {
+        if (true) {
             LoggerFactory.getLogger(SphinxApplication.class).info("dummy_data is enabled");
             dummyDataAdder.emptyUser();
             dummyDataAdder.randUser();

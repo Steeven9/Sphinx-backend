@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model.triggers;
 
 import ch.usi.inf.sa4.sphinx.model.Automation;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public abstract class Trigger extends Observer {
+public abstract class Trigger extends Observer<Device> {
     @ManyToOne
     private Automation automation;
     @OneToOne(cascade = CascadeType.ALL)
@@ -18,6 +19,7 @@ public abstract class Trigger extends Observer {
 
 
     public Trigger(Automation automation, Condition condition) {
+        super(condition.getDevice());
         this.automation = automation;
         this.condition = condition;
     }
@@ -26,5 +28,4 @@ public abstract class Trigger extends Observer {
     public void run() {
         if (condition.check()) automation.run();
     }
-
 }

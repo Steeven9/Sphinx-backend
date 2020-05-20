@@ -21,12 +21,12 @@ public interface CouplingStorage extends JpaRepository<Coupling, Integer> {
 //     */
 //    List<Coupling> getCouplingByDeviceId(Integer deviceId);
 
-    Optional<Coupling> findByDevice1IdAndDevice2Id(Integer id1, Integer id2);
+    Optional<Coupling> findByDeviceIdAndDevice2Id(Integer id1, Integer id2);
 
 
-    List<Coupling> findByDevice1IdOrderById(Integer id);
+    List<Coupling> findByDeviceIdOrderById(Integer id);
 
     List<Coupling> findByDevice2IdOrderById(Integer id);
 
-    void deleteByDevice1IdAndDevice2Id(Integer id1, Integer id2);
+    void deleteByDeviceIdAndDevice2Id(Integer id1, Integer id2);
 }

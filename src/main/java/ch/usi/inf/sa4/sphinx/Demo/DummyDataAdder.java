@@ -38,7 +38,7 @@ public class DummyDataAdder {
 
     //ALL OF THEM SHOULD THROW IF FAILING SO JUST USE get() WITH THE OPTIONALS
 
-    @PostConstruct
+//    @PostConstruct
     private void deleteUsers(){
         userService.delete("user1");
         userService.delete("user2");

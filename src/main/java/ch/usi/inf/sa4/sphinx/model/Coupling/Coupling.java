@@ -5,36 +5,28 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
-@Inheritance
-public abstract class Coupling<X extends Device, Y extends Device> extends Observer {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Coupling<X extends Device, Y extends Device> extends Observer<X> {
     @ManyToOne(targetEntity = Device.class)
-    protected X device1;
-    @ManyToOne(targetEntity = Device.class)
-    protected Y device2;
+    private Y device2;
     @Transient
     DeviceService deviceService;
 
     public Coupling(X device1, Y device2) {
-        this.device1 = device1;
+        super(device1);
         this.device2 = device2;
         this.deviceService = ServiceProvider.getStaticDeviceService();
     }
 
     public X getDevice1() {
-        return device1;
+        return  getDevice();
     }
 
     public Y getDevice2() {
         return device2;
     }
 
-
-    public Coupling() {
-    }
 }

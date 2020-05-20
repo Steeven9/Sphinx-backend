@@ -14,10 +14,8 @@ public class SwitchToDevice extends Coupling<Switch, Device> {
 
     @Override
     public void run() {
-        device2.setOn(device1.isOn());
-        deviceService.update(device2);
+        getDevice2().setOn(getDevice1().isOn());
+        deviceService.update(getDevice2());
     }
 
-    public SwitchToDevice() {
-    }
 }

@@ -8,7 +8,6 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -54,7 +53,7 @@ public class CouplingService {
      * //
      */
     public void removeByDevicesIds(final Integer id1, final Integer id2) {
-        couplingStorage.deleteByDevice1IdAndDevice2Id(id1, id2);
+        couplingStorage.deleteByDeviceIdAndDevice2Id(id1, id2);
     }
 
 
