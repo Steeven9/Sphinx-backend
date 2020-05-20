@@ -137,8 +137,8 @@ public class DeviceService {
     public boolean createCoupling(final Device device1, final Device device2) {
         final List<DeviceType> switches = List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH);
         final List<DeviceType> lights = List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT);
-        final DeviceType type1 = DeviceType.deviceToDeviceType(device1);
-        final DeviceType type2 = DeviceType.deviceToDeviceType(device2);
+        final DeviceType type1 = device1.getDeviceType();
+        final DeviceType type2 = device2.getDeviceType();
         final boolean ordered;
 
         //check if first is a switch and second is a light

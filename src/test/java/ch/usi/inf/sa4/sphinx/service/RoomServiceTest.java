@@ -75,13 +75,13 @@ class RoomServiceTest {
     void testGetPopulatedDevices() {
         assertTrue(roomService.getPopulatedDevices(9999).isEmpty());//not existing id
         List<Device> result = roomService.getPopulatedDevices(2).get();
-       assertAll(
-               () -> assertEquals(2, result.size()),
-               () -> assertEquals(DeviceType.deviceClassToDeviceType(HumiditySensor.class), DeviceType.deviceToDeviceType(result.get(0))),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(Light.class), DeviceType.deviceToDeviceType(result.get(1)))
-       );
+        assertAll(
+                  () -> assertEquals(2, result.size()),
+                  () -> assertEquals(DeviceType.HUMIDITY_SENSOR, result.get(0).getDeviceType()),
+                  () -> assertEquals(DeviceType.LIGHT, result.get(1).getDeviceType())
+        );
         List<Device> res = roomService.getPopulatedDevices(4).get();
-       assertEquals(0, res.size());
+        assertEquals(0, res.size());
     }
 //
     @Test
@@ -98,7 +98,7 @@ class RoomServiceTest {
         roomService.addDevice(5, DeviceType.MOTION_SENSOR);
         assertAll("should add a new device",
                 () -> assertEquals(2, roomService.getPopulatedDevices(5).get().size()),
-                () -> assertEquals(DeviceType.MOTION_SENSOR, DeviceType.deviceToDeviceType(roomService.getPopulatedDevices(5).get().get(1)))
+                () -> assertEquals(DeviceType.MOTION_SENSOR, roomService.getPopulatedDevices(5).get().get(1).getDeviceType())
         );
     }
 //

@@ -20,6 +20,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -31,8 +32,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/devices")
 public class DeviceController {
 
-    private static final List<DeviceType> TYPES_GUEST_CAN_EDIT =
-            List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT, DeviceType.SMART_CURTAIN);
+    private static final Set<DeviceType> TYPES_GUEST_CAN_EDIT =
+            Set.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT, DeviceType.SMART_CURTAIN);
 
     @Autowired
     CouplingService couplingService;
@@ -239,7 +240,7 @@ public class DeviceController {
             throw new UnauthorizedException(NOTOWNS);
         }
 
-        if (DeviceType.deviceToDeviceType(plug) != DeviceType.SMART_PLUG) {
+        if (plug.getDeviceType() != DeviceType.SMART_PLUG) {
             throw new BadRequestException("Not a smart plug");
         }
 

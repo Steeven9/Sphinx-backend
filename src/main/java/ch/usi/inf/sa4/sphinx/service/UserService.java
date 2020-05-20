@@ -315,11 +315,6 @@ public class UserService {
         }
     }
 
-    //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull final String username) {
-        return get(username).map(User::getPassword);
-    }
-
     /**
      * Updates values of all sensors of a given user.
      *
@@ -346,7 +341,7 @@ public class UserService {
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
-        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+        if (!isGuestOf(host, guest)) { //this checks if host is in the guestList of guest
             return false;
         }
 

@@ -143,30 +143,19 @@ public class GuestControllerTest {
 //                .andExpect(status().is(401));
     }
 
-    @Disabled()
     @Test
     public void shouldGet401FromNoGuest() throws Exception {
-
-
         this.mockmvc.perform(get("/guests/user2/devices")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
 
-
-
         this.mockmvc.perform(delete(("/guests/guest23"))
                 .header("user", "user2r")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
-//        this.mockmvc.perform(get("/guests/user2/devices/guest59")
-//        .header("user", "fakeUser")
-//        .header("session-token", "user2SessionToken"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
     }
 
     @Disabled("401")

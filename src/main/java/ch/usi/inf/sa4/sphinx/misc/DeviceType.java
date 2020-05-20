@@ -92,67 +92,6 @@ public enum DeviceType {
 
 
     /**
-     * Given a device, returns the DeviceType corresponding to the device's class.
-     *
-     * @param device a given Device
-     * @return the DeviceType of the given Device
-     */
-    public static DeviceType deviceToDeviceType(final Device device) {
-        return deviceClassToDeviceType(device.getClass());
-    }
-
-
-    /**
-     * Given a device Class, returns the DeviceType of that class
-     *
-     * @param clazz class of an Object
-     * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
-     */
-    public static DeviceType deviceClassToDeviceType(final Class<? extends Device> clazz) {
-        if (Light.class.equals(clazz)) {
-            return LIGHT;
-        }
-        if (DimmableLight.class.equals(clazz)) {
-            return DIMMABLE_LIGHT;
-        }
-        if (Switch.class.equals(clazz)) {
-            return SWITCH;
-        }
-        if (DimmableSwitch.class.equals(clazz)) {
-            return DIMMABLE_SWITCH;
-        }
-        if (StatelessDimmableSwitch.class.equals(clazz)) {
-            return STATELESS_DIMMABLE_SWITCH;
-        }
-        if (SmartPlug.class.equals(clazz)) {
-            return SMART_PLUG;
-        }
-        if (HumiditySensor.class.equals(clazz)) {
-            return HUMIDITY_SENSOR;
-        }
-        if (LightSensor.class.equals(clazz)) {
-            return LIGHT_SENSOR;
-        }
-        if (TempSensor.class.equals(clazz)) {
-            return TEMP_SENSOR;
-        }
-        if (MotionSensor.class.equals(clazz)) {
-            return MOTION_SENSOR;
-        }
-        if (SmartCurtain.class.equals(clazz)) {
-            return SMART_CURTAIN;
-        }
-        if (SecurityCamera.class.equals(clazz)) {
-            return SECURITY_CAMERA;
-        }
-        if (Thermostat.class.equals(clazz)) {
-            return THERMOSTAT;
-        }
-        return INVALID_DEVICE;
-    }
-
-
-    /**
      * Given a DeviceType returns the integer value used to transmit the enum over the network.
      *
      * @param type the DeviceType

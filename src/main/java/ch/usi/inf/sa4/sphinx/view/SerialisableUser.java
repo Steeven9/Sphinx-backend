@@ -13,10 +13,4 @@ public class SerialisableUser {
 
     public Boolean allowSecurityCameras;
 
-
-    /** Constructor.**/
-    public SerialisableUser(){
-
-    }
-
 }

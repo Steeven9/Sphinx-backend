@@ -200,9 +200,9 @@ public abstract class Device extends StorableE {
         serialisableDevice.icon = this.icon;
         serialisableDevice.name = this.name;
         serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
+        serialisableDevice.type = DeviceType.deviceTypetoInt(this.getDeviceType());
         serialisableDevice.label = getLabel();
-        final Room owningRoom = this.getRoom();
+        final Room owningRoom = this.room;
         final User owningUser = owningRoom.getUser();
         serialisableDevice.roomId = owningRoom.getId();
         serialisableDevice.roomName = owningRoom.getName();
