@@ -19,7 +19,7 @@ public class DimmableLight extends Dimmable {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.DIMMABLE_LIGHT;
     }
 

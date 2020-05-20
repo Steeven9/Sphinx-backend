@@ -206,7 +206,7 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.THERMOSTAT;
     }
 
@@ -214,9 +214,13 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
+
+
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
         if (sd.source != null) setSource(sd.source);
         if (sd.slider != null) setTargetTemp(sd.slider);
+
+
     }
 }

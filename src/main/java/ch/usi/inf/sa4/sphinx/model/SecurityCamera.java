@@ -41,7 +41,7 @@ public class SecurityCamera extends Device {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SECURITY_CAMERA;
     }
 

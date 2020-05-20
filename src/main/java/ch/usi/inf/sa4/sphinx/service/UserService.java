@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.*;
@@ -236,6 +237,11 @@ public class UserService {
     }
 
 
+    /**
+     * Given an id, returns the corresponding User
+     * @param id the id of the requested User
+     * @return the requested User
+     */
     public Optional<User> getById(final Integer id) {
         return userStorage.findById(id);
     }
@@ -309,29 +315,120 @@ public class UserService {
         }
     }
 
-
-
     //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull String username) {
+    private Optional<String> getUserHash(@NonNull final String username) {
         return get(username).map(User::getPassword);
     }
-
 
     /**
      * Updates values of all sensors of a given user.
      *
      * @param username owner of all devices
      */
-    public void generateValue(String username) {
-        Optional<List<Device>> optionalDevices = this.getPopulatedDevices(username);
+    public void generateValue(final String username) {
+        final Optional<List<Device>> optionalDevices = this.getPopulatedDevices(username);
         if (optionalDevices.isPresent()) {
-            List<Device> devices = optionalDevices.get();
-            for (Device device : devices) {
+            final List<Device> devices = optionalDevices.get();
+            for (final Device device : devices) {
                 if (device instanceof Sensor) {
                     ((Sensor) device).generateValue(); //updates the value of every sensor
                     deviceStorage.save(device);
                 }
             }
         }
+    }
+
+    /**
+     * Removes the user1  from the guest list of user2  (aka, user1 is the host, user2 is the guest).
+     *
+     * @param host  the user1 username
+     * @param guest the user2 username
+     * @return true if guest is successfully removed
+     **/
+    public boolean removeGuest(final String host, final String guest) {
+        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+            return false;
+        }
+
+        final Optional<User> user = userStorage.findByUsername(host);
+        final Optional<User> guestUser = userStorage.findByUsername(guest);
+
+        if (guestUser.isPresent() && user.isPresent()) {
+            guestUser.get().removeHost(user.get());
+            userStorage.save(user.get());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Add the user2 (username2) in the guest list of user1 (username1).
+     *
+     * @param guest        the user1
+     * @param hostUsername the user2
+     **/
+    public void addGuest(final String guest, final String hostUsername) {
+        final Optional<User> user = userStorage.findByUsername(guest);
+        final Optional<User> host = userStorage.findByUsername(hostUsername);
+
+        if (guest.equals(hostUsername)) {
+            throw new UnauthorizedException("You can't add yourself as guest");
+        }
+
+        if (user.isEmpty() || host.isEmpty()) {
+            throw new NotFoundException("This user does not exist");
+        }
+
+        user.get().addHost(host.get());
+        userStorage.save(user.get());
+
+        user.get().addHost(host.get());
+    }
+
+
+
+    /**
+     * Determines if user is a guest of second user.
+     *
+     * @param host  the user's' username
+     * @param guest the second user's username
+     * @return true if the user is considered the second user's guest
+     */
+    public boolean isGuestOf(final String host, final String guest) {
+        final Optional<User> user = userStorage.findByUsername(host);
+
+        final Optional<User> guestUsername = userStorage.findByUsername(guest);
+        if (user.isEmpty() || guestUsername.isEmpty()) {
+            return false;
+        }
+
+        return user.get().getHosts().contains(guestUsername.get());
+
+    }
+
+    /**
+     * Returns a list of the hosts.
+     *
+     * @param username the user's username
+     * @return a list of the guests
+     **/
+    public List<User> getHosts(final String username) {
+        final Optional<User> user = userStorage.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new NotFoundException("This user does not exist");
+        }
+        return user.get().getHosts();
+    }
+
+    /**
+     * Returns the list of users who have access to your house as guests.
+     *
+     * @param username the name of the user
+     * @return all the guests of a given user
+     */
+    public List<User> returnOwnGuests(@NonNull final String username) {
+        return userStorage.findAll().stream().filter(user ->
+            user.getHosts().stream().map(User::getUsername).anyMatch(s -> s.equals(username))
+        ).collect(Collectors.toList());
     }
 }

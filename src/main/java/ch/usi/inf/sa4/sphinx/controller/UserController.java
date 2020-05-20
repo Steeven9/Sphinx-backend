@@ -129,6 +129,7 @@ public class UserController {
         if (user.email != null) changedUser.setEmail(user.email);
         if (user.fullname != null) changedUser.setFullname(user.fullname);
         if (user.password != null) changedUser.setPassword(user.password);
+        if (user.allowSecurityCameras!= null) changedUser.switchCamerasAccessibility(user.allowSecurityCameras);
 
         userService.update(changedUser);
         if (user.username != null && !username.equals(user.username)) {

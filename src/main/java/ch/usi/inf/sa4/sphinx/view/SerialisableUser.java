@@ -10,4 +10,13 @@ public class SerialisableUser {
     public String fullname;
     public String password;
     public Integer[] rooms;
+
+    public Boolean allowSecurityCameras;
+
+
+    /** Constructor.**/
+    public SerialisableUser(){
+
+    }
+
 }
