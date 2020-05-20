@@ -141,7 +141,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Disabled
     public void shouldSuccessfullyResetEmailOnValidData() throws Exception {
         User newUser = new User("cataclismio2@smarthut.xyz", "1234", "userCata2", "Cataclismio2");
         userService.insert(newUser);
@@ -176,7 +175,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Disabled
     public void shouldSuccessfullyChangePasswordOnValidData() throws Exception {
         User newUser = new User("cataclismio3@smarthut.xyz", "1234", "userCata3", "Cataclismio3");
         userService.insert(newUser);
@@ -190,7 +188,7 @@ public class AuthControllerTest {
                 .content("newPassword")
                 .contentType("application/json"))
                 .andDo(print())
-                .andExpect(status().is(200));
+                .andExpect(status().is(204));
     }
 
     @Test
@@ -201,7 +199,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Disabled
     public void shouldSuccessfullyResendEmailOnValidData() throws Exception {
         this.mockmvc.perform(post("/auth/resend/unv@smarthut.xyz"))
                 .andDo(print())
