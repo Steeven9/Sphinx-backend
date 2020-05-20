@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Disabled
     public void shouldSuccessfullyResetEmailOnValidData() throws Exception {
         User newUser = new User("cataclismio2@smarthut.xyz", "1234", "userCata2", "Cataclismio2");
         userService.insert(newUser);
@@ -174,6 +176,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Disabled
     public void shouldSuccessfullyChangePasswordOnValidData() throws Exception {
         User newUser = new User("cataclismio3@smarthut.xyz", "1234", "userCata3", "Cataclismio3");
         userService.insert(newUser);
@@ -198,6 +201,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Disabled
     public void shouldSuccessfullyResendEmailOnValidData() throws Exception {
         this.mockmvc.perform(post("/auth/resend/unv@smarthut.xyz"))
                 .andDo(print())
