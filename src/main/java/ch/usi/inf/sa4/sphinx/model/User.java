@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 /**
@@ -54,13 +53,8 @@ public class User extends StorableE {
     @Expose(deserialize = false)
     private boolean verified;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-
-
-
     private List<User> hosts;
     private boolean camsVisible;
-
-
 
 //TODO find way to auto generate verificationToken
 
@@ -89,11 +83,9 @@ public class User extends StorableE {
         this.verificationToken = UUID.randomUUID().toString();
     }
 
-
     public User() {
+        // default constructor required by JPA
     }
-
-
 
     /**
      * getter for email
@@ -103,7 +95,6 @@ public class User extends StorableE {
     public String getEmail() {
         return email;
     }
-
 
     /**
      * getter for password
@@ -123,7 +114,6 @@ public class User extends StorableE {
         return username;
     }
 
-
     /**
      * getter for fullname
      *
@@ -133,30 +123,24 @@ public class User extends StorableE {
         return fullname;
     }
 
-
     /**
      * getter for resetcode
      *
-     * @return reset code of the user used to ...?
+     * @return reset code of the user
      */
     public String getResetCode() {
         return resetCode;
     }
 
 
+    /**
+     * gets the rooms of this User
+     *
+     * @return a list of rooms that belong to this user
+     */
     public List<Room> getRooms() {
         return rooms;
     }
-
-    /**
-     * getter for rooms
-     *
-     * @return returns a list of the Ids of the rooms owned by the user
-     */
-    public List<Integer> getRoomsIds() {
-        return rooms.stream().map(Room::getId).collect(Collectors.toList());
-    }
-
 
     /**
      * getter for session token
@@ -167,7 +151,10 @@ public class User extends StorableE {
         return sessionToken;
     }
 
-
+    /**
+     * Sets this User's session token
+     * @param sessionToken the new value of the session token
+     */
     public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
@@ -190,7 +177,6 @@ public class User extends StorableE {
         return verificationToken;
     }
 
-
     /**
      * setter for email field
      *
@@ -198,7 +184,6 @@ public class User extends StorableE {
      */
     public void setEmail(final String email) {
         this.email = email;
-
     }
 
     /**
@@ -215,10 +200,8 @@ public class User extends StorableE {
      *
      * @param username username
      */
-
     public void setUsername(final String username) {
         this.username = username;
-
     }
 
     /**
@@ -226,25 +209,23 @@ public class User extends StorableE {
      *
      * @param fullname full name of the user
      */
-    public void setFullname ( final String fullname){
+    public void setFullname(final String fullname){
         this.fullname = fullname;
     }
-
 
     /**
      * sets the verified status of the user to true
      *
      * @param status the new status to set
      */
-    public void setVerified ( final boolean status){
+    public void setVerified(final boolean status){
         this.verified = status;
     }
-
 
     /**
      * Sets the status of the user to verified
      */
-    public void verify () {
+    public void verify() {
         verified = true;
     }
 
@@ -253,7 +234,7 @@ public class User extends StorableE {
      *
      * @param room the room to be added
      */
-    public void addRoom ( final Room room){
+    public void addRoom(final Room room){
         if (room == null) {
             throw new IllegalArgumentException("Room can't be null");
         }
@@ -261,16 +242,13 @@ public class User extends StorableE {
         rooms.add(room);
     }
 
-
     /**
      * removes the room with the selected id
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom ( final Integer roomId){
-
+    public void removeRoom(final Integer roomId){
         rooms.removeIf(r -> r.getId().equals(roomId));
-
     }
 
 
@@ -279,7 +257,7 @@ public class User extends StorableE {
      *
      * @return the generated session token
      */
-    public String createSessionToken () {
+    public String createSessionToken() {
         sessionToken = UUID.randomUUID().toString();
         return sessionToken;
     }
@@ -289,11 +267,10 @@ public class User extends StorableE {
      *
      * @return the generated reset code
      */
-    public String createResetCode () {
+    public String createResetCode() {
         resetCode = UUID.randomUUID().toString();
         return resetCode;
     }
-
 
     /**
      * Serialises a User. Fields whose value cannot be determined by looking at the User are set to null.
@@ -301,7 +278,7 @@ public class User extends StorableE {
      * @return a serialised version of the USer
      * @see SerialisableUser
      */
-    public SerialisableUser serialise () {
+    public SerialisableUser serialise() {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
@@ -311,39 +288,33 @@ public class User extends StorableE {
         return sd;
     }
 
-
     /**
      * asserts if there's a match between the User's hashed password and the one in plaintext
      *
      * @param password the plaintext password to check
      * @return true if matching else false
      */
-
-    public boolean matchesPassword (@NonNull String password){
+    public boolean matchesPassword(@NonNull final String password){
         return BCrypt.checkpw(password, this.password);
     }
 
-
-    private String hashPassword (String password){
+    /**
+     * Given a password string, returns its salted and hashed equivalent.
+     * @param password the string to hash
+     * @return a string containing the hash of {@code password} and the salt used to hash it
+     */
+    private static String hashPassword(final String password){
         if (password == null) return null;
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
-
-
     }
-
-
 
     /**
      * getter for guest
      *
      * @return returns a list of the houses the user has access to as guest
      */
-    public List<User> getHosts () {
-
-
+    public List<User> getHosts() {
         return hosts;
-
-
     }
 
     /**
@@ -351,28 +322,17 @@ public class User extends StorableE {
      *
      * @param user the user to add
      **/
-
-
-    public void addHost ( final User user){
-
+    public void addHost(final User user){
         hosts.add(user);
-
-
     }
-
 
     /**
      * Removes a house access from deleting a user's name from our list.
      *
      * @param user the user to remove
      **/
-
-
-    public void removeHost ( final User user){
-
+    public void removeHost(final User user){
         hosts.remove(user);
-
-
     }
 
     /**
@@ -380,22 +340,17 @@ public class User extends StorableE {
      *
      * @return true if the cameras are visible to the guests
      **/
-
-
-    public Boolean areCamsVisible () {
+    public Boolean areCamsVisible() {
         return camsVisible;
-
     }
 
-
     /**
-     * Switches the cam visibility from on to off and vice versa.
-     **/
-
-
-    public void switchCamerasAccessibility(boolean status){
+     * Sets the cam visibility to the desired value.
+     *
+     * @param status the new value
+     * */
+    public void switchCamerasAccessibility(final boolean status){
         camsVisible = status;
-
     }
 
     /**
@@ -403,15 +358,13 @@ public class User extends StorableE {
      * @return a serialised version of the User
      * @see SerialisableUser
      */
-    public SerialisableUser serialiseAsHost () {
+    public SerialisableUser serialiseAsHost() {
         final SerialisableUser sd = new SerialisableUser();
         sd.username = this.username;
         sd.email = this.email;
         sd.fullname = this.fullname;
         return sd;
     }
-
-
 }
 
 

@@ -237,6 +237,11 @@ public class UserService {
     }
 
 
+    /**
+     * Given an id, returns the corresponding User
+     * @param id the id of the requested User
+     * @return the requested User
+     */
     public Optional<User> getById(final Integer id) {
         return userStorage.findById(id);
     }
@@ -310,13 +315,10 @@ public class UserService {
         }
     }
 
-
-
     //returns the hashed password of a user
     private Optional<String> getUserHash(@NonNull final String username) {
         return get(username).map(User::getPassword);
     }
-
 
     /**
      * Updates values of all sensors of a given user.
@@ -369,27 +371,16 @@ public class UserService {
         final Optional<User> user = userStorage.findByUsername(guest);
         final Optional<User> host = userStorage.findByUsername(hostUsername);
 
-
-
         if (guest.equals(hostUsername)) {
-
             throw new UnauthorizedException("You can't add yourself as guest");
         }
 
-
-
-        if (!user.isPresent() || !host.isPresent()) {
-
-
+        if (user.isEmpty() || host.isEmpty()) {
             throw new NotFoundException("This user does not exist");
-
-
         }
 
         user.get().addHost(host.get());
         userStorage.save(user.get());
-
-
 
         user.get().addHost(host.get());
     }
@@ -415,22 +406,18 @@ public class UserService {
 
     }
 
-
-
     /**
      * Returns a list of the hosts.
      *
      * @param username the user's username
      * @return a list of the guests
      **/
-
     public List<User> getHosts(final String username) {
-        Optional<User> user = userStorage.findByUsername(username);
-        if (user.isPresent()) {
-
-            return user.get().getHosts();
+        final Optional<User> user = userStorage.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new NotFoundException("This user does not exist");
         }
-        throw new NotFoundException("This user does not exist");
+        return user.get().getHosts();
     }
 
     /**
@@ -440,13 +427,8 @@ public class UserService {
      * @return all the guests of a given user
      */
     public List<User> returnOwnGuests(@NonNull final String username) {
-
-        return userStorage.findAll().stream().filter(user -> {
-            return user.getHosts().stream().map(User::getUsername).anyMatch(s -> {
-                return s.equals(username);
-            });
-        }).collect(Collectors.toList());
+        return userStorage.findAll().stream().filter(user ->
+            user.getHosts().stream().map(User::getUsername).anyMatch(s -> s.equals(username))
+        ).collect(Collectors.toList());
     }
-
-
 }

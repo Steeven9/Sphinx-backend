@@ -26,23 +26,16 @@ import org.junit.jupiter.api.Disabled;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-
-
-
-
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 public class GuestControllerTest {
 
     @Autowired
     private MockMvc mockmvc;
-
     @Autowired
     private DummyDataAdder dummyDataAdder;
 
-
     @BeforeAll
-    void  init() {
+    void init() {
         dummyDataAdder.addDummyData();
     }
 
