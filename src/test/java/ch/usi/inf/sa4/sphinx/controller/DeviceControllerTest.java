@@ -12,7 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -72,6 +75,11 @@ class DeviceControllerTest {
                 .andDo(print()).andExpect(status().is(400));
 
         this.mockmvc.perform(post("/devices/").content("{\"type\": \"\"}")
+                .contentType("application/json"))
+                .andDo(print()).andExpect(status().is(400));
+
+        this.mockmvc.perform(post("/devices/couple/null/1234")
+                .content("{}")
                 .contentType("application/json"))
                 .andDo(print()).andExpect(status().is(400));
 
@@ -138,32 +146,71 @@ class DeviceControllerTest {
     }
 
     @Test
-    void testPostingNewDevice() throws Exception {
-        Integer roomId = userService.getPopulatedRooms("user2").get(0).getId();
+    void testPostingNewDeviceAndMigrateToAnotherRoom() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user2");
+        Integer roomId1 = rooms.get(0).getId();
+        Integer roomId2 = rooms.get(1).getId();
+
         this.mockmvc.perform(post("/devices/")
                 .header("session-token", "user2SessionToken")
                 .header("user", "user2")
-                .content("{\"name\":\"lamp\",\"icon\":\"/images/generic_device\", \"type\":\"1\",\"roomId\":\"" + roomId + "\"}")
+                .content("{\"name\":\"lamp\",\"icon\":\"/images/generic_device\", \"type\":\"1\",\"roomId\":\"" + roomId1 + "\"}")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        this.mockmvc.perform(post("/devices/")
+        MvcResult mvcResult = this.mockmvc.perform(post("/devices/")
                 .header("session-token", "user2SessionToken")
                 .header("user", "user2")
-                .content("{\"name\":\"thermostat\",\"icon\":\"/images/generic_device\", \"type\":\"11\",\"roomId\":\"" + roomId + "\"}")
+                .content("{\"name\":\"thermostat\",\"icon\":\"/images/generic_device\", \"type\":\"11\",\"roomId\":\"" + roomId1 + "\"}")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        String[] content = mvcResult.getResponse().getContentAsString().split("[{\\}\\:\\,]");
 
+        Integer thermostatId = 0;
+        for (int i = 0; i < content.length; i++) {
+            if (content[i].equals("\"id\"")) {
+                thermostatId = Integer.parseInt(content[i + 1]);
+            } else if (content[i].equals("\"roomId\"")) {
+                content[i + 1] = roomId2.toString(); //change room id
+                break;
+            }
+        }
+        StringBuilder contentPut = new StringBuilder("{");
+        for (int i = 0; i < content.length; i++) {
+            if (content[i].equals("\"type\"")) i += 2;
+            if (content[i].equals("\"label\"")) i += 2;
+            if (content[i].equals("\"switched\"")) i += 2;
+            if (content[i].equals("\"switches\"")) i += 2;
+            if (content[i].equals("\"roomName\"")) i += 2;
+            if (i % 2 == 0 && i != 0) { // add value
+                contentPut.append(":");
+                contentPut.append(content[i]);
+                contentPut.append(",");
+            } else {
+                contentPut.append(content[i]);
+            }
+        }
+        contentPut.deleteCharAt(contentPut.length() - 1);
+        contentPut.append("}");
+        String res = contentPut.toString();
+        this.mockmvc.perform(put("/devices/" + thermostatId)
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content(res)
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
     }
+
 
     @Test
     void shouldSuccessfullyPutAndGetOnValidData() throws Exception {
-        //todo test migrate
-        //todo test put on thermostat
+
         Room room = userService.getPopulatedRooms("user2").get(0);
         Device device = room.getDevices().get(0);
 
@@ -182,8 +229,7 @@ class DeviceControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         String[] content = mvcResult.getResponse().getContentAsString().split("[:\\,]");
-        int i = 0;
-        for (; i < content.length; i++) {
+        for (int i = 0; i < content.length; i++) {
             if (content[i].equals("\"name\"")) {
                 assertEquals("\"someRandName\"", content[++i]);
                 break;
@@ -365,7 +411,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @Disabled(value = "fix couplings")
+    @Disabled(value = "fix remove couplings")
     void testCoupling() throws Exception {
         List<Room> rooms = userService.getPopulatedRooms("user1");
         Room room = rooms.get(0);
