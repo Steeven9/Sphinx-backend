@@ -322,7 +322,7 @@ public class DeviceController {
         final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (2)"));
 
 
-        if (deviceService.createCoupling(device1, device2)) {
+        if (couplingService.createCoupling(device1, device2)) {
             return ResponseEntity.noContent().build();
         } else {
             throw new ServerErrorException(DATANOTSAVED);
