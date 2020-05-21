@@ -1,5 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model.triggers;
 
+/**
+ * Represent the various types of conditions available.
+ */
 public enum ConditionType {
     SENSOR_OVER,
     SENSOR_UNDER,

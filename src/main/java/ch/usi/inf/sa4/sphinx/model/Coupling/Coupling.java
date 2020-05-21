@@ -8,6 +8,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Pairs two devices, one will affect the other.
+ * @param <X> Type of the Device observed by the Coupling
+ * @param <Y> Type of the Device affected by the Coupling
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
@@ -15,16 +20,26 @@ public abstract class Coupling<X extends Device, Y extends Device> extends Obser
     @ManyToOne(targetEntity = Device.class)
     private Y device2;
 
-    public Coupling(X device1, Y device2) {
-        super(device1);
-        this.device2 = device2;
+    /**
+     * @param observed the Device to be observed
+     * @param affected the Device to be affected
+     */
+    public Coupling(X observed, Y affected) {
+        super(observed);
+        this.device2 = affected;
     }
 
-    public X getDevice1() {
+    /**
+     * @return the observed device
+     */
+    public X getObserved() {
         return  getDevice();
     }
 
-    public Y getDevice2() {
+    /**
+     * @return the affected device
+     */
+    public Y getAffected() {
         return device2;
     }
 

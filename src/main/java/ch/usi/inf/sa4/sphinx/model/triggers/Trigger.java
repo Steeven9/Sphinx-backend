@@ -12,7 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
- * Del
+ * A Trigger works to activate a Scene.
+ * The trigger class is used in order to trigger a scene when the specified condition
+ * becomes true.
  */
 @Entity
 public abstract class Trigger extends Observer<Device> {
@@ -22,12 +24,20 @@ public abstract class Trigger extends Observer<Device> {
     private Condition condition;
 
 
+    /**
+     * Targets a determinate automation to run it when the condition becomes true.
+     * @param automation the automation to target
+     * @param condition the condition that needs to be verified
+     */
     public Trigger(Automation automation, Condition condition) {
         super(condition.getDevice());
         this.automation = automation;
         this.condition = condition;
     }
 
+    /**
+     * Triggers the trigger making the targeeted Automation run.
+     */
     @Override
     public void run() {
         if (condition.check()) automation.run();
@@ -35,8 +45,10 @@ public abstract class Trigger extends Observer<Device> {
     }
 
 
+    /**
+     * @return The serialised condition of this Trigger.
+     */
     public SerialisableCondition serialise() {
-
         return condition.serialise();
     }
 }

@@ -6,7 +6,26 @@ import ch.usi.inf.sa4.sphinx.model.conditions.OnCondition;
 import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
 import lombok.NonNull;
 
+/**
+ * Factory for Triggers.
+ */
 public class TriggerFactory {
+    /**
+     * Generates a Trigger.
+     *
+     * This function will produce a Trigger that will run the targeted Automation when
+     * the value of the specified Device reaches the target value under the specified
+     * condition type.
+     * If in case of incompatibility between the Device, the type of condition, and the target an
+     * IllegalArgumentException will be thrown.
+     *
+     *
+     * @param device the Device whose status is to to be observed.
+     * @param target the target value of the observed Device
+     * @param type the type of condition to apply
+     * @param automation the automation to run when the condition verifies.
+     * @return the produced trigger.
+     */
     public static Trigger makeEvent(@NonNull Device device,
                                   @NonNull Object target,
                                   @NonNull ConditionType type,

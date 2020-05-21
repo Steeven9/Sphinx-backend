@@ -19,8 +19,8 @@ public class DimmSwitchToDimmLight extends Coupling<DimmableSwitch, DimmableLigh
 
     @Override
     public void run() {
-        getDevice2().setState(getDevice1().getIntensity());
-        ServiceProvider.getStaticDeviceService().update(getDevice2());
+        getAffected().setState(getObserved().getIntensity());
+        ServiceProvider.getStaticDeviceService().update(getAffected());
     }
 
 }
