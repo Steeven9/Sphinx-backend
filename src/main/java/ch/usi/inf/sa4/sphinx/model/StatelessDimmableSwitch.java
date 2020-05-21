@@ -50,8 +50,8 @@ public class StatelessDimmableSwitch extends Device {
     @Override
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if (sd.slider != null) {
-            setIncrement(sd.slider > 0);
+        if (sd.getSlider() != null) {
+            setIncrement(sd.getSlider() > 0);
         }
     }
 

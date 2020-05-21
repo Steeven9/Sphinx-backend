@@ -22,7 +22,7 @@ public abstract class Dimmable extends Device {
     @Override
     public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
-        sd.slider = this.intensity;
+        sd.setSlider(this.intensity);
         return sd;
     }
 
@@ -69,8 +69,8 @@ public abstract class Dimmable extends Device {
     @Override
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if(sd.slider != null) {
-            setState(sd.slider);
+        if(sd.getSlider() != null) {
+            setState(sd.getSlider());
         }
     }
 
