@@ -339,4 +339,11 @@ public class UserService {
         return get(username).map(User::getPassword);
     }
 
+    public Optional<Scene> addScene(String username, Scene scene) {
+        final Optional<User> user = userStorage.findByUsername(username);
+        return user.map(u -> {
+            scene.setUser(u);
+            return  Optional.of(sceneStorage.save(scene));
+        }).orElse(Optional.empty());
+    }
 }
