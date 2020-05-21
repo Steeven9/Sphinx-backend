@@ -1,11 +1,14 @@
 package ch.usi.inf.sa4.sphinx.model.Coupling;
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Switch;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 
 @Entity
+@NoArgsConstructor
 public class SwitchToDevice extends Coupling<Switch, Device> {
 
     public SwitchToDevice(Switch device1, Device device2) {
@@ -15,7 +18,7 @@ public class SwitchToDevice extends Coupling<Switch, Device> {
     @Override
     public void run() {
         getDevice2().setOn(getDevice1().isOn());
-        deviceService.update(getDevice2());
+        ServiceProvider.getStaticDeviceService().update(getDevice2());
     }
 
 }

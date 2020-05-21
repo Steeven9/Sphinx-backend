@@ -1,13 +1,17 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 
-import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +100,40 @@ public class AutomationController {
     }
 
 
+    /**
+     * Delete the automation with the given id.
+     *
+     * @param sessionToken the session token of the User
+     * @param username     the username of the User
+     * @param
+     * @return a ResponseEntity with the ids of the automations owned by the user or
+     * - 404 if not found or
+     * - 401 if not authorized
+     * @see User
+     * @see SerialisableDevice
+     * @see Device
+     */
+    @DeleteMapping({"/{automationId}"})
+    @ApiOperation("Gets the automations")
+    public ResponseEntity deleteAutomations(@RequestHeader("session-token") final String sessionToken,
+                                            @RequestHeader("user") final String username,
+                                            @PathVariable @NonNull Integer automationId
+    ) {
+
+
+        check(username, sessionToken, null);
+        automationService.findById(automationId).ifPresentOrElse(automation -> {
+            if (!automation.getUser().getUsername().equals(username)) throw new NotFoundException("");
+            automationService.deleteAutomation(automation.getId());
+        }, () -> {
+            throw new NotFoundException("");
+        });
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+
 //
 //    Request:
 //    Headers:
@@ -166,6 +204,75 @@ public class AutomationController {
 
 
     /**
+     * modifies the Automation with the given automationId to conform to the fields in the given SerialisableAutomation,
+     * if the user is authenticating with the correct user/session-token pair
+     *
+     * @param automationId the id of the device to be modified
+     * @param automation   an object representing the device to modify
+     * @param sessionToken the session token of the user to authenticate as
+     * @param username     the username of the user to authenticate as
+     * @param errors       validation errors
+     * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
+     * - 400 if bad request or
+     * - 404 if no such device exist or
+     * - 401 if authentication fails or
+     * - 500 in case of a server error
+     * @see SerialisableDevice
+     * @see Device
+     */
+    @PutMapping("/{deviceId}")
+    @ApiOperation("Modifies a Device")
+    public ResponseEntity<SerialisableAutomation> modifyAutomation(@NotBlank @PathVariable final Integer automationId,
+                                                                   @NotBlank @RequestBody final SerialisableAutomation automation,
+                                                                   @RequestHeader("session-token") final String sessionToken,
+                                                                   @RequestHeader("user") final String username,
+                                                                   final Errors errors) {
+
+
+        check(username, sessionToken, errors);
+        Automation storageAutomation = automationService.findById(automationId).orElseThrow(() -> new NotFoundException(""));
+        if (!storageAutomation.getUser().getUsername().equals(username)) throw new NotFoundException("");
+
+        if (automation.getScenes() != null) {
+            List<Integer> putScenes = automation.getScenes(); //gets modified, dont use later or make copy of it
+            storageAutomation.getScenes().forEach(scene -> {
+                if (!putScenes.contains(scene.getId())) {
+                    automationService.removeScene(storageAutomation.getId(), scene.getId());
+                    putScenes.remove(scene.getId()); //THIS WONT WORK IF THE TYPE OF StorableE.getId() is made primitive
+                }
+            });
+            automationService.addScenesIfBelongsTo(username, automationId, putScenes);
+        }
+
+
+        if (automation.getConditions() != null) {
+            automationService.removeConditions(automationId);
+
+            automation.getConditions().forEach(condition ->
+                    automationService.addCondition(automationId,
+                            condition.getSource(),
+                            condition.getEventType(),
+                            condition.getTarget())
+            );
+        }
+
+        if (automation.getTriggers() != null) {
+            automationService.removeTriggers(automationId);
+
+            automation.getTriggers().forEach(trigger ->
+                    automationService.addTrigger(automationId,
+                            trigger.getSource(),
+                            trigger.getEventType(),
+                            trigger.getTarget())
+            );
+        }
+
+
+        return ResponseEntity.ok(storageAutomation.serialise());
+    }
+
+
+    /**
      * Checks if the request parameters are correct. Throws if they are not.
      * It will check that:
      * there are no validation errors
@@ -185,35 +292,7 @@ public class AutomationController {
 
 
     }
-
-
-    /**
-     * modifies the Automation with the given automationId to conform to the fields in the given SerialisableAutomation,
-     * if the user is authenticating with the correct user/session-token pair
-     *
-     * @param automationId the id of the device to be modified
-     * @param automation   an object representing the device to modify
-     * @param sessionToken the session token of the user to authenticate as
-     * @param username     the username of the user to authenticate as
-     * @param errors       validation errors
-     * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
-     * - 400 if bad request or
-     * - 404 if no such device exist or
-     * - 401 if authentication fails or
-     * - 500 in case of a server error
-     * @see SerialisableDevice
-     * @see Device
-     */
-    @PutMapping("/{deviceId}")
-    @ApiOperation("Modifies a Device")
-    public ResponseEntity<SerialisableDevice> modifyDevice(@NotBlank @PathVariable final Integer automationId,
-                                                           @NotBlank @RequestBody final SerialisableAutomation automation,
-                                                           @RequestHeader("session-token") final String sessionToken,
-                                                           @RequestHeader("user") final String username,
-                                                           final Errors errors) {
-
-
-        check(username, sessionToken, errors);
-        throw new NotImplementedException();
-    }
 }
+
+
+

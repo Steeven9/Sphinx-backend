@@ -3,7 +3,7 @@ package ch.usi.inf.sa4.sphinx.model.conditions;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.MotionSensor;
 import ch.usi.inf.sa4.sphinx.model.Sensor;
-import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 import lombok.NonNull;
 
 public class ConditionFactory {
@@ -19,7 +19,7 @@ public class ConditionFactory {
      */
     public static Condition make(@NonNull Device device,
                                  @NonNull Object target,
-                                 @NonNull EventType type
+                                 @NonNull ConditionType type
     ) {
 
         try {

@@ -16,4 +16,5 @@ public class Scene extends StorableE implements Runnable {
     public User getUser(){
         throw new NotImplementedException();
     }
+
 }

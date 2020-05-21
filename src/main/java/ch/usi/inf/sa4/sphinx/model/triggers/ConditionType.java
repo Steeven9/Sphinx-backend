@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model.triggers;
 
-public enum EventType {
+public enum ConditionType {
     SENSOR_OVER,
     SENSOR_UNDER,
     MOTION_DETECTED,

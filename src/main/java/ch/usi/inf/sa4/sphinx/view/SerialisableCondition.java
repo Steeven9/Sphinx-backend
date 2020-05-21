@@ -1,16 +1,23 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 
 public class SerialisableCondition {
-    private EventType eventType;
+    private ConditionType eventType;
     private Integer type;
     private Integer source;
     private String value;
     private Double doubleValue;
     private Boolean booleanValue;
 
-    public EventType getEventType() {
+
+    public SerialisableCondition(ConditionType eventType, Integer source, String value) {
+        this.eventType = eventType;
+        this.source = source;
+        this.value = value;
+    }
+
+    public ConditionType getEventType() {
         return eventType;
     }
 
@@ -43,7 +50,7 @@ public class SerialisableCondition {
 
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(ConditionType eventType) {
         this.eventType = eventType;
     }
 

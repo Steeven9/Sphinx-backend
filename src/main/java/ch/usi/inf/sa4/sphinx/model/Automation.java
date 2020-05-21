@@ -1,18 +1,21 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
+import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
+import ch.usi.inf.sa4.sphinx.service.AutomationService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
+import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import lombok.NonNull;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Automation extends StorableE implements Runnable {
@@ -25,6 +28,9 @@ public class Automation extends StorableE implements Runnable {
     private String name;
     @ManyToOne
     private User user;
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    private String icon;
 
 
     public String getName() {
@@ -76,8 +82,24 @@ public class Automation extends StorableE implements Runnable {
         return user;
     }
 
-    public SerialisableAutomation serialise(){
-       //new SerialisableAutomation(name )
-        return null;
+    public Set<Scene> getScenes() {
+        return scenes;
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
+    }
+
+    public SerialisableAutomation serialise() {
+        List<Integer> sceneIds = scenes.stream().map(Scene::getId).collect(Collectors.toList());
+        List<SerialisableCondition> serialisableConditions = conditions.stream()
+                .map(Condition::serialise)
+                .collect(Collectors.toList());
+
+        AutomationService automationService = ServiceProvider.getAutomationService();
+        List<SerialisableCondition> serialisableTriggers = automationService.findTriggers(id).stream()
+                .map(Trigger::serialise).collect(Collectors.toList());
+
+        return new SerialisableAutomation(id, name, icon, user.getId(), sceneIds, serialisableTriggers, serialisableConditions);
     }
 }

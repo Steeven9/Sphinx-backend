@@ -9,7 +9,7 @@ import lombok.NonNull;
 public class TriggerFactory {
     public static Trigger makeEvent(@NonNull Device device,
                                   @NonNull Object target,
-                                  @NonNull EventType type,
+                                  @NonNull ConditionType type,
                                   @NonNull Automation automation) {
 
         try {
@@ -37,7 +37,7 @@ public class TriggerFactory {
 
 //    public static Event makeEvent(@NonNull Device device,
 //                                  @NonNull Boolean target,
-//                                  @NonNull EventType type,
+//                                  @NonNull ConditionType type,
 //                                  @NonNull Automation automation) {
 //        try {
 //            switch (type) {
@@ -60,7 +60,7 @@ public class TriggerFactory {
 //
 //    public static Event makeEvent(@NonNull Device device,
 //                                  @NonNull Double target,
-//                                  @NonNull EventType type,
+//                                  @NonNull ConditionType type,
 //                                  @NonNull Automation automation) {
 //        try {
 //            switch (type) {

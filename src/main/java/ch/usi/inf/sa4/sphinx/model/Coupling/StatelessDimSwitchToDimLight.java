@@ -3,10 +3,12 @@ package ch.usi.inf.sa4.sphinx.model.Coupling;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.DimmableLight;
 import ch.usi.inf.sa4.sphinx.model.StatelessDimmableSwitch;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 
 @Entity
+@NoArgsConstructor
 public class StatelessDimSwitchToDimLight extends Coupling<StatelessDimmableSwitch, DimmableLight> {
     private double increment;
 
@@ -21,7 +23,7 @@ public class StatelessDimSwitchToDimLight extends Coupling<StatelessDimmableSwit
         if (newState > 1) newState = 1;
         if (newState < 0) newState = 0;
         getDevice2().setState(newState);
-        deviceService.update(getDevice2());
+        ServiceProvider.getStaticDeviceService().update(getDevice2());
     }
 
 }

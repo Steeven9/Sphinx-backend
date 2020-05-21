@@ -1,12 +1,12 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
-import ch.usi.inf.sa4.sphinx.model.triggers.EventType;
+import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 
 public class SerialisableEvent {
     private Integer source;
     private Integer type;
-    private EventType eventType;
+    private ConditionType eventType;
     private String value;
     private Boolean booleanValue;
     private Double doubleValue;
@@ -20,7 +20,7 @@ public class SerialisableEvent {
         this.type = type;
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(ConditionType eventType) {
         this.eventType = eventType;
     }
 
@@ -57,7 +57,7 @@ public class SerialisableEvent {
         return type;
     }
 
-    public EventType getEventType() {
+    public ConditionType getEventType() {
         return eventType;
     }
 

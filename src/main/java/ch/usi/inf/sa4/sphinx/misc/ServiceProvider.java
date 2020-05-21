@@ -1,10 +1,8 @@
 package ch.usi.inf.sa4.sphinx.misc;
 
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.model.Automation;
+import ch.usi.inf.sa4.sphinx.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +18,7 @@ public class ServiceProvider {
     private static UserService staticUserService;
     private static CouplingService staticCouplingService;
     private static RoomService staticRoomService;
+    private static AutomationService staticAutomationService;
     @Autowired
     private DeviceService deviceService;
     @Autowired
@@ -28,6 +27,8 @@ public class ServiceProvider {
     private UserService userService;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private AutomationService automationService;
 
 
     /**
@@ -62,12 +63,21 @@ public class ServiceProvider {
         return staticRoomService;
     }
 
+    /**
+     * @return The AutomationService
+     * @see AutomationService
+     */
+    public static AutomationService getAutomationService(){
+        return staticAutomationService;
+    }
+
     @PostConstruct
     private void init() {
         staticCouplingService = couplingService;
         staticDeviceService = deviceService;
         staticRoomService = roomService;
         staticUserService = userService;
+        staticAutomationService = automationService;
     }
 
 
