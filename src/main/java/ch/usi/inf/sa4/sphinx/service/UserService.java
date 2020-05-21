@@ -1,11 +1,10 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 
-import ch.usi.inf.sa4.sphinx.misc.ImproperImplementationException;
-import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.Scene;
-import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
+import ch.usi.inf.sa4.sphinx.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,26 +31,15 @@ public class UserService {
     @Autowired
     private RoomStorage roomStorage;
     @Autowired
-    private RoomService roomService;
-    @Autowired
-    private DeviceService deviceService;
-    @Autowired
     private DeviceStorage deviceStorage;
-    @Autowired
-    private SceneStorage sceneStorage;
-    @Autowired
-    private SceneService sceneService;
-
-    //Will be used to check that each room belongs to a single user
-    private static final HashMap<String, String> roomToUser = new HashMap<>();
-
 
     /**
      * @deprecated Do not use directly this constructor
      */
     //Needed public otherwise context creation will fail...
-    @Deprecated
+    @Deprecated(forRemoval = false)
     public UserService() {
+        // JPA needs a default constructor.
     }
 
 
@@ -129,8 +116,8 @@ public class UserService {
 
         return user.map(u -> {
             room.setUser(u);
-            return Optional.of(roomStorage.save(room).getId());
-        }).orElse(Optional.empty());
+            return roomStorage.save(room).getId();
+        });
     }
 
 
@@ -179,9 +166,7 @@ public class UserService {
      * @return true if the User with the given Username owns the divice with the given Id
      */
     public boolean ownsDevice(final String username, final Integer deviceId) {
-        return getDevices(username)
-                .map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))
-                ).orElse(false);
+        return getDevices(username).map(ids -> ids.stream().anyMatch(id -> id.equals(deviceId))).orElse(Boolean.FALSE);
     }
 
 
@@ -191,9 +176,8 @@ public class UserService {
      * @param username User of these/this room/s
      * @return a list of rooms
      */
-    @Transactional
     public List<Room> getPopulatedRooms(final String username) {
-        return userStorage.findByUsername(username).map(User::getRooms).orElse(new ArrayList<>());
+        return userStorage.findByUsername(username).map(User::getRooms).orElseGet(ArrayList::new);
     }
 
     /**
@@ -206,7 +190,7 @@ public class UserService {
     public boolean ownsRoom(@NonNull final String username, final Integer roomId) {
         return userStorage.findByUsername(username)
                 .map(user -> user.getRooms().stream().anyMatch(r -> r.getId().equals(roomId)))
-                .orElse(false);
+                .orElse(Boolean.FALSE);
     }
 
 
@@ -223,26 +207,20 @@ public class UserService {
     }
 
     /**
-     * Returns a list of rooms of this user.
-     *
-     * @param username User of these/this room/s
-     * @return a list of rooms
+     * Checks if there exists a valid session with the given username and sessionToken.
+     * Throws an UnauthorisedException if not.
+     * @param username the username to authenticate as
+     * @param sessionToken the session token of the user
+     * @throws UnauthorizedException if session is invalid or user does not exist
      */
-    @Transactional
-    public List<Scene> getPopulatedScenes(final String username) {
-        return sceneStorage.findByUsername(username).stream().collect(Collectors.toList());
-    }
-
-    /**
-     * Checks if the given session token is a match to the one in Storage
-     *
-     * @param username     the username of the User
-     * @param sessionToken the session token
-     * @return true if they match, false if the User does not exist or they don't match
-     */
-    public boolean validSession(@NonNull final String username, @NonNull final String sessionToken) {
-        return userStorage.findByUsername(username)
-                .map(user -> sessionToken.equals(user.getSessionToken())).orElse(false);
+    public void validateSession(@NonNull final String username, @NonNull final String sessionToken) {
+        final Optional<Boolean> foundMatch = userStorage.findByUsername(username)
+                .map(user -> sessionToken.equals(user.getSessionToken()));
+        // Java sucks and sonarqube is a mess, therefore we need to write this shit.
+        // Do not refactor back to !foundMatch.get()
+        if (foundMatch.isEmpty() || Boolean.FALSE.equals(foundMatch.get())) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
     }
 
 
@@ -259,6 +237,11 @@ public class UserService {
     }
 
 
+    /**
+     * Given an id, returns the corresponding User
+     * @param id the id of the requested User
+     * @return the requested User
+     */
     public Optional<User> getById(final Integer id) {
         return userStorage.findById(id);
     }
@@ -282,7 +265,7 @@ public class UserService {
         }
 
         final Room startRoom = roomStorage.findById(startRoomId)
-                .orElseThrow(() -> new ImproperImplementationException("the method ownsRoom doesnt work properly"));
+                .orElseThrow(WrongUniverseException::new);
 
         if (!startRoom.getDevicesIds().contains(deviceId)) {
             return false;
@@ -291,8 +274,8 @@ public class UserService {
         return roomStorage.findById(endRoomId).map(room -> deviceStorage.findById(deviceId).map(device -> {
             device.setRoom(room);
             deviceStorage.save(device);
-            return true;
-        }).orElse(false)).orElse(false);
+            return Boolean.TRUE;
+        }).orElse(Boolean.FALSE)).orElse(Boolean.FALSE);
     }
 
     /**
@@ -321,29 +304,131 @@ public class UserService {
      * @return true if successful else false
      */
     public boolean changeUsername(@NonNull final String oldUsername, @NonNull final String newUsername) {
-        if (newUsername == null) return false;
         try {
             return userStorage.findByUsername(oldUsername).map(user -> {
                 user.setUsername(newUsername);
                 userStorage.save(user);
-                return true;
-            }).orElse(false);
+                return Boolean.TRUE;
+            }).orElse(Boolean.FALSE);
         } catch (final ConstraintViolationException e) {
             return false;
         }
     }
 
-
     //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull String username) {
+    private Optional<String> getUserHash(@NonNull final String username) {
         return get(username).map(User::getPassword);
     }
 
-    public Optional<Scene> addScene(String username, Scene scene) {
+    /**
+     * Updates values of all sensors of a given user.
+     *
+     * @param username owner of all devices
+     */
+    public void generateValue(final String username) {
+        final Optional<List<Device>> optionalDevices = this.getPopulatedDevices(username);
+        if (optionalDevices.isPresent()) {
+            final List<Device> devices = optionalDevices.get();
+            for (final Device device : devices) {
+                if (device instanceof Sensor) {
+                    ((Sensor) device).generateValue(); //updates the value of every sensor
+                    deviceStorage.save(device);
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes the user1  from the guest list of user2  (aka, user1 is the host, user2 is the guest).
+     *
+     * @param host  the user1 username
+     * @param guest the user2 username
+     * @return true if guest is successfully removed
+     **/
+    public boolean removeGuest(final String host, final String guest) {
+        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+            return false;
+        }
+
+        final Optional<User> user = userStorage.findByUsername(host);
+        final Optional<User> guestUser = userStorage.findByUsername(guest);
+
+        if (guestUser.isPresent() && user.isPresent()) {
+            guestUser.get().removeHost(user.get());
+            userStorage.save(user.get());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Add the user2 (username2) in the guest list of user1 (username1).
+     *
+     * @param guest        the user1
+     * @param hostUsername the user2
+     **/
+    public void addGuest(final String guest, final String hostUsername) {
+        final Optional<User> user = userStorage.findByUsername(guest);
+        final Optional<User> host = userStorage.findByUsername(hostUsername);
+
+        if (guest.equals(hostUsername)) {
+            throw new UnauthorizedException("You can't add yourself as guest");
+        }
+
+        if (user.isEmpty() || host.isEmpty()) {
+            throw new NotFoundException("This user does not exist");
+        }
+
+        user.get().addHost(host.get());
+        userStorage.save(user.get());
+
+        user.get().addHost(host.get());
+    }
+
+
+
+    /**
+     * Determines if user is a guest of second user.
+     *
+     * @param host  the user's' username
+     * @param guest the second user's username
+     * @return true if the user is considered the second user's guest
+     */
+    public boolean isGuestOf(final String host, final String guest) {
+        final Optional<User> user = userStorage.findByUsername(host);
+
+        final Optional<User> guestUsername = userStorage.findByUsername(guest);
+        if (user.isEmpty() || guestUsername.isEmpty()) {
+            return false;
+        }
+
+        return user.get().getHosts().contains(guestUsername.get());
+
+    }
+
+    /**
+     * Returns a list of the hosts.
+     *
+     * @param username the user's username
+     * @return a list of the guests
+     **/
+    public List<User> getHosts(final String username) {
         final Optional<User> user = userStorage.findByUsername(username);
-        return user.map(u -> {
-            scene.setUser(u);
-            return  Optional.of(sceneStorage.save(scene));
-        }).orElse(Optional.empty());
+        if (user.isEmpty()) {
+            throw new NotFoundException("This user does not exist");
+        }
+        return user.get().getHosts();
+    }
+
+    /**
+     * Returns the list of users who have access to your house as guests.
+     *
+     * @param username the name of the user
+     * @return all the guests of a given user
+     */
+    public List<User> returnOwnGuests(@NonNull final String username) {
+        return userStorage.findAll().stream().filter(user ->
+            user.getHosts().stream().map(User::getUsername).anyMatch(s -> s.equals(username))
+        ).collect(Collectors.toList());
     }
 }
