@@ -265,7 +265,7 @@ public class GuestControllerTest {
 
     }
 
-    @Disabled // Waiting for scenes
+    @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldGet401OnGetGuestScenesWithWrongGuest() throws Exception {
         this.mockmvc.perform(get("/guests/user1/scenes")
@@ -276,7 +276,7 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Disabled // Waiting for scenes
+    @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldSuccessfullyGetGuestScenes() throws Exception {
         this.mockmvc.perform(post("/guests/")
