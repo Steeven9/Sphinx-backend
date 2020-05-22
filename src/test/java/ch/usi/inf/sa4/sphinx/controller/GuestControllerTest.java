@@ -245,6 +245,8 @@ public class GuestControllerTest {
                 .andExpect(status().is(204));
     }
 
+    // Waiting for the fix on userService.isGuestOf
+//    @Disabled
     @Test
     public void shouldGet401OnGetGuestDevicesWithWrongGuest() throws Exception {
         this.mockmvc.perform(get("/guests/user1/devices")
@@ -253,10 +255,10 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(401))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-
     }
 
-    @Disabled
+    // Waiting for the fix on userService.isGuestOf
+//    @Disabled
     @Test
     public void shouldSuccessfullyGetGuestDevices() throws Exception {
         this.mockmvc.perform(post("/guests/")
