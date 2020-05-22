@@ -2,6 +2,9 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.junit.jupiter.api.Disabled;
 
+import java.util.List;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,6 +34,8 @@ public class GuestControllerTest {
 
     @Autowired
     private MockMvc mockmvc;
+    @Autowired
+    private UserService userService;
     @Autowired
     private DummyDataAdder dummyDataAdder;
 
@@ -245,6 +252,16 @@ public class GuestControllerTest {
     }
 
     @Test
+    public void shouldGet401OnGetGuestDevicesWithNotExistingHost() throws Exception {
+        this.mockmvc.perform(get("/guests/fakeUser/devices")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
     public void shouldSuccessfullyGetGuestDevices() throws Exception {
         this.mockmvc.perform(post("/guests/")
                 .header("user", "user1")
@@ -262,10 +279,110 @@ public class GuestControllerTest {
 
     }
 
+    @Test
+    public void shouldSuccessfullyGetGuestDevicesSecurityCameras() throws Exception {
+        // Create two new users
+        User guest = new User("guest@smarthut.xyz", "1234", "guest", "Guest User");
+        guest.setVerified(true);
+        guest.setSessionToken("guestSessionToken");
+        User host = new User("host@smarthut.xyz", "1234", "host", "Host User");
+        host.setVerified(true);
+        host.setSessionToken("hostSessionToken");
+        userService.insert(guest);
+        userService.insert(host);
+
+        // Post Room to host
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "hostSessionToken")
+                .header("user", "host")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("host");
+        Integer roomId = rooms.get(0).getId();
+
+        // Add guest as guest of host
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "host")
+                .header("session-token", "hostSessionToken")
+                .content("guest")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        // Enable host security cameras
+        this.mockmvc.perform(put("/user/host")
+                .header("session-token", "hostSessionToken")
+                .content("{\"allowSecurityCameras\": " + true + "}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        // guest gets host devices with allowance to security cameras but with no security cameras
+        this.mockmvc.perform(get("/guests/host/devices")
+                .header("user", "guest")
+                .header("session-token", "guestSessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        // Add a security camera to host
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "hostSessionToken")
+                .header("user", "host")
+                .content("{\"name\":\"camera\",\"icon\":\"/images/generic_device\", \"type\":\"13\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // guest gets host devices with allowance to security cameras and with a security camera
+        this.mockmvc.perform(get("/guests/host/devices")
+                .header("user", "guest")
+                .header("session-token", "guestSessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        // Disable host security cameras
+        this.mockmvc.perform(put("/user/host")
+                .header("session-token", "hostSessionToken")
+                .content("{\"allowSecurityCameras\": " + false + "}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        // guest gets host devices without allowance to security cameras and with a security camera
+        this.mockmvc.perform(get("/guests/host/devices")
+                .header("user", "guest")
+                .header("session-token", "guestSessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        // Delete guest as guest of host
+        this.mockmvc.perform(delete("/guests/guest")
+                .header("user", "host")
+                .header("session-token", "hostSessionToken"))
+                .andDo(print())
+                .andExpect(status().is(204));
+    }
+
     @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldGet401OnGetGuestScenesWithWrongGuest() throws Exception {
         this.mockmvc.perform(get("/guests/user1/scenes")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Disabled(value = "Waiting for scenes")
+    @Test
+    public void shouldGet401OnGetGuestScenesWithNotExistingHost() throws Exception {
+        this.mockmvc.perform(get("/guests/fakeUser/scenes")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -291,17 +408,5 @@ public class GuestControllerTest {
                 .andExpect(status().is(200));
 
     }
-
-
-//    @Disabled("Not Implemented")
-//    @Test
-//    public void shouldSuccessfullyGetGuestScenes() throws Exception {
-//        this.mockmvc.perform(get("/guests/user2/scenes/{guest_username}").header("user", "user2").header("session-token", "banana"))
-//                .andDo(print())
-//                .andExpect(status().is(200))
-    //               .andExpect(content().contentType(MediaType.APPLICATION_JSON)
-//    }
-
-
 
 }
