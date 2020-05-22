@@ -4,6 +4,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ch.usi.inf.sa4.sphinx.model.User;
 
 import org.junit.jupiter.api.TestInstance;
 
@@ -35,15 +36,8 @@ public class GuestControllerTest {
     private DummyDataAdder dummyDataAdder;
 
     @BeforeAll
-    void init() throws Exception {
+    void init() {
         dummyDataAdder.addDummyData();
-//        this.mockmvc.perform(post("/guests/")
-//                .header("user", "user2")
-//                .header("session-token", "user2SessionToken")
-//                .content("user1")
-//                .contentType("application/json"))
-//                .andDo(print())
-//                .andExpect(status().is(201));
     }
 
     @Test
