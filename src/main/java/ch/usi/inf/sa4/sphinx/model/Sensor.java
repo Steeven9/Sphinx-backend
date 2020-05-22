@@ -108,8 +108,8 @@ public abstract class Sensor extends Device {
     @Override
     public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
-        sd.tolerance = this.getTolerance();
-        sd.quantity = this.getQuantity();
+        sd.setTolerance(this.getTolerance());
+        sd.setQuantity(this.getQuantity());
         return sd;
     }
 
@@ -119,8 +119,8 @@ public abstract class Sensor extends Device {
     @Override
     public void setPropertiesFrom(SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if (sd.tolerance != null) this.setTolerance(sd.tolerance);
-        if (sd.quantity != null) this.setQuantity(sd.quantity);
+        if (sd.getTolerance() != null) this.setTolerance(sd.getTolerance());
+        if (sd.getQuantity() != null) this.setQuantity(sd.getQuantity());
     }
 
     /**

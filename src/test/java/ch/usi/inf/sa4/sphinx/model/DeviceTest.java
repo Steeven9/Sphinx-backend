@@ -57,7 +57,7 @@ class DeviceTest {
     d.setOn(false);
     d.setName("TEST_NAME");
     SerialisableDevice sd = d.serialise();
-    assertEquals("TEST_NAME", sd.name);
+    assertEquals("TEST_NAME", sd.getName());
     assertFalse(d.isOn());
 }
 //
