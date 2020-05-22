@@ -99,11 +99,11 @@ public class GuestController {
      * @param username      the username of the user.
      * @param sessionToken  the session token used for validation
      * @param guestUsername a String representing the username who wants to add the former as guest guest
-     * @return a ResponseEntity with status code 203 and a body with the newly-created guest's data if the process was successful or
+     * @return a ResponseEntity with status code 201 and a body with the newly-created guest's data if the process was successful or
      * 401 if unauthorized
      */
     @PostMapping({"", "/"})
-    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody final SerialisableUser guestUsername,
+    public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody final String guestUsername,
                                                           @RequestHeader("session-token") final String sessionToken,
                                                           @RequestHeader("user") final String username,
                                                           final Errors errors) {
@@ -111,14 +111,14 @@ public class GuestController {
             throw new BadRequestException("field missing");
         }
 
-        final Optional<User> guest = userService.get(guestUsername.username);
+        final Optional<User> guest = userService.get(guestUsername);
         userService.validateSession(username, sessionToken);
 
         if (guest.isEmpty()) {
             throw new NotFoundException("This user doesn't exist");
         }
 
-        userService.addGuest(guestUsername.username, username);
+        userService.addGuest(guestUsername, username);
         return ResponseEntity.status(201).build();
     }
 
