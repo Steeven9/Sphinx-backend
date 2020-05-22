@@ -390,8 +390,8 @@ public class UserService {
      */
     public boolean isGuestOf(final String host, final String guest) {
         final Optional<User> user = userStorage.findByUsername(host);
-
         final Optional<User> guestUsername = userStorage.findByUsername(guest);
+
         if (user.isEmpty() || guestUsername.isEmpty()) {
             return false;
         }
