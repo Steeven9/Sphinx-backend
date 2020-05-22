@@ -346,7 +346,7 @@ public class UserService {
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
-        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+        if (!isGuestOf(host, guest)) { //this checks if host is in the guestList of guest
             return false;
         }
 
@@ -402,7 +402,7 @@ public class UserService {
             return false;
         }
 
-        return user.get().getHosts().contains(guestUsername.get());
+        return guestUsername.get().getHosts().contains(user.get());
 
     }
 
