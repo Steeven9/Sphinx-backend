@@ -186,24 +186,13 @@ public class GuestControllerTest {
     }
 
     @Test
-    public void shouldSuccessfullyReturnGuestsEmpty() throws Exception {
+    public void shouldSuccessfullyReturnGuests() throws Exception {
         this.mockmvc.perform(get("/guests")
-                .header("user", "user2")
-                .header("session-token", "user2SessionToken"))
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    public void shouldSuccessfullyPostAndReturnGuests() throws Exception {
-        this.mockmvc.perform(post("/guests/")
-                .header("session-token", "user2SessionToken")
-                .header("user", "user2")
-                .content("user1")
-                .contentType("application/json"))
-                .andDo(print())
-                .andExpect(status().is(201));
 
         this.mockmvc.perform(get("/guests")
                 .header("user", "user2")
@@ -213,9 +202,15 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Disabled("401")
     @Test
     public void shouldSuccessfullyReturnHousesAccess() throws Exception {
+        this.mockmvc.perform(get("/guests/houses")
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
         this.mockmvc.perform(get("/guests/houses")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
@@ -223,25 +218,60 @@ public class GuestControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
-    @Disabled("401")
+
+    @Test
+    public void shouldGet500OnDeleteGuestWithWrongGuest() throws Exception {
+        this.mockmvc.perform(delete("/guests/fakeUser")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(500));
+    }
+
     @Test
     public void shouldSuccessfullyDeleteGuest() throws Exception {
-        this.mockmvc.perform(delete("/guests/guest2")
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("emptyUser")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        this.mockmvc.perform(delete("/guests/emptyUser")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(204));
     }
 
-    @Disabled("401")
     @Test
-    public void shouldSuccessfullyGetGuestDevices() throws Exception {
-        this.mockmvc.perform(get("/guests/user2/devices/guest1")
+    public void shouldGet401OnGetGuestDevicesWithWrongGuest() throws Exception {
+        this.mockmvc.perform(get("/guests/user1/devices")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
-                .andExpect(status().is(200))
+                .andExpect(status().is(401))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+    }
+
+    @Disabled
+    @Test
+    public void shouldSuccessfullyGetGuestDevices() throws Exception {
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("user1")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        this.mockmvc.perform(get("/guests/user2/devices")
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200));
 
     }
 
