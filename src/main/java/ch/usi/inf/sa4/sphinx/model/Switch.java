@@ -54,6 +54,12 @@ public class Switch extends Device implements StatusHolder<Boolean> {
 
 
     @Override
+    public void setOn(boolean on) {
+        super.setOn(on);
+        triggerEffects();
+    }
+
+    @Override
     protected DeviceType getDeviceType() {
         return DeviceType.SWITCH;
     }

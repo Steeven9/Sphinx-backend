@@ -72,4 +72,8 @@ public class SensorQuantityCondition extends Condition<Sensor> {
         return target.toString();
     }
 
+//    @Override
+//    public boolean equals(Object obj) {
+//        return th
+//    }
 }
