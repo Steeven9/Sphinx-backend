@@ -9,7 +9,6 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -105,11 +104,7 @@ public class GuestController {
     @PostMapping({"", "/"})
     public ResponseEntity<SerialisableUser> createGuestOf(@RequestBody final String guestUsername,
                                                           @RequestHeader("session-token") final String sessionToken,
-                                                          @RequestHeader("user") final String username,
-                                                          final Errors errors) {
-        if (errors.hasErrors()) {
-            throw new BadRequestException("field missing");
-        }
+                                                          @RequestHeader("user") final String username) {
 
         final Optional<User> guest = userService.get(guestUsername);
         userService.validateSession(username, sessionToken);
