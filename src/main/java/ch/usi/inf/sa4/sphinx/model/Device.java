@@ -209,7 +209,7 @@ public abstract class Device extends StorableE {
         serialisableDevice.setUserName( owningUser.getUsername());
         serialisableDevice.setSwitchedIds(deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray());
         serialisableDevice.setSwitchesIds(deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray());
-        if (serialisableDevice.getSwitched().length == 0) serialisableDevice.setSwitchesIds(null);
+        if (serialisableDevice.getSwitched().length == 0) serialisableDevice.setSwitchedIds(null);
         if (serialisableDevice.getSwitches().length == 0) serialisableDevice.setSwitchesIds(null);
         return serialisableDevice;
     }
