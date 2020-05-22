@@ -35,8 +35,36 @@ public class GuestControllerTest {
     private DummyDataAdder dummyDataAdder;
 
     @BeforeAll
-    void init() {
+    void init() throws Exception {
         dummyDataAdder.addDummyData();
+        // add guest user1 to user2
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("{\"username\": \"user1\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+    }
+
+    @Test
+    public void testPosting() throws Exception {
+
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("{\"username\": \"notExixsts\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(404));
+
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("{\"username\": \"user1\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
     }
 
     @Disabled("post doesnt work")
@@ -198,21 +226,7 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(204));
     }
-    @Disabled("401")
-    @Test
-    public void shouldSuccessfullyCreateGuest() throws Exception {
 
-
-
-        this.mockmvc.perform(post("/guests/")
-                .header("user", "user2")
-                .header("session-token", "user2SessionToken")
-                .content("{\"email\": \"mario@usi.ch\", \"fullname\": \"mariorossi\", \"password\":\"1234\", \"username\": \"user1\"}")
-                .contentType("application/json"))
-                .andDo(print())
-                .andExpect(status().is(204))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
     @Disabled("401")
     @Test
     public void shouldSuccessfullyGetGuestDevices() throws Exception {
