@@ -37,19 +37,17 @@ public class GuestControllerTest {
     @BeforeAll
     void init() throws Exception {
         dummyDataAdder.addDummyData();
-        // add guest user1 to user2
-        this.mockmvc.perform(post("/guests/")
-                .header("user", "user2")
-                .header("session-token", "user2SessionToken")
-                .content("user1")
-                .contentType("application/json"))
-                .andDo(print())
-                .andExpect(status().is(201));
+//        this.mockmvc.perform(post("/guests/")
+//                .header("user", "user2")
+//                .header("session-token", "user2SessionToken")
+//                .content("user1")
+//                .contentType("application/json"))
+//                .andDo(print())
+//                .andExpect(status().is(201));
     }
 
     @Test
     public void testPosting() throws Exception {
-
         this.mockmvc.perform(post("/guests/")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken")
@@ -245,8 +243,6 @@ public class GuestControllerTest {
                 .andExpect(status().is(204));
     }
 
-    // Waiting for the fix on userService.isGuestOf
-//    @Disabled
     @Test
     public void shouldGet401OnGetGuestDevicesWithWrongGuest() throws Exception {
         this.mockmvc.perform(get("/guests/user1/devices")
@@ -257,8 +253,6 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    // Waiting for the fix on userService.isGuestOf
-//    @Disabled
     @Test
     public void shouldSuccessfullyGetGuestDevices() throws Exception {
         this.mockmvc.perform(post("/guests/")
@@ -270,6 +264,36 @@ public class GuestControllerTest {
                 .andExpect(status().is(201));
 
         this.mockmvc.perform(get("/guests/user2/devices")
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+    }
+
+    @Disabled // Waiting for scenes
+    @Test
+    public void shouldGet401OnGetGuestScenesWithWrongGuest() throws Exception {
+        this.mockmvc.perform(get("/guests/user1/scenes")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Disabled // Waiting for scenes
+    @Test
+    public void shouldSuccessfullyGetGuestScenes() throws Exception {
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("user1")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        this.mockmvc.perform(get("/guests/user2/scenes")
                 .header("user", "user1")
                 .header("session-token", "user1SessionToken"))
                 .andDo(print())
