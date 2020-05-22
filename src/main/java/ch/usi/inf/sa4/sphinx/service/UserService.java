@@ -132,7 +132,6 @@ public class UserService {
         if (!ownsRoom(username, roomId)) {
             return false;
         }
-//
 
         final Optional<User> user = userStorage.findByUsername(username);
         user.ifPresent(
@@ -313,11 +312,6 @@ public class UserService {
         } catch (final ConstraintViolationException e) {
             return false;
         }
-    }
-
-    //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull final String username) {
-        return get(username).map(User::getPassword);
     }
 
     /**
