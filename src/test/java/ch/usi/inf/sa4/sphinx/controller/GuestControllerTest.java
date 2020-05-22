@@ -239,7 +239,7 @@ public class GuestControllerTest {
 
     @Test
     public void shouldGet401OnGetGuestDevicesWithWrongGuest() throws Exception {
-        this.mockmvc.perform(get("/guests/user1/devices")
+        this.mockmvc.perform(get("/guests/emptyUser/devices")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -248,19 +248,18 @@ public class GuestControllerTest {
     }
 
     @Test
-    @Disabled(value = "try to fix pipeline")
     public void shouldSuccessfullyGetGuestDevices() throws Exception {
         this.mockmvc.perform(post("/guests/")
-                .header("user", "user2")
-                .header("session-token", "user2SessionToken")
-                .content("user1")
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("user2")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201));
 
-        this.mockmvc.perform(get("/guests/user2/devices")
-                .header("user", "user1")
-                .header("session-token", "user1SessionToken"))
+        this.mockmvc.perform(get("/guests/user1/devices")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(200));
 
