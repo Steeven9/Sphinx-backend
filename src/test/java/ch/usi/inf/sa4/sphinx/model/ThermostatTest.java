@@ -93,30 +93,6 @@ class ThermostatTest {
         assertEquals(Thermostat.States.COOLING, thermostat.getState());
     }
 
-    @Test
-    @Disabled(value = "test serialize method inside controller tests to ensure correct flow")
-    void testSerializer() {
-        SerialisableDevice sd = thermostat.serialise();
-        double quantity = thermostat.getQuantity();
-        double tolerance = thermostat.getTolerance();
-        assertAll(
-                () -> assertEquals(sd.getSlider(), thermostat.getTargetTemp()),
-                () -> assertEquals(1, sd.getState()),
-                () -> assertEquals(0, sd.getSource()),
-                () -> assertEquals(thermostat.getTolerance(), sd.getTolerance()),
-                () -> assertEquals(thermostat.getQuantity(), sd.getQuantity()),
-                () -> assertTrue(sd.getAverageTemp() <= quantity + tolerance && sd.getAverageTemp() >= quantity - tolerance)
-        );
-        thermostat.setPropertiesFrom(sd);
-        thermostat.setTargetTemp(100);
-        assertEquals(3, thermostat.serialise().getState());
-
-        thermostat.setTargetTemp(1);
-        assertEquals(2, thermostat.serialise().getState());
-
-        thermostat.setOn(false);
-        assertEquals(0, thermostat.serialise().getState());
-    }
 
     @Test
     void testAverage() {

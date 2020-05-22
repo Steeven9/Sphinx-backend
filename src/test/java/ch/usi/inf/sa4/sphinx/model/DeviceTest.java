@@ -46,21 +46,7 @@ class DeviceTest {
         d.setOn(false);
         assertFalse(d.isOn());
     }
-//
-@Test
-@Disabled(value = "test serialize method inside controller tests to ensure correct flow")
-    void shouldReturnSerialisableVersion() {
-    Device d = new LightSensor();
-    Room room = new Room();
-    room.setUser(new User());
-    d.setRoom(room);
-    d.setOn(false);
-    d.setName("TEST_NAME");
-    SerialisableDevice sd = d.serialise();
-    assertEquals("TEST_NAME", sd.getName());
-    assertFalse(d.isOn());
-}
-//
+
     @Test
     void shouldAddObserver() {
         Device d = new SmartPlug();
