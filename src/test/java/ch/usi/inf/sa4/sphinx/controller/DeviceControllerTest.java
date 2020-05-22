@@ -37,7 +37,6 @@ class DeviceControllerTest {
     @Autowired
     private DummyDataAdder dummyDataAdder;
 
-    //TODO: test randomness
 
     @BeforeAll
     void init() {
@@ -227,7 +226,7 @@ class DeviceControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-        String[] content = mvcResult.getResponse().getContentAsString().split("[:\\,]");
+        String[] content = mvcResult.getResponse().getContentAsString().split("[:,]");
         for (int i = 0; i < content.length; i++) {
             if (content[i].equals("\"name\"")) {
                 assertEquals("\"someRandName\"", content[++i]);
@@ -257,7 +256,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    void shouldGet404WithWrongUser() throws Exception {
+    void shouldGet401WithWrongUser() throws Exception {
         this.mockmvc.perform(get("/devices/")
                 .header("user", "user1")
                 .header("session-token", "user2SessionToken"))
@@ -291,13 +290,6 @@ class DeviceControllerTest {
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(401));
-
-//        this.mockmvc.perform(delete("/devices/1")
-//                .header("user","user2")
-//                .header("session-token","token")
-//                .contentType("application/json"))
-//                .andDo(print())
-//                .andExpect(status().is(401));
     }
 
 
@@ -426,12 +418,11 @@ class DeviceControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        String[] content = mvcResult.getResponse().getContentAsString().split("[:\\,]");
-        Integer switchId = 0;
+        String[] content = mvcResult.getResponse().getContentAsString().split("[:,]");
+        int switchId = 0;
         for (int i = 0; i < content.length; i++) {
             if (content[i].equals("{\"id\"")) {
                 String str = content[i + 1];
-//                str = str.substring(1, str.length()-2);
                 switchId = Integer.parseInt(str);
                 break;
             }
@@ -452,5 +443,68 @@ class DeviceControllerTest {
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @Disabled(value = "401 when adding a guest to user 1")
+    void increaseGetConditionCoverage() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Room room = rooms.get(0);
+
+        MvcResult mvcResult = this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user1SessionToken")
+                .header("user", "user1")
+                .content("{\"name\":\"switch\",\"icon\":\"/images/generic_device\", \"type\":\"13\",\"roomId\":\"" + room.getId() + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String[] content = mvcResult.getResponse().getContentAsString().split("[:,]");
+        int cameraId = 0;
+        for (int i = 0; i < content.length; i++) {
+            if (content[i].equals("{\"id\"")) {
+                String str = content[i + 1];
+                cameraId = Integer.parseInt(str);
+                break;
+            }
+        }
+
+        this.mockmvc.perform(get("/devices/" + cameraId)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        this.mockmvc.perform(put("/user/user1")
+                .header("session-token", "user1SessionToken")
+                .content("{\"email\": \"test1@smarthut.xyz\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test2\", \"allowSecurityCameras\": \"true\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        this.mockmvc.perform(get("/devices/" + cameraId)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(401));
+
+        this.mockmvc.perform(post("/guests/") //error 401
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("emptyUser")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        this.mockmvc.perform(get("/devices/" + room.getDevices().get(0).getId()) // light
+                .header("user", "emptyUser")
+                .header("session-token", "emptyUserSessionToken")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(401));
     }
 }
