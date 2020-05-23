@@ -3,12 +3,17 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 /**
  * Device repository.
  */
 @Repository
-public interface DeviceStorage extends JpaRepository<Device, Integer> {}
+@Transactional
+public interface DeviceStorage extends JpaRepository<Device, Integer> {
+}
 
 

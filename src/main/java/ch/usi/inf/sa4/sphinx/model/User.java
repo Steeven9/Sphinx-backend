@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
 import lombok.NonNull;
@@ -11,7 +12,6 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 /**
@@ -53,7 +53,9 @@ public class User extends StorableE {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
     )
     private List<Scene> scenes;
 
@@ -266,17 +268,17 @@ public class User extends StorableE {
 
 
 
-    /**
-     * adds a the given scene to the User
-     * @param scene the scene to be added
-     */
-    public void addScene(final Scene scene) {
-        if (scene == null) {
-            throw new IllegalArgumentException("Scene can't be null");
-        }
-        scene.setUser(this);
-        scenes.add(scene);
-    }
+//    /**
+//     * adds a the given scene to the User
+//     * @param scene the scene to be added
+//     */
+//    public void addScene(final Scene scene) {
+//        if (scene == null) {
+//            throw new IllegalArgumentException("Scene can't be null");
+//        }
+//        scene.setUser(this);
+//        scenes.add(scene);
+//    }
 
 
     /**
