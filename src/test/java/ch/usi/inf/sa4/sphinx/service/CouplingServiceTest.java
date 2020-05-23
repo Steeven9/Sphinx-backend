@@ -16,7 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class CouplingServiceTest {
     @Autowired
     RoomService roomService;
@@ -39,15 +38,18 @@ public class CouplingServiceTest {
         User newUser = new User("test@mail.com", "1234", username, "mario rossi");
         userService.insert(newUser);
         user = userService.get(username).get();
-        user.addRoom(new Room());
-        userService.update(user);
-        user = userService.get(user.getUsername()).get();
+        userService.addRoom(username, new Room());
+        int roomId = user.g
+
     }
 
     @AfterEach
     void clean() {
         userService.delete(username);
     }
+
+
+
 
 
 
