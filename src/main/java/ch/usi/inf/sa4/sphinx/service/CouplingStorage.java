@@ -29,4 +29,6 @@ public interface CouplingStorage extends JpaRepository<Coupling, Integer> {
     List<Coupling> findByDevice2IdOrderById(Integer id);
 
     void deleteByDeviceIdAndDevice2Id(Integer id1, Integer id2);
+
+    void deleteByDevice2Id(Integer id);
 }

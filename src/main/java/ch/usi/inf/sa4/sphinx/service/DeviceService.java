@@ -39,6 +39,10 @@ public class DeviceService {
         return deviceStorage.findById(deviceId);
     }
 
+    public void delete(final int deviceId){
+        deleteSwitchedBy(deviceId);
+        deviceStorage.deleteById(deviceId);
+    }
 
     /**
      * @param device the device to update
@@ -69,6 +73,17 @@ public class DeviceService {
                 .stream()
                 .map(Coupling::getObserved)
                 .map(device -> ((Device) device).getId()).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Deletes all the couplings that affect this device.
+     *
+     * @param deviceId the id of the device
+     * @see Device
+     */
+    public void deleteSwitchedBy(final int deviceId) {
+        couplingStorage.deleteByDevice2Id(deviceId);
     }
 
 

@@ -5,6 +5,8 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -14,10 +16,11 @@ import javax.persistence.*;
  * @param <Y> Type of the Device affected by the Coupling
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor
 public abstract class Coupling<X extends Device, Y extends Device> extends Observer<X> {
     @ManyToOne(targetEntity = Device.class)
+    //@OnDelete(action = OnDeleteAction.CASCADE)//TODO discover why this doesn't work but bidirectional does
     private Y device2;
 
     /**

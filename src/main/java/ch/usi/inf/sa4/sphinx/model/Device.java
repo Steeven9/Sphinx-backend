@@ -25,10 +25,19 @@ public abstract class Device extends StorableE {
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
 
     @OneToMany(orphanRemoval = true,
-            cascade = CascadeType.REMOVE,
-            fetch = FetchType.LAZY
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "device"
     )
     protected final List<Observer> observers;
+
+    //possibly remove from here, this is just so that all Couplings targeting this device are removed with it
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "device2"
+    )
+    private final List<Coupling> switchedBy;
 
     @ManyToOne //TODO check why this had a merge cascade type
     @JoinColumn(name = "room_id",
@@ -50,6 +59,7 @@ public abstract class Device extends StorableE {
         on = true;
         this.observers = new ArrayList<>();
         this.deviceType = getDeviceType();
+        this.switchedBy = new ArrayList<>();
     }
 
 
