@@ -320,8 +320,8 @@ public class DeviceController {
      *
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
-     * @param id1  id of the first device to couple
-     * @param id2  id of the second device to couple
+     * @param id1          id of the first device to couple
+     * @param id2          id of the second device to couple
      * @return a ResponseEntity with 204 if coupling is successful or
      * - 404 if not found or
      * - 401 if not authorized or
@@ -362,8 +362,8 @@ public class DeviceController {
      *
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
-     * @param device1_id   id of the first device's couple to delete
-     * @param device2_id   id of the second device's couple to delete
+     * @param id1          id of the first device's couple to delete
+     * @param id2          id of the second device's couple to delete
      * @return a ResponseEntity with 200 if deletion is successful or
      * - 404 if not found or
      * - 401 if not authorized or
@@ -372,15 +372,9 @@ public class DeviceController {
     @DeleteMapping("/couple/{device1_id}/{device2_id}")
     public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username,
-                                                  @PathVariable final String device1_id,
-                                                  @PathVariable final String device2_id) {
+                                                  @NotNull @PathVariable(name = "device1_id") final Integer id1,
+                                                  @NotNull @PathVariable(name = "device2_id") final Integer id2) {
 
-        if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
-            throw new BadRequestException("Some fields are missing");
-        }
-
-        final Integer id1 = Integer.parseInt(device1_id);
-        final Integer id2 = Integer.parseInt(device2_id);
 
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
@@ -390,11 +384,10 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
-//        deviceService.get(id1).orElseThrow(() -> new NotFoundException("No devices found (1)"));
-//        deviceService.get(id2).orElseThrow(() -> new NotFoundException("No devices found (2)"));
 
 
         couplingService.removeByDevicesIds(id1, id2);
+        couplingService.removeByDevicesIds(id2, id1);
 
         return ResponseEntity.ok().build();
     }

@@ -17,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CouplingServiceTest {
+public class AutomationControllerTest {
     @Autowired
     RoomService roomService;
     @Autowired
@@ -48,9 +48,6 @@ public class CouplingServiceTest {
     void clean() {
         userService.delete(username);
     }
-
-
-
 
 
 }

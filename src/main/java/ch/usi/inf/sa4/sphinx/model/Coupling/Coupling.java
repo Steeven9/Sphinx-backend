@@ -1,9 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model.Coupling;
 
-import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Observer;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -20,7 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public abstract class Coupling<X extends Device, Y extends Device> extends Observer<X> {
     @ManyToOne(targetEntity = Device.class)
-    //@OnDelete(action = OnDeleteAction.CASCADE)//TODO discover why this doesn't work but bidirectional does
+    //TODO discover why this doesn't work but bidirectional does
     private Y device2;
 
     /**

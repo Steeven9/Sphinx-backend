@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.service;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.Optional;
  * Repository for Couplings.
  */
 @Repository
+@Transactional
 public interface CouplingStorage extends JpaRepository<Coupling, Integer> {
 //    /**
 //     * Lists all Couplings belonging to a Device with the given ID
