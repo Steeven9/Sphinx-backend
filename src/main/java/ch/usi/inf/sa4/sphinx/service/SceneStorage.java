@@ -15,26 +15,5 @@ import java.util.Optional;
 @Repository
 public interface SceneStorage extends JpaRepository<Scene, Integer> {
 
-    /**
-     * finds a Scene by its unique username
-     * @param username the username
-     * @return the found User
-     */
-    @Transactional
-    Optional<Scene> findByUsername(String username);
-    /**
-     * finds a User by its unique email
-     * @param email the email
-     * @return the found User
-     */
-    @Transactional
-    Optional<Scene> findByEmail(String email);
-
-    /**
-     * Deletes a user by its unique username.
-     * @param username the username
-     */
-    @Transactional
-    void deleteByUsername(String username);
 
 }

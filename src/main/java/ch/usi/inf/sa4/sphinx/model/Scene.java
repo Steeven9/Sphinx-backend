@@ -11,7 +11,8 @@ import java.util.List;
  * Represents a Scene.
  * The Scene can contain Effect(s)
  */
-public class Scene implements Runnable{
+@Entity
+public class Scene extends StorableE implements Runnable{
     @Expose
     private String name;
     @Expose
@@ -46,6 +47,9 @@ public class Scene implements Runnable{
         if(serialisableScene.icon != null) this.icon = serialisableScene.icon;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
     public String getName(){
         return this.name;
     }
@@ -65,6 +69,9 @@ public class Scene implements Runnable{
         return user;
     }
 
+    public void setIcon(String icon){
+        this.icon = icon;
+    }
     public String getIcon(){
         return this.icon;
     }

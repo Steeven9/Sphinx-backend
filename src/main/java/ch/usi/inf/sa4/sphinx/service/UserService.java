@@ -431,4 +431,11 @@ public class UserService {
             user.getHosts().stream().map(User::getUsername).anyMatch(s -> s.equals(username))
         ).collect(Collectors.toList());
     }
+
+    public List<Scene> getPopulatedScenes(String username) {
+        
+    }
+
+    public Optional<Object> addScene(String username, Scene scene) {
+    }
 }
