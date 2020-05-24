@@ -3,9 +3,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
-import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
-import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
@@ -71,6 +68,26 @@ public class SceneController {
                 .collect(Collectors.toList()));
     }
 
+
+    /**
+     * Creates a new room.
+     *
+     * @param sessionToken session token of the user
+     * @param username     the username of the user
+     * @return a new room
+     */
+    @GetMapping("/{sceneId}")
+    @ApiOperation("Modifies a Scene")
+    public ResponseEntity<SerialisableScene> getSceneById(@NotNull @PathVariable final Integer sceneId,
+                                                          @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                          @NotNull @RequestHeader("user") final String username) {
+        check(sessionToken, username, null, sceneId);
+
+        final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
+        return ResponseEntity.ok().body(storageScene.serialise());
+    }
+
+
     /**
      * Creates a new Scene.
      *
@@ -90,10 +107,10 @@ public class SceneController {
         check(sessionToken, username, errors);
 
         boolean owned = serialisableScene.getEffects().stream()
-                .flatMap(effect->effect.getDevices().stream())
-                .allMatch(id->userService.ownsDevice(username, id));
+                .flatMap(effect -> effect.getDevices().stream())
+                .allMatch(id -> userService.ownsDevice(username, id));
 
-        if(!owned){
+        if (!owned) {
             throw new NotFoundException("failed to retrive devices");
         }
 
@@ -101,11 +118,10 @@ public class SceneController {
                 .orElseThrow(() -> new BadRequestException(""));
 
 
-
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
 
 
-        if(effects != null) {
+        if (effects != null) {
             effects.forEach(effect -> {
                         try {
                             sceneService.addEffect(
@@ -148,26 +164,26 @@ public class SceneController {
 
         final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
 
-        if(serialisableScene.getName() != null){
+        if (serialisableScene.getName() != null) {
             storageScene.setName(serialisableScene.getName());
         }
 
-        if(serialisableScene.getIcon() != null){
+        if (serialisableScene.getIcon() != null) {
             storageScene.setIcon(serialisableScene.getIcon());
         }
 
-        sceneService.removeEffects(serialisableScene.getId());
+        sceneService.removeEffects(sceneId);
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
-        effects.forEach(effect->{
+        effects.forEach(effect -> {
                     try {
                         sceneService.addEffect(
-                                serialisableScene.getId(),
+                                sceneId,
                                 effect.getDevices(),
                                 SceneType.intToType(effect.getType()),
                                 effect.getName(),
                                 effect.getTarget());
-                    }catch (IllegalArgumentException e){
+                    } catch (IllegalArgumentException e) {
                         throw new BadRequestException("Incompatible effect type");
 
                     }
@@ -179,20 +195,33 @@ public class SceneController {
         return ResponseEntity.ok().body(res);
     }
 
+//
+    @DeleteMapping("/{sceneId}")
+    @ApiOperation("Delete a Scene")
+    public ResponseEntity<SerialisableScene> deleteScene(@NotNull @PathVariable final Integer sceneId,
+                                                         @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                         @NotNull @RequestHeader("user") final String username) {
 
-    @PostMapping("run/{sceneId}")
+        check(sessionToken, username, null, sceneId);
+
+        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("")).run();
+        sceneService.deleteScene(sceneId);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @PutMapping("run/{sceneId}")
     @ApiOperation("Runs a Scene")
     public ResponseEntity<SerialisableScene> runScene(@NotNull @PathVariable final Integer sceneId,
-                                                         @NotNull @RequestHeader("session-token") final String sessionToken,
-                                                         @NotNull @RequestHeader("user") final String username,
-                                                         @NotNull @RequestBody final SerialisableScene serialisableScene,
-                                                         final Errors errors) {
+                                                      @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                      @NotNull @RequestHeader("user") final String username) {
 
-        check(sessionToken, username, errors, sceneId);
+        check(sessionToken, username, null, sceneId);
 
-        sceneService.get(sceneId).orElseThrow(()->new NotFoundException("")).run();
+        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("")).run();
 
-        return  ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
 
     }
 
@@ -215,12 +244,6 @@ public class SceneController {
     }
 
 
-
-
-
-
-
-
     /**
      * Checks if the request parameters are correct. Throws if they are not.
      * It will check that:
@@ -236,7 +259,7 @@ public class SceneController {
     private void check(final String sessionToken, final String username, final Errors errors, final Integer sceneId) {
         check(sessionToken, username, errors);
 
-        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this room");
+//        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this room");
 
     }
 }

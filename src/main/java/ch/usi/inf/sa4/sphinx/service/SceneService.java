@@ -57,4 +57,8 @@ public class SceneService {
     public boolean isOwnedBy(String username, int sceneId) {
         return sceneStorage.findByIdAndUserUsername(sceneId, username).isPresent();
     }
+
+    public void deleteScene(int scenId){
+        sceneStorage.deleteById(scenId);
+    }
 }
