@@ -382,7 +382,7 @@ class DeviceControllerTest {
             List<Device> devices = room.getDevices();
             for (int i = 0; i < devices.size(); i++) {
                 Device device = devices.get(i);
-                if (DeviceType.deviceToDeviceType(device) == DeviceType.SMART_PLUG) {
+                if (device.getDeviceType() == DeviceType.SMART_PLUG) {
                     plugId = device.getId();
                     break;
                 } else {
