@@ -54,6 +54,7 @@ public class CouplingService {
      */
     public void removeByDevicesIds(final Integer id1, final Integer id2) {
         couplingStorage.deleteByDeviceIdAndDevice2Id(id1, id2);
+        couplingStorage.deleteByDeviceIdAndDevice2Id(id2, id1);
     }
 
 

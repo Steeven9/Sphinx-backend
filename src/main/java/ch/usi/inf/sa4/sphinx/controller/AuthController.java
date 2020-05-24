@@ -41,15 +41,9 @@ public class AuthController {
         final User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElse(null));
+                .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
-        if(user == null){
-            throw new UnauthorizedException("Invalid credentials");
-        }
-
-        if (!userService.validSession(user.getUsername(), sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(user.getUsername(), sessionToken);
 
         return ResponseEntity.ok().body(user.getUsername());
     }
@@ -77,19 +71,15 @@ public class AuthController {
         final User user;
 
         user = userService.get(username)
-                .orElse(userService.getByMail(username).orElse(null));
-
-        if(user == null){
-            throw new UnauthorizedException("Invalid credentials");
-        }
+                .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
         if (!user.isVerified()) {
-            throw new ForbiddenException("User is already verified");
+            throw new ForbiddenException("User is not verified");
         }
 
 
         if (!user.matchesPassword(password)) {
-            throw new UnauthorizedException("");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         user.createSessionToken();
@@ -203,10 +193,7 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/resend/{email}")
-    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable final String email) {
-        if (email == null) {
-            throw new BadRequestException("Some fields are missing");
-        }
+    public ResponseEntity<Boolean> resendEmailVerification(@NotBlank @PathVariable final String email) {
         final User user = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 

@@ -2,14 +2,17 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,7 +32,7 @@ public abstract class Device extends StorableE {
             fetch = FetchType.LAZY,
             mappedBy = "device"
     )
-    protected final List<Observer> observers;
+    protected  List<Observer> observers;
 
     //possibly remove from here, this is just so that all Couplings targeting this device are removed with it
     @OneToMany(orphanRemoval = true,
@@ -37,17 +40,14 @@ public abstract class Device extends StorableE {
             fetch = FetchType.LAZY,
             mappedBy = "device2"
     )
-    private final List<Coupling> switchedBy;
+    private  List<Coupling> switchedBy;
 
-    @ManyToOne //TODO check why this had a merge cascade type
+    @ManyToOne
     @JoinColumn(name = "room_id",
             nullable = false,
             referencedColumnName = "id"
     )
     private Room room;
-    @Expose
-    @Transient
-    private final DeviceType deviceType;
 
 
     /**
@@ -58,26 +58,20 @@ public abstract class Device extends StorableE {
         name = "Device";
         on = true;
         this.observers = new ArrayList<>();
-        this.deviceType = getDeviceType();
         this.switchedBy = new ArrayList<>();
+
     }
 
 
-
-
     /**
-     * @return a serialised copy of this Device
-     * @see SerialisableDevice
+     * Serializes a list of devices.
+     *
+     * @param devices the Devices to serialise
+     * @return a list of serialised devices with info about their owner
+     * @see Device#serialise()
      */
-    protected SerialisableDevice serialise() {
-        final SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.on = this.on;
-        serialisableDevice.icon = this.icon;
-        serialisableDevice.name = this.name;
-        serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
-        serialisableDevice.label = getLabel();
-        return serialisableDevice;
+    public static List<SerialisableDevice> serialise(final Collection<? extends Device> devices) {
+        return devices.stream().map(Device::serialise).collect(Collectors.toList());
     }
 
 
@@ -89,12 +83,25 @@ public abstract class Device extends StorableE {
         return room;
     }
 
+
     /**
      * @return the DeviceType of this device
      * @see DeviceType
      */
-    protected abstract DeviceType getDeviceType();
 
+
+   public abstract DeviceType getDeviceType();
+
+
+    /**
+     * Sets properties of this device to conform with the given SerialisableDevice
+     * @param sd the SerialisableDevice with the properties that are desired in this Device
+     */
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        if (sd.getIcon() != null) icon = sd.getIcon();
+        if (sd.getName() != null) name = sd.getName();
+        if (sd.getOnState()!= null) setOn(sd.getOnState());
+    }
 
     /**
      * @param icon the icon to set
@@ -183,9 +190,37 @@ public abstract class Device extends StorableE {
 
     /**
      * set the Room that owns this Device.
+     *
      * @param room the Room
      */
     public void setRoom(final Room room) {
         this.room = room;
+    }
+
+    /**
+     * Serializes the device.
+     *
+     * @return a serialised copy of this Device
+     * @see SerialisableDevice
+     */
+    public SerialisableDevice serialise() {
+        final SerialisableDevice serialisableDevice = new SerialisableDevice();
+        final DeviceService deviceService = ServiceProvider.getDeviceService();
+        serialisableDevice.setOnState(this.on);
+        serialisableDevice.setIcon(this.icon);
+        serialisableDevice.setName(this.name);
+        serialisableDevice.setId(this.id);
+        serialisableDevice.setType(DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this)));
+        serialisableDevice.setLabel(getLabel());
+        final Room owningRoom = this.getRoom();
+        final User owningUser = owningRoom.getUser();
+        serialisableDevice.setRoomId(owningRoom.getId());
+        serialisableDevice.setRoomName( owningRoom.getName());
+        serialisableDevice.setUserName( owningUser.getUsername());
+        serialisableDevice.setSwitchedIds(deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        serialisableDevice.setSwitchesIds(deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        if (serialisableDevice.getSwitched().length == 0) serialisableDevice.setSwitchedIds(null);
+        if (serialisableDevice.getSwitches().length == 0) serialisableDevice.setSwitchesIds(null);
+        return serialisableDevice;
     }
 }

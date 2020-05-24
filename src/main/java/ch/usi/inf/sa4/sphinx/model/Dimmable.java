@@ -22,7 +22,7 @@ public abstract class Dimmable extends Device {
     @Override
     public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
-        sd.slider = this.intensity;
+        sd.setSlider(this.intensity);
         return sd;
     }
 
@@ -54,7 +54,7 @@ public abstract class Dimmable extends Device {
      * @param newState a new intensity level to be set
      * @throws IllegalArgumentException if the intensity level is more than 1.0 or less than 0.0
      */
-    public void setState(final double newState) throws IllegalArgumentException {
+    public void setState(final double newState) {
         if (newState > 1 || newState < 0) {
             throw new IllegalArgumentException("Intensity must be between 0.0 and 1.0");
         } else {
@@ -69,6 +69,14 @@ public abstract class Dimmable extends Device {
     @Override
     public String getLabel() {
         return intensity * 100 + "%";
+    }
+
+    @Override
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if(sd.getSlider() != null) {
+            setState(sd.getSlider());
+        }
     }
 
 

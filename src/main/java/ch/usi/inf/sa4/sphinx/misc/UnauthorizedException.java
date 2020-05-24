@@ -9,6 +9,9 @@ public class UnauthorizedException extends HttpException {
     public UnauthorizedException(final String message) {
         super(message);
     }
+    public UnauthorizedException(final String message, final Exception cause) {
+        super(message, cause);
+    }
 
     @Override
     public HttpStatus getStatus() {

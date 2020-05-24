@@ -18,7 +18,7 @@ public class SwitchToDevice extends Coupling<Switch, Device> {
     @Override
     public void run() {
         getAffected().setOn(getObserved().isOn());
-        ServiceProvider.getStaticDeviceService().update(getAffected());
+        ServiceProvider.getDeviceService().update(getAffected());
     }
 
 }

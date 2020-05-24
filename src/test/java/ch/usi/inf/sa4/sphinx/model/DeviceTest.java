@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -47,17 +48,7 @@ class DeviceTest {
         d.setOn(false);
         assertFalse(d.isOn());
     }
-//
-    @Test
-    void shouldReturnSerialisableVersion() {
-        Device d = new LightSensor();
-        d.setOn(false);
-        d.setName("TEST_NAME");
-        SerialisableDevice sd = d.serialise();
-        assertEquals("TEST_NAME", sd.name);
-        assertFalse(d.isOn());
-    }
-//
+
     @Test
     void shouldAddObserver() {
         Switch d1 = new Switch();

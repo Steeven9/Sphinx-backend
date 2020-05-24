@@ -9,6 +9,9 @@ public class BadRequestException extends HttpException {
     public BadRequestException(final String message) {
         super("Bad request: " + message );
     }
+    public BadRequestException(final String message, final Exception cause) {
+        super("Bad request: " + message, cause);
+    }
 
 
     @Override

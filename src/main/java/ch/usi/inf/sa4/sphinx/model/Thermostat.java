@@ -6,7 +6,6 @@ import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -16,9 +15,7 @@ import java.util.List;
 public class Thermostat extends TempSensor {
     @Expose//TODO the only information being saved atm
     private double targetTemp;
-    @Transient
     private States state;
-    @Transient
     private Sources source;
 
     /**
@@ -27,7 +24,7 @@ public class Thermostat extends TempSensor {
      */
     public Thermostat() {
         super();
-        this.targetTemp = this.getValue();
+        this.targetTemp = this.getLastValue();
         this.state = States.IDLE;
         this.source = Sources.SELF;
     }
@@ -51,6 +48,15 @@ public class Thermostat extends TempSensor {
     }
 
     /**
+     * Returns target temperature of this thermostat.
+     *
+     * @return target temperature
+     */
+    public double getTargetTemp() {
+        return targetTemp;
+    }
+
+    /**
      * Returns a State basing on given target temperature and considering the Source.
      *
      * @param target the target temperature
@@ -59,12 +65,13 @@ public class Thermostat extends TempSensor {
     private States determineState(final double target) {
         final double temp;
         if (this.source == Sources.SELF) {
-            temp = this.getValue();
+            temp = this.getLastValue();
         } else {
             temp = this.getAverageTemp();
         }
 
-        if (temp < target + 0.5 && temp > target - 0.5) {
+        double tolerance = this.getTolerance();
+        if (temp <= target + tolerance && temp >= target - tolerance) {
             return States.IDLE;
         } else {
             if (target > temp) {
@@ -87,6 +94,7 @@ public class Thermostat extends TempSensor {
 
     /**
      * Maps a state of thermostat to an int.
+     *
      * @param state a State of thermostat
      * @return int mapping to thermostat
      */
@@ -105,25 +113,26 @@ public class Thermostat extends TempSensor {
 
 
     /**
-     * Returns the average temperature in this room. It is computed as the media of all temperature sensors and
+     * Returns the average temperature in this room. It is computed as the average of all temperature sensors and
      * temperature of this Thermostat.
      *
      * @return the average temperature
      */
     public double getAverageTemp() {
         final List<Device> devices = this.getRoom().getDevices();
-        double averageTemp = 0.0, sensors = 1.0;
+        double averageTemp = 0.0;
+        double sensors = 1.0;
 
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
                 if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
-                    averageTemp += ((TempSensor) device).getValue();
+                    averageTemp += ((TempSensor) device).getLastValue();
                     sensors++;
                 }
             }
         }
 
-        averageTemp += this.getValue();
+        averageTemp += this.getLastValue(); //gets last value since all sensors have been updated
         averageTemp /= sensors;
 
         return averageTemp;
@@ -134,12 +143,12 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
-    protected SerialisableDevice serialise() {
+    public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
-        sd.slider = this.targetTemp;
-        sd.averageTemp = this.getAverageTemp();
-        sd.state = Thermostat.fromStateToInt(this.state);
-        sd.source = this.source == Sources.SELF ? 0 : 1;
+        sd.setSlider(this.targetTemp);
+        sd.setAverageTemp(this.getAverageTemp());
+        sd.setState(Thermostat.fromStateToInt(this.state));
+        sd.setSource(this.source == Sources.SELF ? 0 : 1);
         return sd;
     }
 
@@ -159,14 +168,6 @@ public class Thermostat extends TempSensor {
     }
 
     /**
-     * Turns off the thermostat.
-     */
-    public void turnOff() {
-        this.on = false;
-        this.state = States.OFF;
-    }
-
-    /**
      * Sets the thermostat to idle state. In case it is off, then the thermostat is switched on.
      */
     public void setIdle() {
@@ -174,12 +175,15 @@ public class Thermostat extends TempSensor {
         this.state = States.IDLE;
     }
 
-    /**
-     * Turns on the thermostat computing the correct state basing on Source.
-     */
-    public void turnOn() {
-        this.on = true;
-        this.state = this.determineState(this.targetTemp);
+    @Override
+    public void setOn(final boolean on) {
+        if (on) {
+            this.on = true;
+            this.state = this.determineState(this.targetTemp);
+        } else {
+            this.on = false;
+            this.state = States.OFF;
+        }
     }
 
     /**
@@ -192,7 +196,7 @@ public class Thermostat extends TempSensor {
     /**
      * The two possible sources of thermostat.
      */
-    private enum Sources {
+    public enum Sources {
         SELF, AVERAGE
     }
 
@@ -201,7 +205,21 @@ public class Thermostat extends TempSensor {
      * {@inheritDoc}
      */
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.THERMOSTAT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+
+
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if (sd.getSource() != null) setSource(sd.getSource());
+        if (sd.getSlider() != null) setTargetTemp(sd.getSlider());
+
+
     }
 }

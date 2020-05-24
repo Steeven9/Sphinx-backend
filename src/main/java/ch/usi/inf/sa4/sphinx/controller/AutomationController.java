@@ -37,8 +37,6 @@ public class AutomationController {
     @Autowired
     RoomService roomService;
     @Autowired
-    Serialiser serialiser;
-    @Autowired
     private AutomationService automationService;
     @Autowired
     private SceneService sceneService;
@@ -299,9 +297,7 @@ public class AutomationController {
 
 
     private void check(final String username, final String sessionToken) {
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
+        userService.validateSession(username, sessionToken);
     }
 }
 

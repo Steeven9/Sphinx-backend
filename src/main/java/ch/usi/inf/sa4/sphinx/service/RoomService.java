@@ -5,7 +5,6 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,8 +102,8 @@ public class RoomService {
         return roomStorage.findById(roomId).map(room -> {
             room.removeDevice(device.get());
             update(room);
-            return true;
-        }).orElse(false);
+            return Boolean.TRUE;
+        }).orElse(Boolean.FALSE);
     }
 
 }

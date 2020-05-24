@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 public class DeviceService {
 
     @Autowired
-    CouplingService couplingService;
-    @Autowired
     DeviceStorage deviceStorage;
     @Autowired
     CouplingStorage couplingStorage;
@@ -100,6 +98,7 @@ public class DeviceService {
                 .stream()
                 .map(Coupling::getAffected)
                 .map(device -> ((Device) device).getId()).collect(Collectors.toList());
+
     }
 
 }

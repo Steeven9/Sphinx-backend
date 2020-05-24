@@ -1,22 +1,23 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
-import ch.usi.inf.sa4.sphinx.model.Serialiser;
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 @Validated
-@Api(value = "Room endpoint", description = "Room Controller")
+@Api(value = "Room endpoint")
 public class RoomController {
 
     @Autowired
@@ -34,9 +35,8 @@ public class RoomController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
-    @Autowired
-    Serialiser serialiser;
 
+    private static final String DATANOTSAVED = "Couldn't save data";
     /**
      * Returns a list of all rooms which belong to the given user.
      *
@@ -59,7 +59,7 @@ public class RoomController {
 
         check(sessionToken, username,null);
 
-        return ResponseEntity.ok(Serialiser.serialiseRooms(userService.getPopulatedRooms(username)));
+        return ResponseEntity.ok(Room.serialise(userService.getPopulatedRooms(username)));
     }
 
 
@@ -75,12 +75,13 @@ public class RoomController {
      */
     @GetMapping("/{roomId}")
     @ApiOperation("Returns a Room given its id")
-    public ResponseEntity<SerialisableRoom> getRoom(@PathVariable final Integer roomId,
+    public ResponseEntity<SerialisableRoom> getRoom(@NotNull @PathVariable final Integer roomId,
                                                     @NotNull @RequestHeader("session-token") final String sessionToken,
                                                     @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
         //if check didn't throw the room is here
-        return ResponseEntity.ok(Serialiser.serialiseRoom(roomService.get(roomId).get()));
+        Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);
+        return ResponseEntity.ok(room.serialise());
 
     }
 
@@ -96,16 +97,16 @@ public class RoomController {
      */
     @GetMapping("/{roomId}/devices")
     @ApiOperation("Returns all devices in the given Room")
-    public ResponseEntity<Collection<SerialisableDevice>> getDevice(@PathVariable final Integer roomId,
+    public ResponseEntity<Collection<SerialisableDevice>> getDevice(@NotNull @PathVariable final Integer roomId,
                                                                     @NotNull @RequestHeader("session-token") final String sessionToken,
                                                                     @NotNull @RequestHeader("user") final String username) {
 
         check(sessionToken, username, null, roomId);
 
-        final User user = userService.get(username).orElseThrow(()->new ServerErrorException("The universe broke"));//It exists from previous check
-        final Room room = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));//It exists from previous check
+        final Room room = roomService.get(roomId).orElseThrow(WrongUniverseException::new);//It exists from previous check
 
-        return ResponseEntity.ok(serialiser.serialiseDevices(room.getDevices(), user));
+        userService.generateValue(username);
+        return ResponseEntity.ok(Device.serialise(room.getDevices()));
     }
 
 
@@ -120,8 +121,8 @@ public class RoomController {
      */
     @PostMapping({"", "/"})
     @ApiOperation("Creates a Room")
-    public ResponseEntity<SerialisableRoom> createRoom(@NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username,
+    public ResponseEntity<SerialisableRoom> createRoom(@NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username,
                                                        @NotNull @RequestBody final SerialisableRoom serialisableRoom,
                                                        final Errors errors) {
 
@@ -129,10 +130,9 @@ public class RoomController {
         check(sessionToken, username, errors);
 
         final Room room = new Room(serialisableRoom);
-        final Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException("Couldn't save data"));
-        final SerialisableRoom res = Serialiser.serialiseRoom(roomService.get(id).orElseThrow(
-                () -> new ServerErrorException("Couldn't serialise room")
-        ));
+        final Integer id = userService.addRoom(username, room).orElseThrow(() -> new ServerErrorException(DATANOTSAVED));
+        Room room1 = roomService.get(id).orElseThrow(() -> new ServerErrorException("Couldn't serialise room"));
+        final SerialisableRoom res = room1.serialise();
 
         return ResponseEntity.status(201).body(res);
 
@@ -151,19 +151,19 @@ public class RoomController {
      */
     @PutMapping("/{roomId}")
     @ApiOperation("Modifies a Room")
-    public ResponseEntity<SerialisableRoom> modifyRoom(@NotBlank @PathVariable final Integer roomId,
-                                                       @NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username,
-                                                       @NotBlank @RequestBody final SerialisableRoom serialisableRoom,
+    public ResponseEntity<SerialisableRoom> modifyRoom(@NotNull @PathVariable final Integer roomId,
+                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username,
+                                                       @NotNull @RequestBody final SerialisableRoom serialisableRoom,
                                                        final Errors errors) {
         check(sessionToken, username, errors, roomId);
 
-        final Room storageRoom = roomService.get(roomId).orElseThrow(() -> new ServerErrorException("The universe broke"));
+        final Room storageRoom = roomService.get(roomId).orElseThrow(() -> new NotFoundException("No rooms found"));
 
 
-        final String newName = serialisableRoom.name;
-        final String newIcon = serialisableRoom.icon;
-        final String newBackground = serialisableRoom.background;
+        final String newName = serialisableRoom.getName();
+        final String newIcon = serialisableRoom.getIcon();
+        final String newBackground = serialisableRoom.getBackground();
 
         if (newName != null) {
             storageRoom.setName(newName);
@@ -177,10 +177,10 @@ public class RoomController {
         }
 
         if (!roomService.update(storageRoom)) {
-            throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
 
-        final SerialisableRoom res = Serialiser.serialiseRoom(storageRoom);
+        final SerialisableRoom res = storageRoom.serialise();
         return ResponseEntity.ok().body(res);
     }
 
@@ -196,12 +196,12 @@ public class RoomController {
     @DeleteMapping("/{roomId}")
     @ApiOperation("Deletes a Room")
     public ResponseEntity<SerialisableRoom> deleteRoom(@NotNull @PathVariable final Integer roomId,
-                                                       @NotBlank @RequestHeader("session-token") final String sessionToken,
-                                                       @NotBlank @RequestHeader("user") final String username) {
+                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                       @NotNull @RequestHeader("user") final String username) {
         check(sessionToken, username, null, roomId);
 
         if (!userService.removeRoom(username, roomId)) {
-           throw new ServerErrorException("Couldn't save data");
+            throw new ServerErrorException(DATANOTSAVED);
         }
 
         return ResponseEntity.noContent().build();
@@ -224,11 +224,8 @@ public class RoomController {
         if (errors != null && errors.hasErrors()) {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
-        if (!userService.validSession(username, sessionToken)) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
 
-
+        userService.validateSession(username, sessionToken);
     }
 
     /**

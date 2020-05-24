@@ -1,30 +1,24 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import org.springframework.data.annotation.Transient;
 
-import javax.persistence.Entity;
 import java.util.Random;
 
 
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
-@Entity
-public class MotionSensor extends Device  {
 
-    /**
-     * Creates a MotionSensor with initial state set to false.
-     */
-    public MotionSensor() {
-    }
-
+public class MotionSensor extends Device {
+    @Transient
+    private final Random rnd = new Random();
 
     /**
      * Checks if the person is detected.
      * @return true if the person is detected, false otherwise
      */
     public boolean isDetected() {
-        final Random rnd = new Random();
         triggerEffects();
         return rnd.nextBoolean();
     }
@@ -39,7 +33,7 @@ public class MotionSensor extends Device  {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.MOTION_SENSOR;
     }
 

@@ -9,16 +9,9 @@ import javax.persistence.Entity;
  */
 @Entity
 public class DimmableSwitch extends Dimmable {
-    /**
-     * Constructor.
-     * Creates a dimmable switch.
-     */
-    public DimmableSwitch() {
-    }
-
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.DIMMABLE_SWITCH;
     }
 }

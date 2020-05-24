@@ -28,7 +28,7 @@ public class SmartPlug extends Device {
      * @return the consumed energy
      */
     public double getPowerUsed() {
-        DeviceService deviceService = ServiceProvider.getStaticDeviceService();
+        DeviceService deviceService = ServiceProvider.getDeviceService();
         this.powerUsed += 10;
         deviceService.update(this);
         return this.powerUsed;
@@ -52,7 +52,7 @@ public class SmartPlug extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SMART_PLUG;
     }
 }

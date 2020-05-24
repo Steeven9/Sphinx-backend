@@ -61,9 +61,9 @@ public class Room extends StorableE{
      */
     public Room(final SerialisableRoom room) {
         this();
-        if(room.name != null) this.name = room.name;
-        if(room.icon != null) this.icon = room.icon;
-        if(room.background != null) this.background = room.background;
+        if(room.getName() != null) this.name = room.getName();
+        if(room.getIcon() != null) this.icon = room.getIcon();
+        if(room.getBackground() != null) this.background = room.getBackground();
     }
 
 
@@ -156,23 +156,33 @@ public class Room extends StorableE{
      * @param device the Device to remove from this Room
      * @see Device
      */
-    public void removeDevice(final Device device){
+    public void removeDevice(final Device device) {
         devices.remove(device);
     }
 
-    /**
-     * @return a serialised version of this Room
-     */
-    public SerialisableRoom serialise(){
-        final SerialisableRoom sd = new SerialisableRoom();
-        sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
-        sd.background = background;
-        sd.icon = icon;
-        sd.name = name;
-        sd.id = getId();
-        return sd;
 
+    /**
+     * @param rooms the rooms to serialize
+     * @return the serialized rooms
+     * @see Room#serialise()
+     */
+    public static List<SerialisableRoom> serialise(final Collection<? extends Room> rooms) {
+        return rooms.stream().map(Room::serialise).collect(Collectors.toList());
     }
 
+    /**
+     * Serialises a Room. Fields whose value cannot be determined by looking at the Room are set to null.
+     *
+     * @return a serialised version of this Room
+     */
+    public SerialisableRoom serialise() {
+        final SerialisableRoom sd = new SerialisableRoom();
+        sd.setDeviceIds(devices.stream().map(Device::getId).toArray(Integer[]::new));
+        sd.setBackground(background);
+        sd.setIcon(icon);
+        sd.setName(name);
+        sd.setId(getId());
+        return sd;
+    }
 }
 

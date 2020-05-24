@@ -105,47 +105,47 @@ public enum DeviceType {
     /**
      * Given a device Class, returns the DeviceType of that class
      *
-     * @param c class of an Object
+     * @param clazz class of an Object
      * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
      */
-    public static DeviceType deviceClassToDeviceType(final Class c) {
-        if (Light.class.equals(c)) {
+    public static DeviceType deviceClassToDeviceType(final Class<? extends Device> clazz) {
+        if (Light.class.equals(clazz)) {
             return LIGHT;
         }
-        if (DimmableLight.class.equals(c)) {
+        if (DimmableLight.class.equals(clazz)) {
             return DIMMABLE_LIGHT;
         }
-        if (Switch.class.equals(c)) {
+        if (Switch.class.equals(clazz)) {
             return SWITCH;
         }
-        if (DimmableSwitch.class.equals(c)) {
+        if (DimmableSwitch.class.equals(clazz)) {
             return DIMMABLE_SWITCH;
         }
-        if (StatelessDimmableSwitch.class.equals(c)) {
+        if (StatelessDimmableSwitch.class.equals(clazz)) {
             return STATELESS_DIMMABLE_SWITCH;
         }
-        if (SmartPlug.class.equals(c)) {
+        if (SmartPlug.class.equals(clazz)) {
             return SMART_PLUG;
         }
-        if (HumiditySensor.class.equals(c)) {
+        if (HumiditySensor.class.equals(clazz)) {
             return HUMIDITY_SENSOR;
         }
-        if (LightSensor.class.equals(c)) {
+        if (LightSensor.class.equals(clazz)) {
             return LIGHT_SENSOR;
         }
-        if (TempSensor.class.equals(c)) {
+        if (TempSensor.class.equals(clazz)) {
             return TEMP_SENSOR;
         }
-        if (MotionSensor.class.equals(c)) {
+        if (MotionSensor.class.equals(clazz)) {
             return MOTION_SENSOR;
         }
-        if (SmartCurtain.class.equals(c)) {
+        if (SmartCurtain.class.equals(clazz)) {
             return SMART_CURTAIN;
         }
-        if (SecurityCamera.class.equals(c)) {
+        if (SecurityCamera.class.equals(clazz)) {
             return SECURITY_CAMERA;
         }
-        if (Thermostat.class.equals(c)) {
+        if (Thermostat.class.equals(clazz)) {
             return THERMOSTAT;
         }
         return INVALID_DEVICE;

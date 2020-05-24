@@ -22,7 +22,7 @@ class SphinxApplicationTests {
 
 	@Test
 	public void testPropertiesLoad(){
-		assert(url.equals("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"));
+		assertThat("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE").isEqualTo(url);
 
 	}
 

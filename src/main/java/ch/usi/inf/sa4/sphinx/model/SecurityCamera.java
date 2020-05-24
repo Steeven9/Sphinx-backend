@@ -36,12 +36,12 @@ public class SecurityCamera extends Device {
     @Override
     public SerialisableDevice serialise() {
         final SerialisableDevice device = super.serialise();
-        device.url = url;
+        device.setUrl(url); 
         return device;
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SECURITY_CAMERA;
     }
 
