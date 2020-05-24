@@ -87,7 +87,7 @@ public class GuestController {
         final List<Device> devices = userService.getPopulatedDevices(host).orElseThrow(WrongUniverseException::new);
         final SerialisableDevice[] devicesArray = devices.stream()
                 .filter(device -> camsVisible || device.getDeviceType() != DeviceType.SECURITY_CAMERA)
-                .map(device -> device.serialise()).toArray(SerialisableDevice[]::new);
+                .map(Device::serialise).toArray(SerialisableDevice[]::new);
 
         return ResponseEntity.ok(devicesArray);
     }

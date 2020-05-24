@@ -81,8 +81,8 @@ class RoomServiceTest {
         List<Device> result = roomService.getPopulatedDevices(id).get();
         assertAll(
                 () -> assertEquals(2, result.size()),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(TempSensor.class), DeviceType.deviceToDeviceType(result.get(0))),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(Switch.class), DeviceType.deviceToDeviceType(result.get(1)))
+                () -> assertEquals(DeviceType.TEMP_SENSOR, result.get(0).getDeviceType()),
+                () -> assertEquals(DeviceType.SWITCH, result.get(1).getDeviceType())
         );
     }
 
@@ -101,7 +101,7 @@ class RoomServiceTest {
         roomService.addDevice(id, DeviceType.MOTION_SENSOR);
         assertAll("should add a new device",
                 () -> assertEquals(1, roomService.getPopulatedDevices(id).get().size()),
-                () -> assertEquals(DeviceType.MOTION_SENSOR, DeviceType.deviceToDeviceType(roomService.getPopulatedDevices(id).get().get(0)))
+                () -> assertEquals(DeviceType.MOTION_SENSOR, roomService.getPopulatedDevices(id).get().get(0).getDeviceType())
         );
     }
 //
