@@ -66,13 +66,13 @@ public class UserController {
     @ApiOperation("Creates a new User")
     public ResponseEntity<SerialisableUser> createUser(@PathVariable final String username, @RequestBody final SerialisableUser user) {
         final User findUser = userService.get(username)
-                .orElseGet(() -> userService.getByMail(user.email).orElse(null));
+                .orElseGet(() -> userService.getByMail(user.getEmail()).orElse(null));
 
         if (findUser != null) {
             throw new BadRequestException("This user already exists");
         }
 
-        User newUser = new User(user.email, user.password, username, user.fullname);
+        User newUser = new User(user.getEmail(), user.getPassword(), username, user.getFullname());
 
         //TODO switch to throws only in service
         try {
@@ -126,14 +126,14 @@ public class UserController {
 
         final User changedUser = userService.get(username).orElseThrow(WrongUniverseException::new);
 
-        if (user.email != null) changedUser.setEmail(user.email);
-        if (user.fullname != null) changedUser.setFullname(user.fullname);
-        if (user.password != null) changedUser.setPassword(user.password);
-        if (user.allowSecurityCameras!= null) changedUser.switchCamerasAccessibility(user.allowSecurityCameras);
+        if (user.getEmail() != null) changedUser.setEmail(user.getEmail());
+        if (user.getFullname() != null) changedUser.setFullname(user.getFullname());
+        if (user.getPassword() != null) changedUser.setPassword(user.getPassword());
+        if (user.getAllowSecurityCameras()!= null) changedUser.switchCamerasAccessibility(user.getAllowSecurityCameras());
 
         userService.update(changedUser);
-        if (user.username != null && !username.equals(user.username)) {
-            userService.changeUsername(username, user.username);
+        if (user.getUsername() != null && !username.equals(user.getUsername())) {
+            userService.changeUsername(username, user.getUsername());
         }
         User user1 = userService.getById(changedUser.getId()).orElseThrow(WrongUniverseException::new);
         return ResponseEntity.ok(user1.serialise());

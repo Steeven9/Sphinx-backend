@@ -135,22 +135,22 @@ public class DeviceController {
                                                            @RequestHeader("session-token") final String sessionToken,
                                                            @RequestHeader("user") final String username,
                                                            final Errors errors) {
-        if (errors.hasErrors() || Objects.isNull(device.roomId) || Objects.isNull(device.type)) {
+        if (errors.hasErrors() || Objects.isNull(device.getRoomId()) || Objects.isNull(device.getType())) {
             throw new BadRequestException(FIELDSMISSING);
         }
 
         userService.validateSession(username, sessionToken);
 
-        if (!userService.ownsRoom(username, device.roomId)) {
+        if (!userService.ownsRoom(username, device.getRoomId())) {
             throw new UnauthorizedException("You don't own this room");
         }
 
-        final Integer deviceId = roomService.addDevice(device.roomId, DeviceType.intToDeviceType(device.type))
+        final Integer deviceId = roomService.addDevice(device.getRoomId(), DeviceType.intToDeviceType(device.getType()))
                 .orElseThrow(() -> new ServerErrorException("Couldn't add device to room"));
         final Device d = deviceService.get(deviceId).orElseThrow(WrongUniverseException::new); //Since the previous exists then this does too
 
-        if (device.icon != null && !device.icon.isBlank()) d.setIcon(device.icon);
-        if (device.name != null && !device.name.isBlank()) d.setName(device.name);
+        if (device.getIcon() != null && !device.getIcon().isBlank()) d.setIcon(device.getIcon());
+        if (device.getName() != null && !device.getName().isBlank()) d.setName(device.getName());
 
         if (!deviceService.update(d)) throw new ServerErrorException("Couldn't save device data");
         userService.generateValue(username);
@@ -205,8 +205,8 @@ public class DeviceController {
             throw new ServerErrorException(DATANOTSAVED);
         }
         final Integer owningRoom = storageDevice.getRoom().getId();
-        if (device.roomId != null && !device.roomId.equals(owningRoom)) {
-            userService.migrateDevice(username, deviceId, owningRoom, device.roomId);
+        if (device.getRoomId() != null && !device.getRoomId().equals(owningRoom)) {
+            userService.migrateDevice(username, deviceId, owningRoom, device.getRoomId());
         }
         userService.generateValue(username);
         return ResponseEntity.ok().body(storageDevice.serialise());
@@ -317,7 +317,7 @@ public class DeviceController {
         final Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (1)"));
         final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (2)"));
 
-        if (!deviceService.createCoupling(device1, device2)) {
+        if (!couplingService.createCoupling(device1, device2)) {
             throw new ServerErrorException(DATANOTSAVED);
         }
         return ResponseEntity.noContent().build();

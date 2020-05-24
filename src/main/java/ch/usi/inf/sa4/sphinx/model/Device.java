@@ -86,9 +86,9 @@ public abstract class Device extends StorableE {
      * @param sd the SerialisableDevice with the properties that are desired in this Device
      */
     public void setPropertiesFrom(final SerialisableDevice sd) {
-        if (sd.icon != null) icon = sd.icon;
-        if (sd.name != null) name = sd.name;
-        if (sd.on != null) setOn(sd.on);
+        if (sd.getIcon() != null) icon = sd.getIcon();
+        if (sd.getName() != null) name = sd.getName();
+        if (sd.getOnState()!= null) setOn(sd.getOnState());
     }
 
     /**
@@ -196,21 +196,21 @@ public abstract class Device extends StorableE {
     public SerialisableDevice serialise() {
         final SerialisableDevice serialisableDevice = new SerialisableDevice();
         final DeviceService deviceService = ServiceProvider.getDeviceService();
-        serialisableDevice.on = this.on;
-        serialisableDevice.icon = this.icon;
-        serialisableDevice.name = this.name;
-        serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(this.getDeviceType());
-        serialisableDevice.label = getLabel();
-        final Room owningRoom = this.room;
+        serialisableDevice.setOnState(this.on);
+        serialisableDevice.setIcon(this.icon);
+        serialisableDevice.setName(this.name);
+        serialisableDevice.setId(this.id);
+        serialisableDevice.setType(DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this)));
+        serialisableDevice.setLabel(getLabel());
+        final Room owningRoom = this.getRoom();
         final User owningUser = owningRoom.getUser();
-        serialisableDevice.roomId = owningRoom.getId();
-        serialisableDevice.roomName = owningRoom.getName();
-        serialisableDevice.userName = owningUser.getUsername();
-        serialisableDevice.switched = deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray();
-        serialisableDevice.switches = deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray();
-        if (serialisableDevice.switched.length == 0) serialisableDevice.switched = null;
-        if (serialisableDevice.switches.length == 0) serialisableDevice.switches = null;
+        serialisableDevice.setRoomId(owningRoom.getId());
+        serialisableDevice.setRoomName( owningRoom.getName());
+        serialisableDevice.setUserName( owningUser.getUsername());
+        serialisableDevice.setSwitchedIds(deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        serialisableDevice.setSwitchesIds(deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        if (serialisableDevice.getSwitched().length == 0) serialisableDevice.setSwitchedIds(null);
+        if (serialisableDevice.getSwitches().length == 0) serialisableDevice.setSwitchesIds(null);
         return serialisableDevice;
     }
 }

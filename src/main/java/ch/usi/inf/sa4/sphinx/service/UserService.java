@@ -397,7 +397,7 @@ public class UserService {
             return false;
         }
 
-        return user.get().getHosts().contains(guestUsername.get());
+        return guestUsername.get().getHosts().contains(user.get());
 
     }
 

@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,8 +21,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class DeviceService {
 
-    @Autowired
-    CouplingService couplingService;
     @Autowired
     DeviceStorage deviceStorage;
     @Autowired
@@ -83,78 +80,4 @@ public class DeviceService {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Generates an Event basing on switch type.
-     *
-     * @param type the DeviceType of a switch
-     * @param key  the id of the switch
-     * @return event corresponding to the switch
-     */
-    private <T> Event<T> eventHelper(final DeviceType type, final Integer key) {
-        if (type == DeviceType.SWITCH) {
-            return (Event<T>) new SwitchChangedEvent(key);
-        } else if (type == DeviceType.STATELESS_DIMMABLE_SWITCH) {
-            return (Event<T>) new StatelessDimmSwitchChangedEvent(key, 0.1);
-        } else if (type == DeviceType.DIMMABLE_SWITCH) {
-            return (Event<T>) new DimmSwitchChangedEvent(key);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Generates an Effect basing on switch type and light type.
-     *
-     * @param switchType the DeviceType of a switch
-     * @param lightType  the DeviceType of a light
-     * @param key        the id of the switch
-     * @return corresponding effect
-     */
-    private <T> Effect<T> effectHelper(final DeviceType switchType, final DeviceType lightType, final Integer key) {
-        if (switchType == DeviceType.SWITCH) {
-            return (Effect<T>) (new DeviceSetOnEffect(key));
-        } else if (lightType == DeviceType.DIMMABLE_LIGHT) {
-            if (switchType == DeviceType.STATELESS_DIMMABLE_SWITCH) {
-                return (Effect<T>) (new DimmableLightStateInc(key));
-            } else if (switchType == DeviceType.DIMMABLE_SWITCH) {
-                return (Effect<T>) (new DimmableLightStateSet(key));
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Creates a coupling between a light and a switch.
-     *
-     * @param device1 first device to couple
-     * @param device2 second device to couple
-     * @return true if coupling was succeed, false otherwise
-     */
-    public boolean createCoupling(final Device device1, final Device device2) {
-        final List<DeviceType> switches = List.of(DeviceType.SWITCH, DeviceType.DIMMABLE_SWITCH, DeviceType.STATELESS_DIMMABLE_SWITCH);
-        final List<DeviceType> lights = List.of(DeviceType.LIGHT, DeviceType.DIMMABLE_LIGHT);
-        final DeviceType type1 = device1.getDeviceType();
-        final DeviceType type2 = device2.getDeviceType();
-        final boolean ordered;
-
-        //check if first is a switch and second is a light
-        if (switches.contains(type1) && lights.contains(type2)) {
-            ordered = true;
-        } else if (switches.contains(type2) && lights.contains(type1)) {
-            ordered = false;
-        } else {
-            return false;
-        }
-
-        if (ordered) {
-            couplingService.addCoupling(eventHelper(type1, device1.getId()), effectHelper(type1, type2, device2.getId()));
-        } else {
-            couplingService.addCoupling(eventHelper(type2, device2.getId()), effectHelper(type2, type1, device1.getId()));
-        }
-        return true;
-    }
 }

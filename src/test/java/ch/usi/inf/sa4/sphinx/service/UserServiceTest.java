@@ -26,18 +26,6 @@ class UserServiceTest {
     RoomService roomService;
 
 
-//    @BeforeAll
-//    void createDeviceAndUser() {
-//        dummyDataAdder.user1();
-//        user = userService.get("user1").get();
-//    }
-//
-//    @BeforeEach
-//    public void readRoomAndDevice(){
-//        room = user.getRooms().get(0);
-//        device = room.getDevices().get(0);
-//    }
-
 
     @Test
     @DisplayName("creates a user")
@@ -132,25 +120,12 @@ class UserServiceTest {
         room.setName("testName");
 
         assertFalse(userService.ownsRoom(username, 1));
+        assertFalse(userService.removeRoom(username, 1));
         assertEquals(new ArrayList<Room>(), userService.getPopulatedRooms("notExisting"));
 
         assertTrue(userService.addRoom(username, room).isEmpty());
         assertTrue(userService.insert(newUser));
         assertFalse(userService.ownsRoom(username, 1));//no rooms
-//
-//
-//        Room nullKeyRoom = new Room();
-//        assertEquals(Integer.class, userService.addRoom(username, nullKeyRoom).get().getClass());
-//
-//        Integer id = userService.addRoom(username, room).get();
-//        assertFalse(userService.ownsRoom(username, 9999)); //not existing id
-//        assertTrue(userService.ownsRoom(username, id));
-//
-//        assertFalse(userService.removeRoom(username, 9999));
-//        assertFalse(userService.removeRoom("notExistsUsername", 1));
-//
-//        assertTrue(userService.removeRoom(username, id));
-//        assertFalse(userService.ownsRoom(username, id));
     }
 
     @Test
@@ -166,6 +141,7 @@ class UserServiceTest {
 
         assertTrue(userService.getDevices("notExisting").isEmpty());
         userService.insert(newUser);
+        userService.generateValue(username);
         assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no device
         assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username).get()); //no device
         assertTrue(userService.getPopulatedDevices("notExisting").isEmpty()); //no device
@@ -205,7 +181,6 @@ class UserServiceTest {
     }
 
     @Test
-//    @Disabled(value = "fix the error in RoomService.removeDevice line 92 and UserService.migrateDevice line 279: java.lang.UnsupportedOperationException")
     @DisplayName("testing for removing and migrating device")
     void testMovingDevice() {
         String username = "serviceUsername4";
