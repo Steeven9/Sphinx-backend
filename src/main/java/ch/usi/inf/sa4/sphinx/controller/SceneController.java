@@ -71,6 +71,31 @@ public class SceneController {
                 .collect(Collectors.toList()));
     }
 
+
+
+
+
+
+    /**
+     * Creates a new room.
+     *
+     * @param sessionToken      session token of the user
+     * @param username          the username of the user
+     * @return a new room
+     */
+    @GetMapping("/{sceneId}")
+    @ApiOperation("Modifies a Scene")
+    public ResponseEntity<SerialisableScene> getSceneById(@NotNull @PathVariable final Integer sceneId,
+                                                         @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                         @NotNull @RequestHeader("user") final String username) {
+        check(sessionToken, username, null, sceneId);
+
+        final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
+        return ResponseEntity.ok().body(storageScene.serialise());
+    }
+
+
+
     /**
      * Creates a new Scene.
      *
@@ -180,15 +205,13 @@ public class SceneController {
     }
 
 
-    @PostMapping("run/{sceneId}")
+    @PutMapping("run/{sceneId}")
     @ApiOperation("Runs a Scene")
     public ResponseEntity<SerialisableScene> runScene(@NotNull @PathVariable final Integer sceneId,
                                                          @NotNull @RequestHeader("session-token") final String sessionToken,
-                                                         @NotNull @RequestHeader("user") final String username,
-                                                         @NotNull @RequestBody final SerialisableScene serialisableScene,
-                                                         final Errors errors) {
+                                                         @NotNull @RequestHeader("user") final String username) {
 
-        check(sessionToken, username, errors, sceneId);
+        check(sessionToken, username, null, sceneId);
 
         sceneService.get(sceneId).orElseThrow(()->new NotFoundException("")).run();
 
@@ -236,7 +259,7 @@ public class SceneController {
     private void check(final String sessionToken, final String username, final Errors errors, final Integer sceneId) {
         check(sessionToken, username, errors);
 
-        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this room");
+//        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this room");
 
     }
 }
