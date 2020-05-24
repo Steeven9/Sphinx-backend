@@ -32,7 +32,6 @@ class DeviceServiceTest {
     @BeforeAll
     void beforeAll(){
         userService.delete(username);
-        userService.delete("User2");
     }
 
     @BeforeEach
@@ -48,7 +47,6 @@ class DeviceServiceTest {
     @AfterEach
     void clean() {
         userService.delete(username);
-        userService.delete("User2");
     }
 
     @Test
@@ -74,12 +72,5 @@ class DeviceServiceTest {
         Device newDevice =new Light();
         assertFalse(deviceService.update(new Light()));
     }
-
-
-
-
-
-
-
 
 }
