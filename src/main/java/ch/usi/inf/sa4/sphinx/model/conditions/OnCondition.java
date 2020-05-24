@@ -53,7 +53,7 @@ public class OnCondition extends Condition<Device> {
      * @inheritDoc
      */
     @Override
-    public ConditionType getEventType() {
+    public ConditionType getConditionType() {
         return operator == Operator.ON? ConditionType.DEVICE_ON: ConditionType.DEVICE_OFF;
     }
 

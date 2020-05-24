@@ -41,7 +41,7 @@ public abstract class Condition<T extends Device> extends StorableE {
      * @return a serialized version of this condition
      */
     public SerialisableCondition serialise() {
-        return new SerialisableCondition(getEventType(), device.getId(), getStringValue());
+        return new SerialisableCondition(getConditionType(), device.getId(), getStringValue());
     }
 
     /**
@@ -53,9 +53,9 @@ public abstract class Condition<T extends Device> extends StorableE {
 
 
     /**
-     * @return The
+     * @return The type of this condition.
      */
-    public abstract ConditionType getEventType();
+    public abstract ConditionType getConditionType();
 
     protected abstract String getStringValue();
 }

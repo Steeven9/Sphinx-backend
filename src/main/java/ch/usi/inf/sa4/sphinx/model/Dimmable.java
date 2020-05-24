@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.misc.StatusHolder;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
@@ -11,7 +10,7 @@ import javax.persistence.Entity;
  * A dimmable is a dimmable device, that has an internal state (the intensity level).
  */
 @Entity
-public abstract class Dimmable extends Device implements StatusHolder<Double> {
+public abstract class Dimmable extends Device {
 
     @Expose
     @Column
@@ -46,7 +45,6 @@ public abstract class Dimmable extends Device implements StatusHolder<Double> {
     }
 
 
-    @Override
     public Double getStatus() {
         return getIntensity();
     }

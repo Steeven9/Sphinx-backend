@@ -60,7 +60,7 @@ public class SensorQuantityCondition extends Condition<Sensor> {
      * @inheritDoc
      */
     @Override
-    public ConditionType getEventType() {
+    public ConditionType getConditionType() {
         return operator == Operator.GREATER ? ConditionType.SENSOR_OVER : ConditionType.SENSOR_UNDER;
     }
 

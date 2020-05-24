@@ -39,7 +39,7 @@ public class CouplingServiceTest {
         userService.insert(newUser);
         user = userService.get(username).get();
         userService.addRoom(username, new Room());
-        int roomId = user.g
+        //int roomId = user.g
 
     }
 

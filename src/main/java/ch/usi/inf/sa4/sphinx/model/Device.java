@@ -158,9 +158,9 @@ public abstract class Device extends StorableE {
 
     /**
      * Unlinks a Coupling from this Device.
-     * @param observer the Coupling to remove
+     * @param observer the Observer to remove
      */
-    public void removeObserver(final Coupling observer) {
+    public void removeObserver(final Observer observer) {
         observers.remove(observer);
     }
 

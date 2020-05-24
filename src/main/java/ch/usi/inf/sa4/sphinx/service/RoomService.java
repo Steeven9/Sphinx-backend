@@ -107,42 +107,4 @@ public class RoomService {
         }).orElse(false);
     }
 
-//    /**
-//     * Returns the average temperature from all temperature sensors and the thermostat in a given room.
-//     *
-//     * @param roomId       the id of the room
-//     * @param thermostatId the id og the thermostat
-//     * @return the average temperature
-//     */
-//    public double getAverageTemp(final Integer roomId, final Integer thermostatId) {
-//        Optional<List<Device>> opt = this.getPopulatedDevices(roomId);
-//        double averageTemp = 0.0, sensors = 0.0;
-//
-//        if (opt.isEmpty()) {
-//            return -99999;//internal error error
-//        }
-//
-//        Optional<Device> deviceOp = deviceService.get(thermostatId);
-//        if (deviceOp.isEmpty()) {
-//            return -99999; //internal error error
-//        }
-//
-//        List<Device> list = opt.get();
-//        if (!(list.size() == 0)) {
-//            for (Device device : list) {
-//                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
-//                    averageTemp += ((TempSensor) device).getValue();
-//                    sensors++;
-//                }
-//            }
-//        }
-//
-//        Thermostat thermostat = (Thermostat) deviceOp.get();
-//        ++sensors;
-//        averageTemp += thermostat.getValue();
-//        averageTemp = averageTemp / sensors;
-//
-//        return averageTemp;
-//    }
-
 }

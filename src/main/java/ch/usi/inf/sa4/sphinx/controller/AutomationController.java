@@ -11,7 +11,7 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import io.swagger.annotations.ApiOperation;
-import lombok.NonNull;
+//import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,7 +117,7 @@ public class AutomationController {
     @ApiOperation("Gets the automations")
     public ResponseEntity deleteAutomations(@RequestHeader("session-token") final String sessionToken,
                                             @RequestHeader("user") final String username,
-                                            @PathVariable @NonNull Integer automationId
+                                            @PathVariable @NotNull Integer automationId
     ) {
 
 
@@ -128,6 +128,13 @@ public class AutomationController {
         }, () -> {
             throw new NotFoundException("");
         });
+
+
+        automationService.findById(automationId).map(automation -> {
+            if (!automation.getUser().getUsername().equals(username)) throw new NotFoundException("");
+            automationService.deleteAutomation(automation.getId());
+            return automation;
+        }).orElseThrow(() ->  new NotFoundException(""));
 
         return ResponseEntity.noContent().build();
 
@@ -174,7 +181,8 @@ public class AutomationController {
                                                                    final Errors errors) {
 
         check(username, sessionToken, errors);
-        Automation storageAutomation = automationService.createAutomation(username).orElseThrow(() -> new ServerErrorException(""));
+        Automation storageAutomation = automationService.createAutomation(username)
+                .orElseThrow(() -> new ServerErrorException("Failed to create the coupling"));
         Integer autoId = storageAutomation.getId();
 
         List<Integer> sceneIds = automation.getScenes();
@@ -212,17 +220,17 @@ public class AutomationController {
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
      * @param errors       validation errors
-     * @return a ResponseEntity with the data of the modified device and status code 200 if operation is successful or
+     * @return a ResponseEntity with the data of the modified Automation and status code 200 if operation is successful or
      * - 400 if bad request or
-     * - 404 if no such device exist or
+     * - 404 if no such automation exist or
      * - 401 if authentication fails or
      * - 500 in case of a server error
-     * @see SerialisableDevice
-     * @see Device
+     * @see SerialisableAutomation
+     * @see Automation
      */
-    @PutMapping("/{deviceId}")
-    @ApiOperation("Modifies a Device")
-    public ResponseEntity<SerialisableAutomation> modifyAutomation(@NotBlank @PathVariable final Integer automationId,
+    @PutMapping("/{automationId}")
+    @ApiOperation("Modifies an Automation")
+    public ResponseEntity<SerialisableAutomation> modifyAutomation(@NotNull @PathVariable final Integer automationId,
                                                                    @NotBlank @RequestBody final SerialisableAutomation automation,
                                                                    @RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username,
@@ -282,15 +290,18 @@ public class AutomationController {
      * @param username     the username of the user
      * @param errors       in case error occur
      */
-    private void check(final String sessionToken, final String username, final Errors errors) {
+    private void check(final String username, final String sessionToken, final Errors errors) {
         if (errors != null && errors.hasErrors()) {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
+        check(username, sessionToken);
+    }
+
+
+    private void check(final String username, final String sessionToken) {
         if (!userService.validSession(username, sessionToken)) {
             throw new UnauthorizedException("Invalid credentials");
         }
-
-
     }
 }
 

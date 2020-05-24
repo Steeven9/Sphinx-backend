@@ -22,7 +22,7 @@ public class Automation extends StorableE implements Runnable {
     //    @OneToMany(cascade = CascadeType.ALL)
 //    private List<Coupling> triggers;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Condition> conditions; //TODO this into a set and override condition.equa
+    private List<Condition> conditions;
     @OneToMany
     private Set<Scene> scenes;
     private String name;
@@ -36,18 +36,6 @@ public class Automation extends StorableE implements Runnable {
     public String getName() {
         return name;
     }
-
-
-//    /**
-//     * Adds an event to the list of those that will trigger this automation
-//     *
-//     * @param event the event that will trigger this automation
-//     */
-//    public void addTrigger(@NonNull Event<?> event, Device device) {
-////        Coupling newTrigger = new Coupling(event, new RunAutomation(this));
-////        device.addObserver(newTrigger);
-//        //triggers.add(newTrigger);
-//    }
 
 
     public void addScene(@NonNull Scene scene) {
@@ -64,7 +52,6 @@ public class Automation extends StorableE implements Runnable {
 
 
     public Automation(User user) {
-        // this.triggers = new ArrayList<>();
         this.conditions = new ArrayList<>();
         this.scenes = new HashSet<>();
         this.user = user;

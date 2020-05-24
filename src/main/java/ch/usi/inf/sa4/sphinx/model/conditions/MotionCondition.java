@@ -58,7 +58,7 @@ public class MotionCondition extends Condition<MotionSensor> {
      * @inheritDoc
      */
     @Override
-    public ConditionType getEventType() {
+    public ConditionType getConditionType() {
         return operator == Operator.EQUAL? ConditionType.MOTION_DETECTED: ConditionType.MOTION_NOT_DETECTED;
     }
 

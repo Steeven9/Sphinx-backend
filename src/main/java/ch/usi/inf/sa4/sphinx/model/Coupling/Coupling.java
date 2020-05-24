@@ -18,7 +18,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 public abstract class Coupling<X extends Device, Y extends Device> extends Observer<X> {
     @ManyToOne(targetEntity = Device.class)
-    //TODO discover why this doesn't work but bidirectional does
     private Y device2;
 
     /**

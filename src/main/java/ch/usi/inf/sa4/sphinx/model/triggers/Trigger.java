@@ -36,12 +36,11 @@ public abstract class Trigger extends Observer<Device> {
     }
 
     /**
-     * Triggers the trigger making the targeeted Automation run.
+     * Triggers the trigger making the targeted Automation run.
      */
     @Override
     public void run() {
         if (condition.check()) automation.run();
-        //System.out.println("HEEEEEERE TIRGGER");
     }
 
 
