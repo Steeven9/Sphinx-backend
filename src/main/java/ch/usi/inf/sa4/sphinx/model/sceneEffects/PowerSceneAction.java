@@ -2,7 +2,6 @@ package ch.usi.inf.sa4.sphinx.model.sceneEffects;
 
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 
 import javax.persistence.Entity;
@@ -10,15 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-public class PowerSceneEffect extends SceneEffect<Device> {
+public class PowerSceneAction extends SceneAction<Device> {
     private boolean power;
 
-    public PowerSceneEffect(List<Device> devices, boolean power, String name) {
+    public PowerSceneAction(List<Device> devices, boolean power, String name) {
         super( devices, name);
         this.power = power;
     }
 
-    public PowerSceneEffect() {
+    public PowerSceneAction() {
     }
 
     @Override

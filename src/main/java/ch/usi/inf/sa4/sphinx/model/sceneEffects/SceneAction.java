@@ -9,16 +9,16 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class SceneEffect<T extends Device> extends StorableE implements Runnable{
+public abstract class SceneAction<T extends Device> extends StorableE implements Runnable{
     private String name;
     @ManyToMany(targetEntity = Device.class)
     @JoinColumn(name="device_id", referencedColumnName = "id")
     private List<T> devices;
 
-    public SceneEffect() {
+    public SceneAction() {
     }
 
-    public SceneEffect( List<T> devices, String name) {
+    public SceneAction(List<T> devices, String name) {
         this.devices = devices;
         this.name = name;
     }

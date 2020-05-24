@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model.scenesEffects;
 
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Scene;
 import ch.usi.inf.sa4.sphinx.model.StorableE;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 import lombok.NoArgsConstructor;

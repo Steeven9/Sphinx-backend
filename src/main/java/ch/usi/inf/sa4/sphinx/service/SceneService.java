@@ -4,7 +4,7 @@ import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
-import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneEffect;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneAction;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneEffectFactory;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class SceneService {
     public void addEffect(int sceneId, List<Integer> deviceIds, SceneType type, String effectName, Object target) {
         Scene scene = sceneStorage.findById(sceneId).orElseThrow(() -> new NotFoundException(""));
         List<Device> devices = deviceStorage.findAllById(deviceIds);
-        SceneEffect effect = SceneEffectFactory.make(devices, effectName, type, target);
+        SceneAction effect = SceneEffectFactory.make(devices, effectName, type, target);
         scene.addEffect(effect);
         sceneStorage.save(scene);
     }

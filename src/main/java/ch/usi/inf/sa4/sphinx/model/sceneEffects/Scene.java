@@ -21,7 +21,7 @@ public class Scene extends StorableE implements Runnable {
     @OneToMany(orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
-    private List<SceneEffect> effects;
+    private List<SceneAction> effects;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -85,7 +85,7 @@ public class Scene extends StorableE implements Runnable {
         return this.icon;
     }
 
-    public List<SceneEffect> getEffects() {
+    public List<SceneAction> getEffects() {
         return this.effects;
     }
 
@@ -95,18 +95,18 @@ public class Scene extends StorableE implements Runnable {
      */
     public SerialisableScene serialise() {
         final SerialisableScene ss = new SerialisableScene();
-        List<SerialisableSceneEffect> sEffects = getEffects().stream().map(SceneEffect::serialise).collect(Collectors.toList());
+        List<SerialisableSceneEffect> sEffects = getEffects().stream().map(SceneAction::serialise).collect(Collectors.toList());
         return new SerialisableScene(getId(), getName(), getIcon(), sEffects);
     }
 
-    public void addEffect(SceneEffect effect) {
+    public void addEffect(SceneAction effect) {
         effects.add(effect);
     }
 
 
     @Override
     public void run() {
-        effects.forEach(SceneEffect::run);
+        effects.forEach(SceneAction::run);
     }
 
     public void clearEffects() {

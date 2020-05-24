@@ -13,23 +13,23 @@ public final class SceneEffectFactory {
     private SceneEffectFactory() {
     }
 
-    public static SceneEffect make(List<Device> devices, String name, SceneType type, Object target) {
+    public static SceneAction make(List<Device> devices, String name, SceneType type, Object target) {
         try {
             switch (type) {
                 case POWER:
-                    return new PowerSceneEffect(devices, (boolean) target, name);
+                    return new PowerSceneAction(devices, (boolean) target, name);
                 case TEMPERATURE:
                     List<Thermostat> tmp = new ArrayList<>();
                     devices.forEach(device -> tmp.add((Thermostat) device));
-                    return new TemperatureSceneEffect(tmp, (double) target, name);
+                    return new TemperatureSceneAction(tmp, (double) target, name);
                 case LIGHT_INTENSITY:
                     List<DimmableLight> tmp2 = new ArrayList<>();
                     devices.forEach(device -> tmp2.add((DimmableLight) device));
-                    return new LightIntensitySceneEffect(tmp2, (double) target, name);
+                    return new LightIntensitySceneAction(tmp2, (double) target, name);
                 case CURTAINS_APERTURE:
                     List<SmartCurtain> tmp3 = new ArrayList<>();
                     devices.forEach(device -> tmp3.add((SmartCurtain) device));
-                    return new CurtainsApertureSceneEffect(tmp3, (double) target, name);
+                    return new CurtainsApertureSceneAction(tmp3, (double) target, name);
             }
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("");

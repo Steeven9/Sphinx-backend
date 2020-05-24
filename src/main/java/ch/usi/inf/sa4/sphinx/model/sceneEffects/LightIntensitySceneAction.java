@@ -2,7 +2,7 @@ package ch.usi.inf.sa4.sphinx.model.sceneEffects;
 
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.SmartCurtain;
+import ch.usi.inf.sa4.sphinx.model.DimmableLight;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 
 import javax.persistence.Entity;
@@ -10,36 +10,39 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-public class CurtainsApertureSceneEffect extends SceneEffect<SmartCurtain>{
-    private double aperture;
+public class LightIntensitySceneAction extends SceneAction<DimmableLight> {
+    private double intensity;
 
-    public CurtainsApertureSceneEffect() {
+    public LightIntensitySceneAction(List<DimmableLight> lights, double intensity, String name) {
+        super( lights, name);
+        this.intensity = intensity;
     }
-    public CurtainsApertureSceneEffect( List<SmartCurtain> curtains, double aperture,  String name) {
-        super( curtains, name);
-        this.aperture = aperture;
+
+    public LightIntensitySceneAction() {
     }
+
 
     @Override
     public SerialisableSceneEffect serialise() {
         return new SerialisableSceneEffect(getId(),
                 getType().toInt(),
                 getName(),
-                aperture,
+                intensity,
                 null,
                 getDevices().stream().map(Device::getId).collect(Collectors.toList()));
     }
+
     @Override
     public SceneType getType() {
-        return SceneType.CURTAINS_APERTURE;
+        return SceneType.LIGHT_INTENSITY;
     }
 
     @Override
     public void run() {
-        List<SmartCurtain> devices = getDevices();
+        List<DimmableLight> devices = getDevices();
         devices.forEach(device -> {
             device.setOn(true);
-            device.setState(aperture);
+            device.setState(intensity);
             ServiceProvider.getDeviceService().update(device);
         });
     }
