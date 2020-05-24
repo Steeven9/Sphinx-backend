@@ -132,7 +132,6 @@ public class UserService {
         if (!ownsRoom(username, roomId)) {
             return false;
         }
-//
 
         final Optional<User> user = userStorage.findByUsername(username);
         user.ifPresent(
@@ -345,15 +344,12 @@ public class UserService {
             return false;
         }
 
-        final Optional<User> user = userStorage.findByUsername(host);
-        final Optional<User> guestUser = userStorage.findByUsername(guest);
+        final User user = userStorage.findByUsername(host).orElseThrow(WrongUniverseException::new);
+        final User guestUser = userStorage.findByUsername(guest).orElseThrow(WrongUniverseException::new);
 
-        if (guestUser.isPresent() && user.isPresent()) {
-            guestUser.get().removeHost(user.get());
-            userStorage.save(user.get());
-            return true;
-        }
-        return false;
+        guestUser.removeHost(user);
+        userStorage.save(user);
+        return true;
     }
 
     /**
@@ -391,8 +387,8 @@ public class UserService {
      */
     public boolean isGuestOf(final String host, final String guest) {
         final Optional<User> user = userStorage.findByUsername(host);
-
         final Optional<User> guestUsername = userStorage.findByUsername(guest);
+
         if (user.isEmpty() || guestUsername.isEmpty()) {
             return false;
         }

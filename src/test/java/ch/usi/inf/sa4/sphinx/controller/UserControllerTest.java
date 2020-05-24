@@ -141,6 +141,14 @@ public class UserControllerTest {
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(200));
+
+        // To test no modifications
+        this.mockmvc.perform(put("/user/test2")
+                .header("session-token", "user2SessionToken")
+                .content("{\"email\": \"test2@smarthut.xyz\", \"fullname\": \"Marco Tereh\", \"password\": \"12345\", \"username\": \"test2\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
     }
 
     @Test
@@ -162,5 +170,15 @@ public class UserControllerTest {
         this.mockmvc.perform(delete("/user/emptyUser").header("session-token", "emptyUserSessionToken"))
                 .andDo(print())
                 .andExpect(status().is(204));
+    }
+
+    @Test
+    public void shouldSuccessfullyNotModifyUserOnEmptyPut() throws Exception {
+        this.mockmvc.perform(put("/user/user1")
+                .header("session-token", "user1SessionToken")
+                .content("{\"email\": " + null + ", \"fullname\": " + null + ", \"password\": " + null + ", \"username\": " + null + "}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200));
     }
 }
