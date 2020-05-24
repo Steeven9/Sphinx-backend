@@ -81,8 +81,8 @@ class RoomServiceTest {
         List<Device> result = roomService.getPopulatedDevices(id).get();
         assertAll(
                 () -> assertEquals(2, result.size()),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(TempSensor.class), result.get(0).getDeviceType()),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(Switch.class), result.get(1).getDeviceType())
+                () -> assertEquals(DeviceType.TEMP_SENSOR, result.get(0).getDeviceType()),
+                () -> assertEquals(DeviceType.SWITCH, result.get(1).getDeviceType())
         );
     }
 
