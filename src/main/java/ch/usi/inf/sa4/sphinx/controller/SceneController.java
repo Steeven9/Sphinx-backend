@@ -106,6 +106,7 @@ public class SceneController {
                                                          final Errors errors) {
 
         checkRequestParams(sessionToken, username);
+        checkValidationErrors(errors);
 
         boolean owned = serialisableScene.getEffects().stream()
                 .flatMap(effect -> effect.getDevices().stream())
@@ -132,6 +133,7 @@ public class SceneController {
                                     effect.getName(),
                                     effect.getTarget());
                         } catch (IllegalArgumentException e) {
+                            sceneService.deleteScene(sc.getId());
                             throw new BadRequestException("Incompatible effect type");
 
                         }
@@ -162,6 +164,7 @@ public class SceneController {
                                                          @NotNull @RequestBody final SerialisableScene serialisableScene,
                                                          final Errors errors) {
         checkOwnership(sessionToken, username, sceneId);
+        checkValidationErrors(errors);
 
         final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
 
@@ -173,26 +176,29 @@ public class SceneController {
             storageScene.setIcon(serialisableScene.getIcon());
         }
 
-        storageScene.setShared(serialisableScene.isShared());
-
+        if(serialisableScene.isShared() != null) {
+            storageScene.setShared(serialisableScene.isShared());
+        }
 
         sceneService.removeEffects(sceneId);
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
-        effects.forEach(effect -> {
-                    try {
-                        sceneService.addEffect(
-                                sceneId,
-                                effect.getDevices(),
-                                SceneType.intToType(effect.getType()),
-                                effect.getName(),
-                                effect.getTarget());
-                    } catch (IllegalArgumentException e) {
-                        throw new BadRequestException("Incompatible effect type");
+        if(effects != null) {
+            effects.forEach(effect -> {
+                        try {
+                            sceneService.addEffect(
+                                    sceneId,
+                                    effect.getDevices(),
+                                    SceneType.intToType(effect.getType()),
+                                    effect.getName(),
+                                    effect.getTarget());
+                        } catch (IllegalArgumentException e) {
+                            throw new BadRequestException("Incompatible effect type");
 
+                        }
                     }
-                }
-        );
+            );
+        }
 
 
         final SerialisableScene res = storageScene.serialise();
@@ -226,6 +232,16 @@ public class SceneController {
         sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found")).run();
 
         return ResponseEntity.noContent().build();
+
+    }
+
+
+
+
+    private  void  checkValidationErrors(Errors errors){
+        if(errors != null && errors.hasErrors()){
+            throw new BadRequestException(errors.toString());
+        }
 
     }
 

@@ -3,12 +3,14 @@ package ch.usi.inf.sa4.sphinx.model.sceneEffects;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor
 public class PowerSceneAction extends SceneAction<Device> {
     private boolean power;
 
@@ -17,8 +19,6 @@ public class PowerSceneAction extends SceneAction<Device> {
         this.power = power;
     }
 
-    public PowerSceneAction() {
-    }
 
     @Override
     public SerialisableSceneEffect serialise() {

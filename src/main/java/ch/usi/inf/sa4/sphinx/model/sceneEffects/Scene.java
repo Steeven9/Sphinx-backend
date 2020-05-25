@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.model.StorableE;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * The Scene can contain Effect(s)
  */
 @Entity
+@NoArgsConstructor
 public class Scene extends StorableE implements Runnable {
     private String name;
     private boolean shared;
@@ -43,12 +45,6 @@ public class Scene extends StorableE implements Runnable {
             this.icon = "./img/icons/scenes/icon-generic-scene.svg";
         }
 
-    }
-
-    public Scene() {
-        name = "Scene";
-        effects = new ArrayList<>();
-        icon = "./img/icons/scenes/icon-generic-scene.svg";
     }
 
 
@@ -102,7 +98,6 @@ public class Scene extends StorableE implements Runnable {
      * @return a serialised version of this Scene
      */
     public SerialisableScene serialise() {
-        final SerialisableScene ss = new SerialisableScene();
         List<SerialisableSceneEffect> sEffects = getEffects().stream().map(SceneAction::serialise).collect(Collectors.toList());
         return new SerialisableScene(getId(), getName(), getIcon(), sEffects, isShared());
     }
