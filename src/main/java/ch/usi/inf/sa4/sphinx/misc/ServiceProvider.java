@@ -19,7 +19,7 @@ public class ServiceProvider {
     private static CouplingService staticCouplingService;
     private static RoomService staticRoomService;
 
-    public ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
+    private ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
                            @NonNull final UserService userService, @NonNull final RoomService roomService) {
         staticDeviceService = deviceService;
         staticCouplingService = couplingService;

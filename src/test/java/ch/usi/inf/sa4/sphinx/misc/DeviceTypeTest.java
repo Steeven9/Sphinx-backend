@@ -63,12 +63,6 @@ class DeviceTypeTest {
         assertEquals(DeviceType.deviceTypetoInt(type), device);
     }
 
-    @ParameterizedTest(name = "Device {0} is associated to DeviceType {1}")
-    @MethodSource("valueDeviceAndDeviceTypeProvider")
-    @DisplayName("Compare Device with its DeviceType")
-    void TestDeviceClassToDeviceType(Device device, DeviceType type) {
-        assertEquals(type, DeviceType.deviceToDeviceType(device));
-    }
 
     @ParameterizedTest
     @MethodSource("valueDeviceAndDeviceTypeProvider")

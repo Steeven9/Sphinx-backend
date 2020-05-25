@@ -236,7 +236,7 @@ public class DeviceController {
 
         if (!userService.ownsDevice(username, deviceId)) throw new UnauthorizedException(NOTOWNS);
 
-        if (DeviceType.deviceToDeviceType(plug) != DeviceType.SMART_PLUG) {
+        if (plug.getDeviceType() != DeviceType.SMART_PLUG) {
             throw new BadRequestException("Not a smart plug");
         }
 
