@@ -218,7 +218,6 @@ public class SceneController {
 
         checkOwnership(sessionToken, username, sceneId);
 
-        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found")).run();
         sceneService.deleteScene(sceneId);
 
         return ResponseEntity.noContent().build();
