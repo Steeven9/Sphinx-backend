@@ -267,20 +267,6 @@ public class User extends StorableE {
     }
 
 
-
-//    /**
-//     * adds a the given scene to the User
-//     * @param scene the scene to be added
-//     */
-//    public void addScene(final Scene scene) {
-//        if (scene == null) {
-//            throw new IllegalArgumentException("Scene can't be null");
-//        }
-//        scene.setUser(this);
-//        scenes.add(scene);
-//    }
-
-
     /**
      * removes the room with the selected id
      *

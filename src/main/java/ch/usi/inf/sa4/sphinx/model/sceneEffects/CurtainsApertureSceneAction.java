@@ -4,17 +4,17 @@ import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.SmartCurtain;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor
 public class CurtainsApertureSceneAction extends SceneAction<SmartCurtain> {
     private double aperture;
 
-    public CurtainsApertureSceneAction() {
-    }
     public CurtainsApertureSceneAction(List<SmartCurtain> curtains, double aperture, String name) {
         super( curtains, name);
         this.aperture = aperture;

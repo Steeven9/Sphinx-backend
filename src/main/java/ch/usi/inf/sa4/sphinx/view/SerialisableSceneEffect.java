@@ -12,9 +12,6 @@ public class SerialisableSceneEffect {
     private Boolean on;
     private List<Integer> devices;
 
-    public SerialisableSceneEffect() {
-    }
-
     public SerialisableSceneEffect(Integer id, Integer type, String name, Double slider, Boolean on, List<Integer> devices) {
         this.id = id;
         this.type = type;

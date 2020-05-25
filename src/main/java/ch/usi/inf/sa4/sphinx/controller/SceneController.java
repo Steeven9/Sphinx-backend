@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
@@ -61,7 +62,7 @@ public class SceneController {
     public ResponseEntity<List<SerialisableScene>> getAllScenes(@NotNull @RequestHeader("session-token") final String sessionToken,
                                                                 @NotNull @RequestHeader("user") final String username) {
 
-        check(sessionToken, username, null);
+        checkRequestParams(sessionToken, username);
         return ResponseEntity.ok(sceneService.getOwnedScenes(username)
                 .stream()
                 .map(Scene::serialise)
@@ -81,7 +82,7 @@ public class SceneController {
     public ResponseEntity<SerialisableScene> getSceneById(@NotNull @PathVariable final Integer sceneId,
                                                           @NotNull @RequestHeader("session-token") final String sessionToken,
                                                           @NotNull @RequestHeader("user") final String username) {
-        check(sessionToken, username, null, sceneId);
+        checkOwnership(sessionToken, username, sceneId);
 
         final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
         return ResponseEntity.ok().body(storageScene.serialise());
@@ -104,18 +105,18 @@ public class SceneController {
                                                          @NotNull @RequestBody final SerialisableScene serialisableScene,
                                                          final Errors errors) {
 
-        check(sessionToken, username, errors);
+        checkRequestParams(sessionToken, username);
 
         boolean owned = serialisableScene.getEffects().stream()
                 .flatMap(effect -> effect.getDevices().stream())
                 .allMatch(id -> userService.ownsDevice(username, id));
 
         if (!owned) {
-            throw new NotFoundException("failed to retrive devices");
+            throw new NotFoundException("failed to retrieve devices");
         }
 
         final Scene sc = sceneService.createScene(username, serialisableScene.getName(), serialisableScene.getIcon())
-                .orElseThrow(() -> new BadRequestException(""));
+                .orElseThrow(() -> new BadRequestException("Bad Request, check your parameters"));
 
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
@@ -160,7 +161,7 @@ public class SceneController {
                                                          @NotNull @RequestHeader("user") final String username,
                                                          @NotNull @RequestBody final SerialisableScene serialisableScene,
                                                          final Errors errors) {
-        check(sessionToken, username, errors, sceneId);
+        checkOwnership(sessionToken, username, sceneId);
 
         final Scene storageScene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
 
@@ -205,9 +206,9 @@ public class SceneController {
                                                          @NotNull @RequestHeader("session-token") final String sessionToken,
                                                          @NotNull @RequestHeader("user") final String username) {
 
-        check(sessionToken, username, null, sceneId);
+        checkOwnership(sessionToken, username, sceneId);
 
-        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("")).run();
+        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found")).run();
         sceneService.deleteScene(sceneId);
 
         return ResponseEntity.noContent().build();
@@ -220,9 +221,9 @@ public class SceneController {
                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
                                                       @NotNull @RequestHeader("user") final String username) {
 
-        check(sessionToken, username, null, sceneId);
+        checkOwnership(sessionToken, username, sceneId);
 
-        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("")).run();
+        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found")).run();
 
         return ResponseEntity.noContent().build();
 
@@ -237,12 +238,8 @@ public class SceneController {
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
-     * @param errors       in case error occur
      */
-    private void check(final String sessionToken, final String username, final Errors errors) {
-        if (errors != null && errors.hasErrors()) {
-            throw new BadRequestException(errors.getAllErrors().toString());
-        }
+    private void checkRequestParams(final String sessionToken, final String username) {
         userService.validateSession(username, sessionToken);
     }
 
@@ -252,17 +249,16 @@ public class SceneController {
      * It will check that:
      * there are no validation errors
      * the User exists and has a valid sessionToken
-     * the room with the given id belongs to the user
+     * the scene with the given id belongs to the user
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
-     * @param errors       in case error occur
      * @param sceneId      the id of the room
      */
-    private void check(final String sessionToken, final String username, final Errors errors, final Integer sceneId) {
-        check(sessionToken, username, errors);
+    private void checkOwnership(final String sessionToken, final String username, final Integer sceneId) {
+        checkRequestParams(sessionToken, username);
 
-//        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this room");
+        if (!sceneService.isOwnedBy(username, sceneId)) throw new UnauthorizedException("You don't own this scene");
 
     }
 }
