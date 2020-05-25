@@ -59,9 +59,14 @@ public abstract class Dimmable extends Device {
             throw new IllegalArgumentException("Intensity must be between 0.0 and 1.0");
         } else {
             intensity = newState;
-            triggerEffects();
+            if(isOn()) {
+                triggerEffects();
+            }
         }
     }
+
+
+
 
     /**
      * {@inheritDoc}
