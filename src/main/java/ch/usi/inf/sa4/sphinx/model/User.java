@@ -319,11 +319,11 @@ public class User extends StorableE {
      */
     public SerialisableUser serialise() {
         final SerialisableUser sd = new SerialisableUser();
-        sd.username = this.username;
-        sd.email = this.email;
-        sd.fullname = this.fullname;
-        sd.rooms = this.rooms.stream().map(Room::getId).toArray(Integer[]::new);
-        sd.allowSecurityCameras = this.camsVisible;
+        sd.setUsername(this.username);
+        sd.setEmail(this.email);
+        sd.setFullname(this.fullname);
+        sd.setRoomIds(this.rooms.stream().map(Room::getId).toArray(Integer[]::new));
+        sd.setAllowSecurityCameras(this.camsVisible);
         return sd;
     }
 
@@ -400,9 +400,9 @@ public class User extends StorableE {
      */
     public SerialisableUser serialiseAsHost() {
         final SerialisableUser sd = new SerialisableUser();
-        sd.username = this.username;
-        sd.email = this.email;
-        sd.fullname = this.fullname;
+        sd.setUsername(this.username);
+        sd.setEmail(this.email);
+        sd.setFullname(this.fullname);
         return sd;
     }
 }

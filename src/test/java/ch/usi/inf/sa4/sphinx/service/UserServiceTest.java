@@ -1,43 +1,42 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
     @Autowired
     UserService userService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    private DummyDataAdder dummyDataAdder;
 
-
-//    @BeforeAll
-//    void createDeviceAndUser() {
-//        dummyDataAdder.user1();
-//        user = userService.get("user1").get();
-//    }
-//
-//    @BeforeEach
-//    public void readRoomAndDevice(){
-//        room = user.getRooms().get(0);
-//        device = room.getDevices().get(0);
-//    }
-
+    @BeforeAll
+    void init() {
+        dummyDataAdder.addDummyData();
+    }
 
     @Test
     @DisplayName("creates a user")
@@ -132,25 +131,12 @@ class UserServiceTest {
         room.setName("testName");
 
         assertFalse(userService.ownsRoom(username, 1));
+        assertFalse(userService.removeRoom(username, 1));
         assertEquals(new ArrayList<Room>(), userService.getPopulatedRooms("notExisting"));
 
         assertTrue(userService.addRoom(username, room).isEmpty());
         assertTrue(userService.insert(newUser));
         assertFalse(userService.ownsRoom(username, 1));//no rooms
-//
-//
-//        Room nullKeyRoom = new Room();
-//        assertEquals(Integer.class, userService.addRoom(username, nullKeyRoom).get().getClass());
-//
-//        Integer id = userService.addRoom(username, room).get();
-//        assertFalse(userService.ownsRoom(username, 9999)); //not existing id
-//        assertTrue(userService.ownsRoom(username, id));
-//
-//        assertFalse(userService.removeRoom(username, 9999));
-//        assertFalse(userService.removeRoom("notExistsUsername", 1));
-//
-//        assertTrue(userService.removeRoom(username, id));
-//        assertFalse(userService.ownsRoom(username, id));
     }
 
     @Test
@@ -166,6 +152,7 @@ class UserServiceTest {
 
         assertTrue(userService.getDevices("notExisting").isEmpty());
         userService.insert(newUser);
+        userService.generateValue(username);
         assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no device
         assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username).get()); //no device
         assertTrue(userService.getPopulatedDevices("notExisting").isEmpty()); //no device
@@ -205,7 +192,6 @@ class UserServiceTest {
     }
 
     @Test
-//    @Disabled(value = "fix the error in RoomService.removeDevice line 92 and UserService.migrateDevice line 279: java.lang.UnsupportedOperationException")
     @DisplayName("testing for removing and migrating device")
     void testMovingDevice() {
         String username = "serviceUsername4";
@@ -241,13 +227,12 @@ class UserServiceTest {
         deviceId = roomService.addDevice(id1, DeviceType.SMART_PLUG).get();
         assertTrue(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2
         assertEquals(id2, userService.owningRoom(username, deviceId));
-//
+
         assertFalse(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2 (no more devices)
         userService.removeDevice(username, deviceId);
         List<Integer> devicesOwnedByUser = userService.getDevices(username).get();
         assertTrue(devicesOwnedByUser.isEmpty()); //no devices
     }
-
 
     @Test
     void acceptsOnlyCorrectPassword() {
@@ -260,5 +245,75 @@ class UserServiceTest {
                 () -> assertFalse(storageUser.matchesPassword("")),
                 () -> assertFalse(storageUser.matchesPassword("wrong")));
         userService.delete("testUsername");
+    }
+
+    @Test
+    void testOwnsRoom() {
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Integer roomId = rooms.get(0).getId();
+
+        assertFalse(userService.ownsRoom("emptyUser", roomId));
+        assertTrue(userService.ownsRoom("user1", roomId));
+    }
+
+    @Test
+    void coverRemoveDevice() {
+        Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        List<Device> devices = optionalDevices.get();
+        Integer deviceId = devices.get(0).getId();
+
+        userService.removeDevice("emptyUser", deviceId);
+        userService.ownsRoom("user1", deviceId);
+    }
+
+    @Test
+    void testMigrateDeviceFirstCondition() {
+        Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        List<Device> devices = optionalDevices.get();
+        Integer deviceId1 = devices.get(0).getId();
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Integer roomId1 = rooms.get(0).getId();
+        optionalDevices = userService.getPopulatedDevices("user2");
+        devices = optionalDevices.get();
+        Integer deviceId2 = devices.get(0).getId();
+        rooms = userService.getPopulatedRooms("user2");
+        Integer roomId2 = rooms.get(0).getId();
+
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId2));
+        assertTrue(userService.migrateDevice("user2", deviceId2, roomId2, roomId2));
+    }
+
+    @Test
+    void coverGenerateValueWithWrongUser() {
+        userService.generateValue("fakeUser");
+    }
+
+    @Test
+    void testAddGuestExceptions() {
+        assertThrows(UnauthorizedException.class, () -> userService.addGuest("user1", "user1"));
+        assertThrows(NotFoundException.class, () -> userService.addGuest("fakeUser", "user1"));
+        assertThrows(NotFoundException.class, () -> userService.addGuest("user1", "fakeUser"));
+    }
+
+    @Test
+    void testIsGuestOfFalse() {
+        assertFalse(userService.isGuestOf("user1", "user1"));
+        assertFalse(userService.isGuestOf("fakeUser", "user1"));
+        assertFalse(userService.isGuestOf("user1", "fakeUser"));
+    }
+
+    @Test
+    void testGetHostsWithWrongUser() {
+        assertThrows(NotFoundException.class, () -> userService.getHosts("fakeUser"));
+    }
+
+    @Test
+    void coverReturnOwnGuests() {
+        userService.returnOwnGuests("fakeUser");
+        userService.returnOwnGuests("user1");
     }
 }
