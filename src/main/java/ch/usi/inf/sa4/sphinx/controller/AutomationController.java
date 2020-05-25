@@ -4,13 +4,15 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.model.*;
+import ch.usi.inf.sa4.sphinx.model.Automation;
+import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.Scene;
+import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import io.swagger.annotations.ApiOperation;
-//import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
+
+//import lombok.NonNull;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://smarthut.xyz"})
 @RestController
@@ -150,56 +154,6 @@ public class AutomationController {
 //        value:{{effectValue}},
 //    }]
 
-    /**
-     * Creates a new Automation given a SerialisableAutomation. The automation will contain all the triggers,
-     * conditions and scenes specified in the
-     *
-     * @param automation   data of the automation to be created
-     * @param sessionToken sessionToken of the user
-     * @param username     username of the user
-     * @param errors       errors in validating the fields
-     * @return a ResponseEntity with the data of the newly created automation (201), or
-     * - 400 if bad request or
-     * - 401 if not authorized or
-     * - 500 if an internal server error occurred
-     */
-    @PostMapping({"", "/"})
-    @ApiOperation("Creates an automation")
-    public ResponseEntity<SerialisableAutomation> createAutomation(@NotNull @RequestBody final SerialisableAutomation automation,
-                                                                   @RequestHeader("session-token") final String sessionToken,
-                                                                   @RequestHeader("user") final String username,
-                                                                   final Errors errors) {
-
-        checkRequest(username, sessionToken, errors);
-        Automation storageAutomation = automationService.createAutomation(username)
-                .orElseThrow(() -> new ServerErrorException("Failed to create the coupling"));
-        Integer autoId = storageAutomation.getId();
-
-        List<Integer> sceneIds = automation.getScenes();
-        List<SerialisableCondition> conditions = automation.getConditions();
-        List<SerialisableCondition> triggers = automation.getTriggers();
-
-
-        sceneIds.forEach(id -> {
-            Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
-            if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
-            automationService.addScene(autoId, id);
-        });
-
-        conditions.forEach(condition ->
-                automationService.addCondition(autoId, condition.getSource(), condition.getEventType(), condition.getTarget())
-        );
-
-
-        triggers.forEach(trigger ->
-                automationService.addTrigger(autoId, trigger.getSource(), trigger.getEventType(), trigger.getTarget())
-        );
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(storageAutomation.serialise());
-
-    }
-
 
     /**
      * modifies the Automation with the given automationId to conform to the fields in the given SerialisableAutomation,
@@ -221,9 +175,9 @@ public class AutomationController {
     @PutMapping("/{automationId}")
     @ApiOperation("Modifies an Automation")
     public ResponseEntity<SerialisableAutomation> modifyAutomation(@NotNull @PathVariable final Integer automationId,
-                                                                   @NotBlank @RequestBody final SerialisableAutomation automation,
                                                                    @RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username,
+                                                                   @NotBlank @RequestBody final SerialisableAutomation automation,
                                                                    final Errors errors) {
 
 
@@ -287,6 +241,55 @@ public class AutomationController {
         checkRequest(username, sessionToken);
     }
 
+    /**
+     * Creates a new Automation given a SerialisableAutomation. The automation will contain all the triggers,
+     * conditions and scenes specified in the
+     *
+     * @param automation   data of the automation to be created
+     * @param sessionToken sessionToken of the user
+     * @param username     username of the user
+     * @param errors       errors in validating the fields
+     * @return a ResponseEntity with the data of the newly created automation (201), or
+     * - 400 if bad request or
+     * - 401 if not authorized or
+     * - 500 if an internal server error occurred
+     */
+    @PostMapping({"", "/"})
+    @ApiOperation("Creates an automation")
+    public ResponseEntity<SerialisableAutomation> createAutomation(@RequestHeader("session-token") final String sessionToken,
+                                                                   @RequestHeader("user") final String username,
+                                                                   @NotNull @RequestBody final SerialisableAutomation automation,
+                                                                   final Errors errors) {
+
+        checkRequest(username, sessionToken, errors);
+        Automation storageAutomation = automationService.createAutomation(username)
+                .orElseThrow(() -> new ServerErrorException("Failed to create the coupling"));
+        Integer autoId = storageAutomation.getId();
+
+        List<Integer> sceneIds = automation.getScenes();
+        List<SerialisableCondition> conditions = automation.getConditions();
+        List<SerialisableCondition> triggers = automation.getTriggers();
+
+
+        sceneIds.forEach(id -> {
+            Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
+            if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
+            automationService.addScene(autoId, id);
+        });
+
+        conditions.forEach(condition ->
+                automationService.addCondition(autoId, condition.getSource(), condition.getEventType(), condition.getTarget())
+        );
+
+
+        triggers.forEach(trigger ->
+                automationService.addTrigger(autoId, trigger.getSource(), trigger.getEventType(), trigger.getTarget())
+        );
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(storageAutomation.serialise());
+
+    }
 
 
     /**
