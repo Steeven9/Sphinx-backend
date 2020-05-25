@@ -104,7 +104,7 @@ public class Scene extends StorableE implements Runnable {
     public SerialisableScene serialise() {
         final SerialisableScene ss = new SerialisableScene();
         List<SerialisableSceneEffect> sEffects = getEffects().stream().map(SceneAction::serialise).collect(Collectors.toList());
-        return new SerialisableScene(getId(), getName(), getIcon(), sEffects);
+        return new SerialisableScene(getId(), getName(), getIcon(), sEffects, isShared());
     }
 
     public void addEffect(SceneAction effect) {
