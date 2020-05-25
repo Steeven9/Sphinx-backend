@@ -20,9 +20,7 @@ public class StatelessDimSwitchToDimLight extends Coupling<StatelessDimmableSwit
     @Override
     public void run() {
         double newState = getAffected().getIntensity() + (getObserved().isIncrementing() ? increment : -increment);
-        if (newState > 1) newState = 1;
-        if (newState < 0) newState = 0;
-        getAffected().setOn(getObserved().isOn());
+        //getAffected().setOn(getObserved().isOn());
         if(getObserved().isOn() && getAffected().isOn()){
             if (newState > 1) newState = 1;
             if (newState < 0) newState = 0;
