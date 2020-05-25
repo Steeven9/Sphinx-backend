@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 
 import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -237,6 +240,35 @@ class RoomControllerTest {
                 .header("user", "user2"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+
+    void shouldSuccessfullyPutOnNullData() throws Exception {
+        User nullPut = new User("NullPut@smarthut.xyz", "1234", "NullPut", "Null Put");
+        nullPut.setVerified(true);
+        nullPut.setSessionToken("NullST");
+        userService.insert(nullPut);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "NullST")
+                .header("user", "NullPut")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        Integer roomId = userService.getPopulatedRooms("NullPut").get(0).getId();
+
+        this.mockmvc.perform(put("/rooms/" + roomId)
+                .header("user", "NullPut")
+                .header("session-token", "NullST")
+                .content("{\"name\": \"" + null + "\", \"icon\": \"" + null + "\", \"background\": \"" + null + "\", \"devices\":[] }")
+                .contentType("application/json"))
+                .andDo(print()).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
     }
 
 }

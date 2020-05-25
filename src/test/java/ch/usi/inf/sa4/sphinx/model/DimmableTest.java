@@ -11,6 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableTest {
 
+    @Test
+    void testSetState() {
+        DimmableLight d = new DimmableLight();
+        assertThrows(IllegalArgumentException.class, () -> d.setState(1.5));
+        assertThrows(IllegalArgumentException.class, () -> d.setState(-1.5));
+    }
+
 //    @Test
 //    void shouldReturnSerialisebleVersion() {
 //        Dimmable d = new Dimmable();
