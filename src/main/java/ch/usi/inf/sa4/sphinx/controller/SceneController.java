@@ -172,6 +172,9 @@ public class SceneController {
             storageScene.setIcon(serialisableScene.getIcon());
         }
 
+        storageScene.setShared(serialisableScene.isShared());
+
+
         sceneService.removeEffects(sceneId);
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();

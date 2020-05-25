@@ -14,14 +14,16 @@ public class SerialisableScene {
     private Integer id;
     private String name;
     private String icon;
+    private boolean shared;
     @ApiModelProperty(notes = "ids of the devices owned by the scene")
     private List<SerialisableSceneEffect> effects;
 
 
-    public SerialisableScene(Integer id, String name, String icon, List<SerialisableSceneEffect> effects) {
+    public SerialisableScene(Integer id, String name, String icon, List<SerialisableSceneEffect> effects, boolean shared) {
         this.id = id;
         this.name = name;
         this.icon = icon;
+        this.shared = shared;
         this.effects = effects;
     }
 
@@ -35,6 +37,10 @@ public class SerialisableScene {
 
     public String getIcon() {
         return icon;
+    }
+
+    public boolean isShared() {
+        return shared;
     }
 
     public List<SerialisableSceneEffect> getEffects() {
