@@ -85,13 +85,53 @@ public class CouplingServiceTest {
                 ()->assertTrue(switched.isOn()),
                 ()->assertTrue(switcher.isOn())
         );
-        assertDoesNotThrow(()->couplingService.createCoupling(switched, switcher));
+        couplingService.createCoupling(switcher, switched);
         switcher.setOn(false);
         assertAll(("on after switching"),
                 ()->assertFalse(switched.isOn()),
                 ()->assertFalse(switcher.isOn())
         );
+        switcher.setOn(true);
+        assertAll(("on after switching"),
+                ()->assertTrue(switched.isOn()),
+                ()->assertTrue(switcher.isOn())
+        );
+        couplingService.removeByDevicesIds(switcher.getId(), switched.getId());
+        couplingService.removeByDevicesIds(switched.getId(), switcher.getId());
+        Device switcher2 = deviceService.get(deviceIds.get(DeviceType.SWITCH)).get();//lost synch, we must refetch from storage
+        switcher2.setOn(false);
+        assertTrue(switched.isOn());
     }
+
+    @Test
+    @DisplayName("Test adding a new coupling")
+    @Disabled
+    void testDimmSwitchToDimmLightCoupling(){
+        DimmableLight switched = (DimmableLight) deviceService.get(deviceIds.get(DeviceType.DIMMABLE_LIGHT)).get();
+        DimmableSwitch switcher =  (DimmableSwitch) deviceService.get(deviceIds.get(DeviceType.DIMMABLE_SWITCH)).get();
+        switched.setState(0.1);
+        assertEquals(switched.getIntensity(), 0.1);
+        couplingService.createCoupling(switcher, switched);
+        switcher.setState(0.5);
+        assertEquals(switched.getIntensity(), 0.5);
+    }
+
+    @Test
+    @DisplayName("Test adding a new coupling")
+    @Disabled
+    void testStatelessDimmSwitchToDimmLightCoupling(){
+        DimmableLight switched = (DimmableLight) deviceService.get(deviceIds.get(DeviceType.DIMMABLE_LIGHT)).get();
+        StatelessDimmableSwitch switcher =  (StatelessDimmableSwitch) deviceService.get(deviceIds.get(DeviceType.STATELESS_DIMMABLE_SWITCH)).get();
+        switched.setState(0.1);
+        assertEquals(switched.getIntensity(), 0.1);
+        couplingService.createCoupling(switcher, switched);
+        switcher.setIncrement(true);
+        assertEquals(switched.getIntensity(), 0.2);
+    }
+
+
+
+
 
 
 }
