@@ -4,12 +4,14 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
+import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.SceneService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 import io.swagger.annotations.Api;
@@ -71,10 +73,13 @@ public class SceneController {
 
 
     /**
-     * Creates a new room.
+     * Gets a room by the id.
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
+     * @param sceneId       sceneId to find
+     * @see Scene
+     * @see SerialisableScene
      * @return a new room
      */
     @GetMapping("/{sceneId}")
@@ -205,7 +210,6 @@ public class SceneController {
         return ResponseEntity.ok().body(res);
     }
 
-//
     @DeleteMapping("/{sceneId}")
     @ApiOperation("Delete a Scene")
     public ResponseEntity<SerialisableScene> deleteScene(@NotNull @PathVariable final Integer sceneId,

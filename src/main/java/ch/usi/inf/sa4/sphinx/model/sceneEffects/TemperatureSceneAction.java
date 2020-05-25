@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class TemperatureSceneAction extends SceneAction<Thermostat> {
     private double temperature;
 
-
     public TemperatureSceneAction(List<Thermostat> thermos, double temperature, String name) {
         super(thermos, name);
         this.temperature = temperature;
