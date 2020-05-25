@@ -4,7 +4,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.ServerErrorException;
-import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.*;
 import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
@@ -61,7 +60,7 @@ public class AutomationController {
                                                                 @PathVariable Integer automationId) {
 
 
-        check(username, sessionToken, null);
+        checkRequest(username, sessionToken);
 
         Automation automation = automationService.findById(automationId).orElseThrow(() -> new NotFoundException(""));
 
@@ -90,7 +89,7 @@ public class AutomationController {
                                                                        @RequestHeader("user") final String username) {
 
 
-        check(username, sessionToken, null);
+        checkRequest(username, sessionToken);
         List<Automation> automations = automationService.findByOwner(username).orElseThrow(() -> new ServerErrorException(""));
 
         return ResponseEntity.ok(automations.stream().map(Automation::serialise).collect(Collectors.toList()));
@@ -119,20 +118,13 @@ public class AutomationController {
     ) {
 
 
-        check(username, sessionToken, null);
-        automationService.findById(automationId).ifPresentOrElse(automation -> {
-            if (!automation.getUser().getUsername().equals(username)) throw new NotFoundException("");
-            automationService.deleteAutomation(automation.getId());
-        }, () -> {
-            throw new NotFoundException("");
-        });
+        checkRequest(username, sessionToken);
+        final Automation automation = automationService
+                .findById(automationId)
+                .orElseThrow(() -> new NotFoundException("Automation not found"));
 
-
-        automationService.findById(automationId).map(automation -> {
-            if (!automation.getUser().getUsername().equals(username)) throw new NotFoundException("");
-            automationService.deleteAutomation(automation.getId());
-            return automation;
-        }).orElseThrow(() ->  new NotFoundException(""));
+        if (!automation.getUser().getUsername().equals(username)) throw new NotFoundException("Automation not found");
+        automationService.deleteAutomation(automation.getId());
 
         return ResponseEntity.noContent().build();
 
@@ -178,7 +170,7 @@ public class AutomationController {
                                                                    @RequestHeader("user") final String username,
                                                                    final Errors errors) {
 
-        check(username, sessionToken, errors);
+        checkRequest(username, sessionToken, errors);
         Automation storageAutomation = automationService.createAutomation(username)
                 .orElseThrow(() -> new ServerErrorException("Failed to create the coupling"));
         Integer autoId = storageAutomation.getId();
@@ -235,7 +227,7 @@ public class AutomationController {
                                                                    final Errors errors) {
 
 
-        check(username, sessionToken, errors);
+        checkRequest(username, sessionToken, errors);
         Automation storageAutomation = automationService.findById(automationId).orElseThrow(() -> new NotFoundException(""));
         if (!storageAutomation.getUser().getUsername().equals(username)) throw new NotFoundException("");
 
@@ -288,15 +280,24 @@ public class AutomationController {
      * @param username     the username of the user
      * @param errors       in case error occur
      */
-    private void check(final String username, final String sessionToken, final Errors errors) {
+    private void checkRequest(final String username, final String sessionToken, final Errors errors) {
         if (errors != null && errors.hasErrors()) {
             throw new BadRequestException(errors.getAllErrors().toString());
         }
-        check(username, sessionToken);
+        checkRequest(username, sessionToken);
     }
 
 
-    private void check(final String username, final String sessionToken) {
+
+    /**
+     * Checks if the request parameters are correct. Throws if they are not.
+     * It will check that:
+     * the User exists and has a valid sessionToken
+     *
+     * @param sessionToken session token of the user
+     * @param username     the username of the user
+     */
+    private void checkRequest(final String username, final String sessionToken) {
         userService.validateSession(username, sessionToken);
     }
 }
