@@ -4,21 +4,20 @@ import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.DimmableLight;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor
 public class LightIntensitySceneAction extends SceneAction<DimmableLight> {
     private double intensity;
 
     public LightIntensitySceneAction(List<DimmableLight> lights, double intensity, String name) {
         super( lights, name);
         this.intensity = intensity;
-    }
-
-    public LightIntensitySceneAction() {
     }
 
 

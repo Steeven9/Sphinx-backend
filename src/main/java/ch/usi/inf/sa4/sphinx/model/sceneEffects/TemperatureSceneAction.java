@@ -4,17 +4,16 @@ import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Thermostat;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor
 public class TemperatureSceneAction extends SceneAction<Thermostat> {
     private double temperature;
-
-    public TemperatureSceneAction() {
-    }
 
     public TemperatureSceneAction(List<Thermostat> thermos, double temperature, String name) {
         super(thermos, name);
