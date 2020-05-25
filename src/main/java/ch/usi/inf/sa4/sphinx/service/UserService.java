@@ -133,7 +133,6 @@ public class UserService {
         if (!ownsRoom(username, roomId)) {
             return false;
         }
-//
 
         final Optional<User> user = userStorage.findByUsername(username);
         user.ifPresent(
@@ -316,11 +315,6 @@ public class UserService {
         }
     }
 
-    //returns the hashed password of a user
-    private Optional<String> getUserHash(@NonNull final String username) {
-        return get(username).map(User::getPassword);
-    }
-
     /**
      * Updates values of all sensors of a given user.
      *
@@ -347,19 +341,16 @@ public class UserService {
      * @return true if guest is successfully removed
      **/
     public boolean removeGuest(final String host, final String guest) {
-        if (!isGuestOf(guest, host)) { //this checks if host is in the guestList of guest
+        if (!isGuestOf(host, guest)) { //this checks if host is in the guestList of guest
             return false;
         }
 
-        final Optional<User> user = userStorage.findByUsername(host);
-        final Optional<User> guestUser = userStorage.findByUsername(guest);
+        final User user = userStorage.findByUsername(host).orElseThrow(WrongUniverseException::new);
+        final User guestUser = userStorage.findByUsername(guest).orElseThrow(WrongUniverseException::new);
 
-        if (guestUser.isPresent() && user.isPresent()) {
-            guestUser.get().removeHost(user.get());
-            userStorage.save(user.get());
-            return true;
-        }
-        return false;
+        guestUser.removeHost(user);
+        userStorage.save(user);
+        return true;
     }
 
     /**
@@ -397,13 +388,13 @@ public class UserService {
      */
     public boolean isGuestOf(final String host, final String guest) {
         final Optional<User> user = userStorage.findByUsername(host);
-
         final Optional<User> guestUsername = userStorage.findByUsername(guest);
+
         if (user.isEmpty() || guestUsername.isEmpty()) {
             return false;
         }
 
-        return user.get().getHosts().contains(guestUsername.get());
+        return guestUsername.get().getHosts().contains(user.get());
 
     }
 

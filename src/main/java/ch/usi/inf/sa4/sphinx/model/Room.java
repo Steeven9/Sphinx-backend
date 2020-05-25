@@ -62,9 +62,9 @@ public class Room extends StorableE{
      */
     public Room(final SerialisableRoom room) {
         this();
-        if(room.name != null) this.name = room.name;
-        if(room.icon != null) this.icon = room.icon;
-        if(room.background != null) this.background = room.background;
+        if(room.getName() != null) this.name = room.getName();
+        if(room.getIcon() != null) this.icon = room.getIcon();
+        if(room.getBackground() != null) this.background = room.getBackground();
     }
 
 
@@ -178,11 +178,11 @@ public class Room extends StorableE{
      */
     public SerialisableRoom serialise() {
         final SerialisableRoom sd = new SerialisableRoom();
-        sd.devices = devices.stream().map(Device::getId).toArray(Integer[]::new);
-        sd.background = background;
-        sd.icon = icon;
-        sd.name = name;
-        sd.id = getId();
+        sd.setDeviceIds(devices.stream().map(Device::getId).toArray(Integer[]::new));
+        sd.setBackground(background);
+        sd.setIcon(icon);
+        sd.setName(name);
+        sd.setId(getId());
         return sd;
     }
 }

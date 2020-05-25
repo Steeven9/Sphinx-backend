@@ -73,10 +73,6 @@ public class AuthController {
         user = userService.get(username)
                 .orElseGet(() -> userService.getByMail(username).orElseThrow(() -> new UnauthorizedException("Invalid credentials")));
 
-        if(user == null){
-            throw new UnauthorizedException("Invalid credentials");
-        }
-
         if (!user.isVerified()) {
             throw new ForbiddenException("User is not verified");
         }
@@ -197,10 +193,7 @@ public class AuthController {
      * @see User
      */
     @PostMapping("/resend/{email}")
-    public ResponseEntity<Boolean> resendEmailVerification(@PathVariable final String email) {
-        if (email == null) {
-            throw new BadRequestException("Some fields are missing");
-        }
+    public ResponseEntity<Boolean> resendEmailVerification(@NotBlank @PathVariable final String email) {
         final User user = userService.getByMail(email)
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 

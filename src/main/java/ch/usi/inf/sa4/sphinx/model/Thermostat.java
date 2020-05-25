@@ -126,7 +126,7 @@ public class Thermostat extends TempSensor {
 
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
-                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                if (device.getDeviceType() == DeviceType.TEMP_SENSOR) {
                     averageTemp += ((TempSensor) device).getLastValue();
                     sensors++;
                 }
@@ -146,10 +146,10 @@ public class Thermostat extends TempSensor {
     @Override
     public SerialisableDevice serialise() {
         final SerialisableDevice sd = super.serialise();
-        sd.slider = this.targetTemp;
-        sd.averageTemp = this.getAverageTemp();
-        sd.state = Thermostat.fromStateToInt(this.state);
-        sd.source = this.source == Sources.SELF ? 0 : 1;
+        sd.setSlider(this.targetTemp);
+        sd.setAverageTemp(this.getAverageTemp());
+        sd.setState(Thermostat.fromStateToInt(this.state));
+        sd.setSource(this.source == Sources.SELF ? 0 : 1);
         return sd;
     }
 
@@ -218,8 +218,8 @@ public class Thermostat extends TempSensor {
 
     public void setPropertiesFrom(final SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        if (sd.source != null) setSource(sd.source);
-        if (sd.slider != null) setTargetTemp(sd.slider);
+        if (sd.getSource() != null) setSource(sd.getSource());
+        if (sd.getSlider() != null) setTargetTemp(sd.getSlider());
 
 
     }

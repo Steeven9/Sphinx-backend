@@ -161,9 +161,9 @@ public class RoomController {
         final Room storageRoom = roomService.get(roomId).orElseThrow(() -> new NotFoundException("No rooms found"));
 
 
-        final String newName = serialisableRoom.name;
-        final String newIcon = serialisableRoom.icon;
-        final String newBackground = serialisableRoom.background;
+        final String newName = serialisableRoom.getName();
+        final String newIcon = serialisableRoom.getIcon();
+        final String newBackground = serialisableRoom.getBackground();
 
         if (newName != null) {
             storageRoom.setName(newName);
