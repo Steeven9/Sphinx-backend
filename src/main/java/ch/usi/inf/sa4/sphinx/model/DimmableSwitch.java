@@ -20,8 +20,6 @@ public class DimmableSwitch extends Dimmable {
         if (on != isOn()) {
             super.setOn(on);
             triggerEffects();
-        } else {
-            super.setOn(on);
         }
     }
 }
