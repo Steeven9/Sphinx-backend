@@ -74,7 +74,7 @@ public class UserController {
 
         User newUser = new User(user.getEmail(), user.getPassword(), username, user.getFullname());
 
-        //TODO switch to throws only in service
+
         try {
             if (!userService.insert(newUser)) {
                 throw new BadRequestException("Check that you're providing username, fullname, password and email");

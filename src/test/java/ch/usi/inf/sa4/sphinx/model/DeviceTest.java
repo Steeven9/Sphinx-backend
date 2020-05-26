@@ -1,6 +1,4 @@
 package ch.usi.inf.sa4.sphinx.model;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,7 +17,6 @@ class DeviceTest {
 //
 //
 //
-
     @Test
     void shouldSetIcon() {
         Device d = new Switch();
