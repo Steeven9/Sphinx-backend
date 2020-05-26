@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.service;
 
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.CouplingFactory;
@@ -58,12 +59,19 @@ public class CouplingService {
      * //
      */
     public void removeByDevicesIds(final Integer id1, final Integer id2) {
-        Coupling coupling = couplingStorage.findByDeviceIdAndDevice2Id(id1, id2).orElseThrow(()->new NotFoundException(""));
-        Device device = coupling.getDevice();
-        device.removeObserver(coupling);
-        deviceService.update(device);
-        couplingStorage.deleteByDeviceIdAndDevice2Id(id1, id2);
-        couplingStorage.deleteByDeviceIdAndDevice2Id(id2, id1);
+        try {
+            Coupling coupling = couplingStorage.findByDeviceIdAndDevice2Id(id1, id2).orElseThrow(() -> new NotFoundException(""));
+            Device device = coupling.getDevice();
+            device.removeObserver(coupling);
+            deviceService.update(device);
+            couplingStorage.deleteByDeviceIdAndDevice2Id(id1, id2);
+        } catch (NotFoundException e){
+            Coupling coupling = couplingStorage.findByDeviceIdAndDevice2Id(id2, id1).orElseThrow(() -> new NotFoundException(""));
+            Device device = coupling.getDevice();
+            device.removeObserver(coupling);
+            deviceService.update(device);
+            couplingStorage.deleteByDeviceIdAndDevice2Id(id2, id1);
+        }
     }
 
 

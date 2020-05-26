@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/automations")
 public class AutomationController {
-
     @Autowired
     CouplingService couplingService;
     @Autowired

@@ -9,10 +9,17 @@ import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -26,6 +33,8 @@ public class AutomationControllerTest {
     RoomStorage roomStorage;
     @Autowired
     DummyDataAdder dummyDataAdder;
+    @Autowired
+    private MockMvc mockmvc;
     private User user;
     private final static String username = "testUser";
 
@@ -48,6 +57,38 @@ public class AutomationControllerTest {
     void clean() {
         userService.delete(username);
     }
+
+
+
+    @Test
+    void shouldReturn400WithNoTokenOrUser() throws Exception {
+        this.mockmvc.perform(get("/devices/test")).andDo(print())
+                .andExpect(status().is(400));
+    }
+
+
+    @Test
+    void shouldNotCreateWithNoTokenOrUser() throws Exception {
+        this.mockmvc.perform(post("/automations/")).andDo(print())
+                .andExpect(status().is(400));
+        this.mockmvc.perform(post("/automations/")
+                .header("user", "")).andDo(print()).andExpect(status().is(400));
+    }
+
+    @Test
+    void shouldNotEditWithNoTokenOrUser() throws Exception {
+        this.mockmvc.perform(put("/automations/test")).andDo(print())
+                .andExpect(status().is(400));
+        this.mockmvc.perform(put("/automations/test")
+                .header("user", "")).andDo(print()).andExpect(status().is(400));
+    }
+
+
+
+
+
+
+
 
 
 
