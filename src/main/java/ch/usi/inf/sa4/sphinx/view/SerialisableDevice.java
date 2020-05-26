@@ -1,11 +1,13 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Represents the serialised version of a Device entity
  * @see ch.usi.inf.sa4.sphinx.model.Device
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class SerialisableDevice {
     private Integer id;
     private String icon;
