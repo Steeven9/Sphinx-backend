@@ -116,6 +116,48 @@ public class DeviceController {
     }
 
     /**
+     * Gets a security camera video feed with a given Id.
+     * @param deviceId id of the device
+     * @param sessionToken a session token that should match the User's
+     * @param username the username of the User
+     * @return a ResponseEntity with the data of the requested device (200) or
+     * - 404 if not found or
+     * - 401 if not authorized
+     * @see User
+     * @see Device
+     * @see SerialisableDevice
+     */
+    @GetMapping({"/video/{deviceId}", "/video/{deviceId}/"})
+    @ApiOperation("Gets the video feed from security camera")
+    public ResponseEntity<SerialisableDevice> getVideoFeed(@NotNull @PathVariable final Integer deviceId,
+                                                        @RequestHeader("session-token") final String sessionToken,
+                                                        @RequestHeader("user") final String username) {
+        final Device device = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
+
+        userService.validateSession(username, sessionToken);
+
+        final User owner = device.getRoom().getUser();
+
+
+        final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
+                .anyMatch(user -> user.getId().equals(owner.getId()));
+
+        // This can be written as a single expression but I tried and it became way too long and convoluted.
+        // I hope it's a bit more readable like this.
+        if (!userService.ownsDevice(username, deviceId)) {
+            if (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
+                    && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA))) {
+                throw new UnauthorizedException(NOTOWNS);
+            }
+        }
+
+
+        userService.generateValue(username);
+        return ResponseEntity.ok(device.serialise());
+    }
+
+
+    /**
      * Creates a new device given a SerialisableDevice containing its initial data and a user/sessionToken pair which
      * owns the room that the device should be created in.
      *
@@ -247,6 +289,8 @@ public class DeviceController {
 
         return ResponseEntity.noContent().build();
     }
+
+
 
     /**
      * @param deviceId id  of the device to be deleted
