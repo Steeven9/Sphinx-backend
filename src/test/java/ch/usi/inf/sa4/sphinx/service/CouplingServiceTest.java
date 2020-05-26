@@ -84,7 +84,6 @@ public class CouplingServiceTest {
         assertTrue(switched.isOn());
         assertTrue(switcher.isOn());
         couplingService.removeByDevicesIds(switcher.getId(), switched.getId());
-        couplingService.removeByDevicesIds(switched.getId(), switcher.getId());
         switched = deviceService.get(deviceIds.get(DeviceType.LIGHT)).get();
         switcher = deviceService.get(deviceIds.get(DeviceType.SWITCH)).get();
         switcher.setOn(false);
