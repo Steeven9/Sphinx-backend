@@ -24,7 +24,7 @@ public class User extends StorableE {
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(max = 255) //TODO add later
+    @Size(max = 255)
     private String username;
     @Expose
     @Column(nullable = false, unique = true)
@@ -46,8 +46,6 @@ public class User extends StorableE {
     private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
-    // @GeneratedValue(generator = "uuidGenerator")
-    //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
     private String verificationToken;
     @Expose(deserialize = false)
@@ -55,15 +53,6 @@ public class User extends StorableE {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<User> hosts;
     private boolean camsVisible;
-
-//TODO find way to auto generate verificationToken
-
-//    @Component
-//    private final static class UuidGenerator implements IdentifierGenerator {
-//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
-//            return UUID.randomUUID().toString();
-//        }
-//    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -234,10 +223,7 @@ public class User extends StorableE {
      *
      * @param room the room to be added
      */
-    public void addRoom(final Room room){
-        if (room == null) {
-            throw new IllegalArgumentException("Room can't be null");
-        }
+    public void addRoom(@NonNull final Room room){
         room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
         rooms.add(room);
     }

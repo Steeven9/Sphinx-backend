@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 "Sphinx API",
                 "API for SmartHut, Sphinx's SA4 project",
                 "1.0",
-                "Terms", //TODO
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 new Contact("Sphinx", "http://localhost:8080",
                         "info@smarthut.xyz"),
                 "Apache License Version 2.0",
