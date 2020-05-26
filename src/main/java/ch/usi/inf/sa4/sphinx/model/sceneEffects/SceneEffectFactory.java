@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 public final class SceneEffectFactory {
 
     public static SceneAction make(List<Device> devices, String name, SceneType type, Object target) {
