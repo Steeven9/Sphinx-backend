@@ -29,7 +29,7 @@ public abstract class Device extends StorableE {
 
     @OneToMany(orphanRemoval = true,
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "device"
     )
     protected  List<Observer> observers;
@@ -178,7 +178,9 @@ public abstract class Device extends StorableE {
      */
     //TODO fix unchecked
     protected void triggerEffects() {
-        observers.forEach(Observer::run);
+        for(Observer o: observers){
+            o.run();
+        }
     }
 
     /**

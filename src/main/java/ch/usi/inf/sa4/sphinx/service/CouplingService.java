@@ -5,9 +5,11 @@ import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.CouplingFactory;
 import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.Observer;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,12 +21,15 @@ import java.util.Optional;
  * @see Coupling
  */
 @Service
+@Transactional
 public class CouplingService {
 
     @Autowired
     private CouplingStorage couplingStorage;
     @Autowired
     private DeviceStorage deviceStorage;
+    @Autowired
+    private DeviceService deviceService;
 
 
     /**
@@ -53,6 +58,10 @@ public class CouplingService {
      * //
      */
     public void removeByDevicesIds(final Integer id1, final Integer id2) {
+        Coupling coupling = couplingStorage.findByDeviceIdAndDevice2Id(id1, id2).orElseThrow(()->new NotFoundException(""));
+        Device device = coupling.getDevice();
+        device.removeObserver(coupling);
+        deviceService.update(device);
         couplingStorage.deleteByDeviceIdAndDevice2Id(id1, id2);
         couplingStorage.deleteByDeviceIdAndDevice2Id(id2, id1);
     }

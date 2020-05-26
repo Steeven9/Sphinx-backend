@@ -15,7 +15,7 @@ public abstract class Observer<T extends Device> extends StorableE {
     }
 
 
-    @ManyToOne(targetEntity = Device.class)
+    @ManyToOne(targetEntity = Device.class, fetch = FetchType.EAGER)
     @JoinColumn
     private T device;
 
