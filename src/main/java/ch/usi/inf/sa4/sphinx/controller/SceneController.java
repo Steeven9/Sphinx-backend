@@ -4,14 +4,13 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
-import ch.usi.inf.sa4.sphinx.model.Room;
+import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.service.SceneService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 import io.swagger.annotations.Api;
@@ -77,10 +76,10 @@ public class SceneController {
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
-     * @param sceneId       sceneId to find
+     * @param sceneId      sceneId to find
+     * @return a new room
      * @see Scene
      * @see SerialisableScene
-     * @return a new room
      */
     @GetMapping("/{sceneId}")
     @ApiOperation("Modifies a Scene")
@@ -181,28 +180,30 @@ public class SceneController {
             storageScene.setIcon(serialisableScene.getIcon());
         }
 
-        if(serialisableScene.isShared() != null) {
+        if (serialisableScene.isShared() != null) {
             storageScene.setShared(serialisableScene.isShared());
         }
 
-        sceneService.removeEffects(sceneId);
 
-        List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
-        if(effects != null) {
-            effects.forEach(effect -> {
-                        try {
-                            sceneService.addEffect(
-                                    sceneId,
-                                    effect.getDevices(),
-                                    SceneType.intToType(effect.getType()),
-                                    effect.getName(),
-                                    effect.getTarget());
-                        } catch (IllegalArgumentException e) {
-                            throw new BadRequestException("Incompatible effect type");
+        if (serialisableScene.getEffects() != null) {
+            sceneService.removeEffects(sceneId);
+            List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
+            if (effects != null) {
+                effects.forEach(effect -> {
+                            try {
+                                sceneService.addEffect(
+                                        sceneId,
+                                        effect.getDevices(),
+                                        SceneType.intToType(effect.getType()),
+                                        effect.getName(),
+                                        effect.getTarget());
+                            } catch (IllegalArgumentException e) {
+                                throw new BadRequestException("Incompatible effect type");
 
+                            }
                         }
-                    }
-            );
+                );
+            }
         }
 
 
@@ -230,19 +231,22 @@ public class SceneController {
                                                       @NotNull @RequestHeader("session-token") final String sessionToken,
                                                       @NotNull @RequestHeader("user") final String username) {
 
-        checkOwnership(sessionToken, username, sceneId);
+        checkRequestParams(sessionToken, username);
 
-        sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found")).run();
+        Scene scene = sceneService.get(sceneId).orElseThrow(() -> new NotFoundException("No scenes found"));
+        User owner = scene.getUser();
+        if (owner.getUsername().equals(username)
+                || owner.getHosts().stream().anyMatch(guest -> guest.getUsername().equals(username))) {
+            scene.run();
+            return ResponseEntity.noContent().build();
+        }
 
-        return ResponseEntity.noContent().build();
-
+        throw new UnauthorizedException("You dont have access to this scene");
     }
 
 
-
-
-    private  void  checkValidationErrors(Errors errors){
-        if(errors != null && errors.hasErrors()){
+    private void checkValidationErrors(Errors errors) {
+        if (errors != null && errors.hasErrors()) {
             throw new BadRequestException(errors.toString());
         }
 

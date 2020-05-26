@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class Scene extends StorableE implements Runnable {
     private String name;
     private Boolean shared;
+
     private String icon;
     @OneToMany(orphanRemoval = true,
             cascade = CascadeType.ALL,
