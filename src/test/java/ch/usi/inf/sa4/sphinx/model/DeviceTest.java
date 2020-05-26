@@ -19,6 +19,7 @@ class DeviceTest {
 //
 //
 //
+
     @Test
     void shouldSetIcon() {
         Device d = new Switch();
