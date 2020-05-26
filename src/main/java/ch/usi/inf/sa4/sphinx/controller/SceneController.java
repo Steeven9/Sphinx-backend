@@ -72,7 +72,7 @@ public class SceneController {
 
 
     /**
-     * Gets a room by the id.
+     * Gets a scene by id.
      *
      * @param sessionToken session token of the user
      * @param username     the username of the user
@@ -82,7 +82,7 @@ public class SceneController {
      * @see SerialisableScene
      */
     @GetMapping("/{sceneId}")
-    @ApiOperation("Modifies a Scene")
+    @ApiOperation("Gets a Scene")
     public ResponseEntity<SerialisableScene> getSceneById(@NotNull @PathVariable final Integer sceneId,
                                                           @NotNull @RequestHeader("session-token") final String sessionToken,
                                                           @NotNull @RequestHeader("user") final String username) {
