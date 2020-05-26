@@ -118,6 +118,7 @@ public class DeviceController {
                     && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA))) {
                 throw new UnauthorizedException(NOTOWNS);
             }
+
         }
         userService.generateValue(username);
         return ResponseEntity.ok(device.serialise());
@@ -245,7 +246,7 @@ public class DeviceController {
 
         if (!userService.ownsDevice(username, deviceId)) throw new UnauthorizedException(NOTOWNS);
 
-        if (DeviceType.deviceToDeviceType(plug) != DeviceType.SMART_PLUG) {
+        if (plug.getDeviceType() != DeviceType.SMART_PLUG) {
             throw new BadRequestException("Not a smart plug");
         }
 

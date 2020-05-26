@@ -12,6 +12,19 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoomTest {
+
+    @Test
+    void TestConstructor() {
+        SerialisableRoom serRoom = new SerialisableRoom();
+        serRoom.setBackground(null);
+        serRoom.setIcon(null);
+        serRoom.setName(null);
+        Room room = new Room(serRoom);
+        assertEquals("Room", room.getName());
+        assertEquals("./img/icons/rooms/icon-generic-room.svg", room.getIcon());
+        assertEquals("./img/backgrounds/rooms/background-generic-room.svg", room.getBackground());
+    }
+
 //    Room r = new Room();
 //
 //    @Test

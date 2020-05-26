@@ -75,6 +75,7 @@ public class CouplingService {
     }
 
 
+
     public Coupling createCoupling(final int deviceId1, final int deviceId2) {
         Device device1 = deviceStorage.findById(deviceId1).orElseThrow(() -> new NotFoundException("device1 nf"));
         Device device2 = deviceStorage.findById(deviceId2).orElseThrow(() -> new NotFoundException("device2 nf"));

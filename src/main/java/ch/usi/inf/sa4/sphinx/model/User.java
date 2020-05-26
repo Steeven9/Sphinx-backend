@@ -1,11 +1,10 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import com.google.gson.annotations.Expose;
 import lombok.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +23,7 @@ public class User extends StorableE {
     @Expose
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(max = 255) //TODO add later
+    @Size(max = 255)
     private String username;
     @Expose
     @Column(nullable = false, unique = true)
@@ -46,24 +45,26 @@ public class User extends StorableE {
     private List<Room> rooms;
     @Column(name = "session_token")
     private String sessionToken;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<User> hosts;
+    private boolean camsVisible;
+
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    )
+    private List<Scene> scenes;
+
     // @GeneratedValue(generator = "uuidGenerator")
     //  @GenericGenerator(name="uuidGenerator", strategy="ch.usi.inf.sa4.sphinx.service.User.uuidGenerator")
     @Column(name = "verification_token")
     private String verificationToken;
     @Expose(deserialize = false)
     private boolean verified;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private List<User> hosts;
-    private boolean camsVisible;
 
-//TODO find way to auto generate verificationToken
-
-//    @Component
-//    private final static class UuidGenerator implements IdentifierGenerator {
-//        public Serializable generate(SharedSessionContractImplementor s, Object o) {
-//            return UUID.randomUUID().toString();
-//        }
-//    }
 
     /**
      * @param email    user email: can't be the same as other users
@@ -80,12 +81,17 @@ public class User extends StorableE {
         this.verified = false;
         this.camsVisible = false;
         this.hosts = new ArrayList<>();
+        this.scenes = new ArrayList<>();
         this.verificationToken = UUID.randomUUID().toString();
     }
+
+
 
     public User() {
         // default constructor required by JPA
     }
+
+
 
     /**
      * getter for email
@@ -95,6 +101,7 @@ public class User extends StorableE {
     public String getEmail() {
         return email;
     }
+
 
     /**
      * getter for password
@@ -114,6 +121,7 @@ public class User extends StorableE {
         return username;
     }
 
+
     /**
      * getter for fullname
      *
@@ -123,30 +131,32 @@ public class User extends StorableE {
         return fullname;
     }
 
+
     /**
      * getter for resetcode
      *
-     * @return reset code of the user
+     *  * @return reset code of the user
      */
     public String getResetCode() {
         return resetCode;
     }
-
-
     /**
      * gets the rooms of this User
-     *
      * @return a list of rooms that belong to this user
      */
     public List<Room> getRooms() {
         return rooms;
     }
 
-    /**
-     * getter for session token
-     *
-     * @return the session token of the user
-     */
+    public List<Scene> getScenes() {
+        return scenes;
+    }
+
+        /**
+         * getter for session token
+         *
+         * @return the session token of the user
+         */
     public String getSessionToken() {
         return sessionToken;
     }
@@ -155,6 +165,7 @@ public class User extends StorableE {
      * Sets this User's session token
      * @param sessionToken the new value of the session token
      */
+
     public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
@@ -177,6 +188,7 @@ public class User extends StorableE {
         return verificationToken;
     }
 
+
     /**
      * setter for email field
      *
@@ -184,6 +196,7 @@ public class User extends StorableE {
      */
     public void setEmail(final String email) {
         this.email = email;
+
     }
 
     /**
@@ -209,18 +222,20 @@ public class User extends StorableE {
      *
      * @param fullname full name of the user
      */
-    public void setFullname(final String fullname){
+    public void setFullname(final String fullname) {
         this.fullname = fullname;
     }
+
 
     /**
      * sets the verified status of the user to true
      *
      * @param status the new status to set
      */
-    public void setVerified(final boolean status){
+    public void setVerified(final boolean status) {
         this.verified = status;
     }
+
 
     /**
      * Sets the status of the user to verified
@@ -234,23 +249,21 @@ public class User extends StorableE {
      *
      * @param room the room to be added
      */
-    public void addRoom(final Room room){
-        if (room == null) {
-            throw new IllegalArgumentException("Room can't be null");
-        }
+    public void addRoom(@NonNull final Room room){
+
         room.setUser(this); //looks weird but otherwise the foreign key in Room is not saved
         rooms.add(room);
     }
+
 
     /**
      * removes the room with the selected id
      *
      * @param roomId id of the room to remove
      */
-    public void removeRoom(final Integer roomId){
+    public void removeRoom(final Integer roomId) {
         rooms.removeIf(r -> r.getId().equals(roomId));
     }
-
 
     /**
      * generates and sets a session token for the  user
@@ -272,9 +285,9 @@ public class User extends StorableE {
         return resetCode;
     }
 
+
     /**
      * Serialises a User. Fields whose value cannot be determined by looking at the User are set to null.
-     *
      * @return a serialised version of the USer
      * @see SerialisableUser
      */
@@ -288,15 +301,16 @@ public class User extends StorableE {
         return sd;
     }
 
+
     /**
      * asserts if there's a match between the User's hashed password and the one in plaintext
-     *
      * @param password the plaintext password to check
      * @return true if matching else false
      */
     public boolean matchesPassword(@NonNull final String password){
         return BCrypt.checkpw(password, this.password);
     }
+
 
     /**
      * Given a password string, returns its salted and hashed equivalent.
@@ -366,9 +380,4 @@ public class User extends StorableE {
         return sd;
     }
 }
-
-
-
-
-
 

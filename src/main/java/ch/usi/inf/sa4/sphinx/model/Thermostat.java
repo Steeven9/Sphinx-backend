@@ -125,7 +125,7 @@ public class Thermostat extends TempSensor {
 
         if (!(devices.isEmpty())) {
             for (final Device device : devices) {
-                if (DeviceType.deviceToDeviceType(device) == DeviceType.TEMP_SENSOR) {
+                if (device.getDeviceType() == DeviceType.TEMP_SENSOR) {
                     averageTemp += ((TempSensor) device).getLastValue();
                     sensors++;
                 }

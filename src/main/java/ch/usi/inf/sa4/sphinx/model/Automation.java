@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
 import ch.usi.inf.sa4.sphinx.service.AutomationService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;

@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.misc.DeviceFactory;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
@@ -76,7 +77,7 @@ public class RoomService {
      * @return the id of the device or null if it fails
      */
     public Optional<Integer> addDevice(@NonNull final Integer roomId, @NonNull final DeviceType deviceType) {
-        final Device newDevice = DeviceType.makeDevice(deviceType);
+        final Device newDevice = DeviceFactory.makeDevice(deviceType);
         if (newDevice == null) return Optional.empty();
 
 

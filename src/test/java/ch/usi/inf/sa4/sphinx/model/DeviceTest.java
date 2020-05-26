@@ -3,6 +3,7 @@ import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,17 +11,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeviceTest {
-
-    //TODO isnt dimmable supposed to be abstract?
-//    @Test
-//    void shouldReturnTrueIfConstructorCreatesNotNull() {
-//        Device d = new Dimmable();
-//        assertNotNull(d);
-//    }
-//
-//
-//
-//
     @Test
     void shouldSetIcon() {
         Device d = new Switch();

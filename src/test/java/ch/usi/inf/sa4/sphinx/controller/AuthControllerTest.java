@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -62,6 +63,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Transactional
     public void shouldSuccessfullyLoginOnValidData() throws Exception {
         this.mockmvc.perform(post("/auth/login/user2")
                 .header("session-token","user2SessionToken")

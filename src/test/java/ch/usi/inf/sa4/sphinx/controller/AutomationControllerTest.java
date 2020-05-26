@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AutomationControllerTest {
     @Autowired
     RoomService roomService;
@@ -87,15 +88,5 @@ public class AutomationControllerTest {
         this.mockmvc.perform(put("/automations/test")
                 .header("user", "")).andDo(print()).andExpect(status().is(400));
     }
-
-
-
-
-
-
-
-
-
-
 
 }

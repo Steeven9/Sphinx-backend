@@ -375,7 +375,7 @@ class DeviceControllerTest {
             List<Device> devices = room.getDevices();
             for (int i = 0; i < devices.size(); i++) {
                 Device device = devices.get(i);
-                if (DeviceType.deviceToDeviceType(device) == DeviceType.SMART_PLUG) {
+                if (device.getDeviceType() == DeviceType.SMART_PLUG) {
                     plugId = device.getId();
                     break;
                 } else {
@@ -650,19 +650,19 @@ class DeviceControllerTest {
         int smartCurtainsId = devices.get(11).getId();
         int securityCameraIds = devices.get(12).getId();
 
-        assertEquals(devices.get(0).getDeviceType(), DeviceType.LIGHT);
-        assertEquals(devices.get(1).getDeviceType(), DeviceType.DIMMABLE_LIGHT);
-        assertEquals(devices.get(2).getDeviceType(), DeviceType.SWITCH);
-        assertEquals(devices.get(3).getDeviceType(), DeviceType.DIMMABLE_SWITCH);
-        assertEquals(devices.get(4).getDeviceType(), DeviceType.STATELESS_DIMMABLE_SWITCH);
-        assertEquals(devices.get(5).getDeviceType(), DeviceType.SMART_PLUG);
-        assertEquals(devices.get(6).getDeviceType(), DeviceType.HUMIDITY_SENSOR);
-        assertEquals(devices.get(7).getDeviceType(), DeviceType.LIGHT_SENSOR);
-        assertEquals(devices.get(8).getDeviceType(), DeviceType.TEMP_SENSOR);
-        assertEquals(devices.get(9).getDeviceType(), DeviceType.MOTION_SENSOR);
-        assertEquals(devices.get(10).getDeviceType(), DeviceType.THERMOSTAT);
-        assertEquals(devices.get(11).getDeviceType(), DeviceType.SMART_CURTAIN);
-        assertEquals(devices.get(12).getDeviceType(), DeviceType.SECURITY_CAMERA);
+        assertEquals(DeviceType.LIGHT, devices.get(0).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_LIGHT, devices.get(1).getDeviceType());
+        assertEquals(DeviceType.SWITCH, devices.get(2).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_SWITCH, devices.get(3).getDeviceType());
+        assertEquals(DeviceType.STATELESS_DIMMABLE_SWITCH, devices.get(4).getDeviceType());
+        assertEquals(DeviceType.SMART_PLUG, devices.get(5).getDeviceType());
+        assertEquals(DeviceType.HUMIDITY_SENSOR, devices.get(6).getDeviceType());
+        assertEquals(DeviceType.LIGHT_SENSOR, devices.get(7).getDeviceType());
+        assertEquals(DeviceType.TEMP_SENSOR, devices.get(8).getDeviceType());
+        assertEquals(DeviceType.MOTION_SENSOR, devices.get(9).getDeviceType());
+        assertEquals(DeviceType.THERMOSTAT, devices.get(10).getDeviceType());
+        assertEquals(DeviceType.SMART_CURTAIN, devices.get(11).getDeviceType());
+        assertEquals(DeviceType.SECURITY_CAMERA, devices.get(12).getDeviceType());
 
         this.mockmvc.perform(get("/devices/")
                 .header("session-token", "ADST")
@@ -1044,5 +1044,188 @@ class DeviceControllerTest {
                 .header("user", "AD"))
                 .andDo(print())
                 .andExpect(status().is(404));
+    }
+
+    @Test
+    void testThermostat() throws Exception {
+        User Th = new User("thermostat@smarthut.xyz", "1234", "TH", "TH Thermostat");
+        Th.setVerified(true);
+        Th.setSessionToken("THST");
+        userService.insert(Th);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("TH");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"name\":\"Thermostat\",\"icon\":\"/images/generic_device\", \"type\":\"11\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int thermostatId = devices.get(0).getId();
+
+        this.mockmvc.perform(get("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"slider\":\"39.5\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"slider\":\"0.5\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"state\":\"0\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH")
+                .content("{\"slider\":\"0.5\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + thermostatId)
+                .header("session-token", "THST")
+                .header("user", "TH"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void testStatelessDimmableSwitch() throws Exception {
+        User sds = new User("sds@smarthut.xyz", "1234", "SDS", "SD S");
+        sds.setVerified(true);
+        sds.setSessionToken("SDSST");
+        userService.insert(sds);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "SDSST")
+                .header("user", "SDS")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("SDS");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "SDSST")
+                .header("user", "SDS")
+                .content("{\"name\":\"StatelessDimmableSwitcb\",\"icon\":\"/images/generic_device\", \"type\":\"5\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int statelessDimmableSwitchId = devices.get(0).getId();
+
+        this.mockmvc.perform(put("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS")
+                .content("{\"slider\":\"1\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS")
+                .content("{\"slider\":\"1\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS")
+                .content("{\"slider\":\"-1\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(get("/devices/" + statelessDimmableSwitchId)
+                .header("session-token", "SDSST")
+                .header("user", "SDS"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

@@ -34,7 +34,7 @@ public class ServiceProvider {
     @Autowired
     private AutomationService automationService;
 
-    public ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
+    private ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
                            @NonNull final UserService userService, @NonNull final RoomService roomService) {
         staticDeviceService = deviceService;
         staticCouplingService = couplingService;
