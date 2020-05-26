@@ -254,6 +254,7 @@ class UserServiceTest {
 
         assertFalse(userService.ownsRoom("emptyUser", roomId));
         assertTrue(userService.ownsRoom("user1", roomId));
+        assertThrows(NullPointerException.class, () -> userService.ownsRoom(null, 9));
     }
 
     @Test
@@ -286,6 +287,8 @@ class UserServiceTest {
         assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId2));
         assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId1));
         assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId2));
         assertTrue(userService.migrateDevice("user2", deviceId2, roomId2, roomId2));
     }
 
@@ -318,5 +321,13 @@ class UserServiceTest {
     void coverReturnOwnGuests() {
         assertNotNull(userService.returnOwnGuests("fakeUser"));
         assertNotNull(userService.returnOwnGuests("user1"));
+        assertThrows(NullPointerException.class, () -> userService.returnOwnGuests(null));
+    }
+
+    @Test
+    void testValidateSessionNull() {
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession("yes", null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, "yes"));
     }
 }

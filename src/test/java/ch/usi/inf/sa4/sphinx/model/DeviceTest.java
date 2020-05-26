@@ -1,4 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -54,6 +55,24 @@ class DeviceTest {
         d.addObserver(observer);
         List<Coupling> observers = d.getCouplings();
         assertTrue(observers.contains(observer));
+    }
+
+    @Test
+    void testUserAddNullRoom() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.addRoom(null));
+    }
+
+    @Test
+    void testStatelessDimmableSwitchSetState() {
+        StatelessDimmableSwitch d = new StatelessDimmableSwitch();
+        assertFalse(d.isIncrementing());
+        assertEquals("-", d.getLabel());
+        d.setIncrement(true);
+        assertTrue(d.isIncrementing());
+        assertEquals("+", d.getLabel());
+        SerialisableDevice sd = new SerialisableDevice();
+        d.setPropertiesFrom(sd);
     }
 //
 //    @Test
