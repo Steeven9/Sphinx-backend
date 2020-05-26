@@ -68,8 +68,8 @@ class DeviceTypeTest {
     @MethodSource("valueDeviceAndDeviceTypeProvider")
     @DisplayName("Create a Device based on given DeviceType")
     void TestMakeDevice(Device device, DeviceType type) {
-        assertEquals(DeviceType.makeDevice(type).getClass(), device.getClass());
-        assertNull(DeviceType.makeDevice(DeviceType.INVALID_DEVICE));
+        assertEquals(DeviceFactory.makeDevice(type).getClass(), device.getClass());
+        assertNull(DeviceFactory.makeDevice(DeviceType.INVALID_DEVICE));
     }
 
     @Test
