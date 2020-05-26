@@ -650,19 +650,19 @@ class DeviceControllerTest {
         int smartCurtainsId = devices.get(11).getId();
         int securityCameraIds = devices.get(12).getId();
 
-        assertEquals(devices.get(0).getDeviceType(), DeviceType.LIGHT);
-        assertEquals(devices.get(1).getDeviceType(), DeviceType.DIMMABLE_LIGHT);
-        assertEquals(devices.get(2).getDeviceType(), DeviceType.SWITCH);
-        assertEquals(devices.get(3).getDeviceType(), DeviceType.DIMMABLE_SWITCH);
-        assertEquals(devices.get(4).getDeviceType(), DeviceType.STATELESS_DIMMABLE_SWITCH);
-        assertEquals(devices.get(5).getDeviceType(), DeviceType.SMART_PLUG);
-        assertEquals(devices.get(6).getDeviceType(), DeviceType.HUMIDITY_SENSOR);
-        assertEquals(devices.get(7).getDeviceType(), DeviceType.LIGHT_SENSOR);
-        assertEquals(devices.get(8).getDeviceType(), DeviceType.TEMP_SENSOR);
-        assertEquals(devices.get(9).getDeviceType(), DeviceType.MOTION_SENSOR);
-        assertEquals(devices.get(10).getDeviceType(), DeviceType.THERMOSTAT);
-        assertEquals(devices.get(11).getDeviceType(), DeviceType.SMART_CURTAIN);
-        assertEquals(devices.get(12).getDeviceType(), DeviceType.SECURITY_CAMERA);
+        assertEquals(DeviceType.LIGHT, devices.get(0).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_LIGHT, devices.get(1).getDeviceType());
+        assertEquals(DeviceType.SWITCH, devices.get(2).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_SWITCH, devices.get(3).getDeviceType());
+        assertEquals(DeviceType.STATELESS_DIMMABLE_SWITCH, devices.get(4).getDeviceType());
+        assertEquals(DeviceType.SMART_PLUG, devices.get(5).getDeviceType());
+        assertEquals(DeviceType.HUMIDITY_SENSOR, devices.get(6).getDeviceType());
+        assertEquals(DeviceType.LIGHT_SENSOR, devices.get(7).getDeviceType());
+        assertEquals(DeviceType.TEMP_SENSOR, devices.get(8).getDeviceType());
+        assertEquals(DeviceType.MOTION_SENSOR, devices.get(9).getDeviceType());
+        assertEquals(DeviceType.THERMOSTAT, devices.get(10).getDeviceType());
+        assertEquals(DeviceType.SMART_CURTAIN, devices.get(11).getDeviceType());
+        assertEquals(DeviceType.SECURITY_CAMERA, devices.get(12).getDeviceType());
 
         this.mockmvc.perform(get("/devices/")
                 .header("session-token", "ADST")

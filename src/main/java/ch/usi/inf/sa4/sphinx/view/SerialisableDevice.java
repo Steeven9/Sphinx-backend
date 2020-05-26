@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 
 /**
  * Represents the serialised version of a Device entity
