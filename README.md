@@ -4,6 +4,8 @@ SA4 Project - Sphinx Team
 This is the backend supporting our smart home application. It listens on port `8080` for requests on 
 [these routes](https://docs.google.com/document/d/1zfh9SWjNTgY78O2VtZwKhbo_0RKyw0YzUvsAOCPs7TQ/edit?usp=sharing).
 
+Swagger documentation is available at [localhost:8080/docs](http://localhost:8080/docs).
+
 You will **need** to ask the environment file (`sh_envfile`) to a team leader to pass the settings to the containers.
 
 Note: the ports cannot be changed as of now.

@@ -12,9 +12,9 @@ class ExceptionTest {
         assertNotNull(new NotFoundException("something"));
         assertNotNull(new NotFoundException("something", new Exception()));
         NotFoundException exception = new NotFoundException("something");
-        assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
-        assertEquals(exception.getStatus().value(), 404);
-        assertEquals(exception.getCode(), 404);
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        assertEquals(404, exception.getStatus().value());
+        assertEquals(404, exception.getCode());
     }
 
     @Test
@@ -22,8 +22,8 @@ class ExceptionTest {
         assertNotNull(new BadRequestException("something"));
         assertNotNull(new BadRequestException("something", new Exception()));
         BadRequestException exception = new BadRequestException("something");
-        assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
-        assertEquals(exception.getStatus().value(), 400);
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals(400, exception.getStatus().value());
     }
 
     @Test
@@ -31,8 +31,8 @@ class ExceptionTest {
         assertNotNull(new ForbiddenException("something"));
         assertNotNull(new ForbiddenException("something", new Exception()));
         ForbiddenException exception = new ForbiddenException("something");
-        assertEquals(exception.getStatus(), HttpStatus.FORBIDDEN);
-        assertEquals(exception.getStatus().value(), 403);
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+        assertEquals(403, exception.getStatus().value());
     }
 
     @Test
@@ -40,8 +40,8 @@ class ExceptionTest {
         assertNotNull(new ServerErrorException("something"));
         assertNotNull(new ServerErrorException("something", new Exception()));
         ServerErrorException exception = new ServerErrorException("something");
-        assertEquals(exception.getStatus(), HttpStatus.INTERNAL_SERVER_ERROR);
-        assertEquals(exception.getStatus().value(), 500);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+        assertEquals(500, exception.getStatus().value());
     }
 
     @Test
@@ -49,8 +49,8 @@ class ExceptionTest {
         assertNotNull(new UnauthorizedException("something"));
         assertNotNull(new UnauthorizedException("something", new Exception()));
         UnauthorizedException exception = new UnauthorizedException("something");
-        assertEquals(exception.getStatus(), HttpStatus.UNAUTHORIZED);
-        assertEquals(exception.getStatus().value(), 401);
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+        assertEquals(401, exception.getStatus().value());
     }
 
     @Test

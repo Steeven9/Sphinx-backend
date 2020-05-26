@@ -2,7 +2,6 @@ package ch.usi.inf.sa4.sphinx.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 
 /**
  * Represents the serialised version of a Device entity

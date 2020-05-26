@@ -103,13 +103,10 @@ public class DeviceController {
         final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
                 .anyMatch(user -> user.getId().equals(owner.getId()));
 
-        // This can be written as a single expression but I tried and it became way too long and convoluted.
-        // I hope it's a bit more readable like this.
-        if (!userService.ownsDevice(username, deviceId)) {
-            if (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
-                    && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA))) {
-                throw new UnauthorizedException(NOTOWNS);
-            }
+        if (!userService.ownsDevice(username, deviceId)
+            && (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
+                && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA)))) {
+            throw new UnauthorizedException(NOTOWNS);
         }
         userService.generateValue(username);
         return ResponseEntity.ok(device.serialise());
