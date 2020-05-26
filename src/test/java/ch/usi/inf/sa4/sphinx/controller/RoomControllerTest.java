@@ -287,6 +287,19 @@ class RoomControllerTest {
         assertThrows(BadRequestException.class, () -> roomC.createRoom("something", "something", room, error));
     }
 
+    @Test
+    public void testModifyRoomEmptySerialisableRoom() throws Exception {
+        Room room = userService.getPopulatedRooms("user2").get(2);
+
+        this.mockmvc.perform(put("/rooms/" + room.getId())
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken")
+                .content("{\"devices\":[] }")
+                .contentType("application/json"))
+                .andDo(print()).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
 }
 
 
