@@ -112,6 +112,10 @@ public class SceneController {
         checkValidationErrors(errors);
         checkRequestParams(sessionToken, username);
 
+        if (serialisableScene.getEffects() == null) {
+            throw new BadRequestException("No effects provided");
+        }
+
         boolean owned = serialisableScene.getEffects().stream()
                 .flatMap(effect -> effect.getDevices().stream())
                 .allMatch(id -> userService.ownsDevice(username, id));
@@ -127,24 +131,21 @@ public class SceneController {
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
 
+        effects.forEach(effect -> {
+                    try {
+                        sceneService.addEffect(
+                                sc.getId(),
+                                effect.getDevices(),
+                                SceneType.intToType(effect.getType()),
+                                effect.getName(),
+                                effect.getTarget());
+                    } catch (IllegalArgumentException e) {
+                        sceneService.deleteScene(sc.getId());
+                        throw new BadRequestException("Incompatible effect type");
 
-        if (effects != null) {
-            effects.forEach(effect -> {
-                        try {
-                            sceneService.addEffect(
-                                    sc.getId(),
-                                    effect.getDevices(),
-                                    SceneType.intToType(effect.getType()),
-                                    effect.getName(),
-                                    effect.getTarget());
-                        } catch (IllegalArgumentException e) {
-                            sceneService.deleteScene(sc.getId());
-                            throw new BadRequestException("Incompatible effect type");
-
-                        }
                     }
-            );
-        }
+                }
+        );
 
         final SerialisableScene res = sc.serialise();
 

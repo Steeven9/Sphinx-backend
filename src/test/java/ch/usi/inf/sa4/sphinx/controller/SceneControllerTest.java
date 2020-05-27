@@ -109,14 +109,14 @@ public class SceneControllerTest {
                 .andDo(print())
                 .andExpect(status().is(400))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-//        this.mockmvc.perform(post("/scenes")
-//                .header("session-token", "ScenesST")
-//                .header("user", "Scenes0")
-//                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": " + null + "}")
-//                .contentType("application/json"))
-//                .andDo(print())
-//                .andExpect(status().is(400))
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": " + null + "}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
         this.mockmvc.perform(post("/scenes")
                 .header("session-token", "ScenesST")
                 .header("user", "Scenes0")
