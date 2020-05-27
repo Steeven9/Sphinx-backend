@@ -196,6 +196,12 @@ public class SceneControllerTest {
                 .andDo(print())
                 .andExpect(status().is(404))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(put("/scenes/run/" + sceneId)
+                .header("session-token", "user1SessionToken")
+                .header("user", "user1"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // DELETE
         assertThrows(NullPointerException.class, () -> sceneC.deleteScene(null, null, null));
