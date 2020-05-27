@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
@@ -371,6 +372,30 @@ public class GuestControllerTest {
     @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldGet401OnGetGuestScenesWithWrongGuest() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user1SessionToken")
+                .header("user", "user1")
+                .content("{\"name\":\"DimmableLight\",\"icon\":\"/images/generic_device\", \"type\":\"2\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int deviceId = devices.get(1).getId();
+
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "user1SessionToken")
+                .header("user", "user1")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
         this.mockmvc.perform(get("/guests/user1/scenes")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
