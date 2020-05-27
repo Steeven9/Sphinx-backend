@@ -291,7 +291,7 @@ public class DeviceController {
                                                           @RequestHeader("user") final String username,
                                                           @PathVariable final String device1_id,
                                                           @PathVariable final String device2_id) {
-        if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
+        if (device1_id.equals("null") || device2_id.equals("null")) {
             throw new BadRequestException(FIELDSMISSING);
         }
 
@@ -329,7 +329,7 @@ public class DeviceController {
                                                   @RequestHeader("user") final String username,
                                                   @PathVariable final String device1_id,
                                                   @PathVariable final String device2_id){
-        if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
+        if (device1_id.equals("null") || device2_id.equals("null")) {
             throw new BadRequestException(FIELDSMISSING);
         }
 
