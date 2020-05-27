@@ -48,7 +48,7 @@ public class SecurityCamera extends Device {
     @Override
     public void setPropertiesFrom(SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        sd.setUrl(url);
+        url = sd.getUrl();
     }
 
     @Override
