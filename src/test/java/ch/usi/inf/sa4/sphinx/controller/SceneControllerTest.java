@@ -3,9 +3,14 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
+import ch.usi.inf.sa4.sphinx.view.SerialisableSceneEffect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -19,6 +24,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +49,164 @@ public class SceneControllerTest {
     @BeforeAll
     void init() {
         dummyDataAdder.addDummyData();
+    }
+
+    @Test
+    void testErrorsOnScenes() throws Exception {
+        SceneController sceneC = new SceneController();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+        List<SerialisableSceneEffect> effects = new ArrayList<>();
+
+        User errUser = new User("scenes0@smarthut.xyz", "1234", "Scenes0", "Post Scene");
+        errUser.setVerified(true);
+        errUser.setSessionToken("ScenesST");
+        userService.insert(errUser);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("Scenes0");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"DimmableLight\",\"icon\":\"/images/generic_device\", \"type\":\"2\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int deviceId = devices.get(0).getId();
+
+        // POST
+        assertThrows(NullPointerException.class, () -> sceneC.createScene(null, null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.createScene("gno", null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.createScene("gno gno", "gno", null, null));
+        assertThrows(BadRequestException.class, () ->
+                sceneC.createScene("ScenesST", "Scenes0", new SerialisableScene(9, "no", "no", effects, false), error));
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + (deviceId + 1) + "] }] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(404))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"3\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//        this.mockmvc.perform(post("/scenes")
+//                .header("session-token", "ScenesST")
+//                .header("user", "Scenes0")
+//                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": " + null + "}")
+//                .contentType("application/json"))
+//                .andDo(print())
+//                .andExpect(status().is(400))
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"name\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }], \"shared\": \"false\" }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // GET all
+        assertThrows(NullPointerException.class, () -> sceneC.getAllScenes(null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.getAllScenes("ScenesST", null));
+        this.mockmvc.perform(get("/scenes/")
+                .header("user", "Scenes0")
+                .header("session-token", "WrongScenesST"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // GET by id
+        int sceneId = userService.getByMail("scenes0@smarthut.xyz").get().getScenes().get(0).getId();
+        assertThrows(NullPointerException.class, () -> sceneC.getSceneById(null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.getSceneById(9, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.getSceneById(9, "ScenesST", null));
+        this.mockmvc.perform(get("/scenes/" + sceneId)
+                .header("user", "Scenes0")
+                .header("session-token", "WrongScenesST"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(get("/scenes/" + (sceneId + 1))
+                .header("user", "Scenes0")
+                .header("session-token", "ScenesST"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // PUT scene
+        assertThrows(NullPointerException.class, () -> sceneC.modifyScene(null, null, null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.modifyScene(sceneId, null, null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.modifyScene(sceneId, "ScenesST", null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.modifyScene(sceneId, "ScenesST", "Scenes0", null, null));
+        assertThrows(BadRequestException.class, () ->
+                sceneC.modifyScene(sceneId, "ScenesST", "Scenes0", new SerialisableScene(9, "no", "no", effects, false), error));
+        this.mockmvc.perform(put("/scenes/" + (sceneId + 1))
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        this.mockmvc.perform(put("/scenes/" + sceneId)
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0")
+                .content("{\"effects\": [{\"type\": \"3\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//        this.mockmvc.perform(put("/scenes/" + sceneId)
+//                .header("session-token", "ScenesST")
+//                .header("user", "Scenes0")
+//                .content("{\"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + (deviceId + 1) + "] }] }")
+//                .contentType("application/json"))
+//                .andDo(print())
+//                .andExpect(status().is(400))
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // PUT run
+        assertThrows(NullPointerException.class, () -> sceneC.runScene(null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.runScene(sceneId, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.runScene(sceneId, "ScenesST", null));
+        this.mockmvc.perform(put("/scenes/run/" + (sceneId + 1))
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0"))
+                .andDo(print())
+                .andExpect(status().is(404))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // DELETE
+        assertThrows(NullPointerException.class, () -> sceneC.deleteScene(null, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.deleteScene(sceneId, null, null));
+        assertThrows(NullPointerException.class, () -> sceneC.deleteScene(sceneId, "ScenesST", null));
+        this.mockmvc.perform(delete("/scenes/" + (sceneId + 1))
+                .header("session-token", "ScenesST")
+                .header("user", "Scenes0"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
