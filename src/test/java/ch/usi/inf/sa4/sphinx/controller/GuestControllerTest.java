@@ -428,7 +428,7 @@ public class GuestControllerTest {
     }
 
     @Test
-    public void shouldGet401OnGetGuestScenesWithoutPermission() throws Exception {
+    public void shouldGet401OnGetRunAndDeleteGuestScenesWithoutPermission() throws Exception {
         User scenesHost = new User("sceneshost3@smarthut.xyz", "1234", "ScenesHost3", "Post Scene");
         scenesHost.setVerified(true);
         scenesHost.setSessionToken("SHST");
@@ -478,6 +478,20 @@ public class GuestControllerTest {
                 .andExpect(status().is(201));
 
         this.mockmvc.perform(get("/scenes/" + scenesId)
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(put("/scenes/run/" + scenesId)
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        this.mockmvc.perform(delete("/scenes/" + scenesId)
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
