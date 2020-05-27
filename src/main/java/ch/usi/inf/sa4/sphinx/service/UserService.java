@@ -325,8 +325,8 @@ public class UserService {
         if (optionalDevices.isPresent()) {
             final List<Device> devices = optionalDevices.get();
             for (final Device device : devices) {
-                if (device instanceof Sensor) {
-                    ((Sensor) device).generateValue(); //updates the value of every sensor
+                if (device instanceof Generated) {
+                    ((Generated) device).generateValue(); //updates the value of every sensor
                     deviceStorage.save(device);
                 }
             }
