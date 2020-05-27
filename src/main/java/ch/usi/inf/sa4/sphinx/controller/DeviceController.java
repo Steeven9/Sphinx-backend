@@ -220,7 +220,7 @@ public class DeviceController {
     @PutMapping("/{deviceId}")
     @ApiOperation("Modifies a Device")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotNull @PathVariable final Integer deviceId,
-                                                           @NotBlank @RequestBody final SerialisableDevice device,
+                                                           @NotNull @RequestBody final SerialisableDevice device,
                                                            @RequestHeader("session-token") final String sessionToken,
                                                            @RequestHeader("user") final String username,
                                                            final Errors errors) {

@@ -1,5 +1,6 @@
 package ch.usi.inf.sa4.sphinx.view;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 
@@ -221,6 +222,7 @@ public class SerialisableDevice {
     /** Setter for the device url.
      * @param  newUrl the device's new url
      * **/
+    @JsonProperty("video")
     public void setUrl(String newUrl){
         url = newUrl;
     }
