@@ -1243,4 +1243,30 @@ class DeviceControllerTest {
         assertThrows(BadRequestException.class, () -> deviceC.createDevice(device, "blah", "blah", error));
         assertThrows(BadRequestException.class, () -> deviceC.modifyDevice(9, device, "blah", "blah", error));
     }
+
+    @Test
+    @DisplayName("increase condition coverage of POST /devices/")
+    void testPostCondition() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user2");
+        Integer roomId1 = rooms.get(0).getId();
+
+        //empty string as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"\",\"icon\":\"\", \"type\":\"6\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        //null as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"null\",\"icon\":\"null\", \"type\":\"7\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+    }
 }
