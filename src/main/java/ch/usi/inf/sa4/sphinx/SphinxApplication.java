@@ -1,6 +1,6 @@
 package ch.usi.inf.sa4.sphinx;
 
-import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package ch.usi.inf.sa4.sphinx.Demo;
+package ch.usi.inf.sa4.sphinx.demo;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
