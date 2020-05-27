@@ -369,15 +369,28 @@ public class GuestControllerTest {
                 .andExpect(status().is(204));
     }
 
-    @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldGet401OnGetGuestScenesWithWrongGuest() throws Exception {
-        List<Room> rooms = userService.getPopulatedRooms("user1");
+        User scenesHost = new User("sceneshost1@smarthut.xyz", "1234", "ScenesHost1", "Post Scene");
+        scenesHost.setVerified(true);
+        scenesHost.setSessionToken("SHST");
+        userService.insert(scenesHost);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost1")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("ScenesHost1");
         Integer roomId = rooms.get(0).getId();
 
         this.mockmvc.perform(post("/devices/")
-                .header("session-token", "user1SessionToken")
-                .header("user", "user1")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost1")
                 .content("{\"name\":\"DimmableLight\",\"icon\":\"/images/generic_device\", \"type\":\"2\",\"roomId\":\"" + roomId + "\"}")
                 .contentType("application/json"))
                 .andDo(print())
@@ -385,18 +398,18 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         List<Device> devices = rooms.get(0).getDevices();
-        int deviceId = devices.get(1).getId();
+        int deviceId = devices.get(0).getId();
 
         this.mockmvc.perform(post("/scenes")
-                .header("session-token", "user1SessionToken")
-                .header("user", "user1")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost1")
                 .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }] }")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        this.mockmvc.perform(get("/guests/user1/scenes")
+        this.mockmvc.perform(get("/guests/ScenesHost1/scenes")
                 .header("user", "user2")
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
@@ -404,7 +417,6 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldGet401OnGetGuestScenesWithNotExistingHost() throws Exception {
         this.mockmvc.perform(get("/guests/fakeUser/scenes")
@@ -415,22 +427,60 @@ public class GuestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Disabled(value = "Waiting for scenes")
     @Test
     public void shouldSuccessfullyGetGuestScenes() throws Exception {
+        User scenesHost = new User("sceneshost2@smarthut.xyz", "1234", "ScenesHost2", "Post Scene");
+        scenesHost.setVerified(true);
+        scenesHost.setSessionToken("SHST");
+        userService.insert(scenesHost);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost2")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("ScenesHost2");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost2")
+                .content("{\"name\":\"DimmableLight\",\"icon\":\"/images/generic_device\", \"type\":\"2\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int deviceId = devices.get(0).getId();
+
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost2")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }], \"shared\": \"true\" }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
         this.mockmvc.perform(post("/guests/")
-                .header("user", "user2")
-                .header("session-token", "user2SessionToken")
-                .content("user1")
+                .header("user", "ScenesHost2")
+                .header("session-token", "SHST")
+                .content("user2")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201));
 
-        this.mockmvc.perform(get("/guests/user2/scenes")
-                .header("user", "user1")
-                .header("session-token", "user1SessionToken"))
+        this.mockmvc.perform(get("/guests/ScenesHost2/scenes")
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
                 .andDo(print())
-                .andExpect(status().is(200));
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
     }
 
