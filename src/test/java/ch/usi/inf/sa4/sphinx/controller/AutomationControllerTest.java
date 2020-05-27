@@ -225,6 +225,34 @@ public class AutomationControllerTest {
         return;
     }
 
+    @Test
+    void ifCorrectParamPutAutNoChanges2() throws Exception{
+        SerialisableAutomation sa = new SerialisableAutomation(automationId, "bob", "icon", null, null, null, null );
+        Gson gson = new Gson();
+        String json = gson.toJson(sa);
+
+        MvcResult result = this.mockmvc
+                .perform(put("/automations/"+automationId)
+                        .header("user", user.getUsername())
+                        .header("session-token", sessionToken)
+                        .header("content-type", "application/json")
+                        .content(json)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(jsonPath("$.id").value(automationId.toString()))
+                .andExpect(jsonPath("$.ownerId").value(user.getId()))
+                .andExpect(jsonPath("$.triggers[0].type").value(ConditionType.DEVICE_ON.toInt()))
+                .andExpect(jsonPath("$.triggers[0].conditionType").value("DEVICE_ON"))
+                .andExpect(jsonPath("$.triggers[0].source").value(deviceIds.get(DeviceType.SWITCH)))
+                .andExpect(jsonPath("$.conditions").isEmpty())
+                .andDo(print())
+                .andReturn();
+
+        String res = result.getResponse().getContentAsString();//Useful to debug
+        return;
+    }
+
 
     @Test
     @Disabled("Referential integrity constraint violation: \"FKJFHJULLDDTD0MQT6F4QQPS61G: PUBLIC.TRIGGER FOREIGN KEY(AUTOMATION_ID) REFERENCES PUBLIC.AUTOMATION(ID) (1)\"; SQL statement:\n" +

@@ -35,6 +35,7 @@ public class ServiceProvider {
      */
     public static DeviceService getDeviceService() {
         return staticDeviceService;
+
     }
 
     /**
