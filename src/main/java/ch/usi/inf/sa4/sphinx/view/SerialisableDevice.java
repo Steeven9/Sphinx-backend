@@ -33,6 +33,7 @@ public class SerialisableDevice {
     private Integer source;
     private Double tolerance;
     private Double quantity;
+    private String videoFile;
 
 
     /** Getter for the device id.
@@ -159,6 +160,13 @@ public class SerialisableDevice {
      * **/
     public Double getQuantity(){
         return quantity;
+    }
+
+    /** Getter for the device video file.
+     * @return the device's video file
+     * **/
+    public String getVideoFile(){
+        return videoFile;
     }
 
     /** Setter for the device icon.
@@ -289,7 +297,12 @@ public class SerialisableDevice {
     }
 
 
-
+    /** Setter for the device video file.
+     * @param  newVideoFile the device's new video file
+     * **/
+    public void setVideoFile(String newVideoFile){
+        videoFile = newVideoFile;
+    }
 
 
 

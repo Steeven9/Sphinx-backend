@@ -129,7 +129,7 @@ public class DeviceController {
      */
     @GetMapping({"/video/{deviceId}", "/video/{deviceId}/"})
     @ApiOperation("Gets the video feed from security camera")
-    public ResponseEntity<SerialisableDevice> getVideoFeed(@NotNull @PathVariable final Integer deviceId,
+    public ResponseEntity<String> getVideoFeed(@NotNull @PathVariable final Integer deviceId,
                                                         @RequestHeader("session-token") final String sessionToken,
                                                         @RequestHeader("user") final String username) {
         final Device device = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
@@ -153,7 +153,7 @@ public class DeviceController {
 
 
         userService.generateValue(username);
-        return ResponseEntity.ok(device.serialise());
+        return ResponseEntity.ok(device.serialise().getVideoFile());
     }
 
 
