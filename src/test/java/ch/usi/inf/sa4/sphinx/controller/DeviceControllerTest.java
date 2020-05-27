@@ -1,11 +1,13 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.lang.reflect.Array;
@@ -1227,5 +1231,16 @@ class DeviceControllerTest {
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void testErrorsHasErrors() {
+        DeviceController deviceC = new DeviceController();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+        SerialisableDevice device = new SerialisableDevice();
+
+        assertThrows(BadRequestException.class, () -> deviceC.createDevice(device, "blah", "blah", error));
+        assertThrows(BadRequestException.class, () -> deviceC.modifyDevice(9, device, "blah", "blah", error));
     }
 }

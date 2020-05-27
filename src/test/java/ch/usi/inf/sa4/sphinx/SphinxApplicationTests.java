@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx;
 
 import ch.usi.inf.sa4.sphinx.controller.UserController;
+import ch.usi.inf.sa4.sphinx.view.SerialisableException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource("classpath:application.properties")
@@ -29,6 +31,11 @@ class SphinxApplicationTests {
 	@Test
 	public void contextLoads() {
 		assertThat(userController).isNotNull();
+	}
+
+	@Test
+	void testSerialisableExceptionNull() {
+		assertThrows(NullPointerException.class, () -> new SerialisableException(null, "message"));
 	}
 
 }
