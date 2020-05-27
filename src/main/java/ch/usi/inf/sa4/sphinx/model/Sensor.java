@@ -13,7 +13,7 @@ import javax.persistence.Transient;
  * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
  */
 @Entity
-public abstract class Sensor extends Device {
+public abstract class Sensor extends Device implements Generated {
     private double quantity;
     private double lastValue;
     private double tolerance;
@@ -89,8 +89,9 @@ public abstract class Sensor extends Device {
     /**
      * Sets the physical quantity in given room with a random error set by user.
      */
+    @Override
     public void generateValue() {
-        double variance = rand.nextDouble() * this.tolerance * 2;
+        final double variance = rand.nextDouble() * this.tolerance * 2;
         this.lastValue = this.quantity + variance - this.tolerance;
     }
 
