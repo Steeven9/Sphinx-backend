@@ -1,11 +1,13 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.util.List;
 
@@ -1225,5 +1230,42 @@ class DeviceControllerTest {
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void testErrorsHasErrors() {
+        DeviceController deviceC = new DeviceController();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+        SerialisableDevice device = new SerialisableDevice();
+
+        assertThrows(BadRequestException.class, () -> deviceC.createDevice(device, "blah", "blah", error));
+        assertThrows(BadRequestException.class, () -> deviceC.modifyDevice(9, device, "blah", "blah", error));
+    }
+
+    @Test
+    @DisplayName("increase condition coverage of POST /devices/")
+    void testPostCondition() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user2");
+        Integer roomId1 = rooms.get(0).getId();
+
+        //empty string as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"\",\"icon\":\"\", \"type\":\"6\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        //null as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"null\",\"icon\":\"null\", \"type\":\"7\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
     }
 }

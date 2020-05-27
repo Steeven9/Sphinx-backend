@@ -1,18 +1,27 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import org.junit.jupiter.api.*;
+import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -205,4 +214,13 @@ public class AuthControllerTest {
                 .andExpect(status().is(204));
     }
 
+    @Test
+    public void testErrorsHasErrors() {
+        AuthController authC = new AuthController();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+
+        assertThrows(BadRequestException.class, () -> authC.login("blah", "something", error));
+        assertThrows(BadRequestException.class, () -> authC.changePassword("blah", "something", "blah", error));
+    }
 }

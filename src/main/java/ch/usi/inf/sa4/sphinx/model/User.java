@@ -238,13 +238,6 @@ public class User extends StorableE {
 
 
     /**
-     * Sets the status of the user to verified
-     */
-    public void verify() {
-        verified = true;
-    }
-
-    /**
      * adds a the given room to the User notice that this won't update the storage version
      *
      * @param room the room to be added

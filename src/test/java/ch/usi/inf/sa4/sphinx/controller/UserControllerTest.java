@@ -1,7 +1,11 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+
+import ch.usi.inf.sa4.sphinx.service.UserStorage;
+import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,6 +19,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.Disabled;
+import org.springframework.validation.AbstractBindingResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -177,5 +187,14 @@ public class UserControllerTest {
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(200));
+    }
+
+    @Test
+    public void updateUserWithErrors() {
+        UserController userC = new UserController();
+        SerialisableUser user = new SerialisableUser();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+        assertThrows(BadRequestException.class, () -> userC.updateUser("blah", user, "something", error));
     }
 }

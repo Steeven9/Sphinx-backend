@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Disabled;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +12,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeviceTest {
+
+    //TODO isnt dimmable supposed to be abstract?
+//    @Test
+//    void shouldReturnTrueIfConstructorCreatesNotNull() {
+//        Device d = new Dimmable();
+//        assertNotNull(d);
+//    }
+//
+//
+//
+//
     @Test
     void shouldSetIcon() {
         Device d = new Switch();
@@ -47,6 +59,24 @@ class DeviceTest {
         d1.addObserver(observer);
         List<Observer> observers = d1.getObservers();
         assertTrue(observers.contains(observer));
+    }
+
+    @Test
+    void testUserAddNullRoom() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.addRoom(null));
+    }
+
+    @Test
+    void testStatelessDimmableSwitchSetState() {
+        StatelessDimmableSwitch d = new StatelessDimmableSwitch();
+        assertFalse(d.isIncrementing());
+        assertEquals("-", d.getLabel());
+        d.setIncrement(true);
+        assertTrue(d.isIncrementing());
+        assertEquals("+", d.getLabel());
+        SerialisableDevice sd = new SerialisableDevice();
+        d.setPropertiesFrom(sd);
     }
 //
 //    @Test
