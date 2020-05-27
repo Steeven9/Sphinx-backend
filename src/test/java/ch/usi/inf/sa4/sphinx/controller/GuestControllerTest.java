@@ -428,6 +428,64 @@ public class GuestControllerTest {
     }
 
     @Test
+    public void shouldGet401OnGetGuestScenesWithoutPermission() throws Exception {
+        User scenesHost = new User("sceneshost3@smarthut.xyz", "1234", "ScenesHost3", "Post Scene");
+        scenesHost.setVerified(true);
+        scenesHost.setSessionToken("SHST");
+        userService.insert(scenesHost);
+
+        this.mockmvc.perform(post("/rooms/")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost3")
+                .content("{\"name\": \" newRoom \",  \" icon\" : \"/images/default_room\", \"background\": \"/images/default_icon\", \"devices\": [] }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Room> rooms = userService.getPopulatedRooms("ScenesHost3");
+        Integer roomId = rooms.get(0).getId();
+
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost3")
+                .content("{\"name\":\"DimmableLight\",\"icon\":\"/images/generic_device\", \"type\":\"2\",\"roomId\":\"" + roomId + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        List<Device> devices = rooms.get(0).getDevices();
+        int deviceId = devices.get(0).getId();
+
+        this.mockmvc.perform(post("/scenes")
+                .header("session-token", "SHST")
+                .header("user", "ScenesHost3")
+                .content("{\"name\":\"name\",\"icon\":\"/images/generic_device\", \"effects\": [{\"type\": \"1\", \"name\": \"name\", \"slider\": \"0.5\", \"devices\": [" + deviceId + "] }], \"shared\": \"false\" }")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        int scenesId = userService.getByMail("sceneshost3@smarthut.xyz").get().getScenes().get(0).getId();
+
+        this.mockmvc.perform(post("/guests/")
+                .header("user", "ScenesHost3")
+                .header("session-token", "SHST")
+                .content("user2")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
+
+        this.mockmvc.perform(get("/scenes/" + scenesId)
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
     public void shouldSuccessfullyGetGuestScenes() throws Exception {
         User scenesHost = new User("sceneshost2@smarthut.xyz", "1234", "ScenesHost2", "Post Scene");
         scenesHost.setVerified(true);
@@ -480,6 +538,15 @@ public class GuestControllerTest {
                 .header("session-token", "user2SessionToken"))
                 .andDo(print())
                 .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        int scenesId = userService.getByMail("sceneshost2@smarthut.xyz").get().getScenes().get(0).getId();
+
+        this.mockmvc.perform(get("/scenes/" + scenesId)
+                .header("user", "user2")
+                .header("session-token", "user2SessionToken"))
+                .andDo(print())
+                .andExpect(status().is(401))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
     }
