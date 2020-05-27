@@ -352,7 +352,6 @@ public class DeviceController {
 
         couplingService.removeByDevicesIds(id1, id2);
 //        couplingService.removeByDevicesIds(id2, id1);
-
         return ResponseEntity.ok().build();
     }
 }

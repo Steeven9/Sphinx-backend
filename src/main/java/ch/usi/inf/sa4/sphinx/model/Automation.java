@@ -37,6 +37,8 @@ public class Automation extends StorableE implements Runnable {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String icon;
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "automation")
+//    private List<Trigger> triggers;
 
 
     public String getName() {
@@ -62,6 +64,7 @@ public class Automation extends StorableE implements Runnable {
         this.scenes = new HashSet<>();
         this.user = user;
         this.name = "default";
+//        this.triggers = new ArrayList<>();
     }
 
     @Override

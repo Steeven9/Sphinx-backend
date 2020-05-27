@@ -112,7 +112,7 @@ public class AutomationService {
 
     public void deleteAutomation(Integer automationId) {
         automationStorage.deleteById(automationId);
-        triggerStorage.deleteByAutomationId(automationId);
+        //triggerStorage.deleteByAutomationId(automationId);
     }
 
     public void removeConditions(int automationId) {
