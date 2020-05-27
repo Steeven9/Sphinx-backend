@@ -7,10 +7,7 @@ import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * A Trigger works to activate a Scene.
@@ -21,9 +18,11 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 public abstract class Trigger extends Observer<Device> {
     @ManyToOne
+    @JoinColumn
     private Automation automation;
     @OneToOne(cascade = CascadeType.ALL)
     private Condition condition;
+
 
 
     /**

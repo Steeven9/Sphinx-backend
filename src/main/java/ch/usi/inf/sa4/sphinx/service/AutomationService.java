@@ -39,10 +39,21 @@ public class AutomationService {
     private ConditionStorage conditionStorage;
 
 
+
+
+
+
+
     public Optional<Automation> createAutomation(@NonNull String username) {
         return userStorage.findByUsername(username)
                 .map(user -> automationStorage.save(new Automation(user)));
     }
+
+
+    public void deleteAllByUsername(@NonNull String username){
+        automationStorage.deleteAllByUserUsername(username);
+    }
+
 
 
     public Optional<List<Automation>> findByOwner(@NonNull String username) {

@@ -114,9 +114,9 @@ public class AutomationController {
      */
     @DeleteMapping({"/{automationId}"})
     @ApiOperation("Gets the automations")
-    public ResponseEntity deleteAutomations(@NotNull @RequestHeader("session-token") final String sessionToken,
-                                            @NotNull @RequestHeader("user") final String username,
-                                            @PathVariable @NotNull Integer automationId
+    public ResponseEntity deleteAutomation(@NotNull @RequestHeader("session-token") final String sessionToken,
+                                           @NotNull @RequestHeader("user") final String username,
+                                           @PathVariable @NotNull Integer automationId
     ) {
 
 
@@ -269,20 +269,26 @@ public class AutomationController {
         List<SerialisableCondition> triggers = automation.getTriggers();
 
 
-        sceneIds.forEach(id -> {
-            Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
-            if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
-            automationService.addScene(autoId, id);
-        });
+        if(sceneIds != null) {
+            sceneIds.forEach(id -> {
+                Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
+                if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
+                automationService.addScene(autoId, id);
+            });
+        }
 
-        conditions.forEach(condition ->
-                automationService.addCondition(autoId, condition.getSource(), condition.getConditionType(), condition.getTarget())
-        );
+        if(conditions != null) {
+            conditions.forEach(condition ->
+                    automationService.addCondition(autoId, condition.getSource(), condition.getConditionType(), condition.getTarget())
+            );
+        }
 
 
-        triggers.forEach(trigger ->
-                automationService.addTrigger(autoId, trigger.getSource(), trigger.getConditionType(), trigger.getTarget())
-        );
+        if(triggers != null) {
+            triggers.forEach(trigger ->
+                    automationService.addTrigger(autoId, trigger.getSource(), trigger.getConditionType(), trigger.getTarget())
+            );
+        }
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(storageAutomation.serialise());
