@@ -123,6 +123,7 @@ public class SceneController {
         final Scene sc = sceneService.createScene(username, serialisableScene.getName(), serialisableScene.getIcon())
                 .orElseThrow(() -> new BadRequestException("Bad Request, check your parameters"));
 
+        if (serialisableScene.isShared() != null) sc.setShared(serialisableScene.isShared());
 
         List<SerialisableSceneEffect> effects = serialisableScene.getEffects();
 
