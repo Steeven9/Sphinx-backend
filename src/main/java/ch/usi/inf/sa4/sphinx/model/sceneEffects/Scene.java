@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Scene extends StorableE implements Runnable {
     private String name;
-    private Boolean shared;
+    private boolean shared;
 
     private String icon;
     @OneToMany(orphanRemoval = true,
@@ -84,11 +84,11 @@ public class Scene extends StorableE implements Runnable {
     }
 
 
-    public Boolean isShared() {
+    public boolean isShared() {
         return this.shared;
     }
 
-    public void setShared(Boolean condition) { this.shared = condition; }
+    public void setShared(boolean condition) { this.shared = condition; }
 
     public List<SceneAction> getEffects() {
         return this.effects;
