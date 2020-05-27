@@ -8,6 +8,7 @@ import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
 import ch.usi.inf.sa4.sphinx.service.AutomationService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.Type;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor
 public class Automation extends StorableE implements Runnable {
     //    @OneToMany(cascade = CascadeType.ALL)
 //    private List<Coupling> triggers;

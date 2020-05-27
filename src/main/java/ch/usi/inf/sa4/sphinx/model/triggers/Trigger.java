@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.OneToOne;
  * becomes true.
  */
 @Entity
+@NoArgsConstructor
 public abstract class Trigger extends Observer<Device> {
     @ManyToOne
     private Automation automation;
@@ -49,5 +51,9 @@ public abstract class Trigger extends Observer<Device> {
      */
     public SerialisableCondition serialise() {
         return condition.serialise();
+    }
+
+    public ConditionType getConditionType(){
+        return condition.getConditionType();
     }
 }

@@ -2,23 +2,24 @@ package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 
+import java.util.Optional;
+
 public class SerialisableCondition {
-    private ConditionType eventType;
+    private ConditionType conditionType;
     private Integer type;
     private Integer source;
     private String value;
-    private Double doubleValue;
-    private Boolean booleanValue;
 
 
-    public SerialisableCondition(ConditionType eventType, Integer source, String value) {
-        this.eventType = eventType;
+    public SerialisableCondition(ConditionType conditionType, Integer source, String value) {
         this.source = source;
         this.value = value;
+        this.conditionType = conditionType;
+        this.type = conditionType.toInt();
     }
 
-    public ConditionType getEventType() {
-        return eventType;
+    public ConditionType getConditionType() {
+        return conditionType;
     }
 
     public Integer getType() {
@@ -50,8 +51,28 @@ public class SerialisableCondition {
 
     }
 
-    public void setEventType(ConditionType eventType) {
-        this.eventType = eventType;
+    public Optional<Double> getDoubleValue() {
+        try {
+            return Optional.of(Double.valueOf(value));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Boolean> getBooleanValue() {
+        if (value.equals("true")) {
+            return Optional.of(true);
+        }
+
+        if (value.equals("false")) {
+            return Optional.of(false);
+        }
+
+        return Optional.empty();
+    }
+
+    public void setConditionType(ConditionType conditionType) {
+        this.conditionType = conditionType;
     }
 
     public void setType(Integer type) {
@@ -65,4 +86,6 @@ public class SerialisableCondition {
     public void setValue(String value) {
         this.value = value;
     }
+
+
 }

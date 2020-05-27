@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.model.triggers;
 import ch.usi.inf.sa4.sphinx.model.Automation;
 import ch.usi.inf.sa4.sphinx.model.Sensor;
 import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.OneToOne;
  * Trigger for changes in the status of a sensor.
  */
 @Entity
+@NoArgsConstructor
 public class SensorChanged extends Trigger{
 
     /**

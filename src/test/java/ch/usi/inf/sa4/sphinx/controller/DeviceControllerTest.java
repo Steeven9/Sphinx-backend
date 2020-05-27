@@ -39,6 +39,7 @@ class DeviceControllerTest {
     private DummyDataAdder dummyDataAdder;
 
 
+
     @BeforeAll
     void init() {
         dummyDataAdder.addDummyData();

@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,8 +87,8 @@ public class AutomationController {
      */
     @GetMapping({"", "/"})
     @ApiOperation("Gets the automations")
-    public ResponseEntity<List<SerialisableAutomation>> getAutomations(@RequestHeader("session-token") final String sessionToken,
-                                                                       @RequestHeader("user") final String username) {
+    public ResponseEntity<List<SerialisableAutomation>> getAutomations(@NotNull  @RequestHeader("session-token") final String sessionToken,
+                                                                       @NotNull @RequestHeader("user") final String username) {
 
 
         checkRequest(username, sessionToken);
@@ -115,8 +114,8 @@ public class AutomationController {
      */
     @DeleteMapping({"/{automationId}"})
     @ApiOperation("Gets the automations")
-    public ResponseEntity deleteAutomations(@RequestHeader("session-token") final String sessionToken,
-                                            @RequestHeader("user") final String username,
+    public ResponseEntity deleteAutomations(@NotNull @RequestHeader("session-token") final String sessionToken,
+                                            @NotNull @RequestHeader("user") final String username,
                                             @PathVariable @NotNull Integer automationId
     ) {
 
@@ -174,9 +173,9 @@ public class AutomationController {
     @PutMapping("/{automationId}")
     @ApiOperation("Modifies an Automation")
     public ResponseEntity<SerialisableAutomation> modifyAutomation(@NotNull @PathVariable final Integer automationId,
-                                                                   @RequestHeader("session-token") final String sessionToken,
-                                                                   @RequestHeader("user") final String username,
-                                                                   @NotBlank @RequestBody final SerialisableAutomation automation,
+                                                                   @NotNull @RequestHeader("session-token") final String sessionToken,
+                                                                   @NotNull @RequestHeader("user") final String username,
+                                                                   @NotNull @RequestBody final SerialisableAutomation automation,
                                                                    final Errors errors) {
 
 
@@ -202,7 +201,7 @@ public class AutomationController {
             automation.getConditions().forEach(condition ->
                     automationService.addCondition(automationId,
                             condition.getSource(),
-                            condition.getEventType(),
+                            condition.getConditionType(),
                             condition.getTarget())
             );
         }
@@ -213,7 +212,7 @@ public class AutomationController {
             automation.getTriggers().forEach(trigger ->
                     automationService.addTrigger(automationId,
                             trigger.getSource(),
-                            trigger.getEventType(),
+                            trigger.getConditionType(),
                             trigger.getTarget())
             );
         }
@@ -255,8 +254,8 @@ public class AutomationController {
      */
     @PostMapping({"", "/"})
     @ApiOperation("Creates an automation")
-    public ResponseEntity<SerialisableAutomation> createAutomation(@RequestHeader("session-token") final String sessionToken,
-                                                                   @RequestHeader("user") final String username,
+    public ResponseEntity<SerialisableAutomation> createAutomation(@NotNull @RequestHeader("session-token") final String sessionToken,
+                                                                   @NotNull @RequestHeader("user") final String username,
                                                                    @NotNull @RequestBody final SerialisableAutomation automation,
                                                                    final Errors errors) {
 
@@ -277,12 +276,12 @@ public class AutomationController {
         });
 
         conditions.forEach(condition ->
-                automationService.addCondition(autoId, condition.getSource(), condition.getEventType(), condition.getTarget())
+                automationService.addCondition(autoId, condition.getSource(), condition.getConditionType(), condition.getTarget())
         );
 
 
         triggers.forEach(trigger ->
-                automationService.addTrigger(autoId, trigger.getSource(), trigger.getEventType(), trigger.getTarget())
+                automationService.addTrigger(autoId, trigger.getSource(), trigger.getConditionType(), trigger.getTarget())
         );
 
 
