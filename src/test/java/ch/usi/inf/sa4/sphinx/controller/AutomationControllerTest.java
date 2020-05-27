@@ -20,7 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,23 +136,9 @@ public class AutomationControllerTest {
 
     @AfterEach
     void clean() {
-      //  userService.delete(username);
+        //userService.delete(username);
     }
 
-    void deleteAutomations(){
-        automationService.deleteAllByUser(username);
-    }
-
-
-    @Test
-    void deleteTest(){
-        deleteAutomations();
-    }
-
-    @Test
-    void deleteUserTest(){
-        userService.delete(username);
-    }
 
     @Test
     void badRequestIfMissingAuthOnGetAutomations() throws Exception {
@@ -181,9 +166,7 @@ public class AutomationControllerTest {
 
     @Test
     void badRequestIfMissingAuthOnDeleteAutomation() throws Exception {
-        this.mockmvc.perform(delete("/automations/1")
-                .header("user", "user2"))
-                .andDo(print())
+        this.mockmvc.perform(delete("/automations/1").header("user", "user2")).andDo(print())
                 .andExpect(status().is(400));
     }
 
@@ -259,7 +242,6 @@ public class AutomationControllerTest {
         String res = result.getResponse().getContentAsString();//Useful to debug
         return;
     }
-
 
 
 }

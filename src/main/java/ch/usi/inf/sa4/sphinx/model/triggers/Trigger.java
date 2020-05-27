@@ -6,10 +6,11 @@ import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  * A Trigger works to activate a Scene.
@@ -18,11 +19,8 @@ import javax.persistence.*;
  */
 @Entity
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Trigger extends Observer<Device> {
     @ManyToOne
-    @JoinColumn(name = "automation_id", nullable = false, referencedColumnName = "id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Automation automation;
     @OneToOne(cascade = CascadeType.ALL)
     private Condition condition;

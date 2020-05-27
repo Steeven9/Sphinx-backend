@@ -10,8 +10,6 @@ import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -32,7 +30,6 @@ public class Automation extends StorableE implements Runnable {
     private Set<Scene> scenes;
     private String name;
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     @Lob
     @Type(type = "org.hibernate.type.TextType")

@@ -7,10 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
+
 public interface AutomationStorage extends JpaRepository<Automation, Integer> {
+
+    @Transactional
     Optional<List<Automation>> findByUserUsername(String username);
-    void deleteByUserUsername(String username);
-
-
 }

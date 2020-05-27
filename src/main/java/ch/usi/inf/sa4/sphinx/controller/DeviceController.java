@@ -349,9 +349,9 @@ public class DeviceController {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
-
         couplingService.removeByDevicesIds(id1, id2);
 //        couplingService.removeByDevicesIds(id2, id1);
+
         return ResponseEntity.ok().build();
     }
 }
