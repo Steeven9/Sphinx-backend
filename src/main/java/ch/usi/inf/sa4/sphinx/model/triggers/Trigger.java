@@ -6,6 +6,8 @@ import ch.usi.inf.sa4.sphinx.model.Observer;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.view.SerialisableCondition;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,6 +23,7 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 public abstract class Trigger extends Observer<Device> {
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Automation automation;
     @OneToOne(cascade = CascadeType.ALL)
     private Condition condition;

@@ -129,6 +129,11 @@ public class AutomationService {
     }
 
 
+    public void deleteAllByUser(String username){
+
+    }
+
+
     public List<Trigger> findTriggers(int automationId) {
         return triggerStorage.findByAutomationId(automationId);
     }

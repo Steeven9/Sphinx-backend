@@ -10,6 +10,8 @@ import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;
 import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 import ch.usi.inf.sa4.sphinx.service.*;
+import ch.usi.inf.sa4.sphinx.view.SerialisableAutomation;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +63,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AutomationControllerTest {
     @Autowired
@@ -134,9 +137,23 @@ public class AutomationControllerTest {
 
     @AfterEach
     void clean() {
-        //userService.delete(username);
+        userService.delete(username);
     }
 
+    void deleteAutomations(){
+        automationService.deleteAllByUser(username);
+    }
+
+
+    @Test
+    void deleteTest(){
+        deleteAutomations();
+    }
+
+    @Test
+    void deleteUserTest(){
+        userService.delete(username);
+    }
 
     @Test
     void badRequestIfMissingAuthOnGetAutomations() throws Exception {
@@ -164,7 +181,9 @@ public class AutomationControllerTest {
 
     @Test
     void badRequestIfMissingAuthOnDeleteAutomation() throws Exception {
-        this.mockmvc.perform(delete("/automations/1").header("user", "user2")).andDo(print())
+        this.mockmvc.perform(delete("/automations/1")
+                .header("user", "user2"))
+                .andDo(print())
                 .andExpect(status().is(400));
     }
 
@@ -194,5 +213,64 @@ public class AutomationControllerTest {
         String res = result.getResponse().getContentAsString();//Useful to debug
         return;
     }
+
+    @Test
+    void ifCorrectParamPutAutNoChanges() throws Exception{
+        SerialisableAutomation sa = new SerialisableAutomation(automationId, "bob", "icon", null, null, null, null );
+        Gson gson = new Gson();
+        String json = gson.toJson(sa);
+
+        MvcResult result = this.mockmvc
+                .perform(put("/automations/"+automationId)
+                        .header("user", user.getUsername())
+                        .header("session-token", sessionToken)
+                        .header("content-type", "application/json")
+                        .content(json)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(jsonPath("$.id").value(automationId.toString()))
+                .andExpect(jsonPath("$.ownerId").value(user.getId()))
+                .andExpect(jsonPath("$.triggers[0].type").value(ConditionType.DEVICE_ON.toInt()))
+                .andExpect(jsonPath("$.triggers[0].conditionType").value("DEVICE_ON"))
+                .andExpect(jsonPath("$.triggers[0].source").value(deviceIds.get(DeviceType.SWITCH)))
+                .andExpect(jsonPath("$.conditions").isEmpty())
+                .andDo(print())
+                .andReturn();
+
+        String res = result.getResponse().getContentAsString();//Useful to debug
+        return;
+    }
+
+
+    @Test
+    void ifCorrectParamDeletes() throws Exception{
+        SerialisableAutomation sa = new SerialisableAutomation(automationId, "bob", "icon", null, null, null, null );
+        Gson gson = new Gson();
+        String json = gson.toJson(sa);
+
+        MvcResult result = this.mockmvc
+                .perform(put("/automations/"+automationId)
+                        .header("user", user.getUsername())
+                        .header("session-token", sessionToken)
+                        .header("content-type", "application/json")
+                        .content(json)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(jsonPath("$.id").value(automationId.toString()))
+                .andExpect(jsonPath("$.ownerId").value(user.getId()))
+                .andExpect(jsonPath("$.triggers[0].type").value(ConditionType.DEVICE_ON.toInt()))
+                .andExpect(jsonPath("$.triggers[0].conditionType").value("DEVICE_ON"))
+                .andExpect(jsonPath("$.triggers[0].source").value(deviceIds.get(DeviceType.SWITCH)))
+                .andExpect(jsonPath("$.conditions").isEmpty())
+                .andDo(print())
+                .andReturn();
+
+        String res = result.getResponse().getContentAsString();//Useful to debug
+        return;
+    }
+
+
 
 }
