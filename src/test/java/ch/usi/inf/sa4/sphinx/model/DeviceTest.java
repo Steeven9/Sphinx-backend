@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
+import ch.usi.inf.sa4.sphinx.model.conditions.*;
+import ch.usi.inf.sa4.sphinx.model.triggers.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Disabled;
 
@@ -77,6 +79,94 @@ class DeviceTest {
         assertEquals("+", d.getLabel());
         SerialisableDevice sd = new SerialisableDevice();
         d.setPropertiesFrom(sd);
+    }
+
+    @Test
+    void coverConditionTargetType() {
+        ConditionTargetType x = ConditionTargetType.EQUAL_TARGET;
+        x = ConditionTargetType.GREATER_TARGET;
+        x = ConditionTargetType.SMALLER_TARGET;
+        x = ConditionTargetType.UNEQUAL_TARGET;
+    }
+
+    @Test
+    void testMotionCondition() {
+        MotionCondition mc = new MotionCondition(new MotionSensor(), true, MotionCondition.Operator.EQUAL);
+        MotionCondition mc2 = new MotionCondition(new MotionSensor(), false, MotionCondition.Operator.NOT_EQUAL);
+        assertFalse(mc.check());
+        assertFalse(mc2.check());
+        assertEquals(ConditionType.MOTION_DETECTED, mc.getConditionType());
+        assertEquals(ConditionType.MOTION_NOT_DETECTED, mc2.getConditionType());
+    }
+
+    @Test
+    void testConditionFactory() {
+        ConditionFactory cf = new ConditionFactory();
+        cf.make(new Light(), new Object(), ConditionType.DEVICE_ON);
+        cf.make(new Light(), new Object(), ConditionType.DEVICE_OFF);
+        assertThrows(NullPointerException.class, () -> cf.make(new Light(), new Object(), null));
+        assertThrows(NullPointerException.class, () -> cf.make(new Light(), null, null));
+        assertThrows(NullPointerException.class, () -> cf.make(null, null, null));
+        assertThrows(IllegalArgumentException.class, () -> cf.make(new Light(), new Object(), ConditionType.MOTION_DETECTED));
+    }
+
+    @Test
+    void testOnCondition() {
+        OnCondition oc = new OnCondition(new Light(), OnCondition.Operator.ON);
+        OnCondition oc2 = new OnCondition(new Light(), OnCondition.Operator.OFF);
+        assertTrue(oc.check());
+        assertFalse(oc2.check());
+        assertEquals(ConditionType.DEVICE_ON, oc.getConditionType());
+        assertEquals(ConditionType.DEVICE_OFF, oc2.getConditionType());
+    }
+
+    @Test
+    void testSensorQuantityCondition() {
+        SensorQuantityCondition sqc = new SensorQuantityCondition(new TempSensor(), 2.0, SensorQuantityCondition.Operator.GREATER);
+        SensorQuantityCondition sqc2 = new SensorQuantityCondition(new TempSensor(), 2.0, SensorQuantityCondition.Operator.SMALLER);
+        SensorQuantityCondition sqc3 = new SensorQuantityCondition(new TempSensor(), 2.0, SensorQuantityCondition.Operator.EQUAL);
+        assertTrue(sqc.check());
+        assertFalse(sqc2.check());
+        assertFalse(sqc2.check());
+        assertEquals(ConditionType.SENSOR_OVER, sqc.getConditionType());
+        assertEquals(ConditionType.SENSOR_UNDER, sqc2.getConditionType());
+        assertEquals(ConditionType.SENSOR_UNDER, sqc3.getConditionType());
+    }
+
+    @Test
+    void testConditionType() {
+        assertEquals(ConditionType.DEVICE_ON, ConditionType.intToType(1));
+        assertEquals(ConditionType.DEVICE_OFF, ConditionType.intToType(2));
+        assertEquals(ConditionType.MOTION_DETECTED, ConditionType.intToType(3));
+        assertEquals(ConditionType.MOTION_NOT_DETECTED, ConditionType.intToType(4));
+        assertEquals(ConditionType.SENSOR_OVER, ConditionType.intToType(5));
+        assertEquals(ConditionType.SENSOR_UNDER, ConditionType.intToType(6));
+        assertThrows(IllegalArgumentException.class, () -> ConditionType.intToType(0));
+        assertEquals(1, ConditionType.DEVICE_ON.toInt());
+        assertEquals(2, ConditionType.DEVICE_OFF.toInt());
+        assertEquals(3, ConditionType.MOTION_DETECTED.toInt());
+        assertEquals(4, ConditionType.MOTION_NOT_DETECTED.toInt());
+        assertEquals(5, ConditionType.SENSOR_OVER.toInt());
+        assertEquals(6, ConditionType.SENSOR_UNDER.toInt());
+    }
+
+    @Test
+    void coverChanged() {
+        MotionChanged mc = new MotionChanged(new MotionSensor(), new Automation(new User()), true, MotionCondition.Operator.EQUAL);
+        OnChanged oc = new OnChanged(new Light(), new Automation(new User()), OnCondition.Operator.ON);
+        SensorChanged sc = new SensorChanged(new TempSensor(), new Automation(new User()), 2.0, SensorQuantityCondition.Operator.GREATER);
+    }
+
+    @Test
+    void testTriggerFactory() {
+        TriggerFactory tf = new TriggerFactory();
+        tf.makeEvent(new Light(), new Object(), ConditionType.DEVICE_ON, new Automation(new User()));
+        tf.makeEvent(new Light(), new Object(), ConditionType.DEVICE_OFF, new Automation(new User()));
+        assertThrows(NullPointerException.class, () -> tf.makeEvent(new Light(), new Object(), ConditionType.DEVICE_ON, null));
+        assertThrows(NullPointerException.class, () -> tf.makeEvent(new Light(), new Object(), null, null));
+        assertThrows(NullPointerException.class, () -> tf.makeEvent(new Light(), null, null, null));
+        assertThrows(NullPointerException.class, () -> tf.makeEvent(null, null, null, null));
+        assertThrows(IllegalArgumentException.class, () -> tf.makeEvent(new Light(), new Object(), ConditionType.MOTION_DETECTED, new Automation(new User())));
     }
 //
 //    @Test

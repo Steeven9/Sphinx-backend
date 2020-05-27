@@ -23,9 +23,9 @@ public enum ConditionType {
 
     public  int toInt() {
         switch (this) {
-            case DEVICE_OFF:
-                return 1;
             case DEVICE_ON:
+                return 1;
+            case DEVICE_OFF:
                 return 2;
             case MOTION_DETECTED:
                 return 3;
@@ -39,7 +39,7 @@ public enum ConditionType {
         return 0;
     }
 
-    public ConditionType intToType(int a) {
+    public static ConditionType intToType(int a) {
         switch (a) {
             case 1:
                 return ConditionType.DEVICE_ON;
