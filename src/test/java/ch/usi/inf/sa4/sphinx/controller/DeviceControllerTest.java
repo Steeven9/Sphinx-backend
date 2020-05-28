@@ -440,13 +440,34 @@ class DeviceControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        this.mockmvc.perform(delete("/devices/couple/" + light.getId() + "/" + switchId)
+
+        /*this.mockmvc.perform(delete("/devices/couple/" + light.getId() + "/" + switchId)
                 .header("user", "user1")
                 .header("session-token", "user1SessionToken")
                 .content("{}")
                 .contentType("application/json"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk());*/
+
+        Room roomsUser2 = userService.getPopulatedRooms("user2").get(2);
+        Integer id1 = roomsUser2.getDevices().get(0).getId();
+        Integer id2 = roomsUser2.getDevices().get(1).getId();
+        // do not own device
+        this.mockmvc.perform(post("/devices/couple/" + id1 + "/" + id2)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+        this.mockmvc.perform(post("/devices/couple/" + id2 + "/" + light.getId())
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -510,6 +531,61 @@ class DeviceControllerTest {
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(401));
+    }
+
+    @Test
+    void testBadRequestForCoupling() throws Exception {
+        Integer id1 = null;
+        Integer id2 = null;
+        //post
+        this.mockmvc.perform(post("/devices/couple/" + id1 + "/" + id2)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        this.mockmvc.perform(post("/devices/couple/" + 1 + "/" + id2)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        this.mockmvc.perform(post("/devices/couple/" + id1 + "/" + 1)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        //delete
+        this.mockmvc.perform(delete("/devices/couple/" + id1 + "/" + id2)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        this.mockmvc.perform(delete("/devices/couple/" + 1 + "/" + id2)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        this.mockmvc.perform(delete("/devices/couple/" + id1 + "/" + 1)
+                .header("user", "user1")
+                .header("session-token", "user1SessionToken")
+                .content("{}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -1263,7 +1339,7 @@ class DeviceControllerTest {
         this.mockmvc.perform(post("/devices/")
                 .header("session-token", "user2SessionToken")
                 .header("user", "user2")
-                .content("{\"name\":\"null\",\"icon\":\"null\", \"type\":\"7\",\"roomId\":\"" + roomId1 + "\"}")
+                .content("{\"type\":\"7\",\"roomId\":\"" + roomId1 + "\"}")
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is(201));

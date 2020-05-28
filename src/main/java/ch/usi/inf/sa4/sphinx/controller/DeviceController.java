@@ -350,7 +350,6 @@ public class DeviceController {
                                                           @RequestHeader("user") final String username,
                                                           @NonNull @PathVariable(name = "device1_id") final Integer id1,
                                                           @NonNull @PathVariable(name = "device2_id") final Integer id2) {
-
         userService.validateSession(username, sessionToken);
 
         if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
@@ -386,7 +385,6 @@ public class DeviceController {
                                                   @RequestHeader("user") final String username,
                                                   @NotNull @PathVariable(name = "device1_id") final Integer id1,
                                                   @NotNull @PathVariable(name = "device2_id") final Integer id2) {
-
 
         userService.validateSession(username, sessionToken);
 
