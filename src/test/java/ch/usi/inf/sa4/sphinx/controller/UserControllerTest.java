@@ -3,6 +3,7 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+
 import ch.usi.inf.sa4.sphinx.service.UserStorage;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

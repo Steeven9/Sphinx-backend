@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import org.junit.jupiter.api.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AuthControllerTest {
 
@@ -141,6 +142,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Order(9)
     public void shouldReturn401OnResetEmailWithWrongEmail() throws Exception {
         this.mockmvc.perform(post("/auth/reset/invalidEmail"))
                 .andDo(print())

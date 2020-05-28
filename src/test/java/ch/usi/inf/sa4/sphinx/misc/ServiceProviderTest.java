@@ -1,18 +1,23 @@
 package ch.usi.inf.sa4.sphinx.misc;
-import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+
 
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ServiceProviderTest {
+@SpringBootTest
+public class ServiceProviderTest {
 
     @Test
-    void coverServiceProvider() {
-        ServiceProvider.getUserService();
-        ServiceProvider.getDeviceService();
-        ServiceProvider.getCouplingService();
-        ServiceProvider.getRoomService();
+    void test() {
+        assertAll(
+                () -> assertNotNull(ServiceProvider.getDeviceService()),
+                () -> assertNotNull(ServiceProvider.getAutomationService()),
+                () -> assertNotNull(ServiceProvider.getCouplingService()),
+                () -> assertNotNull(ServiceProvider.getRoomService()),
+                () -> assertNotNull(ServiceProvider.getUserService())
+        );
     }
 }

@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
@@ -26,11 +27,21 @@ public abstract class Device extends StorableE {
     @Column(name = "active")
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
 
-    @OneToMany(orphanRemoval = false,
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "device"
     )
-    protected final List<Coupling> couplings;
+    protected  List<Observer> observers;
+
+    //possibly remove from here, this is just so that all Couplings targeting this device are removed with it
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "device2"
+    )
+    private  List<Coupling> switchedBy;
+
 
     @ManyToOne
     @JoinColumn(name = "room_id",
@@ -47,7 +58,9 @@ public abstract class Device extends StorableE {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
-        this.couplings = new ArrayList<>();
+        this.observers = new ArrayList<>();
+        this.switchedBy = new ArrayList<>();
+
     }
 
 
@@ -132,6 +145,7 @@ public abstract class Device extends StorableE {
      */
     public void setOn(final boolean on) {
         this.on = on;
+        triggerEffects();
     }
 
     /**
@@ -146,17 +160,17 @@ public abstract class Device extends StorableE {
      *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(final Coupling observer) {
-        couplings.add(observer);
+    public void addObserver(final Observer observer) {
+        observers.add(observer);
     }
 
 
     /**
      * Unlinks a Coupling from this Device.
-     * @param observer the Coupling to remove
+     * @param observer the Observer to remove
      */
-    public void removeObserver(final Coupling observer) {
-        couplings.remove(observer);
+    public void removeObserver(final Observer observer) {
+        observers.remove(observer);
     }
 
 
@@ -166,16 +180,16 @@ public abstract class Device extends StorableE {
      */
     //TODO fix unchecked
     protected void triggerEffects() {
-        for (final Coupling coupling : couplings) {
-            coupling.run();
+        for(Observer o: observers){
+            o.run();
         }
     }
 
     /**
      * @return All Coupling linked to this Device
      */
-    public List<Coupling> getCouplings() {
-        return couplings;
+    public List<Observer> getObservers() {
+        return observers;
     }
 
     /**

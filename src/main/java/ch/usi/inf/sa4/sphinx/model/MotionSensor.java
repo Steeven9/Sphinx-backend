@@ -11,6 +11,7 @@ import java.util.Random;
 /**
  * A MotionSensor is a sensor that detects a presence of a person in a certain position.
  */
+
 @Entity
 public class MotionSensor extends Device implements Generated {
     @Transient
@@ -59,5 +60,10 @@ public class MotionSensor extends Device implements Generated {
     @Override
     public DeviceType getDeviceType() {
         return DeviceType.MOTION_SENSOR;
+    }
+
+
+    public Boolean getStatus() {
+        return isDetected();
     }
 }

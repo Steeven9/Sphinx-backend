@@ -30,7 +30,7 @@ public final class SceneEffectFactory {
                     return new CurtainsApertureSceneAction(tmp3, (double) target, name);
             }
         } catch (ClassCastException e) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("", e);
         }
         throw new IllegalArgumentException("");
     }

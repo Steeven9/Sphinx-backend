@@ -46,7 +46,7 @@ public class SerialisableSceneEffect {
     }
 
     public Object getTarget(){
-        return slider != null? slider:on;
+        return slider != null ? (Object) slider : (Object) on;
     }
 
 
