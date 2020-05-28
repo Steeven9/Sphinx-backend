@@ -1,11 +1,11 @@
 package ch.usi.inf.sa4.sphinx.model;
+import ch.usi.inf.sa4.sphinx.misc.DeviceFactory;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Coupling.SwitchToDevice;
 import ch.usi.inf.sa4.sphinx.model.conditions.*;
 import ch.usi.inf.sa4.sphinx.model.triggers.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Disabled;
-
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +25,22 @@ class DeviceTest {
 //
 //
 //
+    @Test
+    void coverDeviceFactory() {
+        DeviceFactory df = new DeviceFactory();
+    }
+
+    @Test
+    void coverMotionSensor() {
+        MotionSensor ms = new MotionSensor();
+        SerialisableDevice sd = new SerialisableDevice();
+        ms.setPropertiesFrom(sd);
+        sd.setQuantity(10.0);
+        ms.setPropertiesFrom(sd);
+        sd.setQuantity(null);
+        ms.setPropertiesFrom(sd);
+    }
+
     @Test
     void shouldSetIcon() {
         Device d = new Switch();

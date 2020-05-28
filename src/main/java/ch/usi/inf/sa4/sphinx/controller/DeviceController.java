@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.SecurityCamera;
 import ch.usi.inf.sa4.sphinx.model.SmartPlug;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.*;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
@@ -127,6 +127,47 @@ public class DeviceController {
     }
 
     /**
+     * Gets a security camera video feed with a given Id.
+     * @param deviceId id of the device
+     * @param sessionToken a session token that should match the User's
+     * @param username the username of the User
+     * @return a ResponseEntity with the data of the requested device (200) or
+     * - 404 if not found or
+     * - 401 if not authorized
+     * @see User
+     * @see Device
+     * @see SerialisableDevice
+     */
+    @GetMapping({"/video/{deviceId}", "/video/{deviceId}/"})
+    @ApiOperation("Gets the video feed from security camera")
+    public ResponseEntity<String> getVideoFeed(@NotNull @PathVariable final Integer deviceId,
+                                                        @RequestHeader("session-token") final String sessionToken,
+                                                        @RequestHeader("user") final String username) {
+        final Device device = deviceService.get(deviceId).orElseThrow(() -> new NotFoundException(NODEVICESFOUND));
+
+        userService.validateSession(username, sessionToken);
+
+        if (device.getDeviceType() != DeviceType.SECURITY_CAMERA) {
+            throw new BadRequestException("Not a security camera");
+        }
+
+        final User owner = device.getRoom().getUser();
+
+
+        final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
+                .anyMatch(user -> user.getId().equals(owner.getId()));
+
+        if (!(userService.ownsDevice(username, deviceId) || (owner.areCamsVisible() && isGuest))) {
+            throw new UnauthorizedException(NOTOWNS);
+        }
+
+
+        userService.generateValue(username);
+        return ResponseEntity.ok(((SecurityCamera)device).getVideo());
+    }
+
+
+    /**
      * Creates a new device given a SerialisableDevice containing its initial data and a user/sessionToken pair which
      * owns the room that the device should be created in.
      *
@@ -189,7 +230,7 @@ public class DeviceController {
     @PutMapping("/{deviceId}")
     @ApiOperation("Modifies a Device")
     public ResponseEntity<SerialisableDevice> modifyDevice(@NotNull @PathVariable final Integer deviceId,
-                                                           @NotBlank @RequestBody final SerialisableDevice device,
+                                                           @NotNull @RequestBody final SerialisableDevice device,
                                                            @RequestHeader("session-token") final String sessionToken,
                                                            @RequestHeader("user") final String username,
                                                            final Errors errors) {
@@ -260,6 +301,8 @@ public class DeviceController {
         return ResponseEntity.noContent().build();
     }
 
+
+
     /**
      * @param deviceId     id  of the device to be deleted
      * @param sessionToken a session token that should match the User's
@@ -307,7 +350,6 @@ public class DeviceController {
                                                           @RequestHeader("user") final String username,
                                                           @NonNull @PathVariable(name = "device1_id") final Integer id1,
                                                           @NonNull @PathVariable(name = "device2_id") final Integer id2) {
-
         userService.validateSession(username, sessionToken);
 
         if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
@@ -343,7 +385,6 @@ public class DeviceController {
                                                   @RequestHeader("user") final String username,
                                                   @NotNull @PathVariable(name = "device1_id") final Integer id1,
                                                   @NotNull @PathVariable(name = "device2_id") final Integer id2) {
-
 
         userService.validateSession(username, sessionToken);
 
