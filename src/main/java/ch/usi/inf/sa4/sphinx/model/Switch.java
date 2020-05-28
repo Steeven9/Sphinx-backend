@@ -46,7 +46,7 @@ public class Switch extends Device {
     @Override
     public void setOn(boolean on) {
         super.setOn(on);
-        triggerEffects();
+        //triggerEffects();
     }
 
 

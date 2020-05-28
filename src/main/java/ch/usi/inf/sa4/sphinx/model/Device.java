@@ -145,6 +145,7 @@ public abstract class Device extends StorableE {
      */
     public void setOn(final boolean on) {
         this.on = on;
+        triggerEffects();
     }
 
     /**

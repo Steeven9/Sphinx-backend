@@ -5,8 +5,10 @@ import ch.usi.inf.sa4.sphinx.model.Automation;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.model.conditions.ConditionFactory;
+import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
+import ch.usi.inf.sa4.sphinx.model.triggers.SensorChanged;
 import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
 import ch.usi.inf.sa4.sphinx.model.triggers.TriggerFactory;
 import lombok.NonNull;
@@ -43,6 +45,15 @@ public class AutomationService {
 
 
 
+
+    public void runQuantitySensors(){
+        triggerStorage.findAll().forEach(trigger -> {
+            if(trigger instanceof SensorChanged){
+                trigger.run();
+            }
+        }
+        );
+    }
 
     public Optional<Automation> createAutomation(@NonNull String username) {
         return userStorage.findByUsername(username)

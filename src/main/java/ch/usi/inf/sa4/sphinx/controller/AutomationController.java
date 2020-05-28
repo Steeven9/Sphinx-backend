@@ -20,7 +20,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 //import lombok.NonNull;
@@ -92,9 +94,13 @@ public class AutomationController {
 
 
         checkRequest(username, sessionToken);
-        List<Automation> automations = automationService.findByOwner(username).orElseThrow(() -> new ServerErrorException(""));
 
-        return ResponseEntity.ok(automations.stream().map(Automation::serialise).collect(Collectors.toList()));
+        Optional<List<Automation>> automations = automationService.findByOwner(username);
+
+        if(automations.isEmpty()){
+            return  ResponseEntity.ok(new ArrayList<SerialisableAutomation>());
+        }
+        return ResponseEntity.ok(automations.get().stream().map(Automation::serialise).collect(Collectors.toList()));
 
     }
 
@@ -183,6 +189,11 @@ public class AutomationController {
         Automation storageAutomation = automationService.findById(automationId).orElseThrow(() -> new NotFoundException(""));
         if (!storageAutomation.getUser().getUsername().equals(username)) throw new NotFoundException("");
 
+        if(automation.getName() != null){
+            storageAutomation.setName(automation.getName());
+        }
+
+
         if (automation.getScenes() != null) {
             List<Integer> putScenes = automation.getScenes(); //gets modified, dont use later or make copy of it
             storageAutomation.getScenes().forEach(scene -> {
@@ -201,7 +212,7 @@ public class AutomationController {
             automation.getConditions().forEach(condition ->
                     automationService.addCondition(automationId,
                             condition.getSource(),
-                            condition.getConditionType(),
+                            condition.getType(),
                             condition.getTarget())
             );
         }
@@ -212,7 +223,7 @@ public class AutomationController {
             automation.getTriggers().forEach(trigger ->
                     automationService.addTrigger(automationId,
                             trigger.getSource(),
-                            trigger.getConditionType(),
+                            trigger.getType(),
                             trigger.getTarget())
             );
         }
@@ -269,30 +280,42 @@ public class AutomationController {
         List<SerialisableCondition> triggers = automation.getTriggers();
 
 
-        if(sceneIds != null) {
-            sceneIds.forEach(id -> {
-                Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
-                if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
-                automationService.addScene(autoId, id);
-            });
-        }
 
-        if(conditions != null) {
-            conditions.forEach(condition ->
-                    automationService.addCondition(autoId, condition.getSource(), condition.getConditionType(), condition.getTarget())
-            );
-        }
+        try {
+
+            if (automation.getName() != null) {
+                storageAutomation.setName(automation.getName());
+            }
+
+            if (sceneIds != null) {
+                sceneIds.forEach(id -> {
+                    Scene scene = sceneService.get(id).orElseThrow(() -> new NotFoundException("Scene not found"));
+                    if (!scene.getUser().getUsername().equals(username)) throw new NotFoundException("Scene not found");
+                    automationService.addScene(autoId, id);
+                });
+            }
+
+            if (conditions != null) {
+                conditions.forEach(condition ->
+                        automationService.addCondition(autoId, condition.getSource(), condition.getType(), condition.getTarget())
+                );
+            }
 
 
-        if(triggers != null) {
-            triggers.forEach(trigger ->
-                    automationService.addTrigger(autoId, trigger.getSource(), trigger.getConditionType(), trigger.getTarget())
-            );
+            if (triggers != null) {
+                triggers.forEach(trigger ->
+                        automationService.addTrigger(autoId, trigger.getSource(), trigger.getType(), trigger.getTarget())
+                );
+            }
+
+        }catch (Exception e){
+            //automationService.deleteAutomation(storageAutomation.getId());
+            e.printStackTrace();
+            throw new ServerErrorException("Not compatible");
         }
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(storageAutomation.serialise());
-
     }
 
 

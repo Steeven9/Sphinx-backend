@@ -1,9 +1,13 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class SerialisableAutomation {
     private Integer id;
     private String name;

@@ -62,6 +62,7 @@ public abstract class Sensor extends Device implements Generated {
      */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+        triggerEffects();
     }
 
     /**

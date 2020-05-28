@@ -60,7 +60,7 @@ public class Automation extends StorableE implements Runnable {
         this.conditions = new ArrayList<>();
         this.scenes = new HashSet<>();
         this.user = user;
-        this.name = "default";
+        this.name = "Automation";
         this.triggers = new ArrayList<>();
     }
 
@@ -69,6 +69,10 @@ public class Automation extends StorableE implements Runnable {
         if (conditions.stream().allMatch(Condition::check)) {
             scenes.forEach(Scene::run);
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public User getUser() {
@@ -82,6 +86,8 @@ public class Automation extends StorableE implements Runnable {
     public List<Condition> getConditions() {
         return conditions;
     }
+
+
 
     public SerialisableAutomation serialise() {
         List<Integer> sceneIds = scenes.stream().map(Scene::getId).collect(Collectors.toList());

@@ -7,10 +7,7 @@ import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.SmartPlug;
 import ch.usi.inf.sa4.sphinx.model.User;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,11 +45,14 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
+
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private static final String NODEVICESFOUND = "No devices found";
     private static final String NOTOWNS = "You don't own this device";
     private static final String FIELDSMISSING = "Some fields are missing";
     private static final String DATANOTSAVED = "Couldn't save data";
+    @Autowired
+    private AutomationService automationService;
 
     /**
      * Gets the devices owned by a User.
@@ -70,6 +70,8 @@ public class DeviceController {
     @ApiOperation("Gets the devices owned by the User")
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username) {
+
+        automationService.runQuantitySensors();
         userService.validateSession(username, sessionToken);
         userService.generateValue(username);
 

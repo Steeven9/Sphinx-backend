@@ -1,29 +1,43 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Optional;
 
+
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class SerialisableCondition {
-    private ConditionType conditionType;
-    private Integer type;
+    @JsonIgnore
+    private ConditionType type;
+    private Integer conditionType;
+    @JsonProperty("sourceId")
     private Integer source;
+    @JsonProperty("effectValue")
     private String value;
 
+
+    public SerialisableCondition(){}
 
     public SerialisableCondition(ConditionType conditionType, Integer source, String value) {
         this.source = source;
         this.value = value;
-        this.conditionType = conditionType;
-        this.type = conditionType.toInt();
+        this.type = conditionType;
+        this.conditionType = conditionType.toInt();
     }
 
-    public ConditionType getConditionType() {
+    public ConditionType getType() {
+        if(type != null){
+            return type;
+        }
+        return conditionType !=null? ConditionType.intToType(conditionType):null;
+
+    }
+
+    public Integer getConditionType() {
         return conditionType;
-    }
-
-    public Integer getType() {
-        return type;
     }
 
     public Integer getSource() {
@@ -71,12 +85,12 @@ public class SerialisableCondition {
         return Optional.empty();
     }
 
-    public void setConditionType(ConditionType conditionType) {
-        this.conditionType = conditionType;
+    public void setType(ConditionType type) {
+        this.type = type;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setConditionType(Integer conditionType) {
+        this.conditionType = conditionType;
     }
 
     public void setSource(Integer source) {
