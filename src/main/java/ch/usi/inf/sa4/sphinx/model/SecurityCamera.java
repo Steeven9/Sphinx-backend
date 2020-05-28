@@ -15,7 +15,7 @@ public class SecurityCamera extends Device {
     @Expose
     @Lob
     @Type(type = "org.hibernate.type.TextType")
-    public String url;
+    public String video;
 
     /**
      * Constructor.
@@ -25,30 +25,10 @@ public class SecurityCamera extends Device {
         super();
     }
 
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public void setUrl(final String url){
-        this.url = url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SerialisableDevice serialise() {
-        final SerialisableDevice device = super.serialise();
-        device.setUrl(url); 
-        return device;
-    }
-
-
     @Override
     public void setPropertiesFrom(SerialisableDevice sd) {
         super.setPropertiesFrom(sd);
-        url = sd.getUrl();
+        video = sd.getVideo();
     }
 
     @Override
@@ -61,7 +41,11 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return isOn() + " URL: " + url;
+        return "" + isOn();
+    }
+
+    public String getVideo() {
+        return video;
     }
 
 

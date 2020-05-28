@@ -3,7 +3,6 @@ package ch.usi.inf.sa4.sphinx.view;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 
 /**
  * Represents the serialised version of a Device entity
@@ -30,13 +29,12 @@ public class SerialisableDevice {
     @ApiModelProperty(notes = "name of the user owning this device")
     private String userName;
     private Boolean on;
-    private String url;
     private double averageTemp;
     private Integer state;
     private Integer source;
     private Double tolerance;
     private Double quantity;
-    private String videoFile;
+    private String video;
 
 
     /** Getter for the device id.
@@ -123,13 +121,6 @@ public class SerialisableDevice {
         return on;
     }
 
-    /** Getter for the device url.
-     * @return the device's url
-     * **/
-    public String getUrl(){
-        return url;
-    }
-
     /** Getter for the device id.
      * @return the device's id
      * **/
@@ -168,8 +159,8 @@ public class SerialisableDevice {
     /** Getter for the device video file.
      * @return the device's video file
      * **/
-    public String getVideoFile(){
-        return videoFile;
+    public String getVideo(){
+        return video;
     }
 
     /** Setter for the device icon.
@@ -219,14 +210,6 @@ public class SerialisableDevice {
      * **/
     public void setOnState(Boolean newState){
         on = newState;
-    }
-
-    /** Setter for the device url.
-     * @param  newUrl the device's new url
-     * **/
-    @JsonProperty("video")
-    public void setUrl(String newUrl){
-        url = newUrl;
     }
 
     /** Setter for the device state.
@@ -304,8 +287,8 @@ public class SerialisableDevice {
     /** Setter for the device video file.
      * @param  newVideoFile the device's new video file
      * **/
-    public void setVideoFile(String newVideoFile){
-        videoFile = newVideoFile;
+    public void setVideo(String newVideoFile){
+        video = newVideoFile;
     }
 
 
