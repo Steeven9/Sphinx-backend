@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.SecurityCamera;
 import ch.usi.inf.sa4.sphinx.model.SmartPlug;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.*;
