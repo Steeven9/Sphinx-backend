@@ -4,7 +4,6 @@ import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.DimmableLight;
 import ch.usi.inf.sa4.sphinx.model.SmartCurtain;
 import ch.usi.inf.sa4.sphinx.model.Thermostat;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

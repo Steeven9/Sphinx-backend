@@ -1,12 +1,12 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import java.text.DecimalFormat;
-import java.util.Random;
+
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.text.DecimalFormat;
+import java.util.Random;
 
 
 /**

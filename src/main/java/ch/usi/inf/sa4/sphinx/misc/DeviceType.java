@@ -14,9 +14,6 @@ package ch.usi.inf.sa4.sphinx.misc;
 12 (=SmartCurtain)
  */
 
-import ch.usi.inf.sa4.sphinx.model.*;
-
-
 /**
  * Represent thee different types of Device.
  * INVALID_DEVICE = 0

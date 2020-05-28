@@ -63,7 +63,7 @@ public class Automation extends StorableE implements Runnable {
         this.user = user;
         this.name = "Automation";
         this.triggers = new ArrayList<>();
-        if (triggers == null) {
+        if (!triggers.isEmpty()) {
             throw new WrongUniverseException();
         }
     }

@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
-import ch.usi.inf.sa4.sphinx.misc.*;
+import ch.usi.inf.sa4.sphinx.misc.HttpException;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.view.SerialisableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

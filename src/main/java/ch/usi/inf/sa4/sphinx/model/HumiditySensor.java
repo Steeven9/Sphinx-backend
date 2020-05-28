@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 import javax.persistence.Entity;
 
 
