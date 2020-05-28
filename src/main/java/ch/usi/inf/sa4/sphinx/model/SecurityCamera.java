@@ -2,8 +2,10 @@ package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 /**
  * Represents a security camera.
@@ -11,7 +13,9 @@ import javax.persistence.Entity;
 @Entity
 public class SecurityCamera extends Device {
     @Expose
-    public String url;
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    public String video;
 
     /**
      * Constructor.
@@ -21,23 +25,10 @@ public class SecurityCamera extends Device {
         super();
     }
 
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public void setUrl(final String url){
-        this.url = url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SerialisableDevice serialise() {
-        final SerialisableDevice device = super.serialise();
-        device.setUrl(url); 
-        return device;
+    public void setPropertiesFrom(SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        video = sd.getVideo();
     }
 
     @Override
@@ -50,7 +41,11 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return isOn() + " URL: " + url;
+        return "" + isOn();
+    }
+
+    public String getVideo() {
+        return video;
     }
 
 
