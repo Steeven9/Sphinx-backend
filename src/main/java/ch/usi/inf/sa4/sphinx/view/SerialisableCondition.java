@@ -52,12 +52,12 @@ public class SerialisableCondition {
     }
 
     public Object getTarget() {
-        if (value.equals("true")) {
-            return true;
+        if ("true".equals(value)) {
+            return Boolean.TRUE;
         }
 
-        if (value.equals("false")) {
-            return false;
+        if ("false".equals(value)) {
+            return Boolean.FALSE;
         }
 
         try {
@@ -77,12 +77,12 @@ public class SerialisableCondition {
     }
 
     public Optional<Boolean> getBooleanValue() {
-        if (value.equals("true")) {
-            return Optional.of(true);
+        if ("true".equals(value)) {
+            return Optional.of(Boolean.TRUE);
         }
 
-        if (value.equals("false")) {
-            return Optional.of(false);
+        if ("false".equals(value)) {
+            return Optional.of(Boolean.FALSE);
         }
 
         return Optional.empty();

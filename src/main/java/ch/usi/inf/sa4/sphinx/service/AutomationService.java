@@ -36,14 +36,6 @@ public class AutomationService {
     @Qualifier("triggerStorage")
     @Autowired
     private TriggerStorage triggerStorage;
-    @Qualifier("conditionStorage")
-    @Autowired
-    private ConditionStorage conditionStorage;
-
-
-
-
-
 
 
     public void runQuantitySensors(){

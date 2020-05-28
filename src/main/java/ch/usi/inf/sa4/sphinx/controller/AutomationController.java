@@ -309,9 +309,10 @@ public class AutomationController {
             }
 
         }catch (Exception e){
+            // TODO(lagraf): should this really be commented? It sounds important.
             //automationService.deleteAutomation(storageAutomation.getId());
             e.printStackTrace();
-            throw new ServerErrorException("Not compatible");
+            throw new ServerErrorException("Not compatible", e);
         }
 
 
