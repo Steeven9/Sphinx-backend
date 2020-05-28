@@ -2,15 +2,17 @@ package ch.usi.inf.sa4.sphinx.controller;
 
 
 import ch.usi.inf.sa4.sphinx.misc.*;
-import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.model.Coupling.BadCouplingException;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
+import ch.usi.inf.sa4.sphinx.model.Device;
+import ch.usi.inf.sa4.sphinx.model.SmartPlug;
+import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.service.*;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -43,14 +45,18 @@ public class DeviceController {
     DeviceService deviceService;
     @Autowired
     RoomService roomService;
+
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private static final String NODEVICESFOUND = "No devices found";
     private static final String NOTOWNS = "You don't own this device";
     private static final String FIELDSMISSING = "Some fields are missing";
     private static final String DATANOTSAVED = "Couldn't save data";
+    @Autowired
+    private AutomationService automationService;
 
     /**
      * Gets the devices owned by a User.
+     *
      * @param sessionToken the session token of the User
      * @param username     the username of the User
      * @return a ResponseEntity with the ids of the devices owned by the user or
@@ -64,6 +70,8 @@ public class DeviceController {
     @ApiOperation("Gets the devices owned by the User")
     public ResponseEntity<List<SerialisableDevice>> getUserDevices(@RequestHeader("session-token") final String sessionToken,
                                                                    @RequestHeader("user") final String username) {
+
+        automationService.runQuantitySensors();
         userService.validateSession(username, sessionToken);
         userService.generateValue(username);
 
@@ -80,9 +88,10 @@ public class DeviceController {
 
     /**
      * Gets a device with a given Id.
-     * @param deviceId id of the device
+     *
+     * @param deviceId     id of the device
      * @param sessionToken a session token that should match the User's
-     * @param username the username of the User
+     * @param username     the username of the User
      * @return a ResponseEntity with the data of the requested device (200) or
      * - 404 if not found or
      * - 401 if not authorized
@@ -103,10 +112,15 @@ public class DeviceController {
         final boolean isGuest = userService.get(username).orElseThrow(WrongUniverseException::new).getHosts().stream()
                 .anyMatch(user -> user.getId().equals(owner.getId()));
 
-        if (!userService.ownsDevice(username, deviceId)
-            && (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
-                && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA)))) {
-            throw new UnauthorizedException(NOTOWNS);
+
+        // This can be written as a single expression but I tried and it became way too long and convoluted.
+        // I hope it's a bit more readable like this.
+        if (!userService.ownsDevice(username, deviceId)) {
+            if (!isGuest || (!TYPES_GUEST_CAN_EDIT.contains(device.getDeviceType())
+                    && !(owner.areCamsVisible() && device.getDeviceType() == DeviceType.SECURITY_CAMERA))) {
+                throw new UnauthorizedException(NOTOWNS);
+            }
+
         }
         userService.generateValue(username);
         return ResponseEntity.ok(device.serialise());
@@ -231,6 +245,7 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
+
         if (!userService.ownsDevice(username, deviceId)) throw new UnauthorizedException(NOTOWNS);
 
         if (plug.getDeviceType() != DeviceType.SMART_PLUG) {
@@ -246,9 +261,9 @@ public class DeviceController {
     }
 
     /**
-     * @param deviceId id  of the device to be deleted
+     * @param deviceId     id  of the device to be deleted
      * @param sessionToken a session token that should match the User's
-     * @param username the username of the User
+     * @param username     the username of the User
      * @return a ResponseEntity with 204 if deletion is successful or
      * - 404 if not found or
      * - 401 if not authorized
@@ -263,6 +278,7 @@ public class DeviceController {
 
         userService.validateSession(username, sessionToken);
 
+
         if (!userService.ownsDevice(username, deviceId)) throw new UnauthorizedException(NOTOWNS);
 
         roomService.removeDevice(storageDevice.getRoom().getId(), storageDevice.getId());
@@ -271,12 +287,12 @@ public class DeviceController {
     }
 
     /**
-     * Creates a coupling between two devices.
+     * Creates a coupling between two devices. The order of the ids should not matter.
      *
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
-     * @param device1_id   id of the first device to couple
-     * @param device2_id   id of the second device to couple
+     * @param id1          id of the first device to couple
+     * @param id2          id of the second device to couple
      * @return a ResponseEntity with 204 if coupling is successful or
      * - 404 if not found or
      * - 401 if not authorized or
@@ -289,14 +305,8 @@ public class DeviceController {
     @ApiOperation("Creates a coupling between two devices")
     public ResponseEntity<SerialisableDevice> addCoupling(@RequestHeader("session-token") final String sessionToken,
                                                           @RequestHeader("user") final String username,
-                                                          @PathVariable final String device1_id,
-                                                          @PathVariable final String device2_id) {
-        if (Objects.isNull(device1_id) || Objects.isNull(device2_id)) {
-            throw new BadRequestException(FIELDSMISSING);
-        }
-
-        final int id1 = Integer.parseInt(device1_id);
-        final int id2 = Integer.parseInt(device2_id);
+                                                          @NonNull @PathVariable(name = "device1_id") final Integer id1,
+                                                          @NonNull @PathVariable(name = "device2_id") final Integer id2) {
 
         userService.validateSession(username, sessionToken);
 
@@ -307,9 +317,13 @@ public class DeviceController {
         final Device device1 = deviceService.get(id1).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (1)"));
         final Device device2 = deviceService.get(id2).orElseThrow(() -> new NotFoundException(NODEVICESFOUND + " (2)"));
 
-        if (!couplingService.createCoupling(device1, device2)) throw new ServerErrorException(DATANOTSAVED);
 
-        return ResponseEntity.noContent().build();
+        try {
+            couplingService.createCoupling(device1, device2);
+            return ResponseEntity.noContent().build();
+        } catch (BadCouplingException e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
     /**
@@ -317,8 +331,8 @@ public class DeviceController {
      *
      * @param sessionToken the session token of the user to authenticate as
      * @param username     the username of the user to authenticate as
-     * @param device1_id   id of the first device's couple to delete
-     * @param device2_id   id of the second device's couple to delete
+     * @param id1          id of the first device's couple to delete
+     * @param id2          id of the second device's couple to delete
      * @return a ResponseEntity with 200 if deletion is successful or
      * - 404 if not found or
      * - 401 if not authorized or
@@ -327,22 +341,18 @@ public class DeviceController {
     @DeleteMapping("/couple/{device1_id}/{device2_id}")
     public ResponseEntity<Boolean> removeCoupling(@RequestHeader("session-token") final String sessionToken,
                                                   @RequestHeader("user") final String username,
-                                                  @PathVariable final String device1_id,
-                                                  @PathVariable final String device2_id){
-        if (Objects.isNull(device2_id) || Objects.isNull(device1_id)) {
-            throw new BadRequestException(FIELDSMISSING);
-        }
+                                                  @NotNull @PathVariable(name = "device1_id") final Integer id1,
+                                                  @NotNull @PathVariable(name = "device2_id") final Integer id2) {
 
-        final int id1 = Integer.parseInt(device1_id);
-        final int id2 = Integer.parseInt(device2_id);
 
         userService.validateSession(username, sessionToken);
 
-        if  (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
+        if (!userService.ownsDevice(username, id1) || !userService.ownsDevice(username, id2)) {
             throw new UnauthorizedException("You don't own one of the devices");
         }
 
         couplingService.removeByDevicesIds(id1, id2);
+//        couplingService.removeByDevicesIds(id2, id1);
 
         return ResponseEntity.ok().build();
     }

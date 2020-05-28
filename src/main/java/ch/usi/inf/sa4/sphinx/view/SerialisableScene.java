@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import io.swagger.annotations.ApiModelProperty;
 

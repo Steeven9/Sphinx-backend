@@ -1,8 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
@@ -62,6 +62,7 @@ public abstract class Sensor extends Device implements Generated {
      */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+        triggerEffects();
     }
 
     /**
@@ -71,6 +72,10 @@ public abstract class Sensor extends Device implements Generated {
      */
     public double getTolerance() {
         return tolerance;
+    }
+
+    public Double getStatus() {
+        return getQuantity();
     }
 
 

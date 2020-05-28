@@ -1,9 +1,13 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
+import org.springframework.stereotype.Service;
+
+import javax.swing.text.html.Option;
 import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
-import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneAction;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneEffectFactory;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.SceneType;

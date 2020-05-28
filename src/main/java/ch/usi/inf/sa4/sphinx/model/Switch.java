@@ -20,6 +20,10 @@ public class Switch extends Device {
         return on;
     }
 
+    public Boolean getStatus() {
+        return getState();
+    }
+
     /**
      * Change the state of the switch, if true become false
      * and vice versa.
@@ -40,6 +44,12 @@ public class Switch extends Device {
 
 
     @Override
+    public void setOn(boolean on) {
+        super.setOn(on);
+        //triggerEffects();
+    }
+
+
     public DeviceType getDeviceType() {
         return DeviceType.SWITCH;
     }

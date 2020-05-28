@@ -3,7 +3,6 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.model.Device;
-import ch.usi.inf.sa4.sphinx.model.Effect;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
