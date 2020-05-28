@@ -70,7 +70,7 @@ public class DeviceService {
         return couplingStorage.findByDevice2IdOrderById(deviceId)
                 .stream()
                 .map(Coupling::getObserved)
-                .map(device -> ((Device) device).getId()).collect(Collectors.toList());
+                .map(Device::getId).collect(Collectors.toList());
     }
 
 
@@ -97,7 +97,7 @@ public class DeviceService {
         return couplingStorage.findByDeviceIdOrderById(deviceId)
                 .stream()
                 .map(Coupling::getAffected)
-                .map(device -> ((Device) device).getId()).collect(Collectors.toList());
+                .map(Device::getId).collect(Collectors.toList());
 
     }
 
