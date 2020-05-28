@@ -4,6 +4,7 @@ import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Optional;
 
@@ -14,7 +15,9 @@ public class SerialisableCondition {
     private ConditionType type;
     private Integer conditionType;
     @JsonProperty("sourceId")
+    @SerializedName("sourceId")
     private Integer source;
+    @SerializedName("effectValue")
     @JsonProperty("effectValue")
     private String value;
 
@@ -87,10 +90,13 @@ public class SerialisableCondition {
 
     public void setType(ConditionType type) {
         this.type = type;
+        this.conditionType = type.toInt();
     }
 
     public void setConditionType(Integer conditionType) {
         this.conditionType = conditionType;
+        this.type = ConditionType.intToType(conditionType);
+
     }
 
     public void setSource(Integer source) {
