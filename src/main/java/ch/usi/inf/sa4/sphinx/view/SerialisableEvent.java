@@ -26,15 +26,15 @@ public class SerialisableEvent {
 
     public void setValue(String value) {
         this.value = value;
-        if (value.equals("true")) {
-            booleanValue = true;
-        } else if (value.equals("false")) {
-            booleanValue = false;
+        if ("true".equals(value)) {
+            booleanValue = Boolean.TRUE;
+        } else if ("false".equals(value)) {
+            booleanValue = Boolean.FALSE;
         } else {
             try {
                 doubleValue = Double.valueOf(value);
             } catch (NumberFormatException e) {
-                throw new BadRequestException("Invalid double format");
+                throw new BadRequestException("Invalid double format", e);
             }
         }
 

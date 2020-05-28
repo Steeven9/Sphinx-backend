@@ -18,9 +18,9 @@ public class MotionCondition extends Condition<MotionSensor> {
         private boolean act(Boolean a, Boolean b) {
             switch (this) {
                 case EQUAL:
-                    return a == b;
+                    return a.equals(b);
                 case NOT_EQUAL:
-                    return a != b;
+                    return !a.equals(b);
             }
             return false;
         }

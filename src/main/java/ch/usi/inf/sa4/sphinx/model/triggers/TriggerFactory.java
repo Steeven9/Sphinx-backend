@@ -51,7 +51,7 @@ public class TriggerFactory {
                     throw new IllegalArgumentException("Invalid type");
             }
         } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Incompatible event type/target type");
+            throw new IllegalArgumentException("Incompatible event type/target type", e);
         }
     }
 }

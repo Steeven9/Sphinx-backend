@@ -322,7 +322,7 @@ public class DeviceController {
             couplingService.createCoupling(device1, device2);
             return ResponseEntity.noContent().build();
         } catch (BadCouplingException e) {
-            throw new BadRequestException(e.getMessage());
+            throw new BadRequestException(e.getMessage(), e);
         }
     }
 
