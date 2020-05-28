@@ -2,7 +2,6 @@ package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
-import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
 import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
@@ -60,9 +59,6 @@ public abstract class Device extends StorableE {
         on = true;
         this.observers = new ArrayList<>();
         this.switchedBy = new ArrayList<>();
-        if (!switchedBy.isEmpty()) {
-            throw new WrongUniverseException();
-        }
     }
 
 
@@ -182,6 +178,7 @@ public abstract class Device extends StorableE {
      */
     //TODO fix unchecked
     protected void triggerEffects() {
+        int size = switchedBy.size();
         for(Observer o: observers){
             o.run();
         }
