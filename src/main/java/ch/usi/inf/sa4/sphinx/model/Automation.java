@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.triggers.Trigger;
@@ -62,6 +63,9 @@ public class Automation extends StorableE implements Runnable {
         this.user = user;
         this.name = "Automation";
         this.triggers = new ArrayList<>();
+        if (triggers == null) {
+            throw new WrongUniverseException();
+        }
     }
 
     @Override
