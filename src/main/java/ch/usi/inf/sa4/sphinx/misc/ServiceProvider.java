@@ -1,10 +1,7 @@
 package ch.usi.inf.sa4.sphinx.misc;
 
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.DeviceService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.service.*;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +15,17 @@ public class ServiceProvider {
     private static UserService staticUserService;
     private static CouplingService staticCouplingService;
     private static RoomService staticRoomService;
+    private static AutomationService staticAutomationService;
 
     private ServiceProvider(@NonNull final DeviceService deviceService, @NonNull final CouplingService couplingService,
-                           @NonNull final UserService userService, @NonNull final RoomService roomService) {
+                            @NonNull final UserService userService, @NonNull final RoomService roomService
+            , @NonNull final AutomationService automationService) {
+
         staticDeviceService = deviceService;
         staticCouplingService = couplingService;
         staticUserService = userService;
         staticRoomService = roomService;
+        staticAutomationService = automationService;
     }
 
 
@@ -34,6 +35,7 @@ public class ServiceProvider {
      */
     public static DeviceService getDeviceService() {
         return staticDeviceService;
+
     }
 
     /**
@@ -58,6 +60,14 @@ public class ServiceProvider {
      */
     public static RoomService getRoomService() {
         return staticRoomService;
+    }
+
+    /**
+     * @return The AutomationService
+     * @see AutomationService
+     */
+    public static AutomationService getAutomationService() {
+        return staticAutomationService;
     }
 
 }

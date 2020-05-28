@@ -33,7 +33,7 @@ class DimmableTest {
 //    @Test
 //    void shouldReturnTheStateAfterSettingItMultipleElements() {
 //        Dimmable d = new Dimmable();
-//        d.couplings.add(11);
+//        d.observers.add(11);
 //    }
 //    @Test
 //    void shouldReturnTheStateAfterSettingIt () {
@@ -59,7 +59,7 @@ class DimmableTest {
 //    void shouldCopyDimmableCorrectly () {
 //        Dimmable d = new Dimmable();
 //        Dimmable d2 = d.makeCopy();
-//        assertEquals(d.couplings, d2.couplings);
+//        assertEquals(d.observers, d2.observers);
 //    }
 
 }

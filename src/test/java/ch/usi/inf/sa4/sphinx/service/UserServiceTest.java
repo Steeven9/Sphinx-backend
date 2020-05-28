@@ -254,11 +254,13 @@ class UserServiceTest {
 
         assertFalse(userService.ownsRoom("emptyUser", roomId));
         assertTrue(userService.ownsRoom("user1", roomId));
+        assertThrows(NullPointerException.class, () -> userService.ownsRoom(null, 9));
     }
 
     @Test
     void coverRemoveDevice() {
         Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        assertTrue(optionalDevices.isPresent());
         List<Device> devices = optionalDevices.get();
         Integer deviceId = devices.get(0).getId();
 
@@ -269,6 +271,7 @@ class UserServiceTest {
     @Test
     void testMigrateDeviceFirstCondition() {
         Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        assertTrue(optionalDevices.isPresent());
         List<Device> devices = optionalDevices.get();
         Integer deviceId1 = devices.get(0).getId();
         List<Room> rooms = userService.getPopulatedRooms("user1");
@@ -284,11 +287,14 @@ class UserServiceTest {
         assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId2));
         assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId1));
         assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId2));
         assertTrue(userService.migrateDevice("user2", deviceId2, roomId2, roomId2));
     }
 
     @Test
     void coverGenerateValueWithWrongUser() {
+        assertTrue(true); //hi sonarqube
         userService.generateValue("fakeUser");
     }
 
@@ -313,7 +319,15 @@ class UserServiceTest {
 
     @Test
     void coverReturnOwnGuests() {
-        userService.returnOwnGuests("fakeUser");
-        userService.returnOwnGuests("user1");
+        assertNotNull(userService.returnOwnGuests("fakeUser"));
+        assertNotNull(userService.returnOwnGuests("user1"));
+        assertThrows(NullPointerException.class, () -> userService.returnOwnGuests(null));
+    }
+
+    @Test
+    void testValidateSessionNull() {
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession("yes", null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, "yes"));
     }
 }

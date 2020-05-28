@@ -1,11 +1,13 @@
 package ch.usi.inf.sa4.sphinx.controller;
 
 import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.misc.BadRequestException;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
 import ch.usi.inf.sa4.sphinx.service.UserService;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,10 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.yaml.snakeyaml.util.ArrayUtils;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -37,6 +39,7 @@ class DeviceControllerTest {
     private UserService userService;
     @Autowired
     private DummyDataAdder dummyDataAdder;
+
 
 
     @BeforeAll
@@ -650,19 +653,19 @@ class DeviceControllerTest {
         int smartCurtainsId = devices.get(11).getId();
         int securityCameraIds = devices.get(12).getId();
 
-        assertEquals(devices.get(0).getDeviceType(), DeviceType.LIGHT);
-        assertEquals(devices.get(1).getDeviceType(), DeviceType.DIMMABLE_LIGHT);
-        assertEquals(devices.get(2).getDeviceType(), DeviceType.SWITCH);
-        assertEquals(devices.get(3).getDeviceType(), DeviceType.DIMMABLE_SWITCH);
-        assertEquals(devices.get(4).getDeviceType(), DeviceType.STATELESS_DIMMABLE_SWITCH);
-        assertEquals(devices.get(5).getDeviceType(), DeviceType.SMART_PLUG);
-        assertEquals(devices.get(6).getDeviceType(), DeviceType.HUMIDITY_SENSOR);
-        assertEquals(devices.get(7).getDeviceType(), DeviceType.LIGHT_SENSOR);
-        assertEquals(devices.get(8).getDeviceType(), DeviceType.TEMP_SENSOR);
-        assertEquals(devices.get(9).getDeviceType(), DeviceType.MOTION_SENSOR);
-        assertEquals(devices.get(10).getDeviceType(), DeviceType.THERMOSTAT);
-        assertEquals(devices.get(11).getDeviceType(), DeviceType.SMART_CURTAIN);
-        assertEquals(devices.get(12).getDeviceType(), DeviceType.SECURITY_CAMERA);
+        assertEquals(DeviceType.LIGHT, devices.get(0).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_LIGHT, devices.get(1).getDeviceType());
+        assertEquals(DeviceType.SWITCH, devices.get(2).getDeviceType());
+        assertEquals(DeviceType.DIMMABLE_SWITCH, devices.get(3).getDeviceType());
+        assertEquals(DeviceType.STATELESS_DIMMABLE_SWITCH, devices.get(4).getDeviceType());
+        assertEquals(DeviceType.SMART_PLUG, devices.get(5).getDeviceType());
+        assertEquals(DeviceType.HUMIDITY_SENSOR, devices.get(6).getDeviceType());
+        assertEquals(DeviceType.LIGHT_SENSOR, devices.get(7).getDeviceType());
+        assertEquals(DeviceType.TEMP_SENSOR, devices.get(8).getDeviceType());
+        assertEquals(DeviceType.MOTION_SENSOR, devices.get(9).getDeviceType());
+        assertEquals(DeviceType.THERMOSTAT, devices.get(10).getDeviceType());
+        assertEquals(DeviceType.SMART_CURTAIN, devices.get(11).getDeviceType());
+        assertEquals(DeviceType.SECURITY_CAMERA, devices.get(12).getDeviceType());
 
         this.mockmvc.perform(get("/devices/")
                 .header("session-token", "ADST")
@@ -1227,5 +1230,42 @@ class DeviceControllerTest {
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void testErrorsHasErrors() {
+        DeviceController deviceC = new DeviceController();
+        BindException error = new BindException(new Object(), "something");
+        error.addError(new ObjectError("something", "something"));
+        SerialisableDevice device = new SerialisableDevice();
+
+        assertThrows(BadRequestException.class, () -> deviceC.createDevice(device, "blah", "blah", error));
+        assertThrows(BadRequestException.class, () -> deviceC.modifyDevice(9, device, "blah", "blah", error));
+    }
+
+    @Test
+    @DisplayName("increase condition coverage of POST /devices/")
+    void testPostCondition() throws Exception {
+        List<Room> rooms = userService.getPopulatedRooms("user2");
+        Integer roomId1 = rooms.get(0).getId();
+
+        //empty string as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"\",\"icon\":\"\", \"type\":\"6\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        //null as icon and name
+        this.mockmvc.perform(post("/devices/")
+                .header("session-token", "user2SessionToken")
+                .header("user", "user2")
+                .content("{\"name\":\"null\",\"icon\":\"null\", \"type\":\"7\",\"roomId\":\"" + roomId1 + "\"}")
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().is(201));
     }
 }

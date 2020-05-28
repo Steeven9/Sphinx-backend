@@ -13,8 +13,7 @@ import java.util.List;
  */
 @Entity
 public class Thermostat extends TempSensor {
-
-    @Expose
+    @Expose//TODO the only information being saved atm
     private double targetTemp;
     private States state;
     private Sources source;

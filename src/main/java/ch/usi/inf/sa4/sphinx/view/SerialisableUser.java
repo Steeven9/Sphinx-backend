@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import io.swagger.models.auth.In;
-
 /**
  * Represents the serialised version of a User entity
  * @see ch.usi.inf.sa4.sphinx.model.User
@@ -15,11 +13,6 @@ public class SerialisableUser {
 
     private Boolean allowSecurityCameras;
 
-
-    /** Constructor.**/
-    public SerialisableUser(){
-
-    }
 
     /** Getter for the user username.
      * @return the user's username

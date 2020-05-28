@@ -1,7 +1,6 @@
 package ch.usi.inf.sa4.sphinx.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 /**

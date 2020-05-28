@@ -14,4 +14,12 @@ public class DimmableSwitch extends Dimmable {
     public DeviceType getDeviceType() {
         return DeviceType.DIMMABLE_SWITCH;
     }
+
+    @Override
+    public void setOn(boolean on) {
+        if (on != isOn()) {
+            super.setOn(on);
+            triggerEffects();
+        }
+    }
 }

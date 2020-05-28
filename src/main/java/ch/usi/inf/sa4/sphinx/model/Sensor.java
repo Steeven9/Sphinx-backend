@@ -1,8 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import java.text.DecimalFormat;
 import java.util.Random;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import javax.persistence.Transient;
  * A sensor is a general sensor that measures physical quantity. It is used by more specific sensors.
  */
 @Entity
-public abstract class Sensor extends Device {
+public abstract class Sensor extends Device implements Generated {
     private double quantity;
     private double lastValue;
     private double tolerance;
@@ -62,6 +62,7 @@ public abstract class Sensor extends Device {
      */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+        triggerEffects();
     }
 
     /**
@@ -71,6 +72,10 @@ public abstract class Sensor extends Device {
      */
     public double getTolerance() {
         return tolerance;
+    }
+
+    public Double getStatus() {
+        return getQuantity();
     }
 
 
@@ -89,8 +94,9 @@ public abstract class Sensor extends Device {
     /**
      * Sets the physical quantity in given room with a random error set by user.
      */
+    @Override
     public void generateValue() {
-        double variance = rand.nextDouble() * this.tolerance * 2;
+        final double variance = rand.nextDouble() * this.tolerance * 2;
         this.lastValue = this.quantity + variance - this.tolerance;
     }
 

@@ -5,6 +5,7 @@ import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
 import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.misc.WrongUniverseException;
 import ch.usi.inf.sa4.sphinx.model.*;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -324,8 +325,8 @@ public class UserService {
         if (optionalDevices.isPresent()) {
             final List<Device> devices = optionalDevices.get();
             for (final Device device : devices) {
-                if (device instanceof Sensor) {
-                    ((Sensor) device).generateValue(); //updates the value of every sensor
+                if (device instanceof Generated) {
+                    ((Generated) device).generateValue(); //updates the value of every sensor
                     deviceStorage.save(device);
                 }
             }
@@ -422,4 +423,5 @@ public class UserService {
             user.getHosts().stream().map(User::getUsername).anyMatch(s -> s.equals(username))
         ).collect(Collectors.toList());
     }
+
 }

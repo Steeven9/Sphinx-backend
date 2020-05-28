@@ -4,8 +4,11 @@ package ch.usi.inf.sa4.sphinx.controller;
 import ch.usi.inf.sa4.sphinx.misc.*;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.User;
+import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
+import ch.usi.inf.sa4.sphinx.service.SceneService;
 import ch.usi.inf.sa4.sphinx.service.UserService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import ch.usi.inf.sa4.sphinx.view.SerialisableScene;
 import ch.usi.inf.sa4.sphinx.view.SerialisableUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,9 @@ import java.util.stream.Collectors;
 public class GuestController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    SceneService sceneService;
 
     /**
      * Get all the guests of a certain user.
@@ -91,6 +97,37 @@ public class GuestController {
 
         return ResponseEntity.ok(devicesArray);
     }
+
+    /**
+     * Get the list of scenes the guests can access.
+     *
+     * @param username       the username of the guest.
+     * @param host the username of the owner
+     * @param sessionToken   the session token used for validation
+     * @return a ResponseEntity with status code 200 and a body with the list of user's scenes the guest has access to
+     */
+    @GetMapping({"/{owner_username}/scenes/", "/{owner_username}/scenes"})
+    public ResponseEntity<SerialisableScene[]> getAuthorizedScenes(
+            @NotNull @PathVariable("owner_username") final String host,
+            @RequestHeader("session-token") final String sessionToken,
+            @RequestHeader("user") final String username) {
+
+        final Optional<User> owner = userService.get(host);
+
+        userService.validateSession(username, sessionToken);
+
+        if (owner.isEmpty() || !userService.isGuestOf(host, username)) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+
+        final List<Scene> scenes = sceneService.getOwnedScenes(host);
+        SerialisableScene[] scenesArray = scenes.stream().map(Scene::serialise).toArray(SerialisableScene[]::new);
+
+        return ResponseEntity.ok(scenesArray);
+    }
+
+
 
     /**
      * Adds the name of the user who wants the guest, to the list of the guest.
