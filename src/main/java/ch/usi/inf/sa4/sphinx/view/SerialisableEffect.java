@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import io.swagger.models.auth.In;
-
 import java.util.List;
 
 //        {

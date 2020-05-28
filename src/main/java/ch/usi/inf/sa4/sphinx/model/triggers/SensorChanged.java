@@ -5,9 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.Sensor;
 import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 /**
  * Trigger for changes in the status of a sensor.

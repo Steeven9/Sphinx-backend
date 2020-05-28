@@ -5,9 +5,7 @@ import ch.usi.inf.sa4.sphinx.model.MotionSensor;
 import ch.usi.inf.sa4.sphinx.model.conditions.MotionCondition;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 
 @Entity

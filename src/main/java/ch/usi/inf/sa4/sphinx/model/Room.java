@@ -1,10 +1,13 @@
 package ch.usi.inf.sa4.sphinx.model;
+
 import ch.usi.inf.sa4.sphinx.view.SerialisableRoom;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

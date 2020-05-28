@@ -5,7 +5,6 @@ import ch.usi.inf.sa4.sphinx.model.Automation;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.conditions.Condition;
 import ch.usi.inf.sa4.sphinx.model.conditions.ConditionFactory;
-import ch.usi.inf.sa4.sphinx.model.conditions.SensorQuantityCondition;
 import ch.usi.inf.sa4.sphinx.model.sceneEffects.Scene;
 import ch.usi.inf.sa4.sphinx.model.triggers.ConditionType;
 import ch.usi.inf.sa4.sphinx.model.triggers.SensorChanged;

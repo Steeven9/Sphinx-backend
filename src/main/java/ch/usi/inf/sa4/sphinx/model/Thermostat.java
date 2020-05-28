@@ -2,8 +2,8 @@ package ch.usi.inf.sa4.sphinx.model;
 
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import com.google.gson.annotations.Expose;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.Entity;
 import java.util.List;

@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.view;
 
-import ch.usi.inf.sa4.sphinx.model.Device;
-
 import java.util.List;
 
 public class SerialisableSceneEffect {
