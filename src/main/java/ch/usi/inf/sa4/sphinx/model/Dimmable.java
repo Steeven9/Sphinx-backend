@@ -1,7 +1,5 @@
 package ch.usi.inf.sa4.sphinx.model;
 
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
 
@@ -23,8 +21,8 @@ public abstract class Dimmable extends Device {
      */
     @Override
     public SerialisableDevice serialise() {
-        SerialisableDevice sd = super.serialise();
-        sd.slider = this.intensity;
+        final SerialisableDevice sd = super.serialise();
+        sd.setSlider(this.intensity);
         return sd;
     }
 
@@ -46,26 +44,44 @@ public abstract class Dimmable extends Device {
         return intensity;
     }
 
+
+    public Double getStatus() {
+        return getIntensity();
+    }
+
     /**
      * Changes the state of this DimmableSwitch and remembers it.
      * @param newState a new intensity level to be set
      * @throws IllegalArgumentException if the intensity level is more than 1.0 or less than 0.0
      */
-    public void setState(double newState) throws IllegalArgumentException {
+    public void setState(final double newState) {
         if (newState > 1 || newState < 0) {
             throw new IllegalArgumentException("Intensity must be between 0.0 and 1.0");
         } else {
             intensity = newState;
-            triggerEffects();
+            if(isOn()) {
+                triggerEffects();
+            }
         }
     }
+
+
+
 
     /**
      * {@inheritDoc}
      */
     @Override
     public String getLabel() {
-        return this.getIntensity() * 100 + "%";
+        return intensity * 100 + "%";
+    }
+
+    @Override
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if(sd.getSlider() != null) {
+            setState(sd.getSlider());
+        }
     }
 
 

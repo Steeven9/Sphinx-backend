@@ -1,6 +1,5 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Light;
@@ -33,7 +32,6 @@ class DeviceServiceTest {
     @BeforeAll
     void beforeAll(){
         userService.delete(username);
-        userService.delete("User2");
     }
 
     @BeforeEach
@@ -49,7 +47,6 @@ class DeviceServiceTest {
     @AfterEach
     void clean() {
         userService.delete(username);
-        userService.delete("User2");
     }
 
     @Test
@@ -75,12 +72,5 @@ class DeviceServiceTest {
         Device newDevice =new Light();
         assertFalse(deviceService.update(new Light()));
     }
-
-
-
-
-
-
-
 
 }

@@ -11,14 +11,6 @@ import javax.persistence.Entity;
 @Entity
 public class Switch extends Device {
 
-    /**
-     * Creates a switch, which is on.
-     */
-    public Switch() {
-
-    }
-
-
 
     /**
      * Returns true if and only if the switch is powered.
@@ -26,6 +18,10 @@ public class Switch extends Device {
      */
     public boolean getState(){
         return on;
+    }
+
+    public Boolean getStatus() {
+        return getState();
     }
 
     /**
@@ -48,7 +44,13 @@ public class Switch extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public void setOn(boolean on) {
+        super.setOn(on);
+        //triggerEffects();
+    }
+
+
+    public DeviceType getDeviceType() {
         return DeviceType.SWITCH;
     }
 }

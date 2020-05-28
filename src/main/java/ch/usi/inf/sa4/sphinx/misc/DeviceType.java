@@ -14,11 +14,23 @@ package ch.usi.inf.sa4.sphinx.misc;
 12 (=SmartCurtain)
  */
 
-import ch.usi.inf.sa4.sphinx.model.*;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
-
-
+/**
+ * Represent thee different types of Device.
+ * INVALID_DEVICE = 0
+ * LIGHT = 1
+ * DIMMABLE_LIGHT =2
+ * SWITCH= 3
+ * DIMMABLE_SWITCH=4
+ * STATELESS_DIMMABLE_SWITCH = 5
+ * SMART_PLUG = 6
+ * HUMIDITY_SENSOR =7
+ * LIGHT_SENSOR =8
+ * TEMP_SENSOR =9
+ * MOTION_SENSOR= 10
+ * THERMOSTAT=11
+ * SMART_CURTAIN =12
+ * SECURITY_CAMERA=13
+ */
 public enum DeviceType {
     INVALID_DEVICE,
     LIGHT,
@@ -39,11 +51,11 @@ public enum DeviceType {
     /**
      * Given an integer, returns the device type assigned to that value.
      *
-     * @param d the int representing the DeviceType according to the API
+     * @param deviceType the int representing the DeviceType according to the API
      * @return the corresponding DeviceType
      */
-    public static DeviceType intToDeviceType(int d) {
-        switch (d) {
+    public static DeviceType intToDeviceType(final int deviceType) {
+        switch (deviceType) {
             case 1:
                 return LIGHT;
             case 2:
@@ -76,70 +88,14 @@ public enum DeviceType {
     }
 
 
-    /** Given a device, returns the DeviceType corresponding to the device's class.
-     * @param d a given Device
-     * @return the DeviceType of the given Device
-     */
-    public static DeviceType deviceToDeviceType(Device d) {
-        return deviceClassToDeviceType(d.getClass());
-    }
-
-
-    /** Given a device Class, returns the DeviceType of that class
-     * @param c class of an Object
-     * @return The corresponding DeviceType if the class if of a Device else DeviceType.INVALID_DEVICE
-     */
-    public static DeviceType deviceClassToDeviceType(Class c) {
-        if (Light.class.equals(c)) {
-            return LIGHT;
-        }
-        if (DimmableLight.class.equals(c)) {
-            return DIMMABLE_LIGHT;
-        }
-        if (Switch.class.equals(c)) {
-            return SWITCH;
-        }
-        if (DimmableSwitch.class.equals(c)) {
-            return DIMMABLE_SWITCH;
-        }
-        if (StatelessDimmableSwitch.class.equals(c)) {
-            return STATELESS_DIMMABLE_SWITCH;
-        }
-        if (SmartPlug.class.equals(c)) {
-            return SMART_PLUG;
-        }
-        if (HumiditySensor.class.equals(c)) {
-            return HUMIDITY_SENSOR;
-        }
-        if (LightSensor.class.equals(c)) {
-            return LIGHT_SENSOR;
-        }
-        if (TempSensor.class.equals(c)) {
-            return TEMP_SENSOR;
-        }
-        if (MotionSensor.class.equals(c)) {
-            return MOTION_SENSOR;
-        }
-        if (SmartCurtain.class.equals(c)) {
-            return SMART_CURTAIN;
-        }
-        if (SecurityCamera.class.equals(c)) {
-            return SECURITY_CAMERA;
-        }
-        if (Thermostat.class.equals(c)) {
-            return THERMOSTAT;
-        }
-        return INVALID_DEVICE;
-    }
-
-
-
-    /** Given a DeviceType returns the integer value used to transmit the enum over the network.
-     * @param d the DeviceType
+    /**
+     * Given a DeviceType returns the integer value used to transmit the enum over the network.
+     *
+     * @param type the DeviceType
      * @return the int corresponding to the DeviceType according to the API doc
      */
-    public static int deviceTypetoInt(DeviceType d) {
-        switch (d) {
+    public static int deviceTypetoInt(final DeviceType type) {
+        switch (type) {
             case LIGHT:
                 return 1;
             case DIMMABLE_LIGHT:
@@ -168,46 +124,6 @@ public enum DeviceType {
                 return 13;
             default:
                 return 0;
-        }
-    }
-
-
-    /**
-     * Given a DeviceType, returns a new object of that type.
-     *
-     * @param d the device type
-     * @return a new Device according to the DeviceType
-     */
-    public static Device makeDevice(DeviceType d) {
-        switch (d) {
-            case LIGHT:
-                return new Light();
-            case DIMMABLE_LIGHT:
-                return new DimmableLight();
-            case SWITCH:
-                return new Switch();
-            case DIMMABLE_SWITCH:
-                return new DimmableSwitch();
-            case STATELESS_DIMMABLE_SWITCH:
-                return new StatelessDimmableSwitch();
-            case SMART_PLUG:
-                return new SmartPlug();
-            case HUMIDITY_SENSOR:
-                return new HumiditySensor();
-            case LIGHT_SENSOR:
-                return new LightSensor();
-            case TEMP_SENSOR:
-                return new TempSensor();
-            case MOTION_SENSOR:
-                return new MotionSensor();
-            case SMART_CURTAIN:
-                return new SmartCurtain();
-            case SECURITY_CAMERA:
-                return new SecurityCamera();
-            case THERMOSTAT:
-                return new Thermostat();
-            default:
-                return null;
         }
     }
 }

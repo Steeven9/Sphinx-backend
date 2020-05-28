@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+
 import javax.persistence.Entity;
 
 
@@ -31,7 +32,7 @@ public class HumiditySensor extends Sensor {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.HUMIDITY_SENSOR;
     }
 

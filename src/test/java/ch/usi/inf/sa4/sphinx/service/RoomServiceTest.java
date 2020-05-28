@@ -1,13 +1,12 @@
 package ch.usi.inf.sa4.sphinx.service;
 
-import ch.usi.inf.sa4.sphinx.Demo.DummyDataAdder;
+import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
 import ch.usi.inf.sa4.sphinx.model.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,42 +68,44 @@ class RoomServiceTest {
         assertEquals(name, storageRoom.getName());
 
         assertFalse(roomService.update(new Room()));
+        assertThrows(NullPointerException.class, () -> roomService.update(null));
     }
 
-    @Disabled(value ="the test should not rely on the order of the ids assigned")
+    //    @Disabled(value ="the test should not rely on the order of the ids assigned")
     @Test
     void testGetPopulatedDevices() {
         assertTrue(roomService.getPopulatedDevices(9999).isEmpty());//not existing id
-        List<Device> result = roomService.getPopulatedDevices(2).get();
-       assertAll(
-               () -> assertEquals(2, result.size()),
-               () -> assertEquals(DeviceType.deviceClassToDeviceType(HumiditySensor.class), DeviceType.deviceToDeviceType(result.get(0))),
-                () -> assertEquals(DeviceType.deviceClassToDeviceType(Light.class), DeviceType.deviceToDeviceType(result.get(1)))
-       );
-        List<Device> res = roomService.getPopulatedDevices(4).get();
-       assertEquals(0, res.size());
+        Integer id = userService.addRoom(username, new Room()).get();
+        roomService.addDevice(id, DeviceType.TEMP_SENSOR);
+        roomService.addDevice(id, DeviceType.SWITCH);
+        List<Device> result = roomService.getPopulatedDevices(id).get();
+        assertAll(
+                () -> assertEquals(2, result.size()),
+                () -> assertEquals(DeviceType.TEMP_SENSOR, result.get(0).getDeviceType()),
+                () -> assertEquals(DeviceType.SWITCH, result.get(1).getDeviceType())
+        );
     }
-//
+
     @Test
-    @Disabled("the test should not rely on the order of the ids assigned")
     void testAddDevice() {
         assertAll("test for invalid values",
-                () -> assertThrows(NullPointerException.class, ()->roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT)),
+                () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(null, DeviceType.DIMMABLE_LIGHT)),
                 () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(null, null)),
                 () -> assertThrows(NullPointerException.class, () -> roomService.addDevice(2, null)),
                 () -> assertTrue(roomService.addDevice(1, DeviceType.INVALID_DEVICE).isEmpty()),
-                () -> assertTrue(roomService.addDevice(333, DeviceType.DIMMABLE_LIGHT).isEmpty())
+                () -> assertTrue(roomService.addDevice(3333, DeviceType.DIMMABLE_LIGHT).isEmpty())
         );
-        assertEquals(1, roomService.getPopulatedDevices(5).get().size());
-        roomService.addDevice(5, DeviceType.MOTION_SENSOR);
+
+        Integer id = userService.addRoom(username, new Room()).get();
+        assertEquals(0, roomService.getPopulatedDevices(id).get().size());
+        roomService.addDevice(id, DeviceType.MOTION_SENSOR);
         assertAll("should add a new device",
-                () -> assertEquals(2, roomService.getPopulatedDevices(5).get().size()),
-                () -> assertEquals(DeviceType.MOTION_SENSOR, DeviceType.deviceToDeviceType(roomService.getPopulatedDevices(5).get().get(1)))
+                () -> assertEquals(1, roomService.getPopulatedDevices(id).get().size()),
+                () -> assertEquals(DeviceType.MOTION_SENSOR, roomService.getPopulatedDevices(id).get().get(0).getDeviceType())
         );
     }
 //
     @Test
-//    @Disabled(value = "fix the error in RoomService.removeDevice line 92. java.lang.UnsupportedOperationException")
     void testRemoveDevice() {
         assertAll("test for invalid values",
                 () -> assertThrows(NullPointerException.class, () ->roomService.removeDevice(null, null)),

@@ -2,6 +2,7 @@ package ch.usi.inf.sa4.sphinx.misc;
 
 import org.junit.jupiter.api.DisplayName;
 import ch.usi.inf.sa4.sphinx.model.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -62,19 +63,17 @@ class DeviceTypeTest {
         assertEquals(DeviceType.deviceTypetoInt(type), device);
     }
 
-    @ParameterizedTest(name = "Device {0} is associated to DeviceType {1}")
-    @MethodSource("valueDeviceAndDeviceTypeProvider")
-    @DisplayName("Compare Device with its DeviceType")
-    void TestDeviceClassToDeviceType(Device device, DeviceType type) {
-        assertEquals(DeviceType.deviceToDeviceType(device), type);
-        assertEquals(DeviceType.deviceClassToDeviceType(User.class), DeviceType.INVALID_DEVICE);
-    }
 
     @ParameterizedTest
     @MethodSource("valueDeviceAndDeviceTypeProvider")
     @DisplayName("Create a Device based on given DeviceType")
     void TestMakeDevice(Device device, DeviceType type) {
-        assertEquals(DeviceType.makeDevice(type).getClass(), device.getClass());
-        assertNull(DeviceType.makeDevice(DeviceType.INVALID_DEVICE));
+        assertEquals(DeviceFactory.makeDevice(type).getClass(), device.getClass());
+        assertNull(DeviceFactory.makeDevice(DeviceType.INVALID_DEVICE));
+    }
+
+    @Test
+    void testInvalidDevice() {
+        assertEquals(DeviceType.INVALID_DEVICE, DeviceType.intToDeviceType(0));
     }
 }

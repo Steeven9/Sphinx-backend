@@ -1,16 +1,21 @@
 package ch.usi.inf.sa4.sphinx.model;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
+/**
+ * Represents a security camera.
+ */
 @Entity
 public class SecurityCamera extends Device {
     @Expose
-    public String url;
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    public String video;
 
     /**
      * Constructor.
@@ -20,27 +25,14 @@ public class SecurityCamera extends Device {
         super();
     }
 
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public void setUrl(String url){
-        this.url = url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SerialisableDevice serialise() {
-        SerialisableDevice s = super.serialise();
-        s.url = getUrl();
-        return s;
+    public void setPropertiesFrom(SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        video = sd.getVideo();
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SECURITY_CAMERA;
     }
 
@@ -49,7 +41,11 @@ public class SecurityCamera extends Device {
      */
     @Override
     public String getLabel() {
-        return isOn() + " URL:"+ getUrl();
+        return "" + isOn();
+    }
+
+    public String getVideo() {
+        return video;
     }
 
 

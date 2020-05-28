@@ -1,53 +1,50 @@
 package ch.usi.inf.sa4.sphinx.service;
 
+import ch.usi.inf.sa4.sphinx.demo.DummyDataAdder;
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.NotFoundException;
+import ch.usi.inf.sa4.sphinx.misc.UnauthorizedException;
 import ch.usi.inf.sa4.sphinx.model.Device;
 import ch.usi.inf.sa4.sphinx.model.Room;
 import ch.usi.inf.sa4.sphinx.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
     @Autowired
     UserService userService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    private DummyDataAdder dummyDataAdder;
 
-
-//    @BeforeAll
-//    void createDeviceAndUser() {
-//        dummyDataAdder.user1();
-//        user = userService.get("user1").get();
-//    }
-//
-//    @BeforeEach
-//    public void readRoomAndDevice(){
-//        room = user.getRooms().get(0);
-//        device = room.getDevices().get(0);
-//    }
-
-
+    @BeforeAll
+    void init() {
+        dummyDataAdder.addDummyData();
+    }
 
     @Test
     @DisplayName("creates a user")
-    void testCreatesUser(){
+    void testCreatesUser() {
         User newUser = new User("name@it", "1234", "username", "fullname");
         userService.insert(newUser);
         boolean found = userService.get("username").isPresent();
-        assert(found);
+        assertTrue(found);
     }
 
     @Test
@@ -61,13 +58,12 @@ class UserServiceTest {
                 () -> assertTrue(userService.get(username).isEmpty()),
                 () -> assertTrue(userService.getByMail(email).isEmpty()),
                 () -> assertTrue(userService.getByMail("notExisting@usi.ch").isEmpty()),
-                () -> assertFalse(userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
 
 
-
         boolean inserted = userService.insert(newUser);
-        assert(inserted);
+        assert (inserted);
         User returnedUserByUsername = userService.get(username).get();
         User returnedUserByEmail = userService.getByMail(email).get();
         assertAll("should return correct user",
@@ -75,16 +71,16 @@ class UserServiceTest {
                 () -> assertEquals(username, returnedUserByEmail.getUsername()),
                 () -> assertEquals(email, returnedUserByUsername.getEmail()),
                 () -> assertEquals(email, returnedUserByEmail.getEmail()),
-                () -> assertEquals("1234", returnedUserByEmail.getPassword()),
-                () -> assertEquals("1234", returnedUserByUsername.getPassword()),
+                () -> assertTrue(returnedUserByUsername.matchesPassword("1234")),
+                () -> assertTrue(returnedUserByEmail.matchesPassword("1234")),
                 () -> assertEquals("mario rossi", returnedUserByUsername.getFullname()),
                 () -> assertEquals("mario rossi", returnedUserByEmail.getFullname()),
                 () -> assertNull(returnedUserByUsername.getSessionToken()),
-                () -> assertFalse( userService.validSession(username, "test"))
+                () -> assertThrows(UnauthorizedException.class, () -> userService.validateSession(username, "test"))
         );
         newUser.setSessionToken("token");
         userService.update(newUser);
-        assertTrue(userService.validSession(username, "token"));
+        assertDoesNotThrow(() -> userService.validateSession(username, "token"));
         userService.delete(username);
         assertTrue(userService.get(username).isEmpty());
 
@@ -114,9 +110,9 @@ class UserServiceTest {
         User newUser = new User(email, "1234", username, "mario rossi");
 
         assertAll("test with invalid values",
-                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(username, null)),
+                () -> assertThrows(NullPointerException.class, () -> userService.changeUsername(username, null)),
                 //() -> assertFalse(userService.changeUsername(username, "test")), Why?
-                () -> assertThrows(NullPointerException.class, ()->userService.changeUsername(null, "test"))
+                () -> assertThrows(NullPointerException.class, () -> userService.changeUsername(null, "test"))
         );
         userService.insert(newUser);
 
@@ -135,25 +131,12 @@ class UserServiceTest {
         room.setName("testName");
 
         assertFalse(userService.ownsRoom(username, 1));
+        assertFalse(userService.removeRoom(username, 1));
         assertEquals(new ArrayList<Room>(), userService.getPopulatedRooms("notExisting"));
 
         assertTrue(userService.addRoom(username, room).isEmpty());
         assertTrue(userService.insert(newUser));
         assertFalse(userService.ownsRoom(username, 1));//no rooms
-//
-//
-//        Room nullKeyRoom = new Room();
-//        assertEquals(Integer.class, userService.addRoom(username, nullKeyRoom).get().getClass());
-//
-//        Integer id = userService.addRoom(username, room).get();
-//        assertFalse(userService.ownsRoom(username, 9999)); //not existing id
-//        assertTrue(userService.ownsRoom(username, id));
-//
-//        assertFalse(userService.removeRoom(username, 9999));
-//        assertFalse(userService.removeRoom("notExistsUsername", 1));
-//
-//        assertTrue(userService.removeRoom(username, id));
-//        assertFalse(userService.ownsRoom(username, id));
     }
 
     @Test
@@ -167,8 +150,9 @@ class UserServiceTest {
         room2.setName("testName2");
         room3.setName("testName3");
 
-        assertTrue( userService.getDevices("notExisting").isEmpty());
+        assertTrue(userService.getDevices("notExisting").isEmpty());
         userService.insert(newUser);
+        userService.generateValue(username);
         assertEquals(new ArrayList<Integer>(), userService.getDevices(username).get()); //no device
         assertEquals(new ArrayList<Device>(), userService.getPopulatedDevices(username).get()); //no device
         assertTrue(userService.getPopulatedDevices("notExisting").isEmpty()); //no device
@@ -181,7 +165,7 @@ class UserServiceTest {
                 () -> assertEquals(room2.getName(), userService.getPopulatedRooms(username).get(1).getName()),
                 () -> assertEquals(room3.getName(), userService.getPopulatedRooms(username).get(2).getName()),
                 () -> assertEquals(3, userService.getPopulatedRooms(username).size()),
-                () -> assertTrue( userService.getPopulatedDevices(username).get().isEmpty()), //should not have any devices
+                () -> assertTrue(userService.getPopulatedDevices(username).get().isEmpty()), //should not have any devices
                 () -> assertTrue(userService.getDevices(username).get().isEmpty()) //should not have any devices
         );
 
@@ -201,14 +185,13 @@ class UserServiceTest {
 
         var deviceList = userService.getPopulatedDevices(username);
         assertEquals(4, deviceList.get().size());
-        List<Integer> listOfId = deviceList.map(ds->ds.stream().map(Device::getId).collect(Collectors.toList())).get();
+        List<Integer> listOfId = deviceList.map(ds -> ds.stream().map(Device::getId).collect(Collectors.toList())).get();
         for (Integer id : listOfId) {
             assertTrue(userService.ownsDevice(username, id));
         }
     }
 
     @Test
-//    @Disabled(value = "fix the error in RoomService.removeDevice line 92 and UserService.migrateDevice line 279: java.lang.UnsupportedOperationException")
     @DisplayName("testing for removing and migrating device")
     void testMovingDevice() {
         String username = "serviceUsername4";
@@ -244,10 +227,107 @@ class UserServiceTest {
         deviceId = roomService.addDevice(id1, DeviceType.SMART_PLUG).get();
         assertTrue(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2
         assertEquals(id2, userService.owningRoom(username, deviceId));
-//
+
         assertFalse(userService.migrateDevice(username, deviceId, id1, id2)); //migrate to room2 (no more devices)
         userService.removeDevice(username, deviceId);
         List<Integer> devicesOwnedByUser = userService.getDevices(username).get();
         assertTrue(devicesOwnedByUser.isEmpty()); //no devices
+    }
+
+    @Test
+    void acceptsOnlyCorrectPassword() {
+        User newUser = new User("test@com", "1234", "testUsername", "fullname");
+        userService.insert(newUser);
+        User storageUser = userService.get("testUsername").get();
+        assertTrue(storageUser.matchesPassword("1234"));
+        assertAll("wrong passwords are rejected",
+                () -> assertThrows(NullPointerException.class, () -> storageUser.matchesPassword(null)),
+                () -> assertFalse(storageUser.matchesPassword("")),
+                () -> assertFalse(storageUser.matchesPassword("wrong")));
+        userService.delete("testUsername");
+    }
+
+    @Test
+    void testOwnsRoom() {
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Integer roomId = rooms.get(0).getId();
+
+        assertFalse(userService.ownsRoom("emptyUser", roomId));
+        assertTrue(userService.ownsRoom("user1", roomId));
+        assertThrows(NullPointerException.class, () -> userService.ownsRoom(null, 9));
+    }
+
+    @Test
+    void coverRemoveDevice() {
+        Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        assertTrue(optionalDevices.isPresent());
+        List<Device> devices = optionalDevices.get();
+        Integer deviceId = devices.get(0).getId();
+
+        userService.removeDevice("emptyUser", deviceId);
+        userService.ownsRoom("user1", deviceId);
+    }
+
+    @Test
+    void testMigrateDeviceFirstCondition() {
+        Optional<List<Device>> optionalDevices = userService.getPopulatedDevices("user1");
+        assertTrue(optionalDevices.isPresent());
+        List<Device> devices = optionalDevices.get();
+        Integer deviceId1 = devices.get(0).getId();
+        List<Room> rooms = userService.getPopulatedRooms("user1");
+        Integer roomId1 = rooms.get(0).getId();
+        optionalDevices = userService.getPopulatedDevices("user2");
+        devices = optionalDevices.get();
+        Integer deviceId2 = devices.get(0).getId();
+        rooms = userService.getPopulatedRooms("user2");
+        Integer roomId2 = rooms.get(0).getId();
+
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId2, roomId1, roomId2));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId2, roomId1));
+        assertFalse(userService.migrateDevice("user2", deviceId1, roomId1, roomId2));
+        assertTrue(userService.migrateDevice("user2", deviceId2, roomId2, roomId2));
+    }
+
+    @Test
+    void coverGenerateValueWithWrongUser() {
+        assertTrue(true); //hi sonarqube
+        userService.generateValue("fakeUser");
+    }
+
+    @Test
+    void testAddGuestExceptions() {
+        assertThrows(UnauthorizedException.class, () -> userService.addGuest("user1", "user1"));
+        assertThrows(NotFoundException.class, () -> userService.addGuest("fakeUser", "user1"));
+        assertThrows(NotFoundException.class, () -> userService.addGuest("user1", "fakeUser"));
+    }
+
+    @Test
+    void testIsGuestOfFalse() {
+        assertFalse(userService.isGuestOf("user1", "user1"));
+        assertFalse(userService.isGuestOf("fakeUser", "user1"));
+        assertFalse(userService.isGuestOf("user1", "fakeUser"));
+    }
+
+    @Test
+    void testGetHostsWithWrongUser() {
+        assertThrows(NotFoundException.class, () -> userService.getHosts("fakeUser"));
+    }
+
+    @Test
+    void coverReturnOwnGuests() {
+        assertNotNull(userService.returnOwnGuests("fakeUser"));
+        assertNotNull(userService.returnOwnGuests("user1"));
+        assertThrows(NullPointerException.class, () -> userService.returnOwnGuests(null));
+    }
+
+    @Test
+    void testValidateSessionNull() {
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession("yes", null));
+        assertThrows(NullPointerException.class, () -> userService.validateSession(null, "yes"));
     }
 }

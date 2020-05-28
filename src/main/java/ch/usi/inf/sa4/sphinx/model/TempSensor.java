@@ -31,7 +31,7 @@ public class TempSensor extends Sensor {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.TEMP_SENSOR;
     }
 

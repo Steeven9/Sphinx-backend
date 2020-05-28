@@ -9,6 +9,7 @@ cache:
 stages:
     - build
     - package
+    - analysis
     - deploy
 
 maven-build:
@@ -25,6 +26,13 @@ maven-package:
     artifacts:
         paths: [target/sphinx-backend.jar]
 
+sonarqube:
+    stage: analysis
+    only:
+        - dev
+    script:
+        - mvn -X -e --batch-mode verify sonar:sonar -Dsonar.verbose=true -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.projectKey=$CI_PROJECT_PATH_SLUG -Dsonar.projectName=$CI_PROJECT_PATH_SLUG  -Dsonar.scm.disabled=True -Dsonar.java.binaries=./target/classes/ -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+
 docker-build:
     only: [dev, master]
     stage: deploy
@@ -35,7 +43,7 @@ docker-build:
         - docker:dind
     tags: [dind]
     before_script:
-        - docker login -u $DOCKER_USER -p $DOCKER_PSW       
+        - docker login -u $DOCKER_USER -p $DOCKER_PSW
     script:
         - docker build ./ -t $DOCKER_USER/sa4-sphinx-backend:latest
         - docker push $DOCKER_USER/sa4-sphinx-backend:latest

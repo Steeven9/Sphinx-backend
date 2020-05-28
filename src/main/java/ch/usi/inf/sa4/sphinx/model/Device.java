@@ -1,20 +1,17 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.misc.NotImplementedException;
-import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.google.gson.annotations.Expose;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.model.Coupling.Coupling;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 import com.google.gson.annotations.Expose;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,87 +26,124 @@ public abstract class Device extends StorableE {
     @Column(name = "active")
     protected boolean on; //DO NOT USE ON, IT'S RESERVED IN SQL!!!
 
-    @OneToMany(orphanRemoval = false,
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "device"
     )
-    protected final List<Coupling> couplings;
+    protected  List<Observer> observers;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    //possibly remove from here, this is just so that all Couplings targeting this device are removed with it
+    @OneToMany(orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "device2"
+    )
+    private  List<Coupling> switchedBy;
+
+
+    @ManyToOne
     @JoinColumn(name = "room_id",
             nullable = false,
             referencedColumnName = "id"
     )
     private Room room;
-    @Expose
-    @Transient
-    private final DeviceType deviceType;
 
 
-
-
+    /**
+     * Creates a new device with default name and icon
+     */
     public Device() {
         icon = "./img/icons/devices/unknown-device.svg";
         name = "Device";
         on = true;
-        this.couplings = new ArrayList<>();
-        this.deviceType = getDeviceType();
+        this.observers = new ArrayList<>();
+        this.switchedBy = new ArrayList<>();
     }
-
-
 
 
     /**
-     * @return a copy of this Device
+     * Serializes a list of devices.
+     *
+     * @param devices the Devices to serialise
+     * @return a list of serialised devices with info about their owner
+     * @see Device#serialise()
      */
-
-    protected SerialisableDevice serialise() {
-        SerialisableDevice serialisableDevice = new SerialisableDevice();
-        serialisableDevice.on = this.on;
-        serialisableDevice.icon = this.icon;
-        serialisableDevice.name = this.name;
-        serialisableDevice.id = this.id;
-        serialisableDevice.type = DeviceType.deviceTypetoInt(DeviceType.deviceToDeviceType(this));
-        serialisableDevice.label = getLabel();
-        return serialisableDevice;
+    public static List<SerialisableDevice> serialise(final Collection<? extends Device> devices) {
+        return devices.stream().map(Device::serialise).collect(Collectors.toList());
     }
 
 
-
-
-
-
+    /**
+     * @return The Room that owns this device
+     * @see Room
+     */
     public Room getRoom() {
         return room;
     }
 
-    protected abstract DeviceType getDeviceType();
+
+    /**
+     * @return the DeviceType of this device
+     * @see DeviceType
+     */
 
 
+   public abstract DeviceType getDeviceType();
 
-    public void setIcon(String icon) {
+
+    /**
+     * Sets properties of this device to conform with the given SerialisableDevice
+     * @param sd the SerialisableDevice with the properties that are desired in this Device
+     */
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        if (sd.getIcon() != null) icon = sd.getIcon();
+        if (sd.getName() != null) name = sd.getName();
+        if (sd.getOnState()!= null) setOn(sd.getOnState());
+    }
+
+    /**
+     * @param icon the icon to set
+     */
+    public void setIcon(final String icon) {
         this.icon = icon;
     }
 
-    public void setName(String name) {
+    /**
+     * @param name the name to set
+     */
+    public void setName(final String name) {
         this.name = name;
     }
 
 
+    /**
+     * @return current icon
+     */
     public String getIcon() {
         return icon;
     }
 
+    /**
+     * @return current name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return true if the Device is on else False
+     */
     public boolean isOn() {
         return on;
     }
 
-    public void setOn(boolean on) {
+    /**
+     * @param on true to turn on the Device false to turn it off
+     */
+    public void setOn(final boolean on) {
         this.on = on;
+        triggerEffects();
     }
 
     /**
@@ -124,28 +158,72 @@ public abstract class Device extends StorableE {
      *
      * @param observer The observer to run when this device's state changes
      */
-    public void addObserver(Coupling observer) {
-        couplings.add(observer);
+    public void addObserver(final Observer observer) {
+        observers.add(observer);
     }
 
 
-    public void removeObserver(Coupling observer) {
-        couplings.remove(observer);
+    /**
+     * Unlinks a Coupling from this Device.
+     * @param observer the Observer to remove
+     */
+    public void removeObserver(final Observer observer) {
+        observers.remove(observer);
     }
 
 
+    /**
+     * Triggers all Couplings linked to this Device
+     * @see Coupling
+     */
     //TODO fix unchecked
     protected void triggerEffects() {
-        for (Coupling coupling : couplings) {
-            coupling.run();
+        int size = switchedBy.size();
+        for(Observer o: observers){
+            o.run();
         }
     }
 
-    public List<Coupling> getCouplings() {
-        return couplings;
+    /**
+     * @return All Coupling linked to this Device
+     */
+    public List<Observer> getObservers() {
+        return observers;
     }
 
-    public void setRoom(Room room) {
+    /**
+     * set the Room that owns this Device.
+     *
+     * @param room the Room
+     */
+    public void setRoom(final Room room) {
         this.room = room;
+    }
+
+    /**
+     * Serializes the device.
+     *
+     * @return a serialised copy of this Device
+     * @see SerialisableDevice
+     */
+    public SerialisableDevice serialise() {
+        final SerialisableDevice serialisableDevice = new SerialisableDevice();
+        final DeviceService deviceService = ServiceProvider.getDeviceService();
+        serialisableDevice.setOnState(this.on);
+        serialisableDevice.setIcon(this.icon);
+        serialisableDevice.setName(this.name);
+        serialisableDevice.setId(this.id);
+        serialisableDevice.setType(DeviceType.deviceTypetoInt(getDeviceType()));
+        serialisableDevice.setLabel(getLabel());
+        final Room owningRoom = this.room;
+        final User owningUser = owningRoom.getUser();
+        serialisableDevice.setRoomId(owningRoom.getId());
+        serialisableDevice.setRoomName( owningRoom.getName());
+        serialisableDevice.setUserName( owningUser.getUsername());
+        serialisableDevice.setSwitchedIds(deviceService.getSwitchedBy(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        serialisableDevice.setSwitchesIds(deviceService.getSwitches(this.getId()).stream().mapToInt(Integer::intValue).toArray());
+        if (serialisableDevice.getSwitched().length == 0) serialisableDevice.setSwitchedIds(null);
+        if (serialisableDevice.getSwitches().length == 0) serialisableDevice.setSwitchesIds(null);
+        return serialisableDevice;
     }
 }

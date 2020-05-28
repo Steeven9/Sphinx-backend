@@ -5,7 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
+/**
+ * Device repository.
+ */
 @Repository
-public interface DeviceStorage extends JpaRepository<Device, Integer> {}
+public interface DeviceStorage extends JpaRepository<Device, Integer> {
+}
 
 

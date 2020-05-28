@@ -11,6 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DimmableTest {
 
+    @Test
+    void testSetState() {
+        DimmableLight d = new DimmableLight();
+        assertThrows(IllegalArgumentException.class, () -> d.setState(1.5));
+        assertThrows(IllegalArgumentException.class, () -> d.setState(-1.5));
+    }
+
 //    @Test
 //    void shouldReturnSerialisebleVersion() {
 //        Dimmable d = new Dimmable();
@@ -26,7 +33,7 @@ class DimmableTest {
 //    @Test
 //    void shouldReturnTheStateAfterSettingItMultipleElements() {
 //        Dimmable d = new Dimmable();
-//        d.couplings.add(11);
+//        d.observers.add(11);
 //    }
 //    @Test
 //    void shouldReturnTheStateAfterSettingIt () {
@@ -52,7 +59,7 @@ class DimmableTest {
 //    void shouldCopyDimmableCorrectly () {
 //        Dimmable d = new Dimmable();
 //        Dimmable d2 = d.makeCopy();
-//        assertEquals(d.couplings, d2.couplings);
+//        assertEquals(d.observers, d2.observers);
 //    }
 
 }

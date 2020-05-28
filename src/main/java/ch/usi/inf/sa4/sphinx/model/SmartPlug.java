@@ -1,6 +1,8 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.misc.ServiceProvider;
+import ch.usi.inf.sa4.sphinx.service.DeviceService;
 
 import javax.persistence.Entity;
 
@@ -26,7 +28,10 @@ public class SmartPlug extends Device {
      * @return the consumed energy
      */
     public double getPowerUsed() {
-        return powerUsed += 10;
+        DeviceService deviceService = ServiceProvider.getDeviceService();
+        this.powerUsed += 10;
+        deviceService.update(this);
+        return this.powerUsed;
     }
 
     /**
@@ -47,7 +52,7 @@ public class SmartPlug extends Device {
 
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SMART_PLUG;
     }
 }

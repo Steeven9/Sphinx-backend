@@ -1,8 +1,6 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
-import ch.usi.inf.sa4.sphinx.service.CouplingService;
-import ch.usi.inf.sa4.sphinx.service.RoomService;
 
 import javax.persistence.Entity;
 
@@ -21,7 +19,7 @@ public class SmartCurtain extends Dimmable {
     }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.SMART_CURTAIN;
     }
 }

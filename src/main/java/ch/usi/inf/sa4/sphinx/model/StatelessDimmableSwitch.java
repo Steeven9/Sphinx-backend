@@ -1,6 +1,7 @@
 package ch.usi.inf.sa4.sphinx.model;
 
 import ch.usi.inf.sa4.sphinx.misc.DeviceType;
+import ch.usi.inf.sa4.sphinx.view.SerialisableDevice;
 
 import javax.persistence.Entity;
 
@@ -33,7 +34,7 @@ public class StatelessDimmableSwitch extends Device {
      * Set to true if the last action of this switch was incrementing, false otherwise.
      * @param value true if was incrementing, false otherwise
      */
-    public void setIncrement(boolean value) {
+    public void setIncrement(final boolean value) {
         this.button = value;
         triggerEffects();
     }
@@ -42,14 +43,20 @@ public class StatelessDimmableSwitch extends Device {
      * {@inheritDoc}
      */
     @Override
-
     public String getLabel() {
         return this.button ? "+" : "-";
     }
 
+    @Override
+    public void setPropertiesFrom(final SerialisableDevice sd) {
+        super.setPropertiesFrom(sd);
+        if (sd.getSlider() != null) {
+            setIncrement(sd.getSlider() > 0);
+        }
+    }
 
     @Override
-    protected DeviceType getDeviceType() {
+    public DeviceType getDeviceType() {
         return DeviceType.STATELESS_DIMMABLE_SWITCH;
     }
 }
